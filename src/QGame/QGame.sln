@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QGame", "QGame\QGame.csproj", "{BCF86D87-EDE0-4286-8385-69FF1FB01B9C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QGameTests", "QGameTests\QGameTests.csproj", "{9B7B64AC-1A2C-43DB-A94C-8827688AD9B5}"
@@ -22,5 +24,17 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tacticsiege.visualstudio.com/DefaultCollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = QGame\\QGame.csproj
+		SccProjectName1 = QGame
+		SccLocalPath1 = QGame
+		SccProjectUniqueName2 = QGameTests\\QGameTests.csproj
+		SccProjectName2 = QGameTests
+		SccLocalPath2 = QGameTests
 	EndGlobalSection
 EndGlobal
