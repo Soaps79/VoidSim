@@ -1,0 +1,6 @@
+syntax: glob
+QGame/obj/
+QGame/bin/
+*.suo
+QGameTests/bin/
+QGameTests/obj/

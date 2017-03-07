@@ -1,0 +1,12 @@
+syntax: glob
+Library/
+obj/
+*.sln
+*.suo
+*.csproj
+*.unityproj
+*.user
+*.userprefs
+*.DS_store
+*.meta
+Temp/
