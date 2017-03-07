@@ -51,7 +51,7 @@ namespace Messaging
 				args = arg;
 			}
 		}
-		internal int Count
+		public int Count
 		{
 			get { return _messageQueue[_activeQueue].Count; }
 		}

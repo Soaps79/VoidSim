@@ -18,10 +18,9 @@ namespace Behaviors
 		{
 			parent.AliveChanged += OnParentAliveChanged;
 		}
-
-		// For testing
-		internal int Count { get { return behaviorList.Count; } }
-		internal int AliveCount { get { return behaviorList.Count(b => b.IsAlive); } }
+		
+		public int Count { get { return behaviorList.Count; } }
+		public int AliveCount { get { return behaviorList.Count(b => b.IsAlive); } }
 
 		#region Interface
 		/// <summary>

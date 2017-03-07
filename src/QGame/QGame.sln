@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QGame", "QGame\QGame.csproj", "{BCF86D87-EDE0-4286-8385-69FF1FB01B9C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QGameTests", "QGameTests\QGameTests.csproj", "{9B7B64AC-1A2C-43DB-A94C-8827688AD9B5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QGame.Test", "QGame.Test\QGame.Test.csproj", "{BCBC932C-EDEA-4DA8-90E5-7DB01CE3A77D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{BCF86D87-EDE0-4286-8385-69FF1FB01B9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BCF86D87-EDE0-4286-8385-69FF1FB01B9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BCF86D87-EDE0-4286-8385-69FF1FB01B9C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9B7B64AC-1A2C-43DB-A94C-8827688AD9B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9B7B64AC-1A2C-43DB-A94C-8827688AD9B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9B7B64AC-1A2C-43DB-A94C-8827688AD9B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9B7B64AC-1A2C-43DB-A94C-8827688AD9B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCBC932C-EDEA-4DA8-90E5-7DB01CE3A77D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCBC932C-EDEA-4DA8-90E5-7DB01CE3A77D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCBC932C-EDEA-4DA8-90E5-7DB01CE3A77D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCBC932C-EDEA-4DA8-90E5-7DB01CE3A77D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -28,13 +28,13 @@ Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 3
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tacticsiege.visualstudio.com/DefaultCollection
+		SccTeamFoundationServer = https://tacticsiege.visualstudio.com/
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = QGame\\QGame.csproj
 		SccProjectName1 = QGame
 		SccLocalPath1 = QGame
-		SccProjectUniqueName2 = QGameTests\\QGameTests.csproj
-		SccProjectName2 = QGameTests
-		SccLocalPath2 = QGameTests
+		SccProjectUniqueName2 = QGame.Test\\QGame.Test.csproj
+		SccProjectName2 = QGame.Test
+		SccLocalPath2 = QGame.Test
 	EndGlobalSection
 EndGlobal
