@@ -1,6 +1,7 @@
 ﻿using System;
 using QGame;
 using UnityEngine;
+using Random = System.Random;
 
 namespace Assets.Scripts
 {
@@ -13,7 +14,9 @@ namespace Assets.Scripts
         public Sprite SpaceTile;
         public Sprite FloorTile;
         public Sprite ScaffoldTile;
-        
+
+        readonly Random _rand = new Random();
+        private float _elapsed;
 
         void Start()
         {
@@ -21,6 +24,14 @@ namespace Assets.Scripts
             _grid = new Grid(name, Width, Height);
 
             // create game object for each tile
+            CreateTiles();
+
+            // hook debug randomization
+            OnEveryUpdate += UpdateRandomTiles;
+        }
+
+        private void CreateTiles()
+        {
             for (var i = 0; i < _grid.Width; i++)
             {
                 for (var j = 0; j < _grid.Height; j++)
@@ -32,10 +43,12 @@ namespace Assets.Scripts
 
                     var spriteRenderer = tileGo.AddComponent<SpriteRenderer>();
                     spriteRenderer.sprite = AssignTileSprite(tileData.Type);
+
+                    tileData.RegisterOnTileTypeChangedCallback((tile) => { OnTileTypeChanged(tile, tileGo); });
                 }
             }
         }
-
+        
         private Sprite AssignTileSprite(TileType tileType)
         {
             switch (tileType)
@@ -54,6 +67,27 @@ namespace Assets.Scripts
         public void OnTileTypeChanged(Tile tileData, GameObject tileGo)
         {
             tileGo.GetComponent<SpriteRenderer>().sprite = AssignTileSprite(tileData.Type);
+        }
+
+        private void UpdateRandomTiles(float deltaTime)
+        {
+            _elapsed += deltaTime;
+            if (_elapsed > 2)
+            {
+                _elapsed = 0;
+                RandomizeTiles();
+            }
+        }
+        private void RandomizeTiles()
+        {
+            for (var i = 0; i < _grid.Width; i++)
+            {
+                for (var j = 0; j < _grid.Height; j++)
+                {
+                    var tileData = _grid.GetTileAt(i, j);
+                    tileData.Type = (TileType) _rand.Next(0, 3);
+                }
+            }
         }
     }
 }
