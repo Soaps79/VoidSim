@@ -1,4 +1,5 @@
 ﻿using System;
+using Assets.Scripts.Testing;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -137,6 +138,7 @@ namespace Assets.Editor
             Assert.AreEqual(0, onEveryUpdateCount);
             Assert.AreEqual(0, enabledChangedCount);
             Assert.AreEqual(0, aliveChangedCount);
+            Assert.AreEqual(2, _target.OnUpdateCount);
             Assert.AreEqual(0, onDeathCount, "OnDeath was invoked after ClearAllDelegates was called.");
 
         }
