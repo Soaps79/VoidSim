@@ -1,4 +1,7 @@
-﻿namespace VoidSim.Console.Products
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace VoidSim.Console.Products
 {
     // This object is essentially a service to the rest of the game whose role is to connect consumers with providers. 
     // The goods do not actually pass through here, Providers simply agree to send a specified amount to the Consumer. 
@@ -6,8 +9,89 @@
     // and the Hub will continue to try and find a Provider for the remainder.
     public class ProductTradingHub
     {
-        
-    }
+        Dictionary<string, List<ProductRequest>> _consumerRequests;
+        Dictionary<string, List<ProductRequest>> _providerRequests;
+
+		// Attempts to full the request
+        public void RequestProvide(ProductRequest provider)
+        {
+	        if (_consumerRequests.ContainsKey(provider.ProductName))
+	        {
+		        // iterate the list of consumers for a given product
+		        foreach (var cosumer in _consumerRequests[provider.ProductName])
+		        {
+			        // if the consumer can complete the request, do it and break
+			        if (cosumer.Amount > provider.Amount)
+			        {
+				        cosumer.Amount -= provider.Amount;
+				        provider.Amount = 0;
+				        break;
+			        }
+			        // otherwise, deplete its remaining amount and move to the next
+			        else
+			        {
+				        provider.Amount -= cosumer.Amount;
+				        cosumer.Amount = 0;
+			        }
+		        }
+
+		        // remove that type if it is not empty
+		        _consumerRequests[provider.ProductName].RemoveAll(i => i.Amount == 0);
+		        if (!_consumerRequests[provider.ProductName].Any())
+			        _consumerRequests.Remove(provider.ProductName);
+	        }
+
+
+	        if (provider.Amount == 0)
+				return;
+
+			// if consumer is not fulfilled, add to the backlog, creating a list if there isn't one
+			if (!_consumerRequests.ContainsKey(provider.ProductName))
+				_consumerRequests.Add(provider.ProductName, new List<ProductRequest>());
+
+			_consumerRequests[provider.ProductName].Add(provider);
+		}
+
+		public void RequestConsume(ProductRequest consumer)
+		{
+			if (_providerRequests.ContainsKey(consumer.ProductName))
+			{
+				// iterate the list of providers for a given product
+				foreach (var provider in _providerRequests[consumer.ProductName])
+				{
+					// if the provider can complete the request, do it and break
+					if (provider.Amount > consumer.Amount)
+					{
+						provider.Amount -= consumer.Amount;
+						consumer.Amount = 0;
+						break;
+					}
+					// otherwise, deplete the remaining provider and move to the next
+					else
+					{
+						consumer.Amount -= provider.Amount;
+						provider.Amount = 0;
+					}
+				}
+
+				// remove that type if it is not empty
+				_providerRequests[consumer.ProductName].RemoveAll(i => i.Amount == 0);
+				if (!_providerRequests[consumer.ProductName].Any())
+					_providerRequests.Remove(consumer.ProductName);
+			}
+
+			if (consumer.Amount == 0)
+				return;
+
+			// if consumer is not fulfilled, add to the backlog, creating a list if there isn't one
+			if (!_consumerRequests.ContainsKey(consumer.ProductName))
+				_consumerRequests.Add(consumer.ProductName, new List<ProductRequest>());
+
+			_consumerRequests[consumer.ProductName].Add(consumer);
+		}
+
+
+	}
 
     // An actor in the trading system
     // This object should eventually have information about 
@@ -27,14 +111,8 @@
 
     // ProductTraders will submit these requests to the hub when they either 
     // need goods (Consume), or they have excess good they want to trade (Provide)
-    public enum ProductTransferAction
-    {
-        Provide, Consume
-    }
-
     public class ProductRequest
     {
-        public ProductTransferAction Action;
         public string ProductName;
         public int Amount;
     }
