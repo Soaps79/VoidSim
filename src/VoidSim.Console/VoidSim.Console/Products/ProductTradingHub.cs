@@ -12,27 +12,26 @@ namespace VoidSim.Console.Products
         Dictionary<string, List<ProductRequest>> _consumerRequests;
         Dictionary<string, List<ProductRequest>> _providerRequests;
 
-		// Attempts to full the request
+		// Attempts to fulfill the request, if there is not enough currently provided, it is queued
+		// Spent providers are removed along the way
         public void RequestProvide(ProductRequest provider)
         {
 	        if (_consumerRequests.ContainsKey(provider.ProductName))
 	        {
 		        // iterate the list of consumers for a given product
-		        foreach (var cosumer in _consumerRequests[provider.ProductName])
+		        foreach (var consumer in _consumerRequests[provider.ProductName])
 		        {
 			        // if the consumer can complete the request, do it and break
-			        if (cosumer.Amount > provider.Amount)
+			        if (consumer.Amount > provider.Amount)
 			        {
-				        cosumer.Amount -= provider.Amount;
+				        consumer.Amount -= provider.Amount;
 				        provider.Amount = 0;
 				        break;
 			        }
+
 			        // otherwise, deplete its remaining amount and move to the next
-			        else
-			        {
-				        provider.Amount -= cosumer.Amount;
-				        cosumer.Amount = 0;
-			        }
+			        provider.Amount -= consumer.Amount;
+			        consumer.Amount = 0;
 		        }
 
 		        // remove that type if it is not empty
@@ -66,12 +65,10 @@ namespace VoidSim.Console.Products
 						consumer.Amount = 0;
 						break;
 					}
+
 					// otherwise, deplete the remaining provider and move to the next
-					else
-					{
-						consumer.Amount -= provider.Amount;
-						provider.Amount = 0;
-					}
+					consumer.Amount -= provider.Amount;
+					provider.Amount = 0;
 				}
 
 				// remove that type if it is not empty
@@ -89,8 +86,6 @@ namespace VoidSim.Console.Products
 
 			_consumerRequests[consumer.ProductName].Add(consumer);
 		}
-
-
 	}
 
     // An actor in the trading system
@@ -100,6 +95,7 @@ namespace VoidSim.Console.Products
     public class ProductTrader
     {
         public string Name;
+	    public int Budget;
     }
 
     // One trade consideration could be Distance. Distance can work such that 
@@ -115,5 +111,6 @@ namespace VoidSim.Console.Products
     {
         public string ProductName;
         public int Amount;
+	    public ProductTrader Trader;
     }
 }
