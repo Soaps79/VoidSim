@@ -10,12 +10,8 @@ namespace Assets.Controllers
         // Update is called once per frame
         void Update()
         {
-
             var currentFramePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-            // right mouse + drag to pan camera
-            currentFramePosition = HandleMousePan(currentFramePosition);
-
+            
             // scroll wheel to zoom
             currentFramePosition = HandleMouseZoom(currentFramePosition);
 
