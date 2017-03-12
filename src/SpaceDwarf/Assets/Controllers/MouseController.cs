@@ -23,13 +23,13 @@ namespace Assets.Controllers
             // backward
             if (Input.GetAxis("Mouse ScrollWheel") < 0)
             {
-                Camera.main.orthographicSize = Mathf.Min(Camera.main.orthographicSize + 1, 6);
+                Camera.main.orthographicSize = Mathf.Min(Camera.main.orthographicSize + 1, 10);
             }
 
             // forward
             if (Input.GetAxis("Mouse ScrollWheel") > 0)
             {
-                Camera.main.orthographicSize = Mathf.Max(Camera.main.orthographicSize - 1, 1);
+                Camera.main.orthographicSize = Mathf.Max(Camera.main.orthographicSize - 1, 2);
             }
 
             return currentFramePosition;
