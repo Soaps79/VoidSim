@@ -8,13 +8,12 @@ namespace Assets.Controllers
 {
     public class TerrainController : QScript
     {
-
-        public Sprite GreenGrassTile;
-
-
+        public Sprite GreenGrassTile0;
+        public Sprite GreenGrassTile1;
+        public Sprite GreenGrassTile2;
+        public Sprite GreenGrassTile3;
 
         private TerrainWorld _world;
-
         
         void Start ()
         {
@@ -75,9 +74,28 @@ namespace Assets.Controllers
             switch (tileType)
             {
                 case TerrainType.GreenGrass:
-                    return GreenGrassTile;
+                    return GetGreenGrassSprite();
                 default:
                     throw new ArgumentOutOfRangeException("tileType", tileType, null);
+            }
+        }
+
+        private Sprite GetGreenGrassSprite()
+        {
+            var type = UnityEngine.Random.Range(0, 4);
+            switch (type)
+            {
+                case 0:
+                    return GreenGrassTile0;
+                case 1:
+                    return GreenGrassTile1;
+                case 2:
+                    return GreenGrassTile2;
+                case 3:
+                    return GreenGrassTile3;
+                default:
+                    throw new IndexOutOfRangeException("Invalid GreenGrassTile index.");
+
             }
         }
     }

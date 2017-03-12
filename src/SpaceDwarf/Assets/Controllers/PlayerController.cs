@@ -1,9 +1,10 @@
 ﻿using Assets.Model;
+using QGame;
 using UnityEngine;
 
 namespace Assets.Controllers
 {
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : QScript 
     {
         public Sprite CharacterSprite;
         public float MoveSpeed = 5;
@@ -18,6 +19,9 @@ namespace Assets.Controllers
             
             // create Player game object
             CreatePlayerView();
+
+            // hook updates
+            OnEveryUpdate += UpdateCharacter;
         }
 
         private void CreatePlayerView()
@@ -60,13 +64,9 @@ namespace Assets.Controllers
                 Camera.main.transform.position.z);
         }
 
-        // Update is called once per frame
-        void Update ()
+        private void UpdateCharacter(float timeDelta)
         {
-            var timeDelta = Time.deltaTime;
-            // handle character motion
             UpdateCharacterPosition(timeDelta);
-
         }
 
         private void UpdateCharacterPosition(float timeDelta)
