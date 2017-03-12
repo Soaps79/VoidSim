@@ -4,12 +4,14 @@ using UnityEngine;
 
 namespace Assets.Controllers
 {
-    public class PlayerController : QScript 
+    public class PlayerController : QScript
     {
-        public Sprite CharacterSprite;
+        public GameObject CharacterPrefab;
         public float MoveSpeed = 5;
 
         private PlayerCharacter _character;
+        private Animator _characterAnimator;
+
 
         // Use this for initialization
         void Start ()
@@ -26,16 +28,18 @@ namespace Assets.Controllers
 
         private void CreatePlayerView()
         {
-            var characterGo = new GameObject(_character.Name);
+            var characterGo = Instantiate(CharacterPrefab);
 
             // assign parent and position
             characterGo.transform.parent = transform;
             characterGo.transform.position = _character.Position;
             
-            // create sprite component
-            var spriteRenderer = characterGo.AddComponent<SpriteRenderer>();
-            spriteRenderer.sprite = CharacterSprite;
-            spriteRenderer.sortingLayerName = "Player";
+            //// create sprite component
+            //var spriteRenderer = characterGo.AddComponent<SpriteRenderer>();
+            //spriteRenderer.sprite = CharacterSprite;
+            //spriteRenderer.sortingLayerName = "Player";
+
+            _characterAnimator = characterGo.GetComponent<Animator>();
 
             // center camera on player
             CenterCameraOnPlayer();
@@ -75,6 +79,12 @@ namespace Assets.Controllers
             var horizontal = Input.GetAxis("Horizontal") * MoveSpeed * timeDelta;
             var vertical = Input.GetAxis("Vertical") * MoveSpeed * timeDelta;
             var movement = new Vector2(horizontal, vertical);
+
+            // update animation
+            _characterAnimator.SetFloat("MoveX", horizontal);
+            _characterAnimator.SetFloat("MoveY", vertical);
+
+            //Debug.Log(string.Format("MoveY: ({0})", vertical));
 
             // update player character
             _character.Move(movement);
