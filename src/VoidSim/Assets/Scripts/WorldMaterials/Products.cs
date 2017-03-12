@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace Assets.Scripts.WorldMaterials
 {
@@ -16,7 +17,7 @@ namespace Assets.Scripts.WorldMaterials
 	// nickel, iridium, palladium, platinum, gold, magnesium and other precious 
 	// metals such as osmium, ruthenium and rhodium.
 
-	[Serializable]
+		[Serializable]
 		public enum ProductName
 		{
 			Oxygen,
@@ -43,34 +44,35 @@ namespace Assets.Scripts.WorldMaterials
 		}
 
 		[Serializable]
-		public class Ingredient
+		public class IngredientModel
 		{
 			public ProductName ProductName;
 			public int Quantity;
 		}
 
 		[Serializable]
-		public class Recipe
+		public class RecipeModel
 		{
 			public ProductName ResultProduct;
-			public Ingredient[] Ingredients;
+			public IngredientModel[] Ingredients;
+		
 			public ProductionContainerName[] ProductionContainers;
 		}
 
 		[Serializable]
-		public class Product
+		public class ProductModel
 		{
 			public ProductName Name;
 			public ProductCategory Category;
 
 		// Value? If common currency (credits?) is a thing
 		// Quality?
-	}
+		}
 
-	[Serializable]
+		[Serializable]
 		public class ProductEditorView
 		{
-			public Product Product;
-			public Recipe[] Recipes;
+			public ProductModel Product;
+			public RecipeModel[] Recipes;
 		}
 }

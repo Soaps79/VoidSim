@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<ArrayOfProductEditorView xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ProductEditorView>
+    <Product>
+      <Name>Oxygen</Name>
+      <Category>Raw</Category>
+    </Product>
+    <Recipes />
+  </ProductEditorView>
+  <ProductEditorView>
+    <Product>
+      <Name>Iron</Name>
+      <Category>Raw</Category>
+    </Product>
+    <Recipes />
+  </ProductEditorView>
+  <ProductEditorView>
+    <Product>
+      <Name>Nickle</Name>
+      <Category>Raw</Category>
+    </Product>
+    <Recipes />
+  </ProductEditorView>
+  <ProductEditorView>
+    <Product>
+      <Name>Iridium</Name>
+      <Category>Raw</Category>
+    </Product>
+    <Recipes />
+  </ProductEditorView>
+  <ProductEditorView>
+    <Product>
+      <Name>Magnesium</Name>
+      <Category>Raw</Category>
+    </Product>
+    <Recipes />
+  </ProductEditorView>
+  <ProductEditorView>
+    <Product>
+      <Name>BuildingMaterial</Name>
+      <Category>Raw</Category>
+    </Product>
+    <Recipes>
+      <RecipeModel>
+        <ResultProduct>BuildingMaterial</ResultProduct>
+        <IngredientsModel>
+          <IngredientModel>
+            <ProductName>Iron</ProductName>
+            <Quantity>4</Quantity>
+          </IngredientModel>
+        </IngredientsModel>
+        <ProductionContainers>
+          <ProductionContainerName>SmallFactory</ProductionContainerName>
+        </ProductionContainers>
+      </RecipeModel>
+    </Recipes>
+  </ProductEditorView>
+  <ProductEditorView>
+    <Product>
+      <Name>PowerCell</Name>
+      <Category>Raw</Category>
+    </Product>
+    <Recipes>
+      <RecipeModel>
+        <ResultProduct>PowerCell</ResultProduct>
+        <IngredientsModel>
+          <IngredientModel>
+            <ProductName>Iridium</ProductName>
+            <Quantity>3</Quantity>
+          </IngredientModel>
+          <IngredientModel>
+            <ProductName>Iron</ProductName>
+            <Quantity>1</Quantity>
+          </IngredientModel>
+        </IngredientsModel>
+        <ProductionContainers>
+          <ProductionContainerName>FuelRefinery</ProductionContainerName>
+        </ProductionContainers>
+      </RecipeModel>
+    </Recipes>
+  </ProductEditorView>
+</ArrayOfProductEditorView>
