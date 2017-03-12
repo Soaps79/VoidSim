@@ -12,6 +12,8 @@ namespace Assets.Controllers
         private PlayerCharacter _character;
         private Animator _characterAnimator;
 
+        private Vector3 _lastFramePosition;
+
 
         // Use this for initialization
         void Start ()
@@ -24,6 +26,7 @@ namespace Assets.Controllers
 
             // hook updates
             OnEveryUpdate += UpdateCharacter;
+            OnEveryUpdate += UpdateMouse;
         }
 
         private void CreatePlayerView()
@@ -34,11 +37,7 @@ namespace Assets.Controllers
             characterGo.transform.parent = transform;
             characterGo.transform.position = _character.Position;
             
-            //// create sprite component
-            //var spriteRenderer = characterGo.AddComponent<SpriteRenderer>();
-            //spriteRenderer.sprite = CharacterSprite;
-            //spriteRenderer.sortingLayerName = "Player";
-
+            // grab reference to animator
             _characterAnimator = characterGo.GetComponent<Animator>();
 
             // center camera on player
@@ -89,5 +88,30 @@ namespace Assets.Controllers
             // update player character
             _character.Move(movement);
         }
+
+        private void UpdateMouse(float timeDelta)
+        {
+            // scroll wheel to zoom
+            HandleMouseZoom();
+
+            _lastFramePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); ;
+        }
+
+        private void HandleMouseZoom()
+        {
+            // backward
+            if (Input.GetAxis("Mouse ScrollWheel") < 0)
+            {
+                Camera.main.orthographicSize = Mathf.Min(Camera.main.orthographicSize + 1, 10);
+            }
+
+            // forward
+            if (Input.GetAxis("Mouse ScrollWheel") > 0)
+            {
+                Camera.main.orthographicSize = Mathf.Max(Camera.main.orthographicSize - 1, 2);
+            }
+        }
+
+        
     }
 }
