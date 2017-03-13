@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Assets.Scripts.WorldMaterials
 {
@@ -17,62 +19,67 @@ namespace Assets.Scripts.WorldMaterials
 	// nickel, iridium, palladium, platinum, gold, magnesium and other precious 
 	// metals such as osmium, ruthenium and rhodium.
 
-		[Serializable]
-		public enum ProductName
-		{
-			Oxygen,
-			Iron, // plentiful resource
-			Nickle, // better buiding material
-			Iridium, // energy
-			Magnesium, // explosive
-			BuildingMaterial, // <-
-			PowerCell
-		}
+	[Serializable]
+	public enum ProductName
+	{
+		Oxygen,
+		Iron, // plentiful resource
+		Nickle, // better buiding material
+		Iridium, // energy
+		Magnesium, // explosive
+		BuildingMaterial, // <-
+		PowerCell
+	}
 
-		[Serializable]
-		public enum ProductionContainerName
-		{
-			SmallFactory,
-			FuelRefinery,
-		}
+	[Serializable]
+	public enum ProductionContainerName
+	{
+		SmallFactory,
+		FuelRefinery,
+	}
 
-		// For sorting? Feels like it could be useful in many instances
-		[Serializable]
-		public enum ProductCategory
-		{
-			Raw, Refined, Luxury
-		}
+	// For sorting? Feels like it could be useful in many instances
+	[Serializable]
+	public enum ProductCategory
+	{
+		Raw, Refined, Luxury
+	}
 
-		[Serializable]
-		public class IngredientModel
-		{
-			public ProductName ProductName;
-			public int Quantity;
-		}
+	[Serializable]
+	public class IngredientModel
+	{
+		[JsonConverter(typeof(StringEnumConverter))]
+		public ProductName ProductName;
+		public int Quantity;
+	}
 
-		[Serializable]
-		public class RecipeModel
-		{
-			public ProductName ResultProduct;
-			public IngredientModel[] Ingredients;
-		
-			public ProductionContainerName[] ProductionContainers;
-		}
+	[Serializable]
+	public class RecipeModel
+	{
+		[JsonConverter(typeof(StringEnumConverter))]
+		public ProductName ResultProduct;
+		public IngredientModel[] Ingredients;
 
-		[Serializable]
-		public class ProductModel
-		{
-			public ProductName Name;
-			public ProductCategory Category;
+		[JsonProperty("containers", ItemConverterType = typeof(StringEnumConverter))]
+		public ProductionContainerName[] ProductionContainers;
+	}
+
+	[Serializable]
+	public class ProductModel
+	{
+		[JsonConverter(typeof(StringEnumConverter))]
+		public ProductName Name;
+		[JsonConverter(typeof(StringEnumConverter))]
+		public ProductCategory Category;
 
 		// Value? If common currency (credits?) is a thing
 		// Quality?
-		}
+	}
 
-		[Serializable]
-		public class ProductEditorView
-		{
-			public ProductModel Product;
-			public RecipeModel[] Recipes;
-		}
+	[Serializable]
+	public class ProductEditorView
+	{
+		public ProductModel Product;
+		public RecipeModel[] Recipes;
+	}
 }

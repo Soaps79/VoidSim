@@ -13,13 +13,11 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.5.2f1</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <LangVersion Condition=" '$(VisualStudioVersion)' != '10.0' ">4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -84,19 +82,29 @@
     <Reference Include="QGame">
       <HintPath>Assets\QGame.dll</HintPath>
     </Reference>
+    <Reference Include="QGame">
+      <HintPath>Assets\Scripts\QGame.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>Assets\UnityPackages\JsonNet-Lite\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\Grid.cs" />
     <Compile Include="Assets\Scripts\GridController.cs" />
+    <Compile Include="Assets\Scripts\MouseController.cs" />
     <Compile Include="Assets\Scripts\Station.cs" />
     <Compile Include="Assets\Scripts\StationLayerUI.cs" />
     <Compile Include="Assets\Scripts\Testing\ConcreteScript.cs" />
     <Compile Include="Assets\Scripts\Tile.cs" />
+    <Compile Include="Assets\Scripts\UIHelpers\TextBindingPublisher.cs" />
+    <Compile Include="Assets\Scripts\UIHelpers\TextBindingReceiver.cs" />
+    <Compile Include="Assets\Scripts\UIHelpers\UIVisbilityHotkeys.cs" />
     <Compile Include="Assets\Scripts\WorldClock.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
+    <Compile Include="Assets\Scripts\WorldMaterials\ProductLookup.cs" />
+    <Compile Include="Assets\Scripts\WorldMaterials\ProductLookupCustomEditor.cs" />
+    <Compile Include="Assets\Scripts\WorldMaterials\Products.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

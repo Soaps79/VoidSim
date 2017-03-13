@@ -9,6 +9,8 @@ using System.Xml.Serialization;
 using Assets.Scripts.UIHelpers;
 using QGame;
 using UnityEngine;
+using Newtonsoft.Json;
+using Formatting = Newtonsoft.Json.Formatting;
 
 namespace Assets.Scripts.WorldMaterials
 {
@@ -62,17 +64,15 @@ namespace Assets.Scripts.WorldMaterials
 
 		public void SerializeData()
 		{
-			using (var stream = File.Create("Resources/product_table.xml"))
+			using (FileStream fs = File.Open("Resources/product_table.json", FileMode.Create, FileAccess.Write))
+			using (StreamWriter sw = new StreamWriter(fs))
+			using (JsonWriter jw = new JsonTextWriter(sw))
 			{
-				var serializer = new XmlSerializer(typeof(ProductEditorView[]));
-				serializer.Serialize(stream, _startingProducts);
+				jw.Formatting = Formatting.Indented;
+				var table = new ProductTable { Products = _startingProducts };
+				JsonSerializer serializer = new JsonSerializer();
+				serializer.Serialize(jw, table);
 			}
-
-			//using (var stream = File.OpenRead("product_table.xml"))
-			//{
-			//	var serializer = new XmlSerializer(typeof(ProductEditorView[]));
-			//	var unpack = serializer.Deserialize(stream);
-			//}
 		}
 	}
 }
