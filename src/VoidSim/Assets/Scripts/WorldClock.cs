@@ -4,6 +4,8 @@ using System;
 
 using QGame;
 using Messaging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 [Serializable]
 public class GameSpeed
@@ -18,6 +20,19 @@ public class GameSpeedMessageArgs : MessageArgs
     public string PreviousSpeedName;
     public float NewSpeedTimeScale;
     public string NewSpeedName;
+}
+
+public enum TimeUnit
+{
+    Hour, Minute, Day, Week, Month, Year
+}
+
+[Serializable]
+public class TimeLength
+{
+    [JsonConverter(typeof(StringEnumConverter))]
+    public TimeUnit TimeUnit;
+    public int Length;
 }
 
 [Serializable]
@@ -50,6 +65,7 @@ public class WorldClock : QScript, IMessageListener
 
     private const string PAUSE_NAME = "Pause";
 
+    // TODO: Serialize game speeds to json
     [SerializeField]
     private GameSpeed[] _initialGameSpeeds;
     public string InitialGameSpeedName;

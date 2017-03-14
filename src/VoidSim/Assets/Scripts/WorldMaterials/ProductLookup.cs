@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Permissions;
-using System.Xml;
-using System.Xml.Serialization;
+
 using Assets.Scripts.UIHelpers;
 using QGame;
 using UnityEngine;
@@ -15,51 +11,77 @@ using Formatting = Newtonsoft.Json.Formatting;
 namespace Assets.Scripts.WorldMaterials
 {
 	/// <summary>
-	/// Exposes resources to the editor, other systems should build game logic objects
-	/// based on the data from here. Take the data and go, it's arrays and arrays here.
+	/// Designed to expose a product management view to the editor, and then expose data to the game.
+	/// The accompanying custom editor has a button to serialize, then this Lookup loads from file on Awake.
+	/// One instance should be exposed globally; concerned parties should manage their own versions of this data.
 	/// </summary>
-	public class ProductLookup : QScript
+	public interface IProductLookup
+	{
+		List<Product> GetProducts();
+		List<Recipe> GetRecipes();
+	}
+
+	// TODO: Change from QScript to ScriptableObject, there's no need for this to Update()
+	public class ProductLookup : QScript, IProductLookup
 	{
 		[SerializeField]
 		private ProductEditorView[] _startingProducts;
 
-		private List<ProductEditorView> _products;
+		// TODO: once there is more usage of this, reassess these containers and the interface
+		private List<Product> _products;
+		private Dictionary<ProductName, List<Recipe>> _recipes;
 
 		void Awake()
 		{
+			// was having issues with publisher being available in Awake(), may be fixed?
 			OnNextUpdate += (delta) =>
 			{
 				var publisher = GetComponent<TextBindingPublisher>();
 				publisher.SetText(GenerateDisplayText());
 			};
+
+			PopulateProductData();
+		}
+
+		// loads from file, and remaps the editor types to a more usable form
+		private void PopulateProductData()
+		{
+			var deserialized = DeserializeData();
+			if(deserialized == null)
+				throw new UnityException("ProductLookup could not deserialize");
+
+			var converter = new ProductConverter();
+			_products = converter.ConvertToProducts(deserialized);
+			_recipes = converter.ConvertToRecipes(deserialized);
 		}
 
 		string GenerateDisplayText()
 		{
-			var output = string.Empty;
-			foreach (var product in _startingProducts)
+			var output = _products.Aggregate("Products:", (current, product) => current + "\n" + product.Name.ToString());
+			if (_recipes.Any())
 			{
-				output += string.Format("{0} : {1}", product.Product.Name, product.Product.Category);
-				if (product.Recipes.Any())
-				{
-					output += string.Format(" Recipes: ");
-					foreach (var recipe in product.Recipes)
-					{
-						output += "[ ";
-						output = recipe.Ingredients.Aggregate(output, (current, ingredient) 
-							=> current + string.Format("{0} {1} ", ingredient.Quantity, ingredient.ProductName));
-						output += "] ";
-					}
-				}
-				output += "\n";
+				// Wowza.
+				output = _recipes.Aggregate(output + "\n\nRecipes", 
+					(current1, recipe) => current1 + recipe.Value.Aggregate(
+						string.Format("\n{0}:", recipe.Key), (current, rec) => current + rec.Ingredients.Aggregate(
+							" ", (c, r) => c + string.Format("{0} {1} ", r.Quantity, r.ProductName))));
 			}
 
-			return output.Remove(output.Length - 2);
+
+			return output;
 		}
 
-		public class ProductTable
+		#region Serialization
+		public class ProductTableArray
 		{
 			public ProductEditorView[] Products;
+		}
+
+		private ProductTableArray DeserializeData()
+		{
+			var text = File.ReadAllText(@"Resources/product_table.json");
+			var table = JsonConvert.DeserializeObject<ProductTableArray>(text);
+			return table;
 		}
 
 		public void SerializeData()
@@ -69,10 +91,26 @@ namespace Assets.Scripts.WorldMaterials
 			using (JsonWriter jw = new JsonTextWriter(sw))
 			{
 				jw.Formatting = Formatting.Indented;
-				var table = new ProductTable { Products = _startingProducts };
+				var table = new ProductTableArray { Products = _startingProducts };
 				JsonSerializer serializer = new JsonSerializer();
 				serializer.Serialize(jw, table);
 			}
+		}
+		#endregion
+
+		public List<Product> GetProducts()
+		{
+			return _products;
+		}
+
+		public List<Recipe> GetRecipes()
+		{
+			var list = new List<Recipe>();
+			foreach (var recList in _recipes.Values)
+			{
+				list.AddRange(recList);
+			}
+			return list;
 		}
 	}
 }

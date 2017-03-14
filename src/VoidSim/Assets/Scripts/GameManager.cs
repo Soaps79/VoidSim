@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using Assets.Scripts.WorldMaterials;
 using QGame;
 using Messaging;
 
@@ -20,7 +20,14 @@ public class GameManager : QScript
     public Camera MainCamera;
 
     private MessageHub _messageHub;
-    private KeyValueDisplay _keyValueDisplay; // not yet used
+    private KeyValueDisplay _keyValueDisplay;
+
+    [SerializeField]
+    // Enabling setting in editor and exposing a static interface. there may be a better solution
+    // add to locator once it is generic
+    private ProductLookup _lkp;
+    private static ProductLookup _lkpActual;
+    public static IProductLookup ProductLookup { get { return _lkpActual; } }
 
     public static string KeyValueTextName = "KeyValueText";
 
@@ -35,11 +42,20 @@ public class GameManager : QScript
     void Start()
     {
         InititalizeKeyValueDisplay();
-        BindMouseMovementtoKVD();
+        BindMouseMovementToKvd();
         InitializeScreenBounds();
+        InitializeProductLookup();
     }
 
-    private void BindMouseMovementtoKVD()
+    private void InitializeProductLookup()
+    {
+        if(_lkp == null)
+            throw new UnityException("ProductLookup not found");
+
+        _lkpActual = _lkp;
+    }
+
+    private void BindMouseMovementToKvd()
     {
         _keyValueDisplay.Add("MousePos", () => Input.mousePosition.ToString());
     }

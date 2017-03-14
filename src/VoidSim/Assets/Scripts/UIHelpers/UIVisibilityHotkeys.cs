@@ -9,7 +9,7 @@ namespace Assets.Scripts.UIHelpers
 	[Serializable]
 	public class HotkeyPair
 	{
-		public KeyCode Axis;
+		public KeyCode Key;
 		public GameObject Element;
 	}
 
@@ -17,12 +17,12 @@ namespace Assets.Scripts.UIHelpers
 	/// Add this behavior to a game manager or UI controller
 	/// can link KeyCodes and GameObjects in the inspector
 	/// </summary>
-	public class UIVisbilityHotkeys : QScript
+	public class UIVisibilityHotkeys : QScript
 	{
 		private class HotkeyEntry
 		{
 			public GameObject Element;
-			public bool IsAxisInUse;
+			public bool IsAxisInUse = false;
 		}
 
 		public HotkeyPair[] Hotkeys;
@@ -39,8 +39,8 @@ namespace Assets.Scripts.UIHelpers
 			_hotkeyTable = new Dictionary<KeyCode, HotkeyEntry>();
 			foreach (var hotkeyPair in Hotkeys)
 			{
-				if(!_hotkeyTable.ContainsKey(hotkeyPair.Axis))
-					_hotkeyTable.Add(hotkeyPair.Axis, new HotkeyEntry { Element = hotkeyPair.Element});
+				if(!_hotkeyTable.ContainsKey(hotkeyPair.Key))
+					_hotkeyTable.Add(hotkeyPair.Key, new HotkeyEntry { Element = hotkeyPair.Element});
 			}
 			OnEveryUpdate += CheckForKeyPress;
 		}
