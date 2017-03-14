@@ -1,4 +1,5 @@
-﻿using QGame;
+﻿using System;
+using QGame;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -10,14 +11,24 @@ namespace Assets.Controllers.GUI
         private RectTransform _canvasTransform;
         private RectTransform _panelTransform;
 
+        public GameObject Panel;
+
         void Awake()
         {
-            var canvas = GetComponentInParent<Canvas>();
-            if (canvas != null)
+            if (Panel == null)
             {
-                _canvasTransform = canvas.transform as RectTransform;
-                _panelTransform = transform as RectTransform;
+                throw new ArgumentException("Must set the panel to drag.");
             }
+
+            var canvas = GetComponentInParent<Canvas>();
+            if (canvas == null)
+            {
+                throw new ArgumentException("Cannot add a panel without a canvas");
+                
+            }
+            _canvasTransform = canvas.transform as RectTransform;
+            _panelTransform = Panel.transform as RectTransform;
+            
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -34,7 +45,7 @@ namespace Assets.Controllers.GUI
         {
             if (_panelTransform == null)
                 return;
-
+            
             // clamp pointer so panel doesn't drag off screen
             Vector2 pointerPosition = ClampToWindow(eventData);
 

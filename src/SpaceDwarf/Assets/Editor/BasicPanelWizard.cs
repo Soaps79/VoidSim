@@ -1,16 +1,28 @@
-﻿using UnityEditor;
+﻿using System;
+using System.IO;
+using Assets.Controllers.GUI;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Editor
 {
     public class BasicPanelWizard : ScriptableWizard
     {
-        public string PanelLabel = "Default Label";
+        private const string PreFabName = "Panel_Basic";
+        private const string CanvasName = "Canvas";
+        private const string ResizeZoneName = "ResizeZone";
+
+        public string PanelTitle = "Default Title";
         public int Width = 420;
-        public int Height = 640;
+        public int Height = 560;
+
+        public int PosX = 0;
+        public int PosY = 0;
 
         public bool IsDraggable = true;
-        public bool IsResizable = false;
+        public bool IsResizable = true;
+        public bool IsFocusable = true;
 
         public GameObject InnerPanelContent = null;
 
@@ -23,8 +35,56 @@ namespace Assets.Editor
         void OnWizardCreate()
         {
             // create the panel game object
+            var panel = Instantiate(Resources.Load(PreFabName)) as GameObject;
+            if (panel == null)
+            {
+                throw new FileLoadException(string.Format("Could not load {0} prefab.", PreFabName));
+            }
+
+            panel.name = string.Format("{0} Panel", PanelTitle);
+            ConfigurePanel(panel);
+
+            // attach content to inner panel
+            if (InnerPanelContent != null)
+            {
+                var holder = panel.transform.FindChild("ContentHolder");
+                var content = Instantiate(InnerPanelContent, panel.transform);
+                content.transform.parent = holder;
+            }
 
             // add it to scene, or serialize it directly, whatever
+            var canvas = GameObject.Find(CanvasName);
+            if (canvas == null)
+            {
+                throw new ApplicationException("Must have a canvas to add a UI panel.");
+            }
+            panel.transform.SetParent(canvas.transform, worldPositionStays:false);
+        }
+
+        private void ConfigurePanel(GameObject panel)
+        {
+            // size and position
+            var transform = panel.GetComponent<RectTransform>();
+            transform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Width);
+            transform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Height);
+
+            transform.position = new Vector3(0, 0, 0);
+
+            // panel text
+            var panelTitle = panel.GetComponentInChildren<Text>();
+            panelTitle.text = PanelTitle;
+
+            // behaviors
+            var dragScript = panel.GetComponentInChildren<DragPanel>();
+            dragScript.enabled = IsDraggable;
+
+            var resizeScript = panel.GetComponentInChildren<ResizePanel>();
+            var resizeButton = panel.transform.FindChild(ResizeZoneName);
+            resizeScript.enabled = IsResizable;
+            resizeButton.gameObject.SetActive(IsResizable);
+
+            var focusScript = panel.GetComponent<FocusPanel>();
+            focusScript.enabled = IsFocusable;
         }
 
         void OnWizardUpdate()
