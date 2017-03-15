@@ -41,7 +41,7 @@ namespace Assets.Editor
                 throw new FileLoadException(string.Format("Could not load {0} prefab.", PreFabName));
             }
 
-            panel.name = string.Format("{0} Panel", PanelTitle);
+            panel.name = PanelTitle;
             ConfigurePanel(panel);
 
             // attach content to inner panel
@@ -65,10 +65,13 @@ namespace Assets.Editor
         {
             // size and position
             var transform = panel.GetComponent<RectTransform>();
+
+            //todo: check bounds
             transform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Width);
             transform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Height);
 
-            transform.position = new Vector3(0, 0, 0);
+            // todo: check bounds
+            transform.position = new Vector3(PosX, PosY, 0);
 
             // panel text
             var panelTitle = panel.GetComponentInChildren<Text>();
