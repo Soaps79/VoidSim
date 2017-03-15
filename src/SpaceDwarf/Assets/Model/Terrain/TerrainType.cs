@@ -1,4 +1,4 @@
-﻿namespace Assets.Model
+﻿namespace Assets.Model.Terrain
 {
     public enum TerrainType
     {

@@ -1,9 +1,6 @@
-﻿
-using System;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System;
 
-namespace Assets.Model
+namespace Assets.Model.Terrain
 {
     public class TerrainWorld
     {
@@ -11,7 +8,7 @@ namespace Assets.Model
         private const int MaxRegionHeight = 3;
         
 
-        private TerrainRegion[,] _regions = new TerrainRegion[MaxRegionWidth, MaxRegionHeight];
+        private readonly TerrainRegion[,] _regions = new TerrainRegion[MaxRegionWidth, MaxRegionHeight];
 
 
         private Action<TerrainWorld, TerrainRegion> _onRegionAdded;

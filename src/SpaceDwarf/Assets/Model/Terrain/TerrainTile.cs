@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Assets.Model
+namespace Assets.Model.Terrain
 {
     public class TerrainTile
     {
