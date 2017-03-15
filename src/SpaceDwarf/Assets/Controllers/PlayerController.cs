@@ -1,4 +1,5 @@
-﻿using Assets.Model;
+﻿using Assets.Controllers.GUI;
+using Assets.Model;
 using QGame;
 using UnityEngine;
 
@@ -36,9 +37,17 @@ namespace Assets.Controllers
             // assign parent and position
             characterGo.transform.parent = transform;
             characterGo.transform.position = _character.Position;
+            characterGo.layer = 11;
             
             // grab reference to animator
             _characterAnimator = characterGo.GetComponent<Animator>();
+
+            // todo: bake into prefab?
+            // add collider and tooltip
+            characterGo.AddComponent<BoxCollider>();
+            var tooltip = characterGo.AddComponent<TooltipBehavior>();
+            tooltip.TooltipText1 = "Character";
+            tooltip.TooltipText2 = "The king baby!";
 
             // center camera on player
             CenterCameraOnPlayer();

@@ -2,12 +2,9 @@
 
 namespace Assets.Model.Terrain
 {
-    public class TerrainTile
+    public class TerrainTile : TileBase
     {
         private TerrainType _type;
-        private readonly int _x;
-        private readonly int _y;
-
         private Action<TerrainTile> _onTileTypeChanged;
 
         public TerrainType Type
@@ -26,12 +23,9 @@ namespace Assets.Model.Terrain
         public int X { get { return _x; } }
         public int Y { get { return _y; } }
 
-        public string Name { get { return string.Format("Tile ({0}, {1}) - {2}", _x, _y, _type); } }
-
         public TerrainTile(int x, int y, TerrainType terrainType)
+            : base(x, y)
         {
-            _x = x;
-            _y = y;
             _type = terrainType;
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using Assets.Controllers.GUI;
 using Assets.Model;
 using Assets.Model.Terrain;
 using QGame;
@@ -48,11 +49,20 @@ namespace Assets.Controllers
                     // update position relative to region parent
                     tileGo.transform.position = new Vector3(i, j, 0);
                     tileGo.transform.parent = regionGo.transform;
+                    tileGo.layer = 8;
 
                     // create sprite component and assign texture
                     var spriteRenderer = tileGo.AddComponent<SpriteRenderer>();
                     spriteRenderer.sprite = AssignTileSprite(tile.Type);
                     spriteRenderer.sortingLayerName = "Terrain";
+
+                    // create collider
+                    tileGo.AddComponent<BoxCollider>();
+                    
+                    // create tooltip
+                    var tooltip = tileGo.AddComponent<TooltipBehavior>();
+                    tooltip.TooltipText1 = "Tile";
+                    tooltip.TooltipText2 = "Tile information";
 
                     // hook tile events
                     tile.RegisterOnTileTypeChangedCallback((t) => { OnTileTypeChanged(t, tileGo); });
