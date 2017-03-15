@@ -56,6 +56,9 @@ namespace Assets.Controllers.GUI
 
         private void SetTooltip(GameObject go)
         {
+            if (go == null)
+                return;
+
             var tooltip = go.GetComponent<TooltipBehavior>();
             if (tooltip == null)
                 return;

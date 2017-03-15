@@ -1,10 +1,8 @@
 ﻿using System;
 using Assets.Controllers.GUI;
-using Assets.Model;
 using Assets.Model.Terrain;
 using QGame;
 using UnityEngine;
-using UnityEngine.WSA;
 
 namespace Assets.Controllers
 {
@@ -43,7 +41,7 @@ namespace Assets.Controllers
                 for (var j = 0; j < region.Height; j++)
                 {
                     // query region for tile data
-                    var tile = region.GetTileAt(i, j);
+                    var tile = region.GetObjectAt(i, j);
                     var tileGo = new GameObject(tile.Name);
 
                     // update position relative to region parent

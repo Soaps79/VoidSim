@@ -1,8 +1,12 @@
 ﻿using System;
+using Assets.Framework;
 
 namespace Assets.Model.Terrain
 {
-    public class TerrainTile : TileBase
+    /// <summary>
+    /// Typed <see cref="Tile"/> for use in Terrain.
+    /// </summary>
+    public class TerrainTile : Tile
     {
         private TerrainType _type;
         private Action<TerrainTile> _onTileTypeChanged;
@@ -20,9 +24,7 @@ namespace Assets.Model.Terrain
                 }
             }
         }
-        public int X { get { return _x; } }
-        public int Y { get { return _y; } }
-
+        
         public TerrainTile(int x, int y, TerrainType terrainType)
             : base(x, y)
         {

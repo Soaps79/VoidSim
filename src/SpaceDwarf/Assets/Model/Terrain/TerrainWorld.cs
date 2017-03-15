@@ -1,26 +1,29 @@
 ﻿using System;
+using Assets.Framework;
 
 namespace Assets.Model.Terrain
 {
-    public class TerrainWorld
+    /// <summary>
+    /// Grid of <see cref="TerrainRegion"/> for memory management. Maintains a 3x3 grid
+    /// with the center <see cref="TerrainRegion"/> as the focus.
+    /// </summary>
+    public class TerrainWorld : Grid<TerrainRegion>
     {
         private const int MaxRegionWidth = 3;
         private const int MaxRegionHeight = 3;
         
-
-        private readonly TerrainRegion[,] _regions = new TerrainRegion[MaxRegionWidth, MaxRegionHeight];
-
-
         private Action<TerrainWorld, TerrainRegion> _onRegionAdded;
 
         public TerrainWorld()
+            : base(MaxRegionWidth, MaxRegionHeight)
         {
-            
         }
-
+        
         public void InitializeRegions(int x = 0, int y = 0)
         {
             var centerRegion = new TerrainRegion(x, y);
+
+            //todo: calculate center index
             AddRegion(centerRegion, 1, 1);
             
             // todo: create adjacent regions
@@ -37,16 +40,11 @@ namespace Assets.Model.Terrain
                 throw new IndexOutOfRangeException("regionViewY TerrainWorld index out of bounds");
             }
 
-            _regions[regionViewX, regionViewY] = region;
+            SetObjectAt(regionViewX, regionViewY, region);
             
             // fire events
             if (_onRegionAdded != null)
                 _onRegionAdded(this, region);
-        }
-
-        private TerrainRegion CreateRegion(int x, int y)
-        {
-           return new TerrainRegion(x, y);
         }
 
         public void RegisterOnRegionAddedCallback(Action<TerrainWorld, TerrainRegion> callback)

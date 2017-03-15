@@ -10,13 +10,15 @@ namespace Assets.Controllers
         public GameObject CharacterPrefab;
         public float MoveSpeed = 5;
 
+        public bool SmoothZoom = false;
+        public float ZoomSpeed = 40;
+
+        private const float MaxOrthoSize = 16;
+        private const float MinOrthoSize = 2;
+
         private PlayerCharacter _character;
         private Animator _characterAnimator;
-
-        private Vector3 _lastFramePosition;
-
-
-        // Use this for initialization
+        
         void Start ()
         {
             // todo: load character profile
@@ -25,9 +27,15 @@ namespace Assets.Controllers
             // create Player game object
             CreatePlayerView();
 
-            // hook updates
-            OnEveryUpdate += UpdateCharacter;
-            OnEveryUpdate += UpdateMouse;
+            // hook events
+        }
+
+        public override void OnUpdate(float delta)
+        {
+            base.OnUpdate(delta);
+
+            UpdateCharacter(delta);
+            UpdateMouse(delta);
         }
 
         private void CreatePlayerView()
@@ -53,9 +61,9 @@ namespace Assets.Controllers
             CenterCameraOnPlayer();
 
             // hook player events
-            _character.RegisterOnPositionChangedCallback((character, position) =>
+            _character.RegisterOnPositionChangedCallback((character, oldPosition) =>
             {
-                OnCharacterPositionChanged(character, position, characterGo);
+                OnCharacterPositionChanged(character, oldPosition, characterGo);
             });
         }
 
@@ -101,23 +109,25 @@ namespace Assets.Controllers
         private void UpdateMouse(float timeDelta)
         {
             // scroll wheel to zoom
-            HandleMouseZoom();
-
-            _lastFramePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); ;
+            HandleMouseZoom(timeDelta);
         }
 
-        private void HandleMouseZoom()
+        private void HandleMouseZoom(float timeDelta)
         {
+            var magnitude = timeDelta * ZoomSpeed;
+            if (!SmoothZoom)
+                magnitude = 1;
+
             // backward
             if (Input.GetAxis("Mouse ScrollWheel") < 0)
             {
-                Camera.main.orthographicSize = Mathf.Min(Camera.main.orthographicSize + 1, 10);
+                Camera.main.orthographicSize = Mathf.Min(Camera.main.orthographicSize + magnitude, MaxOrthoSize);
             }
 
             // forward
             if (Input.GetAxis("Mouse ScrollWheel") > 0)
             {
-                Camera.main.orthographicSize = Mathf.Max(Camera.main.orthographicSize - 1, 2);
+                Camera.main.orthographicSize = Mathf.Max(Camera.main.orthographicSize - magnitude, MinOrthoSize);
             }
         }
 
