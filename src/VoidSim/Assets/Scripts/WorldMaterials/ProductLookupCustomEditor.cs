@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.IO;
+using Newtonsoft.Json;
+using UnityEngine;
 using UnityEditor;
 
 namespace Assets.Scripts.WorldMaterials
@@ -6,20 +8,35 @@ namespace Assets.Scripts.WorldMaterials
 	/// <summary>
 	/// Make editing products and recipes not painful.
 	/// </summary>
-	[CustomEditor(typeof(ProductLookup))]
+	[CustomEditor(typeof(ProductEditorViewModel))]
 	public class ProductLookupCustomEditor : Editor
 	{
 		public override void OnInspectorGUI()
 		{
+		    var view = (ProductEditorViewModel) this.serializedObject.targetObject;
 			DrawDefaultInspector();
 
 			// add a button to serialize
-			var script = (ProductLookup) target;
 			if (GUILayout.Button("Serialize"))
 			{
-				script.SerializeData();
-			}
+			    view.SerializeAll();
+            }
 
 		}
+
+	    private void SerializeCollection(string name, string json)
+	    {
+            using (FileStream fs = File.Open(string.Format("Resources/{0}.json", name), FileMode.Create, FileAccess.Write))
+            using (StreamWriter sw = new StreamWriter(fs))
+            {
+                sw.WriteLine(json);
+            }
+        }
 	}
+
+    //[CustomEditor(typeof (ProductLookup))]
+    //public class ResourceCustomEditor : Editor
+    //{
+        
+    //}
 }

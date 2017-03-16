@@ -9,28 +9,7 @@ namespace Assets.Scripts.WorldMaterials
     /// <summary>
     /// Products define the material of the world. 
     /// Recipes have ingredients and a container they can be made in.
-    /// 
-    /// Using enums to support the editor without having to type. Strings would be great 
-    /// if there was a way to define products in the editor and then see them in dropdowns.
     /// </summary>
-    [Serializable]
-    public enum ProductName
-    {
-        Oxygen,
-        Iron, // plentiful resource
-        Nickle, // better buiding material
-        Iridium, // energy
-        Magnesium, // explosive
-        BuildingMaterial, // <-
-        PowerCell
-    }
-
-    [Serializable]
-    public enum ProductionContainerName
-    {
-        SmallFactory,
-        FuelRefinery,
-    }
 
     // For sorting? Feels like it could be useful in many instances
     [Serializable]
@@ -42,28 +21,31 @@ namespace Assets.Scripts.WorldMaterials
     [Serializable]
     public class Ingredient
     {
-        [JsonConverter(typeof(StringEnumConverter))]
-        public ProductName ProductName;
+        public string ProductName;
         public int Quantity;
     }
 
     [Serializable]
     public class Recipe
     {
-        [JsonConverter(typeof(StringEnumConverter))]
-        public ProductName ResultProduct;
+        public string ResultProduct;
         public List<Ingredient> Ingredients;
         public TimeLength TimeLength;
+        public CraftingContainer Container;
+    }
 
-        [JsonProperty("containers", ItemConverterType = typeof(StringEnumConverter))]
-        public List<ProductionContainerName> ProductionContainers;
+    [Serializable]
+    public class CraftingContainer
+    {
+        public string Name;
+        public float CraftingSpeed;
     }
 
     [Serializable]
     public class Product
     {
-        [JsonConverter(typeof(StringEnumConverter))]
-        public ProductName Name;
+        public int ID;
+        public string Name;
         [JsonConverter(typeof(StringEnumConverter))]
         public ProductCategory Category;
 

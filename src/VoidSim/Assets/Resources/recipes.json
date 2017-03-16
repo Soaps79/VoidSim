@@ -1,0 +1,19 @@
+[
+  {
+    "ResultProduct": "Steel",
+    "Ingredients": [
+      {
+        "ProductName": "Iron",
+        "Quantity": 3
+      }
+    ],
+    "TimeLength": {
+      "TimeUnit": "Week",
+      "Length": 1
+    },
+    "Container": {
+      "Name": "Steel Mill",
+      "CraftingSpeed": 0.0
+    }
+  }
+]

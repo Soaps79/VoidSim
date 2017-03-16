@@ -8,8 +8,8 @@ namespace Assets.Scripts.WorldMaterials
 {
 	/// <summary>
 	/// Editor friendly data model
-    /// Should only be modified to work better with the editor
-    /// </summary>
+	/// Should only be modified to work better with the editor
+	/// </summary>
 
 	// Inspiration: Asteroids are made up of oxygen and silicon, the number one and number two most abundant elements in the Earth's crust. 
 	// The metallic asteroids are composed of up to 80 % iron and 20 % a mixture of 
@@ -19,8 +19,7 @@ namespace Assets.Scripts.WorldMaterials
 	[Serializable]
 	public class IngredientModel
 	{
-		[JsonConverter(typeof(StringEnumConverter))]
-		public ProductName ProductName;
+		public string ProductName;
 		public int Quantity;
 	}
 
@@ -30,16 +29,13 @@ namespace Assets.Scripts.WorldMaterials
 		public IngredientModel[] Ingredients;
 		public TimeLength TimeLength;
 
-		[JsonProperty("containers", ItemConverterType = typeof(StringEnumConverter))]
-		public ProductionContainerName[] ProductionContainers;
+		public string[] ProductionContainers;
 	}
 
 	[Serializable]
 	public class ProductModel
 	{
-		[JsonConverter(typeof(StringEnumConverter))]
-		public ProductName Name;
-		[JsonConverter(typeof(StringEnumConverter))]
+		public string Name;
 		public ProductCategory Category;
 
 		// Value? If common currency (credits?) is a thing

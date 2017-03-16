@@ -1,0 +1,12 @@
+[
+  {
+    "ID": 1,
+    "Name": "Iron",
+    "Category": "Raw"
+  },
+  {
+    "ID": 2,
+    "Name": "Steel",
+    "Category": "Refined"
+  }
+]
