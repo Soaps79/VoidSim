@@ -2,7 +2,6 @@
 using Assets.Controllers.GUI;
 using Assets.Framework;
 using Assets.Model;
-using QGame;
 using UnityEngine;
 
 namespace Assets.Controllers
@@ -63,8 +62,8 @@ namespace Assets.Controllers
 
             // todo: bake into prefab?
             // add collider and tooltip
-            characterGo.AddComponent<BoxCollider>();
-            var tooltip = characterGo.AddComponent<TooltipBehavior>();
+            characterGo.GetOrAddComponent<BoxCollider>();
+            var tooltip = characterGo.GetOrAddComponent<TooltipBehavior>();
             tooltip.TooltipText1 = "Character";
             tooltip.TooltipText2 = "The king baby!";
 
