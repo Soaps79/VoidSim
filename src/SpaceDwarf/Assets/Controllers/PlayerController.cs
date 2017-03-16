@@ -1,11 +1,13 @@
-﻿using Assets.Controllers.GUI;
+﻿using System;
+using Assets.Controllers.GUI;
+using Assets.Framework;
 using Assets.Model;
 using QGame;
 using UnityEngine;
 
 namespace Assets.Controllers
 {
-    public class PlayerController : QScript
+    public class PlayerController : SingletonBehavior<PlayerController>
     {
         public GameObject CharacterPrefab;
         public float MoveSpeed = 5;
@@ -13,11 +15,19 @@ namespace Assets.Controllers
         public bool SmoothZoom = false;
         public float ZoomSpeed = 40;
 
+        public Canvas Canvas;
+
+        public GameObject InventoryMenu;
+        public GameObject BuildPalette;
+
         private const float MaxOrthoSize = 16;
         private const float MinOrthoSize = 2;
 
         private PlayerCharacter _character;
         private Animator _characterAnimator;
+        private RectTransform _canvasTransform;
+
+        public PlayerCharacter PlayerCharacter { get { return _character; } }
         
         void Start ()
         {
@@ -35,7 +45,7 @@ namespace Assets.Controllers
             base.OnUpdate(delta);
 
             UpdateCharacter(delta);
-            UpdateMouse(delta);
+            UpdateInput(delta);
         }
 
         private void CreatePlayerView()
@@ -47,8 +57,9 @@ namespace Assets.Controllers
             characterGo.transform.position = _character.Position;
             characterGo.layer = 11;
             
-            // grab reference to animator
+            // grab reference to animator and canvas
             _characterAnimator = characterGo.GetComponent<Animator>();
+            _canvasTransform = Canvas.transform as RectTransform;
 
             // todo: bake into prefab?
             // add collider and tooltip
@@ -106,10 +117,62 @@ namespace Assets.Controllers
             _character.Move(movement);
         }
 
-        private void UpdateMouse(float timeDelta)
+        private void UpdateInput(float timeDelta)
         {
             // scroll wheel to zoom
             HandleMouseZoom(timeDelta);
+            HandleMenuInput(timeDelta);
+        }
+
+        private void HandleMenuInput(float timeDelta)
+        {
+            // check for inventory
+            if (Input.GetButtonDown("Inventory"))
+            {
+                TogglePanel(InventoryMenu);
+            }
+
+            // check for build menu
+            if (Input.GetButtonDown("BuildPalette"))
+            {
+                TogglePanel(BuildPalette);
+            }
+        }
+
+        private void TogglePanel(GameObject panel)
+        {
+            if (!panel.activeSelf)
+            {
+                ClampPanelToScreen(panel);
+            }
+            
+            // toggle panel
+            panel.SetActive(!panel.activeSelf);
+        }
+
+        private void ClampPanelToScreen(GameObject panel)
+        {
+            // spawn under mouse but keep on screen
+            var pointer = Input.mousePosition;
+
+            var clampedPosition = ClampPanelToScreen(panel.transform as RectTransform, _canvasTransform, pointer);
+
+            // transform directly in screen space
+            panel.transform.position = clampedPosition;
+        }
+
+        private static Vector2 ClampPanelToScreen(RectTransform panel, RectTransform canvas, Vector3 pointer)
+        {
+            // get corners of canvas
+            var canvasCorners = new Vector3[4];
+            canvas.GetWorldCorners(canvasCorners);
+            
+
+            var clampedX = Mathf.Clamp(pointer.x, canvasCorners[0].x, canvasCorners[2].x - panel.rect.width);
+            var clampedY = Mathf.Clamp(pointer.y, canvasCorners[0].y + panel.rect.height, canvasCorners[2].y);
+
+            var clampedPosition = new Vector2(clampedX, clampedY);
+            return clampedPosition;
         }
 
         private void HandleMouseZoom(float timeDelta)

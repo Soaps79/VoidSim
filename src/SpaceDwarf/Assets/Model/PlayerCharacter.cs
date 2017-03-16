@@ -1,4 +1,5 @@
 ﻿using System;
+using Assets.Framework;
 using UnityEngine;
 
 namespace Assets.Model

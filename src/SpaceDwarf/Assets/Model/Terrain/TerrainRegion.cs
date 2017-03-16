@@ -33,6 +33,11 @@ namespace Assets.Model.Terrain
             Initialize();
         }
 
+        public TerrainTile GetTileAt(int x, int y)
+        {
+            return GetObjectAt(x, y);
+        }
+
         public override string ToString()
         {
             var gridString = base.ToString();

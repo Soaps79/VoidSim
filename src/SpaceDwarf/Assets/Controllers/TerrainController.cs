@@ -1,12 +1,13 @@
 ﻿using System;
 using Assets.Controllers.GUI;
+using Assets.Framework;
 using Assets.Model.Terrain;
 using QGame;
 using UnityEngine;
 
 namespace Assets.Controllers
 {
-    public class TerrainController : QScript
+    public class TerrainController : SingletonBehavior<TerrainController>
     {
         public Sprite GreenGrassTile0;
         public Sprite GreenGrassTile1;
@@ -14,6 +15,8 @@ namespace Assets.Controllers
         public Sprite GreenGrassTile3;
 
         private TerrainWorld _world;
+
+        public TerrainWorld World { get { return _world; } }
         
         void Start ()
         {
@@ -41,7 +44,7 @@ namespace Assets.Controllers
                 for (var j = 0; j < region.Height; j++)
                 {
                     // query region for tile data
-                    var tile = region.GetObjectAt(i, j);
+                    var tile = region.GetTileAt(i, j);
                     var tileGo = new GameObject(tile.Name);
 
                     // update position relative to region parent

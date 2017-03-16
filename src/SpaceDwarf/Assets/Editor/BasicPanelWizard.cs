@@ -26,10 +26,10 @@ namespace Assets.Editor
 
         public GameObject InnerPanelContent = null;
 
-        [MenuItem("TacticLib/GUI/Create Basic Panel")]
+        [MenuItem("TacticLib/GUI/Create basic panel")]
         static void CreateWizard()
         {
-            DisplayWizard<BasicPanelWizard>("Create Basic Panel...", "Create");
+            DisplayWizard<BasicPanelWizard>("Create basic panel...", "Create");
         }
 
         void OnWizardCreate()
