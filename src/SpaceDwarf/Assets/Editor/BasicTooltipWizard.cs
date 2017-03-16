@@ -30,12 +30,11 @@ namespace Assets.Editor
                 return;
             }
 
+            selection.AddComponent<BoxCollider>();
             var tooltip = selection.GetOrAddComponent<TooltipBehavior>();
             tooltip.TooltipText1 = Text1;
             tooltip.TooltipText2 = Text2;
-
-            var collider = selection.AddComponent<BoxCollider>();
-
+            
             Debug.Log(string.Format("Applied tooltip to {0}.", selection.name));
 
         }
