@@ -2,25 +2,17 @@
 using Assets.Controllers.GUI;
 using Assets.Framework;
 using Assets.Model;
+using Assets.View;
 using UnityEngine;
 
 namespace Assets.Controllers
 {
     public class PlayerController : SingletonBehavior<PlayerController>
     {
-        public GameObject CharacterPrefab;
+        public PlayerView View;
+
         public float MoveSpeed = 5;
-
-        public bool SmoothZoom = false;
-        public float ZoomSpeed = 40;
-
-        public Canvas Canvas;
-
-        public GameObject InventoryMenu;
-        public GameObject BuildPalette;
-
-        private const float MaxOrthoSize = 16;
-        private const float MinOrthoSize = 2;
+        
 
         private PlayerCharacter _character;
         private Animator _characterAnimator;
@@ -49,7 +41,7 @@ namespace Assets.Controllers
 
         private void CreatePlayerView()
         {
-            var characterGo = Instantiate(CharacterPrefab);
+            var characterGo = Instantiate(View.CharacterPrefab);
 
             // assign parent and position
             characterGo.transform.parent = transform;
@@ -58,7 +50,7 @@ namespace Assets.Controllers
             
             // grab reference to animator and canvas
             _characterAnimator = characterGo.GetComponent<Animator>();
-            _canvasTransform = Canvas.transform as RectTransform;
+            _canvasTransform = View.Canvas.transform as RectTransform;
 
             // force add collider
             characterGo.AddComponent<BoxCollider>();
@@ -127,13 +119,13 @@ namespace Assets.Controllers
             // check for inventory
             if (Input.GetButtonDown("Inventory"))
             {
-                TogglePanel(InventoryMenu);
+                TogglePanel(View.InventoryMenu);
             }
 
             // check for build menu
             if (Input.GetButtonDown("BuildPalette"))
             {
-                TogglePanel(BuildPalette);
+                TogglePanel(View.BuildPalette);
             }
         }
 
@@ -175,20 +167,20 @@ namespace Assets.Controllers
 
         private void HandleMouseZoom(float timeDelta)
         {
-            var magnitude = timeDelta * ZoomSpeed;
-            if (!SmoothZoom)
+            var magnitude = timeDelta * View.ZoomSpeed;
+            if (!View.SmoothZoom)
                 magnitude = 1;
 
             // backward
             if (Input.GetAxis("Mouse ScrollWheel") < 0)
             {
-                Camera.main.orthographicSize = Mathf.Min(Camera.main.orthographicSize + magnitude, MaxOrthoSize);
+                Camera.main.orthographicSize = Mathf.Min(Camera.main.orthographicSize + magnitude, View.MaxOrthoSize);
             }
 
             // forward
             if (Input.GetAxis("Mouse ScrollWheel") > 0)
             {
-                Camera.main.orthographicSize = Mathf.Max(Camera.main.orthographicSize - magnitude, MinOrthoSize);
+                Camera.main.orthographicSize = Mathf.Max(Camera.main.orthographicSize - magnitude, View.MinOrthoSize);
             }
         }
 
