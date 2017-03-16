@@ -60,9 +60,8 @@ namespace Assets.Controllers
             _characterAnimator = characterGo.GetComponent<Animator>();
             _canvasTransform = Canvas.transform as RectTransform;
 
-            // todo: bake into prefab?
-            // add collider and tooltip
-            characterGo.GetOrAddComponent<BoxCollider>();
+            // force add collider
+            characterGo.AddComponent<BoxCollider>();
             var tooltip = characterGo.GetOrAddComponent<TooltipBehavior>();
             tooltip.TooltipText1 = "Character";
             tooltip.TooltipText2 = "The king baby!";
