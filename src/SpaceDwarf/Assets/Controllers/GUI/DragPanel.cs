@@ -47,7 +47,7 @@ namespace Assets.Controllers.GUI
                 return;
             
             // clamp pointer so panel doesn't drag off screen
-            Vector2 pointerPosition = ClampToWindow(eventData);
+            Vector2 pointerPosition = ClampToWindow(eventData.position);
 
             Vector2 localPointerPosition;
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
@@ -60,17 +60,14 @@ namespace Assets.Controllers.GUI
             }
         }
 
-        private Vector2 ClampToWindow(PointerEventData eventData)
+        private Vector2 ClampToWindow(Vector2 position)
         {
-            var rawPointer = eventData.position;
-
             // get corners of canvas
             var canvasCorners = new Vector3[4];
-
             _canvasTransform.GetWorldCorners(canvasCorners);
 
-            var clampedX = Mathf.Clamp(rawPointer.x, canvasCorners[0].x, canvasCorners[2].x);
-            var clampedY = Mathf.Clamp(rawPointer.y, canvasCorners[0].y, canvasCorners[2].y);
+            var clampedX = Mathf.Clamp(position.x, canvasCorners[0].x, canvasCorners[2].x);
+            var clampedY = Mathf.Clamp(position.y, canvasCorners[0].y, canvasCorners[2].y);
             
             return new Vector2(clampedX, clampedY);
         }

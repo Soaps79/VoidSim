@@ -1,7 +1,7 @@
 ﻿namespace Assets.Framework
 {
     /// <summary>
-    /// Indexable generic tile
+    /// Generic tile
     /// </summary>
     public class Tile
     {
@@ -11,12 +11,12 @@
         public virtual string Name { get { return "Tile"; } }
 
         /// <summary>
-        /// X component. Always positive.
+        /// X component.
         /// </summary>
         public int X { get { return _x; } }
 
         /// <summary>
-        /// Y component. Always positive.
+        /// Y component.
         /// </summary>
         public int Y { get { return _y; } }
 

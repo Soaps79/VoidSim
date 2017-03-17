@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Framework
@@ -28,9 +24,15 @@ namespace Assets.Framework
             return result;
         }
     }
-
+    
     public static class GameObjectExtensions
     {
+        /// <summary>
+        /// Modelled after <see cref="Component"/> GetOrAddComponent{T}
+        /// 
+        /// Will return one of the default (and unlisted in editor)
+        /// game components on the game object.
+        /// </summary>
         public static T GetOrAddComponent<T>(this GameObject go) where T : Component
         {
             var result = go.GetComponent<T>() ?? go.AddComponent<T>();

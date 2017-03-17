@@ -11,10 +11,13 @@ namespace Assets.Editor
 {
     public class BasicTooltipWizard : ScriptableWizard
     {
+        [Tooltip("Tooltip text field 1.")]
         public string Text1 = "Tooltip Text1";
+
+        [Tooltip("Tooltip text field 2.")]
         public string Text2 = "Tooltip Text2";
 
-        [MenuItem("TacticLib/GUI/Add basic tooltip")]
+        [MenuItem("QGame/GUI/Add basic tooltip")]
         static void CreateWizard()
         {
             DisplayWizard<BasicTooltipWizard>("Add basic tooltip...", "Apply to selection");

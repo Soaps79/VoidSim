@@ -10,23 +10,36 @@ namespace Assets.Editor
     public class BasicPanelWizard : ScriptableWizard
     {
         private const string PreFabName = "Panel_Basic";
-        private const string CanvasName = "Canvas";
+        private const string ContentHolderName = "ContentHolder";
         private const string ResizeZoneName = "ResizeZone";
 
         public string PanelTitle = "Default Title";
+
+        [Tooltip("Canvas to draw the panel on.")]
+        public Canvas Canvas;
+
         public int Width = 420;
         public int Height = 560;
 
+        [Tooltip("X position from top left origin.")]
         public int PosX = 0;
+
+        [Tooltip("Y position from top left origin.")]
         public int PosY = 0;
 
+        [Tooltip("Is the panel draggable?")]
         public bool IsDraggable = true;
+
+        [Tooltip("Is the panel resizable?")]
         public bool IsResizable = true;
+
+        [Tooltip("Does the panel focus on mouse click?")]
         public bool IsFocusable = true;
 
+        [Tooltip("Content to fill the panel.")]
         public GameObject InnerPanelContent = null;
 
-        [MenuItem("TacticLib/GUI/Create basic panel")]
+        [MenuItem("QGame/GUI/Create basic panel")]
         static void CreateWizard()
         {
             DisplayWizard<BasicPanelWizard>("Create basic panel...", "Create");
@@ -47,18 +60,17 @@ namespace Assets.Editor
             // attach content to inner panel
             if (InnerPanelContent != null)
             {
-                var holder = panel.transform.FindChild("ContentHolder");
+                var holder = panel.transform.FindChild(ContentHolderName);
                 var content = Instantiate(InnerPanelContent, panel.transform);
                 content.transform.parent = holder;
             }
 
             // add it to scene, or serialize it directly, whatever
-            var canvas = GameObject.Find(CanvasName);
-            if (canvas == null)
+            if (Canvas == null)
             {
                 throw new ApplicationException("Must have a canvas to add a UI panel.");
             }
-            panel.transform.SetParent(canvas.transform, worldPositionStays:false);
+            panel.transform.SetParent(Canvas.transform, worldPositionStays:false);
         }
 
         private void ConfigurePanel(GameObject panel)

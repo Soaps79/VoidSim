@@ -2,7 +2,6 @@
 using Assets.Controllers.GUI;
 using Assets.Framework;
 using Assets.Model.Terrain;
-using QGame;
 using UnityEngine;
 
 namespace Assets.Controllers
@@ -15,6 +14,8 @@ namespace Assets.Controllers
         public Sprite GreenGrassTile3;
 
         private TerrainWorld _world;
+
+        private const int TerrainLayer = 8;
 
         public TerrainWorld World { get { return _world; } }
         
@@ -45,12 +46,12 @@ namespace Assets.Controllers
                 {
                     // query region for tile data
                     var tile = region.GetTileAt(i, j);
-                    var tileGo = new GameObject(tile.Name);
+                    var tileGo = new GameObject(tile.ToString());
 
                     // update position relative to region parent
                     tileGo.transform.position = new Vector3(i, j, 0);
                     tileGo.transform.parent = regionGo.transform;
-                    tileGo.layer = 8;
+                    tileGo.layer = TerrainLayer;
 
                     // create sprite component and assign texture
                     var spriteRenderer = tileGo.AddComponent<SpriteRenderer>();
