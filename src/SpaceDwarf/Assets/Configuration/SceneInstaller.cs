@@ -1,6 +1,8 @@
-﻿using Assets.Controllers.GameStates;
+﻿using Assets.Configuration;
+using Assets.Controllers.GameStates;
 using Assets.Model;
 using Assets.View;
+using UnityEngine;
 using Zenject;
 
 namespace Assets.Controllers
@@ -13,12 +15,19 @@ namespace Assets.Controllers
     {
         public TerrainController TerrainController;
         public PlayerController PlayerController;
+        public CameraSettings CameraSettings;
 
         public override void InstallBindings()
         {
+            Container.Bind<Vector2>().ToSelf().FromInstance(new Vector2(0, 0)).WhenInjectedInto<PlayerCharacter>();
+            Container.Bind<PlayerCharacter>().AsSingle();
+
             // controllers from the scene
             Container.Bind<TerrainController>().FromInstance(TerrainController).AsSingle();
             Container.Bind<PlayerController>().FromInstance(PlayerController).AsSingle();
+
+            // config settings
+            Container.Bind<CameraSettings>().FromInstance(CameraSettings).AsTransient();
 
             // Satisfy ITileFactory dependency, from a new instance, and use this one everywhere (single instance)
             Container.Bind<ITileFactory>().FromInstance(new TileFactory()).AsSingle();
@@ -30,6 +39,8 @@ namespace Assets.Controllers
             Container.Bind<PauseGameState>().AsSingle();
             Container.Bind<DefaultGlobalState>().AsSingle();
             Container.Bind<DefaultGameState>().AsSingle();
+
+
         }
     }
 }
