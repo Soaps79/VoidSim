@@ -1,41 +1,41 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Assets.Model
 {
-    public class State<T>
+    public abstract class State<T>
     {
-        private readonly T _type;
-        public T Type { get { return _type; } }
+        public abstract string Name { get; }
 
-        public Action<State<T>> OnEnter = null;
-        public Action<State<T>> OnExecute = null;
-        public Action<State<T>> OnExit = null;
-
-        public State(T type)
-        {
-            _type = type;
-        }
-
-        public virtual void Enter()
+        public Action<State<T>, T> OnEnter = null;
+        public Action<State<T>, T, float> OnExecute = null;
+        public Action<State<T>, T> OnExit = null;
+        
+        public virtual void Enter(T owner)
         {
             if (OnEnter != null)
-                OnEnter(this);
+                OnEnter(this, owner);
         }
 
-        public virtual void Execute(float timeDelta)
+        public virtual void Execute(T owner, float timeDelta)
         {
             if (OnExecute != null)
-                OnExecute(this);
+                OnExecute(this, owner, timeDelta);
         }
 
-        public virtual void Exit()
+        public virtual void Exit(T owner)
         {
             if (OnExit != null)
-                OnExit(this);
+                OnExit(this, owner);
         }
         
         public virtual bool CanTransition(State<T> nextState)
         {
+            if (nextState == null)
+            {
+                Debug.LogWarning("Tried to transition into null state");
+                return false;
+            }
             return true;
         }
     }
