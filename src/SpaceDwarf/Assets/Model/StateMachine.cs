@@ -61,6 +61,7 @@ namespace Assets.Model
         public void AddState(string key, State<T> state)
         {
             _states.AddOrSet(key, state);
+            state.RegisterMachine(this);
         }
     }
 }

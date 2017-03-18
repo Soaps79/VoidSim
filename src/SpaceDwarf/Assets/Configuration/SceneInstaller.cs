@@ -1,4 +1,5 @@
-﻿using Assets.Model;
+﻿using Assets.Controllers.GameStates;
+using Assets.Model;
 using Assets.View;
 using Zenject;
 
@@ -12,14 +13,12 @@ namespace Assets.Controllers
     {
         public TerrainController TerrainController;
         public PlayerController PlayerController;
-        public GameStateController GameStateController;
 
         public override void InstallBindings()
         {
             // controllers from the scene
             Container.Bind<TerrainController>().FromInstance(TerrainController).AsSingle();
             Container.Bind<PlayerController>().FromInstance(PlayerController).AsSingle();
-            Container.Bind<GameStateController>().FromInstance(GameStateController).AsSingle();
 
             // Satisfy ITileFactory dependency, from a new instance, and use this one everywhere (single instance)
             Container.Bind<ITileFactory>().FromInstance(new TileFactory()).AsSingle();

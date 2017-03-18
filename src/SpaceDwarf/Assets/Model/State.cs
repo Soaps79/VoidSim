@@ -10,6 +10,13 @@ namespace Assets.Model
         public Action<State<T>, T> OnEnter = null;
         public Action<State<T>, T, float> OnExecute = null;
         public Action<State<T>, T> OnExit = null;
+
+        protected StateMachine<T> Machine { get; private set; }
+
+        public void RegisterMachine(StateMachine<T> machine)
+        {
+            Machine = machine;
+        }
         
         public virtual void Enter(T owner)
         {
@@ -37,6 +44,11 @@ namespace Assets.Model
                 return false;
             }
             return true;
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

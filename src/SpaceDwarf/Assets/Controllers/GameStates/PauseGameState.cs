@@ -1,48 +1,21 @@
 ﻿using Assets.Model;
 using UnityEngine;
 
-namespace Assets.Controllers
+namespace Assets.Controllers.GameStates
 {
-    // global states
-    public class DefaultGlobalState : State<GameModel>
-    {
-        public override string Name { get { return "DefaultGlobalState"; } }
-
-        private readonly GameStateController _stateController;
-
-        public DefaultGlobalState(
-            GameStateController stateController)
-        {
-            _stateController = stateController;
-        }
-
-        public override void Execute(GameModel owner, float timeDelta)
-        {
-            base.Execute(owner, timeDelta);
-
-            if (Input.GetButtonDown("Pause"))
-            {
-                _stateController.ChangeGlobalState(_stateController.PauseGameState);
-            }
-        }
-    }
-
     public class PauseGameState : State<GameModel>
     {
         public override string Name { get { return "PauseGameState"; } }
 
         private readonly TerrainController _terrainController;
         private readonly PlayerController _playerController;
-        private readonly GameStateController _stateController;
 
         public PauseGameState(
             TerrainController terrainController, 
-            PlayerController playerController,
-            GameStateController stateController)
+            PlayerController playerController)
         {
             _terrainController = terrainController;
             _playerController = playerController;
-            _stateController = stateController;
         }
 
         public override void Enter(GameModel owner)
@@ -57,7 +30,7 @@ namespace Assets.Controllers
 
             if (Input.GetButtonDown("Pause"))
             {
-                _stateController.RevertGlobalState();
+                Machine.Revert();
             }
         }
 
@@ -80,11 +53,5 @@ namespace Assets.Controllers
             _terrainController.enabled = true;
             _playerController.enabled = true;
         }
-    }
-
-    // Game States
-    public class DefaultGameState : State<GameModel>
-    {
-        public override string Name { get { return "DefaultGameState"; } }
     }
 }
