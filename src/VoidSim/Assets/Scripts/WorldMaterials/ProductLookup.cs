@@ -85,6 +85,14 @@ namespace Assets.Scripts.WorldMaterials
 			return _products;
 		}
 
+        // Plan is to form interface as needs require
+        // would like to avoid usage of getting full list so impl can be optimized
+	    public Product GetProduct(string name)
+	    {
+            // throw errors here for not found, or let users handle it?
+	        return _products.FirstOrDefault(i => i.Name == name);
+	    }
+
 		public List<CraftingContainerInfo> GetContainers()
 		{
 			return _containers;

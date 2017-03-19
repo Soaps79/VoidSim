@@ -15,7 +15,7 @@ public class ProductEditorViewModel : QScript
 	public static string[] ContainerNames;
 
 	public Product[] Products;
-	public CraftingContainerInfo[] ContainersInfo;
+	public CraftingContainerInfo[] Containers;
 	public Recipe[] Recipes;
 
 	public ProductEditorViewModel()
@@ -33,8 +33,8 @@ public class ProductEditorViewModel : QScript
 
 	private void BindContainerNames()
 	{
-		ContainerNames = ContainersInfo != null && ContainersInfo.Any()
-			? ContainersInfo.Select(i => i.Name).ToArray()
+		ContainerNames = Containers != null && Containers.Any()
+			? Containers.Select(i => i.Name).ToArray()
 			: new string[1] { "Empty" };
 	}
 
@@ -61,18 +61,18 @@ public class ProductEditorViewModel : QScript
 		SaveCollectionToFile("recipes", collection);
 	}
 
-	public string SerializeProducts()
+    private string SerializeProducts()
 	{
 		
 		return JsonConvert.SerializeObject(Products, Formatting.Indented);
 	}
 
-	public string SerializeContainers()
+    private string SerializeContainers()
 	{
-		return JsonConvert.SerializeObject(ContainersInfo, Formatting.Indented);
+		return JsonConvert.SerializeObject(Containers, Formatting.Indented);
 	}
 
-	public string SerializeRecipes()
+    private string SerializeRecipes()
 	{
 		return JsonConvert.SerializeObject(Recipes, Formatting.Indented);
 	}

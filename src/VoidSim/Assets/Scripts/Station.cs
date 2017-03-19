@@ -31,9 +31,12 @@ public class Station : QScript
     private StationLayer[] _initialLayers;
     [SerializeField]
     private GameObject _craftingPrefab;
+    [SerializeField]
+    private Inventory _inventory;
 
     private readonly Dictionary<LayerType, StationLayer> _layers =  new Dictionary<LayerType, StationLayer>();
     private CraftingContainer _crafter;
+    
 
     void Awake()
     {
@@ -51,6 +54,7 @@ public class Station : QScript
     {
         CreateCraftingContainer();
         BindToUI();
+        BindToInventory();
     }
 
     private void CreateCraftingContainer()
@@ -74,6 +78,11 @@ public class Station : QScript
         // find the viewmodel and bind to it
         var viewmodel = _crafter.gameObject.GetComponent<CraftingViewModel>();
         viewmodel.Bind(_productLookup.GetRecipes(), _crafter);
+    }
+
+    private void BindToInventory()
+    {
+        
     }
 
     private void OnCraftingComplete(Recipe recipe)
