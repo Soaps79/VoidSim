@@ -34,6 +34,8 @@ public class GameManager : QScript
     public GameManager()
     {
         _messageHub = new MessageHub();
+        OnEveryUpdate += (delta) => _messageHub.Update();
+
         _keyValueDisplay = new KeyValueDisplay();
 
         Locator.Initialize(_messageHub, _keyValueDisplay);
@@ -96,11 +98,6 @@ public class GameManager : QScript
     }
 
     // Update is called once per frame
-    public override void OnUpdate(float delta)
-    {
-        _messageHub.Update();
-    }
-
     private void UpdateKeyValueDisplayText(float delta)
     {
         _textGameObject.text = _keyValueDisplay.CurrentDisplayString();

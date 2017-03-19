@@ -6,11 +6,10 @@ namespace Assets.Scripts.Testing
     {
         private int _onUpdateCount = 0;
         public int OnUpdateCount { get { return _onUpdateCount; } }
-        public override void OnUpdate(float delta)
-        {
-            base.OnUpdate(delta);
 
-            _onUpdateCount++;
+        protected override void OnAwake()
+        {
+            OnEveryUpdate += (delta) => _onUpdateCount++;
         }
     }
 }

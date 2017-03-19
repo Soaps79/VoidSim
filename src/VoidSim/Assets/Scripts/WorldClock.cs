@@ -110,6 +110,8 @@ public class WorldClock : QScript, IMessageListener
 
         // start looking for keypresses
         OnEveryUpdate += CheckForKeypress;
+        OnEveryUpdate += UpdateClock;
+
 
         // tell the world
         PostSpeedChange(InitialGameSpeedName, _gameSpeeds[InitialGameSpeedName]);
@@ -175,7 +177,7 @@ public class WorldClock : QScript, IMessageListener
         Locator.Messages.QueueMessage(GameMessages.GameSpeedChange, args);
     }
 
-    public override void OnUpdate(float delta)
+    private void UpdateClock(float delta)
     {
         _elapsedMS += delta;
         var realSecondsToGameMinute = (60 / RealSecondsToGameHour) * CurrentTimeScale;
