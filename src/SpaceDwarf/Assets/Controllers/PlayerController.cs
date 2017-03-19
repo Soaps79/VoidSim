@@ -1,4 +1,5 @@
-﻿using Assets.Model;
+﻿using Assets.Framework;
+using Assets.Model;
 using Assets.View;
 using QGame;
 using UnityEngine;
@@ -6,7 +7,7 @@ using Zenject;
 
 namespace Assets.Controllers
 {
-    public class PlayerController : QScript
+    public class PlayerController : SingletonBehavior<PlayerController>
     {
         public PlayerView View;
 

@@ -1,6 +1,4 @@
-﻿using System;
-using Assets.Controllers.GUI;
-using Assets.Framework;
+﻿using Assets.Framework;
 using Assets.Model.Terrain;
 using Assets.View;
 using QGame;
@@ -9,7 +7,7 @@ using Zenject;
 
 namespace Assets.Controllers
 {
-    public class TerrainController : OrderedEventBehavior
+    public class TerrainController : SingletonBehavior<TerrainController>
     {
         [Tooltip("View for Terrain.")]
         public TerrainView View;

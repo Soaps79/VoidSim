@@ -1,12 +1,12 @@
 ﻿using Assets.Controllers.GameStates;
-using Assets.Framework;
 using Assets.Model;
+using QGame;
 using UnityEngine;
 using Zenject;
 
 namespace Assets.Controllers
 {
-    public class GameStateController : SingletonBehavior<GameStateController>
+    public class GameStateController : OrderedEventBehavior
     {
         [Inject]
         public GameModel GameModel;
