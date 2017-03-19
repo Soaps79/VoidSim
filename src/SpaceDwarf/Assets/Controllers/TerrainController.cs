@@ -3,12 +3,13 @@ using Assets.Controllers.GUI;
 using Assets.Framework;
 using Assets.Model.Terrain;
 using Assets.View;
+using QGame;
 using UnityEngine;
 using Zenject;
 
 namespace Assets.Controllers
 {
-    public class TerrainController : SingletonBehavior<TerrainController>
+    public class TerrainController : OrderedEventBehavior
     {
         [Tooltip("View for Terrain.")]
         public TerrainView View;
@@ -18,7 +19,7 @@ namespace Assets.Controllers
         [Inject]
         public ITileFactory TileFactory;
         
-        void Start ()
+        protected override void OnStart ()
         {
             World = new TerrainWorld();
 

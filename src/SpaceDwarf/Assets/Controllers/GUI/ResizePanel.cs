@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using QGame;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Assets.Controllers.GUI
 {
-    public class ResizePanel : MonoBehaviour, IPointerDownHandler, IDragHandler
+    public class ResizePanel : OrderedEventBehavior, IPointerDownHandler, IDragHandler
     {
 
         public Vector2 MinSize = new Vector2(30, 40);
@@ -13,7 +14,7 @@ namespace Assets.Controllers.GUI
         private Vector2 _currentPointer;
         private Vector2 _previousPointer;
 
-        void Awake()
+        protected override void OnAwake()
         {
             _transform = transform.parent.GetComponent<RectTransform>();
         }

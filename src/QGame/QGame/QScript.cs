@@ -1,95 +1,29 @@
-﻿using UnityEngine;
-
+﻿using System;
 using Behaviors;
-using Messaging;
-
-using System.Collections.Generic;
-
 
 namespace QGame
 {
-	public delegate void VoidVoidCallback();
-	public delegate void VoidFloatCallback(float value);
-	public delegate void VoidQScriptCallback(QScript script);
+    public delegate void VoidVoidCallback();
+    public delegate void VoidFloatCallback(float value);
+    public delegate void VoidQScriptCallback(OrderedEventBehavior script);
 
-	public delegate object ObjectCallback();
+    public delegate object ObjectCallback();
 
-	public delegate void VoidILivingCallback(ILiving iLiving);
+    public delegate void VoidILivingCallback(ILiving iLiving);
 
-	public interface ILiving
-	{
-		event VoidILivingCallback AliveChanged;
-		bool IsAlive { get; set; }
-	}
+    public abstract class QScript : OrderedEventBehavior, ILiving
+    {
+        private bool _isAlive = true;
+        public Action<ILiving> AliveChanged { get; set; }
 
-	public abstract class QScript : MonoBehaviour, ILiving
-	{
-		private bool _isIsEnabled = true;
-		public bool IsEnabled
-		{
-			get
-			{
-				return _isIsEnabled;
-			}
-			set
-			{
-				if (_isIsEnabled != value)
-				{
-					_isIsEnabled = value;
-					if (EnableChanged != null)
-					{
-						EnableChanged(this);
-					}
-				}
-			}
-		}
-		public VoidQScriptCallback EnableChanged;
+        private BehaviorHolder _holder;
+        public BehaviorHolder Holder { get { return _holder; } }
 
-		private bool _isAlive = true;
-		public bool IsAlive
-		{
-			get { return _isAlive; }
-			set
-			{
-				if (_isAlive != value)
-				{
-					_isAlive = value;
-					if (AliveChanged != null)
-					{
-						AliveChanged(this);
-					}
-					if (!_isAlive && OnDeath != null)
-					{
-						OnDeath(this);
-					}
-				}
-			}
-		}
-		public event VoidILivingCallback AliveChanged;
-		public event VoidILivingCallback OnDeath;
-
-		//public readonly string KillAllTrigger;
-		//public void Die()
-		//{
-		//	IsAlive = false;
-		//	OnUpdate(1);
-		//}
-
-		private BehaviorHolder _holder;
-		public BehaviorHolder Holder
-		{
-			get
-			{
-				return _holder;
-			}
-		}
-
-		public QScript()
-		{
-			_holder = new BehaviorHolder(this);
+        public QScript()
+        {
+            _holder = new BehaviorHolder(this);
             EnableStopWatch();
-			//KillAllTrigger = "Die";
-		}
+        }
 
         protected StopWatch StopWatch;
         public void EnableStopWatch()
@@ -100,48 +34,56 @@ namespace QGame
             }
         }
 
-        public void ClearAllDelegates()
-		{
-			this.OnNextUpdate = null;
-			this.OnEveryUpdate = null;
-			this.EnableChanged = null;
-			this.AliveChanged = null;
-		}
+        public bool IsAlive
+        {
+            get { return _isAlive; }
+            set { _isAlive = TrySet(_isAlive, value, AliveChanged); }
+        }
 
-		#region Updating
-		public void Update()
-		{
-			Update(Time.deltaTime);
-		}
+        public override void ClearAllDelegates()
+        {
+            base.ClearAllDelegates();
 
-		// Derived classes do not override Update()
-		// OnUpdate will hold their individual update logic.
-		public VoidFloatCallback OnEveryUpdate;
-		public VoidFloatCallback OnNextUpdate;
-		private void Update(float delta)
-		{
+            AliveChanged = null;
+        }
+
+        /// <summary>
+        /// Only fire event if the value is changed.
+        /// </summary>
+        /// <param name="currentValue">Current value</param>
+        /// <param name="newValue">Value to set</param>
+        /// <param name="onChangedCallback">Callback to fire if value is changed</param>
+        /// <returns>The value to set.</returns>
+        protected bool TrySet(bool currentValue, bool newValue, Action<ILiving> onChangedCallback)
+        {
+            if (currentValue != newValue)
+            {
+                currentValue = newValue;
+                if (onChangedCallback != null)
+                {
+                    onChangedCallback(this);
+                }
+            }
+
+            return currentValue;
+        }
+        
+        protected override void OnUpdateStart(float delta)
+        {
             if (StopWatch != null)
             {
                 StopWatch.UpdateNodes(delta);
             }
+            base.OnUpdateStart(delta);
+        }
 
-            Holder.Update(delta);
+        protected override void OnUpdate(float delta)
+        {
+            _holder.Update(delta);
 
-			if (OnNextUpdate != null)
-			{
-				OnNextUpdate(delta);
-				OnNextUpdate = null;
-			}
+            base.OnUpdate(delta);
+        }
 
-			if (OnEveryUpdate != null)
-			{
-				OnEveryUpdate(delta);
-			}
-
-			this.OnUpdate(delta);
-		}
-		public virtual void OnUpdate(float delta) { }
-		public virtual void Initialize() { }
-		#endregion
-	}
+        public virtual void Initialize() { }
+    }
 }

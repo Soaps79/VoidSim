@@ -1,7 +1,4 @@
-﻿using System;
-using Assets.Controllers.GUI;
-using Assets.Framework;
-using Assets.Model;
+﻿using Assets.Model;
 using Assets.View;
 using QGame;
 using UnityEngine;
@@ -9,7 +6,6 @@ using Zenject;
 
 namespace Assets.Controllers
 {
-    //public class PlayerController : SingletonBehavior<PlayerController>
     public class PlayerController : QScript
     {
         public PlayerView View;
@@ -18,7 +14,7 @@ namespace Assets.Controllers
         
         [Inject] public PlayerCharacter PlayerCharacter { get; set; }
 
-        void Start ()
+        protected override void OnStart ()
         {
             // create Player game object
             View.Initialize(PlayerCharacter);
@@ -30,7 +26,7 @@ namespace Assets.Controllers
             });
         }
 
-        public override void OnUpdate(float delta)
+        protected override void OnUpdate(float delta)
         {
             base.OnUpdate(delta);
 

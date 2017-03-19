@@ -21,8 +21,10 @@ namespace Assets.Controllers
         // game states
         [Inject] public DefaultGameState DefaultGameState;
 
-        void Start()
+        protected override void OnStart()
         {
+            base.OnStart();
+
             // todo: inject state factories
 
             _stateMachine = new StateMachine<GameModel>(GameModel, DefaultGameState);
@@ -34,7 +36,7 @@ namespace Assets.Controllers
             _globalStateMachine.OnStateChanged += OnGlobalStateChanged;
         }
 
-        public override void OnUpdate(float delta)
+        protected override void OnUpdate(float delta)
         {
             base.OnUpdate(delta);
 

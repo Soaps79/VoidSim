@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Behaviors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -9,7 +10,7 @@ namespace QGame.Test.Behaviors
     {
         private class LivingConcrete : ILiving
         {
-            public event VoidILivingCallback AliveChanged;
+            public Action<ILiving> AliveChanged { get; set; }
 
             private bool _isAlive;
 
@@ -24,8 +25,6 @@ namespace QGame.Test.Behaviors
                         if (AliveChanged != null)
                             AliveChanged(this);
                     }
-                    
-                    
                 }
             }
         }

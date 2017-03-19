@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Assets.Controllers.GUI
 {
-    public class TooltipController : QScript
+    public class TooltipController : OrderedEventBehavior
     {
         private string _tooltipText1;
         private string _tooltipText2;
@@ -17,8 +17,10 @@ namespace Assets.Controllers.GUI
         private const int BuildingsLayerMask = 1 << 9;
         private const int TerrainLayerMask = 1 << 8;
         
-        void OnGUI()
+        protected override void OnGUIDraw(float delta)
         {
+            base.OnGUIDraw(delta);
+
             // get game object under mouse
             var underMouse = GetObjectUnderMouse();
             SetTooltip(underMouse);

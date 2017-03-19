@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 namespace Assets.Controllers.GUI
 {
-    public class DragPanel : QScript, IPointerDownHandler, IDragHandler
+    public class DragPanel : OrderedEventBehavior, IPointerDownHandler, IDragHandler
     {
         private Vector2 _pointerOffset;
         private RectTransform _canvasTransform;
@@ -13,7 +13,7 @@ namespace Assets.Controllers.GUI
 
         public GameObject Panel;
 
-        void Awake()
+        protected override void OnAwake()
         {
             if (Panel == null)
             {

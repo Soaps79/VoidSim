@@ -4,11 +4,11 @@ using UnityEngine.EventSystems;
 
 namespace Assets.Controllers.GUI
 {
-    public class FocusPanel : QScript, IPointerDownHandler
+    public class FocusPanel : OrderedEventBehavior, IPointerDownHandler
     {
         private RectTransform _panel;
 
-        void Awake()
+        protected override void OnAwake()
         {
             _panel = GetComponent<RectTransform>();
         }

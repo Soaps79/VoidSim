@@ -12,7 +12,7 @@ namespace Assets.Framework
     /// 
     /// As a note, this is made as MonoBehaviour because we need Coroutines.
     /// </summary>
-    public class SingletonBehavior<T> : QScript where T : MonoBehaviour
+    public class SingletonBehavior<T> : OrderedEventBehavior where T : MonoBehaviour
     {
         private static T _instance;
         
