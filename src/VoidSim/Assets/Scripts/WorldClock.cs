@@ -274,4 +274,43 @@ public class WorldClock : QScript, IMessageListener
     public string Name { get { return "WorldClock"; } }
 
     #endregion
+
+
+    // would be nice to make these appear statically
+    public float SecondsPerDay
+    {
+        get { return RealSecondsToGameHour * HoursPerDay; }
+    }
+
+    public float SecondsPerWeek
+    {
+        get { return RealSecondsToGameHour * HoursPerDay * DaysPerWeek; }
+    }
+
+    public float SecondsPerMonth
+    {
+        get { return RealSecondsToGameHour * HoursPerDay * DaysPerWeek * WeeksPerMonth; }
+    }
+
+    public float SecondsPerYear
+    {
+        get { return RealSecondsToGameHour * HoursPerDay * DaysPerWeek * WeeksPerMonth * MonthsPerYear; }
+    }
+
+    public float GetSeconds(TimeLength timeLength)
+    {
+        switch (timeLength.TimeUnit)
+        {
+            case TimeUnit.Day:
+                return SecondsPerDay* timeLength.Length;
+            case TimeUnit.Week:
+                return SecondsPerWeek* timeLength.Length;
+            case TimeUnit.Month:
+                return SecondsPerMonth* timeLength.Length;
+            case TimeUnit.Year:
+                return SecondsPerYear* timeLength.Length;
+            default:
+                throw new ArgumentOutOfRangeException("Unsupported Unit in GetSeconds", timeLength.TimeUnit, null);
+        }
+    }
 }

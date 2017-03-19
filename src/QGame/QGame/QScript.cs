@@ -87,19 +87,20 @@ namespace QGame
 		public QScript()
 		{
 			_holder = new BehaviorHolder(this);
+            EnableStopWatch();
 			//KillAllTrigger = "Die";
 		}
 
-		//protected StopWatch stopWatch;
-		//public void EnableStopWatch()
-		//{
-		//	if (stopWatch == null)
-		//	{
-		//		stopWatch = new StopWatch();
-		//	}
-		//}
+        protected StopWatch StopWatch;
+        public void EnableStopWatch()
+        {
+            if (StopWatch == null)
+            {
+                StopWatch = new StopWatch();
+            }
+        }
 
-		public void ClearAllDelegates()
+        public void ClearAllDelegates()
 		{
 			this.OnNextUpdate = null;
 			this.OnEveryUpdate = null;
@@ -119,12 +120,12 @@ namespace QGame
 		public VoidFloatCallback OnNextUpdate;
 		private void Update(float delta)
 		{
-			//if (stopWatch != null)
-			//{
-			//	stopWatch.Update(gameTime);
-			//}
+            if (StopWatch != null)
+            {
+                StopWatch.UpdateNodes(delta);
+            }
 
-			Holder.Update(delta);
+            Holder.Update(delta);
 
 			if (OnNextUpdate != null)
 			{

@@ -8,12 +8,12 @@
       }
     ],
     "TimeLength": {
-      "TimeUnit": "Week",
+      "TimeUnit": "Day",
       "Length": 1
     },
     "Container": {
-      "Name": "Steel Mill",
-      "CraftingSpeed": 0.0
+      "Name": "Small Factory",
+      "CraftingSpeed": 1.0
     }
   }
 ]

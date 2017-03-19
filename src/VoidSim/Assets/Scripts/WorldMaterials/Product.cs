@@ -31,11 +31,11 @@ namespace Assets.Scripts.WorldMaterials
         public string ResultProduct;
         public List<Ingredient> Ingredients;
         public TimeLength TimeLength;
-        public CraftingContainer Container;
+        public CraftingContainerInfo Container;
     }
 
     [Serializable]
-    public class CraftingContainer
+    public class CraftingContainerInfo
     {
         public string Name;
         public float CraftingSpeed;
