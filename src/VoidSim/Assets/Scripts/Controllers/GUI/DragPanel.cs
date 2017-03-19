@@ -13,7 +13,8 @@ namespace Assets.Controllers.GUI
 
         public GameObject Panel;
 
-        void Awake()
+        // Changed to Start because when instanced from a prefab, canvas not yet set on Awake
+        void Start()
         {
             if (Panel == null)
             {

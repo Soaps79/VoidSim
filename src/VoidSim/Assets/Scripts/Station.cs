@@ -28,11 +28,6 @@ public class Station : QScript
     private ProductLookup _productLookup;
 
     [SerializeField]
-    private Image _craftingViewContext;
-    [SerializeField]
-    private Button _buttonPrefab;
-
-    [SerializeField]
     private StationLayer[] _initialLayers;
     [SerializeField]
     private GameObject _craftingPrefab;
@@ -76,31 +71,14 @@ public class Station : QScript
 
     private void BindToUI()
     {
-        if(_craftingViewContext == null || _buttonPrefab == null)
-            throw new UnityException("Crafting UI ref missing");
-
-        foreach (var recipe in _productLookup.GetRecipes())
-        {
-            var button = GameObject.Instantiate(_buttonPrefab).GetComponent<Button>();
-            var text = button.GetComponentInChildren<Text>();
-            text.text = recipe.Ingredients.Aggregate(string.Format("{0}\t\t", recipe.ResultProduct), (content, ing)
-                => content + string.Format("{0} {1} ", ing.Quantity, ing.ProductName));
-            button.transform.parent = _craftingViewContext.transform;
-            button.onClick.AddListener( () =>
-            {
-                _crafter.QueueCrafting(recipe);
-            });
-        }
+        // find the viewmodel and bind to it
+        var viewmodel = _crafter.gameObject.GetComponent<CraftingViewModel>();
+        viewmodel.Bind(_productLookup.GetRecipes(), _crafter);
     }
 
     private void OnCraftingComplete(Recipe recipe)
     {
         Debug.Log(string.Format("{0}: Craft Complete", recipe.ResultProduct));
-    }
-
-    public void CraftSomething()
-    {
-        _crafter.QueueCrafting(_productLookup.GetRecipes().FirstOrDefault());
     }
 
     public StationLayer GetLayer(LayerType type)
