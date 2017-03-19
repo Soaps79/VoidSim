@@ -1,11 +1,11 @@
-﻿using Assets.Configuration;
+﻿using Assets.Controllers;
 using Assets.Controllers.GameStates;
 using Assets.Model;
 using Assets.View;
 using UnityEngine;
 using Zenject;
 
-namespace Assets.Controllers
+namespace Assets.Configuration
 {
     /// <summary>
     /// Add to scene to install dependencies.

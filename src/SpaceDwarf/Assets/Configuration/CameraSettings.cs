@@ -10,5 +10,6 @@ namespace Assets.Configuration
         public float ZoomSpeed = 40;
         public float MaxOrthoSize = 16;
         public float MinOrthoSize = 2;
+        public float MoveSpeed = 5;
     }
 }

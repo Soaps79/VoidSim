@@ -1,6 +1,4 @@
-﻿using Assets.Model;
-using UnityEngine;
-using Zenject;
+﻿using UnityEngine;
 
 namespace Assets.Controllers.Cameras
 {

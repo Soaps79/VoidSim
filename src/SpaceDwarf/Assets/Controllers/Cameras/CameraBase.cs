@@ -11,20 +11,27 @@ namespace Assets.Controllers.Cameras
     {
         //todo: not this
         [Inject] public CameraSettings CameraSettings { get; set; }
+
+        public Camera CameraComponent { get; private set; }
         public Vector3 Position { get { return transform.position; } }
         public Vector3 Forward { get { return transform.forward; } }
         public Vector3 Up { get { return transform.up; } }
         public Vector3 Right { get { return transform.right; } }
 
-        private readonly Dictionary<string, CameraControl<CameraBase>> _controls
-            = new Dictionary<string, CameraControl<CameraBase>>();
+        private readonly Dictionary<string, CameraControl> _controls
+            = new Dictionary<string, CameraControl>();
 
         protected bool IsPhysicsBased { get; set; }
 
         void Start()
         {
-            var zoomControl = new MouseZoomControl<CameraBase>();
-            _controls.AddOrSet(zoomControl.Name, zoomControl);
+            OnStart();
+        }
+
+        protected virtual void OnStart()
+        {
+            AddCameraControl(new MouseZoomControl());
+            CameraComponent = GetComponent<Camera>();
         }
 
         void FixedUpdate()
@@ -55,8 +62,17 @@ namespace Assets.Controllers.Cameras
         {
             foreach (var control in _controls.Values)
             {
-                control.Execute(this, delta);
+                if (control.IsEnabled)
+                {
+                    control.Execute(this, delta);
+                }
             }
+        }
+
+        public virtual bool AddCameraControl(CameraControl control) 
+        {
+            _controls.AddOrSet(control.Name, control);
+            return true;
         }
     }
 }
