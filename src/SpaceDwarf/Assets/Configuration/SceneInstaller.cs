@@ -39,6 +39,7 @@ namespace Assets.Configuration
             Container.Bind<GameModel>().AsSingle();
 
             Container.Bind<Material>().ToSelf().FromInstance(SelectionMaterial).WhenInjectedInto<SelectionBehavior>();
+            Container.Bind<Material>().ToSelf().FromInstance(SelectionMaterial).WhenInjectedInto<SelectionGameState>();
 
             // bind states
             Container.Bind<PauseGameState>().AsSingle();

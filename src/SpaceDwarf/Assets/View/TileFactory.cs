@@ -44,8 +44,8 @@ namespace Assets.View
             tooltip.TooltipText2 = "Tile information";
 
             // add select behavior
-            var selectBehavior = tileGo.AddComponent<SelectionBehavior>();
-            selectBehavior.SelectionMaterial = _selectionMaterial;
+            //var selectBehavior = tileGo.AddComponent<SelectionBehavior>();
+            //selectBehavior.SelectionMaterial = _selectionMaterial;
 
             return tileGo;
         }

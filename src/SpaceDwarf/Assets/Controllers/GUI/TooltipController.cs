@@ -33,7 +33,7 @@ namespace Assets.Controllers.GUI
         private GameObject GetObjectUnderMouse()
         {
             // project ray from screen into world
-            var camera = CameraController.ActiveCamera;
+            var camera = CameraController.Instance.ActiveCamera;
             var ray = camera.ScreenPointToRay(Input.mousePosition);
 
             RaycastHit hit;
