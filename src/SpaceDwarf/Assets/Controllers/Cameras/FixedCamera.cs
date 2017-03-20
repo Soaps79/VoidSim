@@ -16,6 +16,7 @@ namespace Assets.Controllers.Cameras
         {
             base.OnUpdate(delta);
 
+            // fix the camera position at the LookAt, even if input has updated it
             transform.position = new Vector3(LookAt.x, LookAt.y, LookAt.z + Offset);
         }
     }

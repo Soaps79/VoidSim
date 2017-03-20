@@ -6,12 +6,5 @@
         {
             IsPhysicsBased = false;
         }
-
-        protected override void OnStart()
-        {
-            base.OnStart();
-
-            AddCameraControl(new PanAndScanControl());
-        }
     }
 }

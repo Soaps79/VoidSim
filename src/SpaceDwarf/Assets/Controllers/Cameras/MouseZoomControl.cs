@@ -2,9 +2,13 @@
 
 namespace Assets.Controllers.Cameras
 {
+    [CreateAssetMenu(menuName = "Cameras/Controls/Mouse Zoom")]
     public class MouseZoomControl : CameraControl 
     {
         public override string Name { get { return "MouseZoomControl"; } }
+
+        public int MaxOrthoSize = 16;
+        public int MinOrthoSize = 2;
 
         public override void Execute(ICamera camera, float timeDelta)
         {

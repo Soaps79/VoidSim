@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using Assets.Configuration;
-using Assets.Framework;
 using UnityEngine;
 using Zenject;
 
@@ -19,8 +17,7 @@ namespace Assets.Controllers.Cameras
         public Vector3 Right { get { return transform.right; } }
         public bool IsActive { get; set; }
 
-        private readonly Dictionary<string, CameraControl> _controls
-            = new Dictionary<string, CameraControl>();
+        public CameraControl[] Controls;
 
         protected bool IsPhysicsBased { get; set; }
 
@@ -32,7 +29,6 @@ namespace Assets.Controllers.Cameras
         protected virtual void OnStart()
         {
             IsActive = true;
-            AddCameraControl(new MouseZoomControl());
             CameraComponent = GetComponent<Camera>();
         }
 
@@ -62,19 +58,13 @@ namespace Assets.Controllers.Cameras
 
         protected virtual void OnUpdate(float delta)
         {
-            foreach (var control in _controls.Values)
+            foreach (var control in Controls)
             {
                 if (control.IsEnabled)
                 {
                     control.Execute(this, delta);
                 }
             }
-        }
-
-        public virtual bool AddCameraControl(CameraControl control) 
-        {
-            _controls.AddOrSet(control.Name, control);
-            return true;
         }
     }
 }

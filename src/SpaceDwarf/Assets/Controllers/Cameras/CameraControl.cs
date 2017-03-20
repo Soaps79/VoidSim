@@ -1,15 +1,16 @@
-﻿namespace Assets.Controllers.Cameras
+﻿using UnityEngine;
+
+namespace Assets.Controllers.Cameras
 {
-    // todo: make viewable in editor
-    public abstract class CameraControl
+    public abstract class CameraControl : ScriptableObject
     {
+        public abstract string Name { get; }
+
         private bool _isEnabled = true;
         public bool IsEnabled { get { return _isEnabled; } }
-
-        public abstract string Name { get; }
-        public abstract void Execute(ICamera camera, float timeDelta);
-
         public void Enable() { _isEnabled = true; }
         public void Disable() { _isEnabled = false; }
+        
+        public abstract void Execute(ICamera camera, float timeDelta);
     }
 }

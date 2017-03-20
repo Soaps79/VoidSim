@@ -2,6 +2,7 @@
 
 namespace Assets.Controllers.Cameras
 {
+    [CreateAssetMenu(menuName = "Cameras/Controls/Pan and Scan")]
     public class PanAndScanControl : CameraControl
     {
         public override string Name { get { return "PanAndScanControl"; } }
