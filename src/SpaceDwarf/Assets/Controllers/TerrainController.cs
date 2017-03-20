@@ -19,6 +19,9 @@ namespace Assets.Controllers
         
         protected override void OnStart ()
         {
+            base.OnStart();
+
+            Debug.Log("OnStart");
             World = new TerrainWorld();
 
             // hook actions
@@ -27,6 +30,7 @@ namespace Assets.Controllers
             // initialize regions (after hooking!)
             // todo: load based on player position
             World.InitializeRegions();
+            
         }
 
         public void OnTerrainRegionAdded(TerrainWorld world, TerrainRegion region, GameObject worldGo)
@@ -34,6 +38,7 @@ namespace Assets.Controllers
             // create game object for region
             var regionGo = new GameObject(region.Name);
             regionGo.transform.parent = worldGo.transform;
+            regionGo.transform.localPosition = new Vector3(0, 0, 0);
 
             // hook any region events
 

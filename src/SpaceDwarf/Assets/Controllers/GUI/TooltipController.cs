@@ -1,6 +1,7 @@
 ﻿using QGame;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace Assets.Controllers.GUI
 {
@@ -12,10 +13,13 @@ namespace Assets.Controllers.GUI
         public Text TopText;
         public Text BottomText;
 
+        //todo: centralize
         private const int PlayerLayerMask = 1 << 11;
         private const int UnitsLayerMask = 1 << 10;
         private const int BuildingsLayerMask = 1 << 9;
         private const int TerrainLayerMask = 1 << 8;
+
+        [Inject] public CameraController CameraController;
         
         protected override void OnGUIDraw(float delta)
         {
@@ -29,7 +33,8 @@ namespace Assets.Controllers.GUI
         private GameObject GetObjectUnderMouse()
         {
             // project ray from screen into world
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            var camera = CameraController.ActiveCamera;
+            var ray = camera.ScreenPointToRay(Input.mousePosition);
 
             RaycastHit hit;
             GameObject foundGo = null;

@@ -8,10 +8,13 @@ namespace Assets.Model
     {
         private Vector2 _position;
         private readonly string _name;
+        private bool _canMove = true;
 
         private Action<PlayerCharacter, Vector2> _onPositionChanged;
 
         public string Name { get { return _name; } }
+
+        public bool CanMove { get { return _canMove; } set { _canMove = value; } }
 
         public Vector2 Position
         {
@@ -46,6 +49,4 @@ namespace Assets.Model
             _onPositionChanged += callback;
         }
     }
-
-    
 }

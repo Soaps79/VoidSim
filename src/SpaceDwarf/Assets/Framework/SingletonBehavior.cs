@@ -24,8 +24,11 @@ namespace Assets.Framework
                 {
                     Debug.LogWarning("[Singleton] Instance '" + typeof(T) +
                                      "' already destroyed on application quit." +
-                                     " Won't create again - returning null.");
-                    return null;
+                                     //" Won't create again - returning null.");
+                                     " Creating anyway, incase this if for DI." +
+                                     " Beware of weird ghost singletons in the editor.");
+                    // return null;
+                    applicationIsQuitting = false;
                 }
                 
                 if (_instance == null)

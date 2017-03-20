@@ -1,7 +1,6 @@
 ﻿using Assets.Framework;
 using Assets.Model;
 using Assets.View;
-using QGame;
 using UnityEngine;
 using Zenject;
 
@@ -48,12 +47,20 @@ namespace Assets.Controllers
             var vertical = Input.GetAxis("Vertical") * MoveSpeed * timeDelta;
             var movement = new Vector2(horizontal, vertical);
 
-            // update animation
-            View.Animator.SetFloat("MoveX", horizontal);
-            View.Animator.SetFloat("MoveY", vertical);
+            if (PlayerCharacter.CanMove)
+            {
+                // update animation
+                View.Animator.SetFloat("MoveX", horizontal);
+                View.Animator.SetFloat("MoveY", vertical);
 
-            // update player character
-            PlayerCharacter.Move(movement);
+                // update player character
+                PlayerCharacter.Move(movement);
+            }
+            else
+            {
+                View.Animator.SetFloat("MoveX", 0);
+                View.Animator.SetFloat("MoveY", 0);
+            }
         }
 
         private void HandleMenuInput()

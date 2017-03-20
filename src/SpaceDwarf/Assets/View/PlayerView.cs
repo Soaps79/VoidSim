@@ -38,7 +38,7 @@ namespace Assets.View
             CanvasTransform = Canvas.transform as RectTransform;
 
             // force add collider, this works but revisit
-            CharacterPrefab.AddComponent<BoxCollider>();
+            //CharacterPrefab.AddComponent<BoxCollider>();
             var tooltip = CharacterPrefab.GetOrAddComponent<TooltipBehavior>();
             tooltip.TooltipText1 = "Character";
             tooltip.TooltipText2 = "The king baby!";

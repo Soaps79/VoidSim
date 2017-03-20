@@ -1,4 +1,5 @@
 ﻿using System;
+using Assets.Controllers;
 using Assets.Controllers.GUI;
 using Assets.Model.Terrain;
 using UnityEngine;
@@ -13,13 +14,20 @@ namespace Assets.View
 
     public class TileFactory  : ITileFactory
     {
+        private readonly Material _selectionMaterial;
+
+        public TileFactory(Material selectionMaterial)
+        {
+            _selectionMaterial = selectionMaterial;
+        }
+
         public GameObject CreateTerrainTile(TerrainTile tile, TerrainView view, int x, int y, GameObject region)
         {
             var tileGo = new GameObject(tile.ToString());
 
-            // update position relative to region parent
-            tileGo.transform.position = new Vector3(x, y, 0);
+            // update position relative to region parent (not accurately working!!!)
             tileGo.transform.parent = region.transform;
+            tileGo.transform.localPosition = new Vector3(x, y, 1);
             tileGo.layer = view.TerrainLayer;
 
             // create sprite component and assign texture
@@ -34,6 +42,11 @@ namespace Assets.View
             var tooltip = tileGo.AddComponent<TooltipBehavior>();
             tooltip.TooltipText1 = "Tile";
             tooltip.TooltipText2 = "Tile information";
+
+            // add select behavior
+            var selectBehavior = tileGo.AddComponent<SelectionBehavior>();
+            selectBehavior.SelectionMaterial = _selectionMaterial;
+
             return tileGo;
         }
 

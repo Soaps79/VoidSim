@@ -1,12 +1,13 @@
-﻿using Assets.Controllers.GameStates;
+﻿using System;
+using Assets.Controllers.GameStates;
+using Assets.Framework;
 using Assets.Model;
-using QGame;
 using UnityEngine;
 using Zenject;
 
 namespace Assets.Controllers
 {
-    public class GameStateController : OrderedEventBehavior
+    public class GameStateController : SingletonBehavior<GameStateController>
     {
         [Inject]
         public GameModel GameModel;
@@ -14,12 +15,20 @@ namespace Assets.Controllers
         private StateMachine<GameModel> _stateMachine;
         private StateMachine<GameModel> _globalStateMachine;
 
+        private Action<State<GameModel>, State<GameModel>> _onStateChanged;
+
+        public void RegisterStateChangeCallback(Action<State<GameModel>, State<GameModel>> callback)
+        {
+            _onStateChanged += callback;
+        }
+
         // global states
         [Inject] public DefaultGlobalState DefaultGlobalState;
         [Inject] public PauseGameState PauseGameState;
 
         // game states
         [Inject] public DefaultGameState DefaultGameState;
+        [Inject] public SelectionGameState SelectionGameState;
 
         protected override void OnStart()
         {
@@ -28,11 +37,13 @@ namespace Assets.Controllers
             // todo: inject state factories
 
             _stateMachine = new StateMachine<GameModel>(GameModel, DefaultGameState);
+            _stateMachine.AddState(SelectionGameState.Name, SelectionGameState);
+
             _globalStateMachine = new StateMachine<GameModel>(GameModel, DefaultGlobalState);
             _globalStateMachine.AddState(PauseGameState.Name, PauseGameState);
 
             // hook events
-            _stateMachine.OnStateChanged += OnStateChanged;
+            _stateMachine.OnStateChanged += OnStateChangedHandler;
             _globalStateMachine.OnStateChanged += OnGlobalStateChanged;
         }
 
@@ -54,9 +65,11 @@ namespace Assets.Controllers
             return _globalStateMachine.ChangeState(newState);
         }
 
-        private void OnStateChanged(State<GameModel> oldState, State<GameModel> newState)
+        private void OnStateChangedHandler(State<GameModel> oldState, State<GameModel> newState)
         {
             Debug.Log(string.Format("Changed state from {0} to {1}.", oldState, newState));
+            if (_onStateChanged != null)
+                _onStateChanged(oldState, newState);
         }
 
         private void OnGlobalStateChanged(State<GameModel> oldState, State<GameModel> newState)

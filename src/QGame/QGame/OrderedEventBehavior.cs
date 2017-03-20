@@ -40,7 +40,8 @@ namespace QGame
 
         void Update()
         {
-            Update(Time.deltaTime);
+            if(_isEnabled)
+                Update(Time.deltaTime);
         }
 
         private void Update(float delta)
@@ -68,7 +69,8 @@ namespace QGame
 
         void FixedUpdate()
         {
-            FixedUpdate(Time.fixedDeltaTime);
+            if(_isEnabled)
+                FixedUpdate(Time.fixedDeltaTime);
         }
 
         private void FixedUpdate(float delta)
@@ -80,7 +82,8 @@ namespace QGame
 
         void LateUpdate()
         {
-            LateUpdate(Time.deltaTime);
+            if(IsEnabled)
+                LateUpdate(Time.deltaTime);
         }
 
         private void LateUpdate(float delta)
@@ -92,7 +95,8 @@ namespace QGame
 
         void OnGUI()
         {
-            OnGUIDraw(Time.deltaTime);
+            if(IsEnabled)
+                OnGUIDraw(Time.deltaTime);
         }
 
         protected virtual void OnGUIDraw(float delta) { }

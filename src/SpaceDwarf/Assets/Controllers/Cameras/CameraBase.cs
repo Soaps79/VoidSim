@@ -17,6 +17,7 @@ namespace Assets.Controllers.Cameras
         public Vector3 Forward { get { return transform.forward; } }
         public Vector3 Up { get { return transform.up; } }
         public Vector3 Right { get { return transform.right; } }
+        public bool IsActive { get; set; }
 
         private readonly Dictionary<string, CameraControl> _controls
             = new Dictionary<string, CameraControl>();
@@ -30,6 +31,7 @@ namespace Assets.Controllers.Cameras
 
         protected virtual void OnStart()
         {
+            IsActive = true;
             AddCameraControl(new MouseZoomControl());
             CameraComponent = GetComponent<Camera>();
         }
@@ -43,7 +45,7 @@ namespace Assets.Controllers.Cameras
             //   interpolate and smooth in a fixed update function for the simulation.
             //   If the camera doesn't update in FixedUpdate as well, it will jitter.
             // ref: https://forum.unity3d.com/threads/camera-jitter-problem.115224/
-            if(IsPhysicsBased)
+            if(IsPhysicsBased && IsActive)
                 OnUpdate(Time.fixedDeltaTime);
 
         }
@@ -54,7 +56,7 @@ namespace Assets.Controllers.Cameras
             //   the uncontrolled update order of game objects.
             // ex: camera updates, then followed object moves (off by 1 error)
             // ref: https://forum.unity3d.com/threads/camera-jitter-problem.115224/
-            if (!IsPhysicsBased)
+            if (!IsPhysicsBased && IsActive)
                 OnUpdate(Time.deltaTime);
         }
 
