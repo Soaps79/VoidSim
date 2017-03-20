@@ -1,32 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Assets.Model;
+﻿using Assets.Model;
 using QGame;
 using UnityEngine;
-using Zenject;
 
 namespace Assets.Controllers
 {
+    /// <summary>
+    /// Selection Behavior to attach to individual GameObjects.
+    /// Note that a better solution exists in SelectionGameState such
+    /// that you don't have to apply this behavior to thousands of objects.
+    /// </summary>
     [RequireComponent(typeof(SpriteRenderer))]
     public class SelectionBehavior : OrderedEventBehavior
     {
-        // todo: centralize
-        private const int PlayerLayerMask = 1 << 11;
-        private const int UnitsLayerMask = 1 << 10;
-        private const int BuildingsLayerMask = 1 << 9;
-        private const int TerrainLayerMask = 1 << 8;
-
         public Material SelectionMaterial;
 
-        //todo: solve injection issues
-        // weirdness, sometimes null.
-        //[Inject] public GameStateController GameStateController;
-        //[Inject] public CameraController CameraController { get; set; }
-
         private Material _originalMaterial = null;
-
         private SpriteRenderer _spriteRenderer;
 
         protected override void OnStart()
@@ -78,41 +66,10 @@ namespace Assets.Controllers
 
         private bool IsUnderMouse()
         {
-            var activeCamera = CameraController.Instance.ActiveCamera;
-            var underMouse = GetObjectUnderMouse(activeCamera);
+            var underMouse = MouseController.Instance.UnderMouse;
             return underMouse == gameObject;
         }
-
-        private GameObject GetObjectUnderMouse(Camera activeCamera)
-        {
-            // project ray from screen into world
-            
-            var ray = activeCamera.ScreenPointToRay(Input.mousePosition);
-
-            RaycastHit hit;
-            GameObject foundGo = null;
-
-            // use layers to avoid z-fighting
-            // Player -> Units -> Buildings -> Terrain
-            if (Physics.Raycast(ray, out hit, 100, PlayerLayerMask))
-            {
-                foundGo = hit.transform.gameObject;
-            }
-            else if (Physics.Raycast(ray, out hit, 100, UnitsLayerMask))
-            {
-                foundGo = hit.transform.gameObject;
-            }
-            else if (Physics.Raycast(ray, out hit, 100, BuildingsLayerMask))
-            {
-                foundGo = hit.transform.gameObject;
-            }
-            else if (Physics.Raycast(ray, out hit, 100, TerrainLayerMask))
-            {
-                foundGo = hit.transform.gameObject;
-            }
-
-            return foundGo;
-        }
+        
 
         void OnMouseOver()
         {

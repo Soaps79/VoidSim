@@ -5,12 +5,6 @@ namespace Assets.Controllers.GameStates
 {
     public class SelectionGameState : State<GameModel>
     {
-        // todo: centralize
-        private const int PlayerLayerMask = 1 << 11;
-        private const int UnitsLayerMask = 1 << 10;
-        private const int BuildingsLayerMask = 1 << 9;
-        private const int TerrainLayerMask = 1 << 8;
-
         public override string Name { get { return "SelectionGameState"; } }
 
         private readonly PlayerCharacter _character;
@@ -57,7 +51,7 @@ namespace Assets.Controllers.GameStates
             }
 
             // get object under mouse
-            var underMouse = GetObjectUnderMouse();
+            var underMouse = MouseController.Instance.UnderMouse;
             if (underMouse == null) { return; }
             if (_previousUnderMouse != null 
                 && underMouse.name == _previousUnderMouse.name)
@@ -88,44 +82,6 @@ namespace Assets.Controllers.GameStates
             // save for next frame
             _previousUnderMouse = underMouse;
         }
-
-        private GameObject GetObjectUnderMouse()
-        {
-            var activeCamera = CameraController.Instance.ActiveCamera;
-            var underMouse = GetObjectUnderMouse(activeCamera);
-            return underMouse;
-        }
-
-        private GameObject GetObjectUnderMouse(Camera activeCamera)
-        {
-            // project ray from screen into world
-            var ray = activeCamera.ScreenPointToRay(Input.mousePosition);
-
-            RaycastHit hit;
-            GameObject foundGo = null;
-
-            // use layers to avoid z-fighting
-            // Player -> Units -> Buildings -> Terrain
-            if (Physics.Raycast(ray, out hit, 100, PlayerLayerMask))
-            {
-                foundGo = hit.transform.gameObject;
-            }
-            else if (Physics.Raycast(ray, out hit, 100, UnitsLayerMask))
-            {
-                foundGo = hit.transform.gameObject;
-            }
-            else if (Physics.Raycast(ray, out hit, 100, BuildingsLayerMask))
-            {
-                foundGo = hit.transform.gameObject;
-            }
-            else if (Physics.Raycast(ray, out hit, 100, TerrainLayerMask))
-            {
-                foundGo = hit.transform.gameObject;
-            }
-
-            return foundGo;
-        }
-
         public override void Exit(GameModel owner)
         {
             base.Exit(owner);
@@ -152,7 +108,7 @@ namespace Assets.Controllers.GameStates
         {
             // find game object
             // get item under cursor
-            var go = GetObjectUnderMouse();
+            var go = MouseController.Instance.UnderMouse;
             if (go == null)
             {
                 return null;

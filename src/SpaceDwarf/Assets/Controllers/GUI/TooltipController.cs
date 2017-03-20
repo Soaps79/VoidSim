@@ -12,53 +12,14 @@ namespace Assets.Controllers.GUI
 
         public Text TopText;
         public Text BottomText;
-
-        //todo: centralize
-        private const int PlayerLayerMask = 1 << 11;
-        private const int UnitsLayerMask = 1 << 10;
-        private const int BuildingsLayerMask = 1 << 9;
-        private const int TerrainLayerMask = 1 << 8;
-
-        [Inject] public CameraController CameraController;
         
         protected override void OnGUIDraw(float delta)
         {
             base.OnGUIDraw(delta);
 
             // get game object under mouse
-            var underMouse = GetObjectUnderMouse();
+            var underMouse = MouseController.Instance.UnderMouse;
             SetTooltip(underMouse);
-        }
-
-        private GameObject GetObjectUnderMouse()
-        {
-            // project ray from screen into world
-            var camera = CameraController.Instance.ActiveCamera;
-            var ray = camera.ScreenPointToRay(Input.mousePosition);
-
-            RaycastHit hit;
-            GameObject foundGo = null;
-            
-            // use layers to avoid z-fighting
-            // Player -> Units -> Buildings -> Terrain
-            if (Physics.Raycast(ray, out hit, 100, PlayerLayerMask))
-            {
-                foundGo = hit.transform.gameObject;
-            }
-            else if (Physics.Raycast(ray, out hit, 100, UnitsLayerMask))
-            {
-                foundGo = hit.transform.gameObject;
-            }
-            else if (Physics.Raycast(ray, out hit, 100, BuildingsLayerMask))
-            {
-                foundGo = hit.transform.gameObject;
-            }
-            else if (Physics.Raycast(ray, out hit, 100, TerrainLayerMask))
-            {
-                foundGo = hit.transform.gameObject;
-            }
-
-            return foundGo;
         }
 
         private void SetTooltip(GameObject go)
