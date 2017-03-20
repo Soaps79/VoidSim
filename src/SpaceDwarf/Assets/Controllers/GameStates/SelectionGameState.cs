@@ -8,21 +8,18 @@ namespace Assets.Controllers.GameStates
         public override string Name { get { return "SelectionGameState"; } }
 
         private readonly PlayerCharacter _character;
-        private readonly CameraController _cameraController;
 
-        private Material _originalMaterial = null;
-        private Material _selectionMaterial = null;
+        private Material _originalMaterial;
+        private readonly Material _selectionMaterial;
 
-        private GameObject _previousUnderMouse = null;
+        private GameObject _previousUnderMouse;
         
 
         public SelectionGameState(
             PlayerCharacter character,
-            CameraController cameraController,
             Material selectionMaterial)
         {
             _character = character;
-            _cameraController = cameraController;
             _selectionMaterial = selectionMaterial;
         }
 
@@ -45,8 +42,18 @@ namespace Assets.Controllers.GameStates
             {
                 // cancelling selection mode
                 Machine.Revert();
-                _originalMaterial = null;
-                _previousUnderMouse = null;
+                Reset();
+                return;
+            }
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                // clicked, change to selected state
+                Machine.ChangeState(GameStateController.Instance.SelectedGameState);
+
+                GameStateController.Instance.SelectedGameState.SetSelectedObject(
+                    MouseController.Instance.UnderMouse, _originalMaterial);
+                Reset();
                 return;
             }
 
@@ -60,14 +67,14 @@ namespace Assets.Controllers.GameStates
                 return;
             }
 
-            // it's different, unswap previous item
+            // it's different, unswap previous item material
             if (_previousUnderMouse != null)
             {
                 var prevRenderer = GetRendererFromObject(_previousUnderMouse);
                 prevRenderer.material = _originalMaterial;
             }
 
-            //
+            // set selection material
             var renderer = GetRendererFromObject(underMouse);
             var currentMaterial = renderer.material;
             if (currentMaterial.name == _selectionMaterial.name)
@@ -76,12 +83,20 @@ namespace Assets.Controllers.GameStates
                 return;
             }
 
+            // save current material as original
             _originalMaterial = renderer.material;
             renderer.material = _selectionMaterial;
 
             // save for next frame
             _previousUnderMouse = underMouse;
         }
+
+        private void Reset()
+        {
+            _originalMaterial = null;
+            _previousUnderMouse = null;
+        }
+
         public override void Exit(GameModel owner)
         {
             base.Exit(owner);

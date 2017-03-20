@@ -16,11 +16,7 @@ namespace Assets.Controllers
         private StateMachine<GameModel> _globalStateMachine;
 
         private Action<State<GameModel>, State<GameModel>> _onStateChanged;
-
-        public void RegisterStateChangeCallback(Action<State<GameModel>, State<GameModel>> callback)
-        {
-            _onStateChanged += callback;
-        }
+        private Action<State<GameModel>, State<GameModel>> _onGlobalStateChanged;
 
         // global states
         [Inject] public DefaultGlobalState DefaultGlobalState;
@@ -29,6 +25,7 @@ namespace Assets.Controllers
         // game states
         [Inject] public DefaultGameState DefaultGameState;
         [Inject] public SelectionGameState SelectionGameState;
+        [Inject] public SelectedGameState SelectedGameState;
 
         protected override void OnStart()
         {
@@ -38,6 +35,7 @@ namespace Assets.Controllers
 
             _stateMachine = new StateMachine<GameModel>(GameModel, DefaultGameState);
             _stateMachine.AddState(SelectionGameState.Name, SelectionGameState);
+            _stateMachine.AddState(SelectedGameState.Name, SelectedGameState);
 
             _globalStateMachine = new StateMachine<GameModel>(GameModel, DefaultGlobalState);
             _globalStateMachine.AddState(PauseGameState.Name, PauseGameState);
@@ -85,6 +83,16 @@ namespace Assets.Controllers
         public void RevertGlobalState()
         {
             _globalStateMachine.Revert();
+        }
+
+        public void RegisterStateChangeCallback(Action<State<GameModel>, State<GameModel>> callback)
+        {
+            _onStateChanged += callback;
+        }
+
+        public void RegisterGlobalStateChangeCallback(Action<State<GameModel>, State<GameModel>> callback)
+        {
+            _onGlobalStateChanged += callback;
         }
     }
 }

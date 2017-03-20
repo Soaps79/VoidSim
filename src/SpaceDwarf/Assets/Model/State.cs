@@ -11,7 +11,21 @@ namespace Assets.Model
         public Action<State<T>, T, float> OnExecute = null;
         public Action<State<T>, T> OnExit = null;
 
-        protected StateMachine<T> Machine { get; private set; }
+        private StateMachine<T> _machine;
+
+        protected StateMachine<T> Machine
+        {
+            get
+            {
+                if (_machine == null)
+                {
+                    Debug.LogWarning(string.Format("State Machine was null on {0}. " +
+                                                   "Make sure this state is added to the Machine.", Name));
+                }
+                return _machine;
+            }
+            private set { _machine = value; }
+        }
 
         public void RegisterMachine(StateMachine<T> machine)
         {

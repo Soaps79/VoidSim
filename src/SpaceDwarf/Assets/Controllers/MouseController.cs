@@ -1,19 +1,33 @@
 ﻿using System;
 using Assets.Framework;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Assets.Controllers
 {
     public class MouseController : SingletonBehavior<MouseController>
     {
-        // todo: centralize
+        //todo: DI layer masks
         private const int PlayerLayerMask = 1 << 11;
         private const int UnitsLayerMask = 1 << 10;
         private const int BuildingsLayerMask = 1 << 9;
         private const int TerrainLayerMask = 1 << 8;
-        public GameObject UnderMouse { get; private set; }
 
-        private GameObject _previousUnderMouse = null;
+        private GameObject _underMouse;
+        public GameObject UnderMouse
+        {
+            get { return _underMouse; }
+            private set
+            {
+                if (HasChanged(_underMouse, value))
+                {
+                    var prev = _underMouse;
+                    _underMouse = value;
+                    if (OnUnderMouseChanged != null)
+                        OnUnderMouseChanged(prev, value);
+                }
+            }
+        }
 
         public Vector3 RawPosition { get; private set; }
 
@@ -24,24 +38,13 @@ namespace Assets.Controllers
             base.OnUpdateStart(delta);
             RawPosition = Input.mousePosition;
             UnderMouse = GetObjectUnderMouse(CameraController.Instance.ActiveCamera);
-
-            if (HasUnderMouseChanged())
-            {
-                // switched, fire event
-                if (OnUnderMouseChanged != null)
-                    OnUnderMouseChanged(_previousUnderMouse, UnderMouse);
-            }
-
-            // save for next frame
-            _previousUnderMouse = UnderMouse;
         }
 
-        private bool HasUnderMouseChanged()
+        private static bool HasChanged(Object prev, Object next)
         {
-            return (UnderMouse == null && _previousUnderMouse != null)
-                   || (_previousUnderMouse == null && UnderMouse != null)
-                   || (_previousUnderMouse != null && UnderMouse != null
-                       && _previousUnderMouse.name != UnderMouse.name);
+            return (prev != null && next == null)
+                   || (prev == null && next != null)
+                   || (prev != null && prev.name != next.name);
         }
 
         private GameObject GetObjectUnderMouse(Camera activeCamera)

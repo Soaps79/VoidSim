@@ -16,6 +16,7 @@ namespace Assets.Configuration
         public CameraSettings CameraSettings;
 
         public Material SelectionMaterial;
+        public Material SelectedMaterial;
 
         public override void InstallBindings()
         {
@@ -41,10 +42,13 @@ namespace Assets.Configuration
             Container.Bind<Material>().ToSelf().FromInstance(SelectionMaterial).WhenInjectedInto<SelectionBehavior>();
             Container.Bind<Material>().ToSelf().FromInstance(SelectionMaterial).WhenInjectedInto<SelectionGameState>();
 
+            Container.Bind<Material>().ToSelf().FromInstance(SelectedMaterial).WhenInjectedInto<SelectedGameState>();
+
             // bind states
             Container.Bind<PauseGameState>().AsSingle();
             Container.Bind<DefaultGlobalState>().AsSingle();
 
+            Container.Bind<SelectedGameState>().AsSingle();
             Container.Bind<SelectionGameState>().AsSingle();
             Container.Bind<DefaultGameState>().AsSingle();
         }
