@@ -1,5 +1,4 @@
 ﻿using System;
-using Assets.Controllers;
 using Assets.Controllers.GUI;
 using Assets.Model.Terrain;
 using UnityEngine;
@@ -14,13 +13,6 @@ namespace Assets.View
 
     public class TileFactory  : ITileFactory
     {
-        private readonly Material _selectionMaterial;
-
-        public TileFactory(Material selectionMaterial)
-        {
-            _selectionMaterial = selectionMaterial;
-        }
-
         public GameObject CreateTerrainTile(TerrainTile tile, TerrainView view, int x, int y, GameObject region)
         {
             var tileGo = new GameObject(tile.ToString());
@@ -45,7 +37,7 @@ namespace Assets.View
 
             // add select behavior
             //var selectBehavior = tileGo.AddComponent<SelectionBehavior>();
-            //selectBehavior.SelectionMaterial = _selectionMaterial;
+            //selectBehavior.SelectionMaterial = SelectionMaterial;
 
             return tileGo;
         }
