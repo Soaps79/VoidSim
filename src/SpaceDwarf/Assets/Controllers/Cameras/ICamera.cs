@@ -10,7 +10,6 @@ namespace Assets.Controllers.Cameras
         Vector3 Forward { get; }
         Vector3 Up { get; }
         Vector3 Right { get; }
-        CameraSettings CameraSettings { get; }
         bool IsActive { get; set; }
     }
 }

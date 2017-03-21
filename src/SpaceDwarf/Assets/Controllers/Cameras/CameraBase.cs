@@ -7,9 +7,6 @@ namespace Assets.Controllers.Cameras
     [RequireComponent(typeof(Camera))]
     public class CameraBase : MonoBehaviour, ICamera
     {
-        //todo: not this
-        [Inject] public CameraSettings CameraSettings { get; set; }
-
         public Camera CameraComponent { get; private set; }
         public Vector3 Position { get { return transform.position; } }
         public Vector3 Forward { get { return transform.forward; } }

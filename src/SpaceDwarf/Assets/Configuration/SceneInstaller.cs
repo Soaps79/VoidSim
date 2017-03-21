@@ -12,8 +12,6 @@ namespace Assets.Configuration
     /// </summary>
     public class SceneInstaller : MonoInstaller<SceneInstaller>
     {
-        public CameraSettings CameraSettings;
-
         public override void InstallBindings()
         {
             Container.Bind<Vector2>().ToSelf().FromInstance(new Vector2(0, 0)).WhenInjectedInto<PlayerCharacter>();
@@ -23,10 +21,7 @@ namespace Assets.Configuration
             Container.Bind<TerrainController>().FromInstance(TerrainController.Instance).AsSingle();
             Container.Bind<PlayerController>().FromInstance(PlayerController.Instance).AsSingle();
             Container.Bind<CameraController>().FromInstance(CameraController.Instance).AsSingle();
-
-            // config settings
-            Container.Bind<CameraSettings>().FromInstance(CameraSettings).AsSingle();
-
+            
             // Satisfy ITileFactory dependency, from a new instance, and use this one everywhere (single instance)
             var tileFactory = new TileFactory();
             Container.Bind<ITileFactory>().To<TileFactory>().FromInstance(tileFactory).AsSingle();

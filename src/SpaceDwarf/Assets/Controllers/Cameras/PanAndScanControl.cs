@@ -5,10 +5,11 @@ namespace Assets.Controllers.Cameras
     [CreateAssetMenu(menuName = "Cameras/Controls/Pan and Scan")]
     public class PanAndScanControl : CameraControl
     {
+        public int MoveSpeed = 5;
         public override string Name { get { return "PanAndScanControl"; } }
         public override void Execute(ICamera camera, float timeDelta)
         {
-            var magnitude = timeDelta * camera.CameraSettings.MoveSpeed;
+            var magnitude = timeDelta * MoveSpeed;
             var horizontal = Input.GetAxis("Horizontal") * magnitude;
             var vertical = Input.GetAxis("Vertical") * magnitude;
             var movement = new Vector3(horizontal, vertical, 0);
