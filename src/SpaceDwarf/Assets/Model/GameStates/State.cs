@@ -49,9 +49,9 @@ namespace Assets.Model.GameStates
 
         private void DoEnterExecutions(StateMachine machine)
         {
-            foreach (var execution in OnEnterExecutions)
+            for(var i = 0; i < OnEnterExecutions.Length; i++)
             {
-                execution.Execute(machine, Time.deltaTime);
+                OnEnterExecutions[i].Execute(machine, Time.deltaTime);
             }
         }
 
@@ -66,30 +66,28 @@ namespace Assets.Model.GameStates
 
         private void DoExecutions(StateMachine machine, float timeDelta)
         {
-            foreach (var execution in Executions)
+            for(var i = 0; i < Executions.Length; i++)
             {
-                execution.Execute(machine, timeDelta);
+                Executions[i].Execute(machine, timeDelta);
             }
         }
 
         private void DoTransitions(StateMachine machine, float timeDelta)
         {
-            foreach (var transition in Transitions)
+            for(var i = 0; i < Transitions.Length; i++)
             {
+                var transition = Transitions[i];
                 if (transition.Decision == null)
                 {
                     Debug.LogWarning("A transition's decision was null. Make sure it's set up in the inspector.");
                     continue;
                 }
                 var decision = transition.Decision.Decide(machine, timeDelta);
-                if (decision)
-                {
-                    machine.ChangeState(transition.TrueState);
-                }
-                else
-                {
-                    machine.ChangeState(transition.FalseState);
-                }
+
+                machine.ChangeState(
+                    decision ? 
+                    transition.TrueState :
+                    transition.FalseState);
             }
         }
 
@@ -102,9 +100,9 @@ namespace Assets.Model.GameStates
 
         private void DoExitExecutions(StateMachine machine)
         {
-            foreach (var execution in OnExitExecutions)
+            for(var i = 0; i < OnExitExecutions.Length; i++)
             {
-                execution.Execute(machine, Time.deltaTime);
+                OnExitExecutions[i].Execute(machine, Time.deltaTime);
             }
         }
         

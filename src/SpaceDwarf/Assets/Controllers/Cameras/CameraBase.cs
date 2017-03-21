@@ -55,11 +55,11 @@ namespace Assets.Controllers.Cameras
 
         protected virtual void OnUpdate(float delta)
         {
-            foreach (var control in Controls)
+            for(var i = 0; i < Controls.Length; i++)
             {
-                if (control.IsEnabled)
+                if (Controls[i].IsEnabled)
                 {
-                    control.Execute(this, delta);
+                    Controls[i].Execute(this, delta);
                 }
             }
         }
