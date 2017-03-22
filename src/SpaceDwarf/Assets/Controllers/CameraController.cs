@@ -15,9 +15,11 @@ namespace Assets.Controllers
         // todo: use SOs, as-in Types example
         public const string FreeCameraKey = "FreeCamera";
         public const string FollowCameraKey = "FollowCamera";
+        public const string SpringCameraKey = "SpringCamera";
 
         public Camera FreeCamera;
         public Camera FollowCamera;
+        public Camera SpringCamera;
 
         private Camera _activeCamera;
         private Camera _prevCamera;
@@ -43,10 +45,15 @@ namespace Assets.Controllers
             
             // disable other camera types
             FreeCamera.enabled = false;
+            SpringCamera.enabled = false;
             
             // build map of known set camera types
             _cameraMap.Add(FreeCameraKey, FreeCamera);
             _cameraMap.Add(FollowCameraKey, FollowCamera);
+            _cameraMap.Add(SpringCameraKey, SpringCamera);
+
+            // override active camera
+            ChangeCamera(SpringCameraKey);
         }
 
         public void ChangeCamera(string cameraKey)
@@ -64,7 +71,6 @@ namespace Assets.Controllers
 
         public void ChangeCamera(Camera cameraComponent)
         {
-            //todo: should we allow changing to itself?
             if (_activeCamera == cameraComponent)
             {
                 //return;
