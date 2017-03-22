@@ -1,29 +1,51 @@
 ﻿using System.Collections.Generic;
-using Assets.Controllers.Cameras;
 using Assets.Framework;
 using UnityEngine;
 
 namespace Assets.Controllers
 {
+    // todo: this is using drop-in instances to cameras.
+    // figure out a good way to:
+    //   1.) Dynamically add cameras created at runtime
+    //   2.) Dynamically add cameras in editor
     public class CameraController : SingletonBehavior<CameraController>
     {
-        private Camera _activeCamera;
-        private Camera _prevCamera;
-        public Camera ActiveCamera { get { return _activeCamera; } }
+        // Keys for camera scripting
+        // todo: use SOs, as-in Types example
+        public const string FreeCameraKey = "FreeCamera";
+        public const string FollowCameraKey = "FollowCamera";
 
         public Camera FreeCamera;
         public Camera FollowCamera;
 
+        private Camera _activeCamera;
+        private Camera _prevCamera;
+
+        /// <summary>
+        /// Currently active camera component.
+        /// </summary>
+        public Camera ActiveCamera { get { return _activeCamera; } }
+        
+        
+        /// <summary>
+        /// Camera map to resolve string keys to in scene Camera elements.
+        /// </summary>
         private readonly Dictionary<string, Camera> _cameraMap = new Dictionary<string, Camera>();
 
         protected override void OnStart()
         {
             base.OnStart();
-            FreeCamera.enabled = false;
+
+            // start with FollowCamera by default
             FollowCamera.enabled = true;
-            _prevCamera = _activeCamera =  FollowCamera;
-            _cameraMap.Add("FreeCamera", FreeCamera);
-            _cameraMap.Add("FollowCamera", FollowCamera);
+            _prevCamera = _activeCamera = FollowCamera;
+            
+            // disable other camera types
+            FreeCamera.enabled = false;
+            
+            // build map of known set camera types
+            _cameraMap.Add(FreeCameraKey, FreeCamera);
+            _cameraMap.Add(FollowCameraKey, FollowCamera);
         }
 
         public void ChangeCamera(string cameraKey)
@@ -39,41 +61,39 @@ namespace Assets.Controllers
             }
         }
 
-        public void ChangeCamera(Camera cameraObject)
+        public void ChangeCamera(Camera cameraComponent)
         {
-            if (cameraObject == FreeCamera)
+            //todo: should we allow changing to itself?
+            if (_activeCamera == cameraComponent)
             {
+                //return;
+            }
+
+            // disable all
+            foreach (var sceneCamera in _cameraMap.Values)
+            {
+                sceneCamera.enabled = false;
+            }
+
+            // activate camera passed in, save previous
+            _prevCamera = _activeCamera;
+            _activeCamera = cameraComponent;
+            cameraComponent.enabled = true;
+
+            // handle special case:
+            // Free Cam should center on player when enabled.
+            // todo: consider moving this somewhere?
+            if(cameraComponent == FreeCamera)
                 CenterCameraOnPlayer(FreeCamera);
-                FreeCamera.enabled = true;
-                FollowCamera.enabled = false;
-                _prevCamera = _activeCamera;
-                _activeCamera = FreeCamera;
-            }
-            else if (cameraObject == FollowCamera)
-            {
-                FreeCamera.enabled = false;
-                FollowCamera.enabled = true;
-                _prevCamera = _activeCamera;
-                _activeCamera = FollowCamera;
-            }
-            else
-            {
-                Debug.LogWarning("Switching to unrecognized camera. Disabling Camera Controller registered cameras.");
-                FreeCamera.enabled = false;
-                FollowCamera.enabled = false;
-                cameraObject.enabled = true;
-                _prevCamera = _activeCamera;
-                _activeCamera = cameraObject;
-            }
         }
 
-        private void CenterCameraOnPlayer(Camera cameraObject)
+        private static void CenterCameraOnPlayer(Component cameraComponent)
         {
             var playerPosition = PlayerController.Instance.PlayerCharacter.Position;
-            cameraObject.transform.position = new Vector3(
+            cameraComponent.transform.position = new Vector3(
                 playerPosition.x, 
                 playerPosition.y, 
-                cameraObject.transform.position.z);
+                cameraComponent.transform.position.z);
         }
 
         public void Revert()
