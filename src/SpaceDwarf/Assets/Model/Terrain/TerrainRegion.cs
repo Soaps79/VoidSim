@@ -1,4 +1,5 @@
 ﻿using Assets.Framework;
+using QGame.Common;
 
 namespace Assets.Model.Terrain
 {
@@ -56,7 +57,7 @@ namespace Assets.Model.Terrain
             {
                 for (var j = 0; j < RegionSize; j++)
                 {
-                    SetObjectAt(i, j, new TerrainTile(i, j, typeGrid[i, j]));
+                    SetElementAt(i, j, new TerrainTile(i, j, typeGrid[i, j]));
                 }
             }
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
+//todo: Update QGame unity reference, cannot reference UnityEngine.UI with current reference (referenced by Receiver)
 namespace Assets.Scripts.UIHelpers
 {
 	/// <summary>

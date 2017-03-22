@@ -1,5 +1,6 @@
 ﻿using System;
 using Assets.Framework;
+using QGame.Common;
 
 namespace Assets.Model.Terrain
 {
@@ -40,7 +41,7 @@ namespace Assets.Model.Terrain
                 throw new IndexOutOfRangeException("regionViewY TerrainWorld index out of bounds");
             }
 
-            SetObjectAt(regionViewX, regionViewY, region);
+            SetElementAt(regionViewX, regionViewY, region);
             
             // fire events
             if (_onRegionAdded != null)

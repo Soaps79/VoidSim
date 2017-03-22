@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Assets.Framework;
+using QGame;
 using UnityEngine;
 
 namespace Assets.Controllers

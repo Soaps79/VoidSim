@@ -3,6 +3,7 @@ using QGame;
 using UnityEngine;
 using UnityEngine.UI;
 
+//todo: Update QGame unity reference, cannot reference UnityEngine.UI with current reference
 namespace Assets.Scripts.UIHelpers
 {
 	/// <summary>

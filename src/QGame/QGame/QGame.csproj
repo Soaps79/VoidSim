@@ -41,10 +41,12 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnityEditor">
+    <Reference Include="UnityEditor, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\UnityEditor.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine">
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
@@ -54,6 +56,8 @@
     <Compile Include="Behaviors\Behavior.cs" />
     <Compile Include="Behaviors\BehaviorsMisc.cs" />
     <Compile Include="Behaviors\TransformBehavior.cs" />
+    <Compile Include="Common\Grid.cs" />
+    <Compile Include="SingletonBehavior.cs" />
     <Compile Include="ILiving.cs" />
     <Compile Include="KeyValueDisplay.cs" />
     <Compile Include="Locator.cs" />
@@ -67,6 +71,7 @@
     <Compile Include="OrderedEventBehavior.cs" />
     <Compile Include="StopWatch.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy /Y "$(TargetPath)" "$(SolutionDir)..\VoidSim\Assets"</PostBuildEvent>

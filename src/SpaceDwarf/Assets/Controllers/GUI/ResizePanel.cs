@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 
 namespace Assets.Controllers.GUI
 {
+    //todo: Upgrade QGame unity reference, currently cant reference UnityEngine.EventSystems
     public class ResizePanel : OrderedEventBehavior, IPointerDownHandler, IDragHandler
     {
         public Vector2 MinSize = new Vector2(30, 40);

@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 
 namespace Assets.Controllers.GUI
 {
+    //todo: Upgrade QGame unity reference, currently cant reference UnityEngine.EventSystems
     public class DragPanel : OrderedEventBehavior, IPointerDownHandler, IDragHandler
     {
         private Vector2 _pointerOffset;

@@ -1,6 +1,7 @@
 ﻿using Assets.Framework;
 using Assets.Model;
 using Assets.View;
+using QGame;
 using UnityEngine;
 using Zenject;
 

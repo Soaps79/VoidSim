@@ -1,9 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-
-// todo: move to QGame
-namespace Assets.Framework
+namespace QGame.Common
 {
     /// <summary>
     /// Logical grid of objects
@@ -11,19 +9,16 @@ namespace Assets.Framework
     /// <typeparam name="T">Type of objects in the grid</typeparam>
     public class Grid<T>
     {
-        private readonly int _width;
-        private readonly int _height;
-
         private readonly T[,] _gridObjects;
 
-        private Action<T, T> _onSetTile;
+        public Action<T, T> OnSetElement;
 
         public Grid(int width, int height)
         {
-            _width = width;
-            _height = height;
+            Width = width;
+            Height = height;
 
-            _gridObjects = new T[_width, _height];
+            _gridObjects = new T[width, height];
         }
 
         public virtual string Name
@@ -31,18 +26,18 @@ namespace Assets.Framework
             get { return string.Format("Grid<{0}>", typeof(T).Name); }
         }
 
-        public int Width { get { return _width; } }
-        public int Height { get { return _height; } }
+        public int Width { get; private set; }
+        public int Height { get; private set; }
 
         public T GetObjectAt(int x, int y)
         {
             if (IsIndexOutOfBounds(x, y))
                 return default(T);
-            
+
             return _gridObjects[x, y];
         }
 
-        public T SetObjectAt(int x, int y, T tile)
+        public T SetElementAt(int x, int y, T tile)
         {
             if (IsIndexOutOfBounds(x, y))
                 return default(T);
@@ -51,35 +46,30 @@ namespace Assets.Framework
             _gridObjects[x, y] = tile;
 
             // fire set event
-            if (_onSetTile != null)
-                _onSetTile(oldTile, tile);
+            if (OnSetElement != null)
+                OnSetElement(oldTile, tile);
 
             return oldTile;
         }
 
-        public void RegisterOnSetObjectCallback(Action<T, T> callback)
-        {
-            _onSetTile += callback;
-        }
-
         public override string ToString()
         {
-            return string.Format("{0} width({1}), height({2})", Name, _width, _height);
+            return string.Format("{0} width({1}), height({2})", Name, Width, Height);
         }
 
         private bool IsIndexOutOfBounds(int x, int y)
         {
             var outOfBounds = false;
 
-            if (x >= _width || x < 0)
+            if (x >= Width || x < 0)
             {
-                Debug.LogWarningFormat("Grid: x index out of range ({0}), max ({1})", new[] { x, _width });
+                Debug.LogWarning(string.Format("Grid: x index out of range ({0}), max ({1})", x, Width));
                 outOfBounds = true;
             }
 
-            if (y >= _height || y < 0)
+            if (y >= Height || y < 0)
             {
-                Debug.LogWarningFormat("Grid: y index out of range ({0}), max ({1})", new[] { y, _height });
+                Debug.LogWarning(string.Format("Grid: y index out of range ({0}), max ({1})", y, Height));
                 outOfBounds = true;
             }
 

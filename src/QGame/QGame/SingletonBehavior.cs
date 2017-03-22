@@ -1,8 +1,6 @@
-﻿using QGame;
-using UnityEngine;
+﻿using UnityEngine;
 
-// todo: move to qgame
-namespace Assets.Framework
+namespace QGame
 {
     /// <summary>
     /// From: http://wiki.unity3d.com/index.php?title=Singleton
@@ -16,7 +14,7 @@ namespace Assets.Framework
     public class SingletonBehavior<T> : OrderedEventBehavior where T : MonoBehaviour
     {
         private static T _instance;
-        
+
         public static T Instance
         {
             get
@@ -31,7 +29,7 @@ namespace Assets.Framework
                     // return null;
                     applicationIsQuitting = false;
                 }
-                
+
                 if (_instance == null)
                 {
                     _instance = (T)FindObjectOfType(typeof(T));
@@ -64,7 +62,7 @@ namespace Assets.Framework
                 }
 
                 return _instance;
-                
+
             }
         }
 
