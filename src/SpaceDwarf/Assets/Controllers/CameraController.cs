@@ -71,11 +71,6 @@ namespace Assets.Controllers
 
         public void ChangeCamera(Camera cameraComponent)
         {
-            if (_activeCamera == cameraComponent)
-            {
-                //return;
-            }
-
             // disable all
             foreach (var sceneCamera in _cameraMap.Values)
             {

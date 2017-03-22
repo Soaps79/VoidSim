@@ -37,7 +37,7 @@ namespace Assets.Controllers.GUI
 
             // only resize if we are at the extreme bottom or right, minus a modest buffer zone
             const int buffer = 20;
-            var nearBottom = _currentPointer.y < _transform.rect.position.y - buffer;
+            var nearBottom = _currentPointer.y < _transform.rect.position.y + buffer;
             if (!nearBottom)
             {
                 // not near the bottom, don't allow negative y resize
