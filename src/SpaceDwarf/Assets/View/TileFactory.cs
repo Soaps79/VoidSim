@@ -28,7 +28,7 @@ namespace Assets.View
             spriteRenderer.sortingLayerName = view.SortingLayerName;
 
             // create collider
-            tileGo.AddComponent<BoxCollider>();
+            tileGo.AddComponent<BoxCollider2D>();
 
             // create tooltip
             var tooltip = tileGo.AddComponent<TooltipBehavior>();

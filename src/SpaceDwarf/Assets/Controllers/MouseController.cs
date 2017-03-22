@@ -1,5 +1,4 @@
 ﻿using System;
-using Assets.Framework;
 using QGame;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -8,12 +7,6 @@ namespace Assets.Controllers
 {
     public class MouseController : SingletonBehavior<MouseController>
     {
-        //todo: DI layer masks
-        private const int PlayerLayerMask = 1 << 11;
-        private const int UnitsLayerMask = 1 << 10;
-        private const int BuildingsLayerMask = 1 << 9;
-        private const int TerrainLayerMask = 1 << 8;
-
         private GameObject _underMouse;
         public GameObject UnderMouse
         {
@@ -50,32 +43,16 @@ namespace Assets.Controllers
 
         private GameObject GetObjectUnderMouse(Camera activeCamera)
         {
-            // project ray from screen into world
-            var ray = activeCamera.ScreenPointToRay(Input.mousePosition);
-
-            RaycastHit hit;
-            GameObject foundGo = null;
-
-            // use layers to avoid z-fighting
-            // Player -> Units -> Buildings -> Terrain
-            if (Physics.Raycast(ray, out hit, 100, PlayerLayerMask))
+            var worldMouse = activeCamera.ScreenToWorldPoint(RawPosition);
+            
+            var hit = Physics2D.Raycast(worldMouse, Vector2.zero);
+            if (hit.collider != null && hit.collider.gameObject != null)
             {
-                foundGo = hit.transform.gameObject;
-            }
-            else if (Physics.Raycast(ray, out hit, 100, UnitsLayerMask))
-            {
-                foundGo = hit.transform.gameObject;
-            }
-            else if (Physics.Raycast(ray, out hit, 100, BuildingsLayerMask))
-            {
-                foundGo = hit.transform.gameObject;
-            }
-            else if (Physics.Raycast(ray, out hit, 100, TerrainLayerMask))
-            {
-                foundGo = hit.transform.gameObject;
+                return hit.collider.gameObject;
             }
 
-            return foundGo;
+            return null;
+
         }
     }
 }
