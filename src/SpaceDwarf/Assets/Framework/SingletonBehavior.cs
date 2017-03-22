@@ -1,6 +1,7 @@
 ﻿using QGame;
 using UnityEngine;
 
+// todo: move to qgame
 namespace Assets.Framework
 {
     /// <summary>
