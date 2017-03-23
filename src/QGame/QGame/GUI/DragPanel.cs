@@ -1,11 +1,10 @@
 ﻿using System;
-using QGame;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Assets.Controllers.GUI
+
+namespace QGame.GUI
 {
-    //todo: Upgrade QGame unity reference, currently cant reference UnityEngine.EventSystems
     public class DragPanel : OrderedEventBehavior, IPointerDownHandler, IDragHandler
     {
         private Vector2 _pointerOffset;
@@ -25,20 +24,20 @@ namespace Assets.Controllers.GUI
             if (canvas == null)
             {
                 throw new ArgumentException("Cannot add a panel without a canvas");
-                
+
             }
             _canvasTransform = canvas.transform as RectTransform;
             _panelTransform = Panel.transform as RectTransform;
-            
+
         }
 
         public void OnPointerDown(PointerEventData eventData)
         {
             _panelTransform.SetAsLastSibling();
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                _panelTransform, 
+                _panelTransform,
                 eventData.position,
-                eventData.pressEventCamera, 
+                eventData.pressEventCamera,
                 out _pointerOffset);
         }
 
@@ -46,7 +45,7 @@ namespace Assets.Controllers.GUI
         {
             if (_panelTransform == null)
                 return;
-            
+
             // clamp pointer so panel doesn't drag off screen
             Vector2 pointerPosition = ClampToWindow(eventData.position);
 
@@ -69,7 +68,7 @@ namespace Assets.Controllers.GUI
 
             var clampedX = Mathf.Clamp(position.x, canvasCorners[0].x, canvasCorners[2].x);
             var clampedY = Mathf.Clamp(position.y, canvasCorners[0].y, canvasCorners[2].y);
-            
+
             return new Vector2(clampedX, clampedY);
         }
     }

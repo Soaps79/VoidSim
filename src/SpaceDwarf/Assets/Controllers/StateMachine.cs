@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace Assets.Controllers
 {
-    [CreateAssetMenu(menuName = "GameStates/State Machine")]
     [Serializable]
     public class StateMachine : OrderedEventBehavior
     {

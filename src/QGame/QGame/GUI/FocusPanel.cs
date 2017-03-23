@@ -1,10 +1,12 @@
-﻿using QGame;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Assets.Controllers.GUI
+namespace QGame.GUI
 {
-    //todo: Upgrade QGame unity reference, currently cant reference UnityEngine.EventSystems
     public class FocusPanel : OrderedEventBehavior, IPointerDownHandler
     {
         private RectTransform _panel;

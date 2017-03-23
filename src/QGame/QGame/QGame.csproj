@@ -49,6 +49,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\UnityEngine.UI.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\Behaviors2D.cs" />
@@ -57,6 +60,11 @@
     <Compile Include="Behaviors\BehaviorsMisc.cs" />
     <Compile Include="Behaviors\TransformBehavior.cs" />
     <Compile Include="Common\Grid.cs" />
+    <Compile Include="GUI\DragPanel.cs" />
+    <Compile Include="GUI\FocusPanel.cs" />
+    <Compile Include="GUI\ResizePanel.cs" />
+    <Compile Include="GUI\TextBindingPublisher.cs" />
+    <Compile Include="GUI\TextBindingReceiver.cs" />
     <Compile Include="SingletonBehavior.cs" />
     <Compile Include="ILiving.cs" />
     <Compile Include="KeyValueDisplay.cs" />
