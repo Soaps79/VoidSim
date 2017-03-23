@@ -19,20 +19,6 @@ namespace Assets.Model.GameStates
 
         private StateMachine _machine;
 
-        protected StateMachine Machine
-        {
-            get
-            {
-                if (_machine == null)
-                {
-                    Debug.LogWarning(string.Format("State Machine was null on {0}. " +
-                                                   "Make sure this state is added to the Machine.", ToString()));
-                }
-                return _machine;
-            }
-            private set { _machine = value; }
-        }
-
         void OnEnable()
         {
             OnEnabled();

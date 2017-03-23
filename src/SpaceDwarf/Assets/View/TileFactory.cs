@@ -2,6 +2,7 @@
 using Assets.Controllers.GUI;
 using Assets.Model.Terrain;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Assets.View
 {
@@ -35,11 +36,26 @@ namespace Assets.View
             tooltip.TooltipText1 = "Tile";
             tooltip.TooltipText2 = "Tile information";
 
+            // add event trigger
+            var trigger = tileGo.AddComponent<EventTrigger>();
+            var entry = new EventTrigger.Entry();
+            entry.eventID = EventTriggerType.PointerEnter;
+            var callback = new EventTrigger.TriggerEvent();
+            callback.AddListener((data) => SwapMaterial(data, tileGo));
+            entry.callback = callback;
+            trigger.triggers.Add(entry);
+
+
             // add select behavior
             //var selectBehavior = tileGo.AddComponent<SelectionBehavior>();
             //selectBehavior.SelectionMaterial = SelectionMaterial;
 
             return tileGo;
+        }
+
+        public void SwapMaterial(BaseEventData arg, GameObject tileGo)
+        {
+            Debug.Log(string.Format("Swap from Tile hit! Object: {0}", tileGo.name));
         }
 
         public Sprite AssignTileSprite(TerrainType type, TerrainView view)
