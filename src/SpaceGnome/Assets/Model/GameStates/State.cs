@@ -1,5 +1,5 @@
 ﻿using System;
-using Assets.Controllers;
+using Assets.Controllers.GameStates;
 using UnityEngine;
 
 namespace Assets.Model.GameStates
@@ -16,10 +16,8 @@ namespace Assets.Model.GameStates
         public Action<State, StateMachine> OnEnter = null;
         public Action<State, StateMachine, float> OnExecute = null;
         public Action<State, StateMachine> OnExit = null;
-
-        private StateMachine _machine;
-
-        void OnEnable()
+        
+        private void OnEnable()
         {
             OnEnabled();
         }

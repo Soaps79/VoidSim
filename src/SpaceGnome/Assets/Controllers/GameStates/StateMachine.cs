@@ -3,7 +3,7 @@ using Assets.Model.GameStates;
 using QGame;
 using UnityEngine;
 
-namespace Assets.Controllers
+namespace Assets.Controllers.GameStates
 {
     [Serializable]
     public class StateMachine : OrderedEventBehavior

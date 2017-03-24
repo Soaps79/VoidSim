@@ -1,5 +1,5 @@
 ﻿using System;
-using Assets.Controllers;
+using Assets.Controllers.GameStates;
 using UnityEngine;
 
 namespace Assets.Model.GameStates
