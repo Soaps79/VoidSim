@@ -5,7 +5,12 @@ using UnityEngine.EventSystems;
 
 namespace Assets.Controllers.Units
 {
-    public class UnitEvents : OrderedEventBehavior, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, ISelectHandler, IDeselectHandler
+    public class UnitEvents : OrderedEventBehavior, 
+        IPointerEnterHandler, 
+        IPointerExitHandler, 
+        IPointerClickHandler, 
+        ISelectHandler, 
+        IDeselectHandler
     {
         private UnitViewDetails _viewDetails;
         private SpriteRenderer _renderer;
@@ -39,7 +44,7 @@ namespace Assets.Controllers.Units
 
         public void OnSelect(BaseEventData eventData)
         {
-            Debug.Log(string.Format("OnSelect: {0}", eventData.selectedObject.name));
+            //Debug.Log(string.Format("OnSelect: {0}", eventData.selectedObject.name));
             _renderer.material = _viewDetails.SelectedMaterial;
         }
 
