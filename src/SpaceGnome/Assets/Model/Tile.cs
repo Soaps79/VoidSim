@@ -1,4 +1,4 @@
-﻿namespace Assets.Framework
+﻿namespace Assets.Model
 {
     /// <summary>
     /// Generic tile

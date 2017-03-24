@@ -1,16 +1,33 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 
-public class TerrainTile : MonoBehaviour {
+namespace Assets.Model.Terrain
+{
+    /// <summary>
+    /// Typed <see cref="Tile"/> for use in Terrain.
+    /// </summary>
+    public class TerrainTile : Tile
+    {
+        private TerrainType _type;
+        public Action<TerrainTile> OnTileTypeChanged { get; set; }
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+        public TerrainTile(int x, int y, TerrainType type)
+            : base(x, y)
+        {
+            _type = type;
+        }
+
+        public TerrainType Type
+        {
+            get { return _type; }
+            set
+            {
+                if (_type == value) { return; }
+
+                _type = value;
+                if (OnTileTypeChanged != null)
+                    OnTileTypeChanged(this);
+            }
+        }
+
+    }
 }
