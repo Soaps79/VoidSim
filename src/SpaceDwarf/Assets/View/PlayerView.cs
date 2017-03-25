@@ -12,6 +12,8 @@ namespace Assets.View
         // character object and components
         public GameObject CharacterPrefab;
 
+        public float MoveSpeed = 5;
+
         // gui
         public Canvas Canvas;
         public GameObject InventoryMenu;

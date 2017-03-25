@@ -1012,6 +1012,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CharacterPrefab: {fileID: 132641781}
+  MoveSpeed: 5
   Canvas: {fileID: 795857714}
   InventoryMenu: {fileID: 1552097401}
   BuildPalette: {fileID: 207519423}
@@ -1740,7 +1741,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   View: {fileID: 661856543}
-  MoveSpeed: 5
+  Controls:
+  - {fileID: 11400000, guid: a575a6b6edbca7442aebaf2a95493499, type: 2}
+  - {fileID: 11400000, guid: 11a1495d836b5ff44bc3d1b204a7365c, type: 2}
 --- !u!1 &1152233690
 GameObject:
   m_ObjectHideFlags: 0

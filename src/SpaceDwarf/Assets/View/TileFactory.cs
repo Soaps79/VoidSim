@@ -1,5 +1,6 @@
 ﻿using Assets.Controllers;
 using Assets.Controllers.GUI;
+using Assets.Controllers.Terrain;
 using Assets.Framework;
 using Assets.Model.Terrain;
 using UnityEngine;
@@ -68,32 +69,5 @@ namespace Assets.View
             exit.callback = onExit;
             trigger.triggers.Add(exit);
         }
-
-        //private void Highlight(BaseEventData arg, GameObject tileGo, TerrainView view)
-        //{
-        //    if (SelectionController.Instance.CanSelect("Terrain"))
-        //    {
-        //        SetMaterial(tileGo, view.HighlightMaterial);
-        //    }
-            
-        //}
-
-        //private void Unhighlight(BaseEventData arg, GameObject tileGo, TerrainView view)
-        //{
-        //    var material = (tileGo == SelectionController.Instance.SelectedObject)
-        //        ? view.SelectedMaterial
-        //        : view.DefaultMaterial;
-
-        //    SetMaterial(tileGo, material);
-        //}
-
-        //private void SetMaterial(GameObject tileGo, Material material)
-        //{
-        //    var renderer = tileGo.GetComponent<SpriteRenderer>();
-        //    renderer.material = material;
-        //}
-        
-        
-
     }
 }

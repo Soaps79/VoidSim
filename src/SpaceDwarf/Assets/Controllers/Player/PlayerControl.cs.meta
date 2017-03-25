@@ -1,11 +1,10 @@
 fileFormatVersion: 2
-guid: ab0b9616296400248b8ac20548c72a16
-timeCreated: 1489272341
+guid: 77e0b9953b8b85a45a6985a171894400
+timeCreated: 1490424579
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences:
-  - GreenGrassTile: {fileID: 21300002, guid: a43854610f6840c41b94a065801cb121, type: 3}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
