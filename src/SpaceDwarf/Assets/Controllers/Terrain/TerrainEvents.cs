@@ -12,7 +12,6 @@ namespace Assets.Controllers.Terrain
             {
                 SetMaterial(tileGo, view.HighlightMaterial);
             }
-
         }
 
         public static void Unhighlight(BaseEventData arg, GameObject tileGo, TerrainView view)

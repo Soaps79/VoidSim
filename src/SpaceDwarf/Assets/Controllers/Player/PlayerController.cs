@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Assets.Framework;
 using Assets.Model;
 using Assets.View;
 using QGame;
@@ -47,25 +48,6 @@ namespace Assets.Controllers
             {
                 Controls[i].UpdateCharacter(PlayerCharacter, View, timeDelta);
             }
-            //// check for input, calculate movement vector
-            //var horizontal = Input.GetAxis("Horizontal") * View.MoveSpeed * timeDelta;
-            //var vertical = Input.GetAxis("Vertical") * View.MoveSpeed * timeDelta;
-            //var movement = new Vector2(horizontal, vertical);
-
-            //if (PlayerCharacter.CanMove)
-            //{
-            //    // update animation
-            //    View.Animator.SetFloat("MoveX", horizontal);
-            //    View.Animator.SetFloat("MoveY", vertical);
-
-            //    // update player character
-            //    PlayerCharacter.Move(movement);
-            //}
-            //else
-            //{
-            //    View.Animator.SetFloat("MoveX", 0);
-            //    View.Animator.SetFloat("MoveY", 0);
-            //}
         }
 
         private void HandleMenuInput()

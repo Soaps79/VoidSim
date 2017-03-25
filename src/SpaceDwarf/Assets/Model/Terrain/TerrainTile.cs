@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using Assets.Framework;
 
 namespace Assets.Model.Terrain
