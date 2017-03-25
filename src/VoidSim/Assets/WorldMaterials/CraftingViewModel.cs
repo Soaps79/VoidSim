@@ -80,7 +80,8 @@ public class CraftingViewModel : MonoBehaviour
 
     private string GenerateText(Recipe recipe)
     {
-        return recipe.Ingredients.Aggregate(string.Format("{0}\t\t", recipe.ResultProduct), (content, ing)
-            => content + string.Format("{0} {1} ", ing.Quantity, ing.ProductName));
+        return recipe.ResultProduct;
+        //return recipe.Ingredients.Aggregate(string.Format("{0}\t\t", recipe.ResultProduct), (content, ing)
+        //    => content + string.Format("{0} {1} ", ing.Quantity, ing.ProductName));
     }
 }

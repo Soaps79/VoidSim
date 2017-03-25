@@ -19,7 +19,7 @@ namespace Assets.Scripts.WorldMaterials
         [Inject]
         public WorldClock WorldClock;
 
-        private readonly Queue<Recipe> _recipeQueue = new Queue<Recipe>();
+        private readonly List<Recipe> _recipeQueue = new List<Recipe>();
         private Recipe _currentlyCrafting;
         private const string STOPWATCH_NAME = "Crafting";
 
@@ -43,7 +43,7 @@ namespace Assets.Scripts.WorldMaterials
         {
             // This func can possibly take in a transaction and hold the cost.
             // will enable refunds when player cancels a build
-            _recipeQueue.Enqueue(recipe);
+            _recipeQueue.Add(recipe);
             CheckForBeginCrafting();
         }
 
@@ -52,7 +52,11 @@ namespace Assets.Scripts.WorldMaterials
             // If nothing is currently being crafted and there is something in the queue, start it.
             // Doing it next cycle to give stopwatch a chance to complete, should not be made not necessary
             if (_currentlyCrafting == null && _recipeQueue.Any())
-                OnNextUpdate += delta => BeginCrafting(_recipeQueue.Dequeue());
+            {
+                var first = _recipeQueue.First();
+                OnNextUpdate += delta => BeginCrafting(first);
+                _recipeQueue.RemoveAt(0);
+            }
         }
 
         private void BeginCrafting(Recipe recipe)

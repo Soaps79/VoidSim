@@ -279,6 +279,11 @@ public class WorldClock : QScript, IMessageListener
 
 
     // would be nice to make these appear statically
+    public float SecondsPerHour
+    {
+        get {  return RealSecondsToGameHour; }
+    }
+
     public float SecondsPerDay
     {
         get { return RealSecondsToGameHour * HoursPerDay; }
@@ -303,6 +308,8 @@ public class WorldClock : QScript, IMessageListener
     {
         switch (timeLength.TimeUnit)
         {
+            case TimeUnit.Hour:
+                return RealSecondsToGameHour * timeLength.Length;
             case TimeUnit.Day:
                 return SecondsPerDay* timeLength.Length;
             case TimeUnit.Week:
@@ -312,7 +319,7 @@ public class WorldClock : QScript, IMessageListener
             case TimeUnit.Year:
                 return SecondsPerYear* timeLength.Length;
             default:
-                throw new ArgumentOutOfRangeException("Unsupported Unit in GetSeconds", timeLength.TimeUnit, null);
+                throw new ArgumentOutOfRangeException("timeLength", timeLength.TimeUnit, "Unsupported Unit in GetSeconds");
         }
     }
 }
