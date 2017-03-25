@@ -41,7 +41,14 @@ namespace QGame
             }
         }
 
-        public bool IsPaused { get; set; }
+        public void Pause()
+        {
+            _isPaused = true;
+        }
+
+        private bool _isPaused;
+
+        public bool IsPaused { get {  return _isPaused; } }
 
         /// <summary>
         /// Alter the occurence of ticks. Will reset elapsed timer.
@@ -77,10 +84,11 @@ namespace QGame
         }
 
         /// <summary>
-        /// Resets object state
+        /// Resets object state, will also unpause
         /// </summary>
         public void Reset()
         {
+            _isPaused = false;
             _hasTicked = false;
             _elapsedLifetime = 0;
             IsComplete = false;
