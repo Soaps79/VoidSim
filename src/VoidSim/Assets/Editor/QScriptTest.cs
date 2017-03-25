@@ -54,7 +54,6 @@ namespace Assets.Editor
         public void QScript_AliveChanged_EventsFired()
         {
             var aliveChangedCount = 0;
-            var onDeathCount = 0;
 
             _target.AliveChanged += delegate { aliveChangedCount++; };
             
@@ -62,7 +61,6 @@ namespace Assets.Editor
             _target.IsAlive = true;
 
             Assert.AreEqual(2, aliveChangedCount);
-
         }
 
         [Test]
@@ -114,7 +112,6 @@ namespace Assets.Editor
             var onEveryUpdateCount = 0;
             var enabledChangedCount = 0;
             var aliveChangedCount = 0;
-            var onDeathCount = 0;
 
             _target.EnableChanged += delegate { enabledChangedCount++; };
             _target.OnNextUpdate += delegate { onNextUpdateCount++; };
