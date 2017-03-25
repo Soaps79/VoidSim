@@ -1,5 +1,6 @@
 ﻿using System;
 using Assets.Controllers.GUI;
+using Assets.Framework;
 using Assets.Model.Terrain;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -16,51 +17,73 @@ namespace Assets.View
     {
         public GameObject CreateTerrainTile(TerrainTile tile, TerrainView view, int x, int y, GameObject region)
         {
-            var tileGo = new GameObject(tile.ToString());
-
-            // update position relative to region parent (not accurately working!!!)
+            var tileGo = UnityEngine.Object.Instantiate(Resources.Load("Prefabs/GreenGrassTile")) as GameObject;
+            if (tileGo == null)
+            {
+                Debug.LogError("Could not load tile.");
+                return null;
+            }
+            
+            tileGo.name = tile.ToString();
             tileGo.transform.parent = region.transform;
             tileGo.transform.localPosition = new Vector3(x, y, 1);
             tileGo.layer = view.TerrainLayer;
 
             // create sprite component and assign texture
-            var spriteRenderer = tileGo.AddComponent<SpriteRenderer>();
+            var spriteRenderer = tileGo.GetOrAddComponent<SpriteRenderer>();
             spriteRenderer.sprite = AssignTileSprite(tile.Type, view);
             spriteRenderer.sortingLayerName = view.SortingLayerName;
 
             // create collider
-            tileGo.AddComponent<BoxCollider2D>();
+            //tileGo.AddComponent<BoxCollider2D>();
 
             // create tooltip
-            var tooltip = tileGo.AddComponent<TooltipBehavior>();
+            var tooltip = tileGo.GetOrAddComponent<TooltipBehavior>();
             tooltip.TooltipText1 = "Tile";
             tooltip.TooltipText2 = "Tile information";
 
             // add event trigger
             var trigger = tileGo.AddComponent<EventTrigger>();
-            var entry = new EventTrigger.Entry();
-            entry.eventID = EventTriggerType.PointerEnter;
-            var callback = new EventTrigger.TriggerEvent();
-            callback.AddListener((data) => SwapMaterial(data, tileGo));
-            entry.callback = callback;
-            trigger.triggers.Add(entry);
+            AddEventTriggers(view, tileGo, trigger);
             return tileGo;
         }
 
-        public void SwapMaterial(BaseEventData arg, GameObject tileGo)
+        private void AddEventTriggers(TerrainView view, GameObject tileGo, EventTrigger trigger)
         {
-            Debug.Log(string.Format("Swap from Tile hit! Object: {0}", tileGo.name));
+            var enter = new EventTrigger.Entry {eventID = EventTriggerType.PointerEnter};
+            var onEnter = new EventTrigger.TriggerEvent();
+            onEnter.AddListener((data) => Highlight(data, tileGo, view));
+            enter.callback = onEnter;
+            trigger.triggers.Add(enter);
+
+            var exit = new EventTrigger.Entry {eventID = EventTriggerType.PointerExit};
+            var onExit = new EventTrigger.TriggerEvent();
+            onExit.AddListener((data) => Unhighlight(data, tileGo, view));
+            exit.callback = onExit;
+            trigger.triggers.Add(exit);
+        }
+
+        private void Unhighlight(BaseEventData arg, GameObject tileGo, TerrainView view)
+        {
+            SetMaterial(tileGo, view.DefaultMaterial);
+        }
+
+        private void SetMaterial(GameObject tileGo, Material material)
+        {
+            var renderer = tileGo.GetComponent<SpriteRenderer>();
+            renderer.material = material;
+        }
+
+
+        public void Highlight(BaseEventData arg, GameObject tileGo, TerrainView view)
+        {
+            //Debug.Log(string.Format("Swap from Tile hit! Object: {0}", tileGo.name));
+            SetMaterial(tileGo, view.HighlightMaterial);
         }
 
         public Sprite AssignTileSprite(TerrainType type, TerrainView view)
         {
-            switch (type)
-            {
-                case TerrainType.GreenGrass:
-                    return view.GetGreenGrassSprite();
-                default:
-                    throw new ArgumentOutOfRangeException("type", type, null);
-            }
+            return view.GetRandomSprite(type);
         }
 
     }

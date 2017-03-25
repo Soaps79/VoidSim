@@ -1,35 +1,42 @@
 ﻿using System;
+using System.Collections.Generic;
+using Assets.Controllers;
+using Assets.Model.Terrain;
+using QGame;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Assets.View
 {
-    public class TerrainView : MonoBehaviour
+    public class TerrainView : OrderedEventBehavior
     {
         public int TerrainLayer = 8;
         public readonly string SortingLayerName = "Terrain";
 
-        public Sprite GreenGrassTile0;
-        public Sprite GreenGrassTile1;
-        public Sprite GreenGrassTile2;
-        public Sprite GreenGrassTile3;
+        public Material DefaultMaterial;
+        public Material HighlightMaterial;
+        public Material SelectedMaterial;
 
-        public Sprite GetGreenGrassSprite()
+        public List<TileTypeView> TileViews;
+
+        private readonly Dictionary<TerrainType, TileTypeView> _tileViewDictionary = new Dictionary<TerrainType, TileTypeView>();
+
+        protected override void OnStart()
         {
-            var type = UnityEngine.Random.Range(0, 4);
-            switch (type)
+            base.OnStart();
+
+            // create a handy dictionary from views
+            for(var i = 0; i < TileViews.Count; i++)
             {
-                case 0:
-                    return GreenGrassTile0;
-                case 1:
-                    return GreenGrassTile1;
-                case 2:
-                    return GreenGrassTile2;
-                case 3:
-                    return GreenGrassTile3;
-                default:
-                    Debug.LogError(new IndexOutOfRangeException("Invalid GreenGrassTile index."));
-                    return GreenGrassTile0;
+                _tileViewDictionary.Add(TileViews[i].TileType, TileViews[i]);
             }
+        }
+
+        public Sprite GetRandomSprite(TerrainType type)
+        {
+            var view = _tileViewDictionary[type];
+            var index = UnityEngine.Random.Range(0, view.Sprites.Count);
+            return view.Sprites[index];
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using Assets.Framework;
 
 namespace Assets.Model.Terrain
@@ -34,6 +35,12 @@ namespace Assets.Model.Terrain
         public void RegisterOnTileTypeChangedCallback(Action<TerrainTile> callback)
         {
             _onTileTypeChanged += callback;
+        }
+
+        public override string ToString()
+        {
+            var baseStr = base.ToString();
+            return string.Format("{0} Terrain ({1})", baseStr, _type);
         }
     }
 }

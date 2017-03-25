@@ -1,5 +1,4 @@
-﻿using Assets.Framework;
-using Assets.Model.Terrain;
+﻿using Assets.Model.Terrain;
 using Assets.View;
 using QGame;
 using UnityEngine;
@@ -11,6 +10,9 @@ namespace Assets.Controllers
     {
         [Tooltip("View for Terrain.")]
         public TerrainView View;
+
+        [Tooltip("Root for Terrain objects.")]
+        public Transform TerrainRoot;
         
         public TerrainWorld World { get; private set; }
 
@@ -25,7 +27,7 @@ namespace Assets.Controllers
             World = new TerrainWorld();
 
             // hook actions
-            World.RegisterOnRegionAddedCallback((world, tile) => { OnTerrainRegionAdded(world, tile, gameObject);});
+            World.RegisterOnRegionAddedCallback((world, tile) => { OnTerrainRegionAdded(world, tile);});
 
             // initialize regions (after hooking!)
             // todo: load based on player position
@@ -33,11 +35,11 @@ namespace Assets.Controllers
             
         }
 
-        public void OnTerrainRegionAdded(TerrainWorld world, TerrainRegion region, GameObject worldGo)
+        public void OnTerrainRegionAdded(TerrainWorld world, TerrainRegion region)
         {
             // create game object for region
             var regionGo = new GameObject(region.Name);
-            regionGo.transform.parent = worldGo.transform;
+            regionGo.transform.parent = TerrainRoot;
             regionGo.transform.localPosition = new Vector3(0, 0, 0);
 
             // hook any region events
