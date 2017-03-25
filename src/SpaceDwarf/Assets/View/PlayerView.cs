@@ -16,13 +16,7 @@ namespace Assets.View
         public Canvas Canvas;
         public GameObject InventoryMenu;
         public GameObject BuildPalette;
-
-        // camera
-        public bool SmoothZoom = false;
-        public float ZoomSpeed = 40;
-        public float MaxOrthoSize = 16;
-        public float MinOrthoSize = 2;
-
+        
         // controller access
         public Animator Animator { get; private set; }
         public RectTransform CanvasTransform { get; private set; }

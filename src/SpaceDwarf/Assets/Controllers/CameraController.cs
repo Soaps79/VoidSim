@@ -75,18 +75,22 @@ namespace Assets.Controllers
             foreach (var sceneCamera in _cameraMap.Values)
             {
                 sceneCamera.enabled = false;
+                sceneCamera.gameObject.SetActive(false);
             }
 
             // activate camera passed in, save previous
             _prevCamera = _activeCamera;
             _activeCamera = cameraComponent;
             cameraComponent.enabled = true;
+            cameraComponent.gameObject.SetActive(true);
 
             // handle special case:
             // Free Cam should center on player when enabled.
             // todo: consider moving this somewhere?
             if(cameraComponent == FreeCamera)
                 CenterCameraOnPlayer(FreeCamera);
+            if(cameraComponent == SpringCamera)
+                CenterCameraOnPlayer(SpringCamera);
         }
 
         private static void CenterCameraOnPlayer(Component cameraComponent)
