@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -49,5 +50,20 @@ namespace Assets.Scripts.WorldMaterials
             EditorUtility.FocusProjectWindow();
             Selection.activeObject = asset;
         }
+
+        public string[] GenerateProductNames()
+        {
+            return Products != null && Products.Any()
+                ? Products.Select(i => i.Name).ToArray()
+                : new string[1] { "Empty" };
+        }
+
+        public string[] GenerateContainerNames()
+        {
+            return Containers != null && Containers.Any()
+                ? Containers.Select(i => i.Name).ToArray()
+                : new string[1] { "Empty" };
+        }
+
     }
 }

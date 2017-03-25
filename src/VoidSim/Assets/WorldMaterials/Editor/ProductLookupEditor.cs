@@ -16,29 +16,16 @@ namespace Assets.WorldMaterials.Editor
         public static string[] ProductNames;
         public static string[] ContainerNames;
 
-        private void BindProductNames()
-        {
-            ProductNames = _lookup.Products != null && _lookup.Products.Any()
-                ? _lookup.Products.Select(i => i.Name).ToArray()
-                : new string[1] { "Empty" };
-        }
-
-        private void BindContainerNames()
-        {
-            ContainerNames = _lookup.Containers != null && _lookup.Containers.Any()
-                ? _lookup.Containers.Select(i => i.Name).ToArray()
-                : new string[1] { "Empty" };
-        }
-
         private ProductLookupScriptable _lookup;
 
+        
         public override void OnInspectorGUI()
         {
             // do we have to do this every time?
             _lookup = (ProductLookupScriptable)this.serializedObject.targetObject;
 
-            BindProductNames();
-            BindContainerNames();
+            ProductNames = _lookup.GenerateProductNames();
+            ContainerNames = _lookup.GenerateContainerNames();
             DrawDefaultInspector();
 
             // this will make it check every cycle, is this necessary?

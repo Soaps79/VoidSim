@@ -12,19 +12,7 @@ namespace Assets.Scripts.WorldMaterials
 {
     public class Inventory : QScript
     {
-        [Serializable]
-        public class ProductEntryInfo
-        {
-            public string ProductName;
-            public int Amount;
-        }
-
-        [Serializable]
-        public class InventoryInfo
-        {
-            public string Name;
-            public List<ProductEntryInfo> Products;
-        }
+        
 
         /// <summary>
         /// The idea here is that Products are one type of object that Inventory maintains.
@@ -40,19 +28,9 @@ namespace Assets.Scripts.WorldMaterials
         [Inject]
         private ProductLookup _productLookup;
         public string Name;
-        public bool LoadFromFile;
-
+        
         private readonly Dictionary<int, InventoryProductEntry> _productTable 
             = new Dictionary<int, InventoryProductEntry>();
-
-        protected override void OnStart()
-        {
-            if (LoadFromFile)
-            {
-                var json = LoadDataFromFile(Name);
-                Deserialize(json);
-            }
-        }
 
         /// <summary>
         /// Add Products to an inventory
@@ -91,37 +69,6 @@ namespace Assets.Scripts.WorldMaterials
 
         public class Factory : Factory<Inventory>
         {
-        }
-
-        // need to extract serializtion
-        public string Serialize()
-        {
-            var list = _productTable.Select(
-                i => new ProductEntryInfo {ProductName = i.Value.Product.Name, Amount = i.Value.Amount});
-            return JsonConvert.SerializeObject(list, Formatting.Indented);
-        }
-
-        public void Deserialize(string json)
-        {
-            var info = JsonConvert.DeserializeObject<InventoryInfo>(json);
-            _productTable.Clear();
-            foreach (var productEntryInfo in info.Products)
-            {
-                try
-                {
-                    var product = _productLookup.GetProduct(productEntryInfo.ProductName);
-                    var entry = new InventoryProductEntry
-                    {
-                        Amount = productEntryInfo.Amount,
-                        Product = product
-                    };
-                    _productTable.Add(product.ID, entry);
-                }
-                catch (Exception)
-                {
-                    throw new UnityException("Inventory deserialize: Tried to add same product twice.");
-                }
-            }
         }
 
         private string LoadDataFromFile(string fileName)
