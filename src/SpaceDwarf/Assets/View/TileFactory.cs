@@ -17,7 +17,7 @@ namespace Assets.View
     {
         public GameObject CreateTerrainTile(TerrainTile tile, TerrainView view, int x, int y, GameObject region)
         {
-            var tileGo = UnityEngine.Object.Instantiate(Resources.Load("Prefabs/GreenGrassTile")) as GameObject;
+            var tileGo = UnityEngine.Object.Instantiate(Resources.Load("Prefabs/TerrainTile")) as GameObject;
             if (tileGo == null)
             {
                 Debug.LogError("Could not load tile.");
@@ -43,13 +43,15 @@ namespace Assets.View
             tooltip.TooltipText2 = "Tile information";
 
             // add event trigger
-            var trigger = tileGo.AddComponent<EventTrigger>();
-            AddEventTriggers(view, tileGo, trigger);
+            
+            AddEventTriggers(view, tileGo);
             return tileGo;
         }
 
-        private void AddEventTriggers(TerrainView view, GameObject tileGo, EventTrigger trigger)
+        private void AddEventTriggers(TerrainView view, GameObject tileGo)
         {
+            var trigger = tileGo.AddComponent<EventTrigger>();
+
             var enter = new EventTrigger.Entry {eventID = EventTriggerType.PointerEnter};
             var onEnter = new EventTrigger.TriggerEvent();
             onEnter.AddListener((data) => Highlight(data, tileGo, view));
