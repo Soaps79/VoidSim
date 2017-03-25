@@ -8,7 +8,7 @@ namespace Assets.WorldMaterials.Editor
     [CustomPropertyDrawer(typeof(IngredientInfo))]
     public class IngredientInfoDrawer : PropertyDrawer
     {
-        int _nameIndex = 0;
+        int _nameIndex;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {

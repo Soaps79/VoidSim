@@ -16,7 +16,6 @@ namespace Assets.WorldMaterials.Editor
             position = EditorGUI.IndentedRect(position);
             position.x -= 12;
 
-            // create a rect for and add the amount
             var amountRect = new Rect(position.x, position.y, 160, position.height);
             EditorGUI.PropertyField(amountRect, property.FindPropertyRelative("Name"), GUIContent.none);
 
@@ -24,7 +23,7 @@ namespace Assets.WorldMaterials.Editor
             EditorGUI.LabelField(position, "Speed", GUIStyle.none);
 
             position.x += 40;
-            var nameRect = new Rect(position.x, position.y, 40, position.height);
+            var nameRect = new Rect(position.x, position.y, 50, position.height);
             EditorGUI.PropertyField(nameRect, property.FindPropertyRelative("CraftingSpeed"), GUIContent.none);
 
             EditorGUI.EndProperty();

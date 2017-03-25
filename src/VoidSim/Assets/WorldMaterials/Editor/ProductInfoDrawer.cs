@@ -17,30 +17,13 @@ namespace Assets.WorldMaterials.Editor
             position = EditorGUI.IndentedRect(position);
             position.x -= 12;
 
-            // create a rect for and add the amount
-            var amountRect = new Rect(position.x, position.y, 140, position.height);
-            EditorGUI.PropertyField(amountRect, property.FindPropertyRelative("Name"), GUIContent.none);
-
+            // get the product name, then handle moving the cursor
+            var nameRect = new Rect(position.x, position.y, 140, position.height);
+            EditorGUI.PropertyField(nameRect, property.FindPropertyRelative("Name"), GUIContent.none);
             position.x += 140;
-            var nameRect = new Rect(position.x, position.y, 80, position.height);
-            EditorGUI.PropertyField(nameRect, property.FindPropertyRelative("Category"), GUIContent.none);
 
-            // Saving for 
-            //// grab the current name and list
-            //var names = ProductLookupEditor.ProductNames;
-
-
-            //// make this better and extract it
-            //// find the object's current name index, get the index from state of the popup
-            //var currentName = names.ToList().FindIndex(i => i == nameProperty.stringValue);
-            //var current = EditorGUI.Popup(nameRect, currentName, names, GUIStyle.none);
-
-            // if they're different, the popup changed, grab its result
-            //if (current != _nameIndex)
-            //{
-            //    nameProperty.stringValue = names[current];
-            //    _nameIndex = current;
-            //}
+            var categoryRect = new Rect(position.x, position.y, 80, position.height);
+            EditorGUI.PropertyField(categoryRect, property.FindPropertyRelative("Category"), GUIContent.none);
 
             EditorGUI.EndProperty();
         }
