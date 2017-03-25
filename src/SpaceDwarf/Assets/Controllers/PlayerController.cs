@@ -3,11 +3,12 @@ using Assets.Model;
 using Assets.View;
 using QGame;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Zenject;
 
 namespace Assets.Controllers
 {
-    public class PlayerController : SingletonBehavior<PlayerController>
+    public class PlayerController : SingletonBehavior<PlayerController>, IPointerEnterHandler
     {
         public PlayerView View;
 
@@ -113,6 +114,11 @@ namespace Assets.Controllers
 
             var clampedPosition = new Vector2(clampedX, clampedY);
             return clampedPosition;
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -44,12 +44,6 @@ namespace Assets.View
             callback.AddListener((data) => SwapMaterial(data, tileGo));
             entry.callback = callback;
             trigger.triggers.Add(entry);
-
-
-            // add select behavior
-            //var selectBehavior = tileGo.AddComponent<SelectionBehavior>();
-            //selectBehavior.SelectionMaterial = SelectionMaterial;
-
             return tileGo;
         }
 

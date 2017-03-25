@@ -2,6 +2,7 @@
 using Assets.Framework;
 using QGame;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Object = UnityEngine.Object;
 
 namespace Assets.Controllers
@@ -16,6 +17,7 @@ namespace Assets.Controllers
         {
             get
             {
+               
                 return _selectedObject;
             }
             private set
