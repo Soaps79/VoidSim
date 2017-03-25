@@ -5,6 +5,10 @@ using UnityEngine;
 
 namespace Assets.Scripts.WorldMaterials
 {
+    /// <summary>
+    /// This scriptable and its Info objects are an abstraction of the
+    /// Product aimed at the inspector and serialization in general
+    /// </summary>
     [Serializable]
     public class IngredientInfo
     {
@@ -26,7 +30,6 @@ namespace Assets.Scripts.WorldMaterials
     {
         public int ID;
         public string Name;
-        //[JsonConverter(typeof(StringEnumConverter))]
         public ProductCategory Category;
     }
 
@@ -40,12 +43,10 @@ namespace Assets.Scripts.WorldMaterials
         public static void CreateMyAsset()
         {
             var asset = ScriptableObject.CreateInstance<ProductLookupScriptable>();
-
             AssetDatabase.CreateAsset(asset, "Assets/NewScripableObject.asset");
             AssetDatabase.SaveAssets();
 
             EditorUtility.FocusProjectWindow();
-
             Selection.activeObject = asset;
         }
     }

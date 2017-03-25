@@ -25,9 +25,7 @@ namespace Assets.WorldMaterials.Editor
             // create a rect for and add the amount
             var amountRect = new Rect(position.x, position.y, 65, position.height);
             EditorGUI.PropertyField(amountRect, property.FindPropertyRelative("Quantity"), GUIContent.none);
-
             
-
             // prepare rect for product selector
             // learn how to snap right
             EditorGUI.indentLevel = 4;

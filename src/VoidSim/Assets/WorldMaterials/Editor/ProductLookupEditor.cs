@@ -10,6 +10,9 @@ namespace Assets.WorldMaterials.Editor
     [CustomEditor(typeof(ProductLookupScriptable))]
     public class ProductLookupEditor : UnityEditor.Editor
     {
+        // These are for the editor dropdowns
+        // Ingredient PropertyDrawer needs this in both an array and a string
+        // it ToLists every draw, maintain both if perf becomes an issue
         public static string[] ProductNames;
         public static string[] ContainerNames;
 
@@ -31,27 +34,16 @@ namespace Assets.WorldMaterials.Editor
 
         public override void OnInspectorGUI()
         {
+            // do we have to do this every time?
             _lookup = (ProductLookupScriptable)this.serializedObject.targetObject;
+
             BindProductNames();
             BindContainerNames();
-
-
-
             DrawDefaultInspector();
+
+            // this will make it check every cycle, is this necessary?
+            // must be a way to redraw on a real Dirty
             EditorUtility.SetDirty(this);
-
-            // add a button to serialize
-            //if (GUILayout.Button("Serialize"))
-            //{
-            //    view.SerializeAll();
-            //}
-
         }
     }
-
-    //[CustomEditor(typeof (ProductLookup))]
-    //public class ResourceCustomEditor : Editor
-    //{
-
-    //}
 }
