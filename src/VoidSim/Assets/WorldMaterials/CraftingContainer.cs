@@ -9,8 +9,16 @@ using Zenject;
 namespace Assets.Scripts.WorldMaterials
 {
     /// <summary>
-    /// This object manages the queueing and execution of Recipes. A driver calls QueueCrafting(), 
-    /// which will start constructing if none already going, otherwise queue
+    /// This object manages the queueing and crafting of Recipes. It was written alongside
+    /// CraftingViewModel, which binds it to a player-facing UI. Any other actor can drive
+    /// the Container using a similar interface:
+    /// 
+    /// QueueCrafting(Recipe recipe) - queues a build, returns its ID
+    /// public Action<Recipe> OnCraftingComplete - consume the result
+    /// 
+    /// CancelCrafting(int recipeId)
+    /// public Action<Recipe> OnCraftingCancelled - refunds goods
+    /// 
     /// </summary>
     public class CraftingContainer : QScript
     {
@@ -29,11 +37,14 @@ namespace Assets.Scripts.WorldMaterials
         private const string STOPWATCH_NAME = "Crafting";
         private int _lastId;
 
+        // best external usage
         public Action<Recipe> OnCraftingComplete;
+        public Action<Recipe> OnCraftingCancelled;
+
+        // could probably be ignored by an outside actor, aimed at internal UI representation
+        // written so game-side consumers don't have to know what a QueuedRecipe is
         public Action<QueuedRecipe> OnCraftingBegin;
         public Action<QueuedRecipe> OnCraftingQueued;
-        public Action<Recipe> OnCraftingCancelled;
-        // written so game-side consumers don't have to know what a QueuedRecipe is
         public Action<QueuedRecipe> OnCraftingCompleteUI;
 
         public float CurrentQueueCount { get { return _recipeQueue.Count; } }
@@ -46,10 +57,8 @@ namespace Assets.Scripts.WorldMaterials
             }
         }
 
-        /// <summary>
-        /// Users will call this, container will decide whether or not it can start right away.
-        /// </summary>
-        public void QueueCrafting(Recipe recipe)
+        // This, CancelCrafting() and the Recipe callbacks are the typical in-game usage
+        public int QueueCrafting(Recipe recipe)
         {
             _lastId++;
             var queued = new QueuedRecipe {ID = _lastId, Recipe = recipe};
@@ -59,6 +68,7 @@ namespace Assets.Scripts.WorldMaterials
                 OnCraftingQueued(queued);
 
             CheckForBeginCrafting();
+            return queued.ID;
         }
 
         private void CheckForBeginCrafting()
@@ -84,7 +94,6 @@ namespace Assets.Scripts.WorldMaterials
             // may replace with WorldTime when it is a more flexible type
             var seconds = WorldClock.GetSeconds(recipe.TimeLength);
 
-            // TODO: Add the node just once during initialization
             StopWatch.AddNode(STOPWATCH_NAME, seconds, true).OnTick = CompleteCraft;
             _currentlyCrafting = queuedRecipe;
             if (OnCraftingBegin != null)
@@ -104,20 +113,28 @@ namespace Assets.Scripts.WorldMaterials
             CheckForBeginCrafting();
         }
 
-        public void CancelCrafting(QueuedRecipe recipe)
+        public void CancelCrafting(int recipeId)
         {
-            // cancels craft, tells observers, see if a new craft should start
-            if (_currentlyCrafting.ID == recipe.ID)
+            Recipe recipe = null;
+            
+            // check whether to cancel current build or one from the queue
+            if (_currentlyCrafting.ID == recipeId)
             {
+                recipe = _currentlyCrafting.Recipe;
                 CancelCurrentCraft();
             }
             else
             {
-                _recipeQueue.RemoveAll(i => i.ID == recipe.ID);
+                var queuedRecipe = _recipeQueue.FirstOrDefault(i => i.ID == recipeId);
+                if (queuedRecipe != null)
+                    recipe = queuedRecipe.Recipe;
+
+                _recipeQueue.RemoveAll(i => i.ID == recipeId);
             }
 
-            if (OnCraftingCancelled != null)
-                OnCraftingCancelled(recipe.Recipe);
+            // only broadcast if a build was actually cancelled
+            if (recipe != null && OnCraftingCancelled != null)
+                OnCraftingCancelled(recipe);
 
             CheckForBeginCrafting();
         }

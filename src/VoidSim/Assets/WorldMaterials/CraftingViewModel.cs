@@ -12,9 +12,9 @@ using UnityEngine.UI;
 /// 
 /// Callback Flows
 /// Init: Container > ViewModel > creates recipe buttons
-/// Queue: RecipeButton > ViewModel > Container queues build > ViewModel > create queue button
-/// Complete: Container > ViewModel > removes button from list
-/// Cancel: QueueButton > ViewModel > Container cancels build > ViewModel > remove queue button
+/// Queue Build: RecipeButton > ViewModel > Container queues build > ViewModel > create queue button
+/// Complete Build: Container > ViewModel > removes button from list
+/// Cancel Build: QueueButton > ViewModel > Container cancels build > ViewModel > remove queue button
 /// 
 /// The flows with VM > Container > VM facilitate other actors being able to queue and cancel
 /// </summary>
@@ -130,11 +130,12 @@ public class CraftingViewModel : MonoBehaviour
         _crafter.QueueCrafting(recipe);
     }
 
-    // tell crafter cancel was requested from button
+    // tell crafter to cancel, kill button
     private void CancelCrafting(int buttonId)
     {
+        _crafter.CancelCrafting(buttonId);
+
         var queued = _queuedButtons.FirstOrDefault(i => i.QueueID == buttonId);
-        _crafter.CancelCrafting(queued.Recipe);
         queued.Button.gameObject.SetActive(false);
         Destroy(queued.Button);
     }
