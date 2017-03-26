@@ -10,7 +10,7 @@ namespace Assets.Scripts.WorldMaterials
 {
     /// <summary>
     /// This object manages the queueing and crafting of Recipes. It was written alongside
-    /// CraftingViewModel, which binds it to a player-facing UI. Any other actor can drive
+    /// PlayerCraftingViewModel, which binds it to a player-facing UI. Any other actor can drive
     /// the Container using a similar interface:
     /// 
     /// QueueCrafting(Recipe recipe) - queues a build, returns its ID
@@ -42,10 +42,10 @@ namespace Assets.Scripts.WorldMaterials
         public Action<Recipe> OnCraftingCancelled;
 
         // could probably be ignored by an outside actor, aimed at internal UI representation
-        // written so game-side consumers don't have to know what a QueuedRecipe is
-        public Action<QueuedRecipe> OnCraftingBegin;
-        public Action<QueuedRecipe> OnCraftingQueued;
-        public Action<QueuedRecipe> OnCraftingCompleteUI;
+        // also encapsulates Recipe ID system
+        public Action<Recipe, int> OnCraftingBegin;
+        public Action<Recipe, int> OnCraftingQueued;
+        public Action<Recipe, int> OnCraftingCompleteUI;
 
         public float CurrentQueueCount { get { return _recipeQueue.Count; } }
         public float CurrentCraftRemainingAsZeroToOne
@@ -65,7 +65,7 @@ namespace Assets.Scripts.WorldMaterials
             _recipeQueue.Add(queued);
 
             if (OnCraftingQueued != null)
-                OnCraftingQueued(queued);
+                OnCraftingQueued(queued.Recipe, queued.ID);
 
             CheckForBeginCrafting();
             return queued.ID;
@@ -97,7 +97,7 @@ namespace Assets.Scripts.WorldMaterials
             StopWatch.AddNode(STOPWATCH_NAME, seconds, true).OnTick = CompleteCraft;
             _currentlyCrafting = queuedRecipe;
             if (OnCraftingBegin != null)
-                OnCraftingBegin(queuedRecipe);
+                OnCraftingBegin(queuedRecipe.Recipe, queuedRecipe.ID);
         }
 
         private void CompleteCraft()
@@ -107,7 +107,7 @@ namespace Assets.Scripts.WorldMaterials
                 OnCraftingComplete(_currentlyCrafting.Recipe);
 
             if (OnCraftingCompleteUI != null)
-                OnCraftingCompleteUI(_currentlyCrafting);
+                OnCraftingCompleteUI(_currentlyCrafting.Recipe, _currentlyCrafting.ID);
 
             _currentlyCrafting = null;
             CheckForBeginCrafting();

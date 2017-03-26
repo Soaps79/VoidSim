@@ -29,6 +29,7 @@ namespace Assets.Scripts.WorldMaterials
     public class Recipe
     {
         public string ResultProduct;
+        public int ResultAmount;
         public List<Ingredient> Ingredients;
         public TimeLength TimeLength;
         public CraftingContainerInfo Container;

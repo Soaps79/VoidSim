@@ -4,6 +4,7 @@ using System.Linq;
 using Assets.Scripts;
 using Assets.Scripts.WorldMaterials;
 using Assets.WorldMaterials;
+using Assets.WorldMaterials.UI;
 using QGame;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,6 +22,10 @@ public class StationLayer
     public int BuildingGridCapacity;
 }
 
+/// <summary>
+/// Serving as an anchor for all the other game parts as they come together.
+/// Currently instantiates player's crafting parts and binds UI interactions
+/// </summary>
 public class Station : QScript
 {
     [Inject]
@@ -32,6 +37,8 @@ public class Station : QScript
     private GameObject _craftingPrefab;
     [SerializeField]
     private InventoryScriptable _inventoryScriptable;
+    [SerializeField]
+    private Inventory _inventoryPrefab;
 
     private readonly Dictionary<LayerType, StationLayer> _layers =  new Dictionary<LayerType, StationLayer>();
     private CraftingContainer _crafter;
@@ -55,10 +62,9 @@ public class Station : QScript
 
     void Start ()
     {
-        InstantiateCraftingContainer();
-        BindCraftingToUI();
         InstantiateInventory();
-        BindInventoryToUI();
+        InstantiateCraftingContainer();
+        BindCraftingToShop();
     }
 
     private void InstantiateCraftingContainer()
@@ -81,24 +87,20 @@ public class Station : QScript
         Locator.ValueDisplay.Add("Current Craft", () => _crafter.CurrentCraftRemainingAsZeroToOne);
     }
 
-    private void BindCraftingToUI()
+    private void BindCraftingToShop()
     {
         // find the viewmodel and bind to it
-        var viewmodel = _crafter.gameObject.GetComponent<CraftingViewModel>();
-        viewmodel.Bind(_productLookup.GetRecipes(), _crafter);
+        var viewmodel = _crafter.gameObject.GetComponent<PlayerCraftingViewModel>();
+        viewmodel.Bind(_productLookup.GetRecipes(), _crafter, _inventory);
     }
 
     private void InstantiateInventory()
     {
-        // standard unity instantiation
-        var crafterGo = GameObject.Instantiate(_craftingPrefab);
-        crafterGo.transform.SetParent(transform);
-        var crafter = crafterGo.GetOrAddComponent<Inventory>();
-    }
-
-    private void BindInventoryToUI()
-    {
-        
+        _inventory = GameObject.Instantiate(_inventoryPrefab);
+        if(_inventory == null || _inventoryScriptable == null)
+            throw new UnityException("Station inventory missing a dependency");
+        _inventory.transform.SetParent(transform);
+        _inventory.BindToScriptable(_inventoryScriptable, _productLookup);
     }
 
     private void OnCraftingComplete(Recipe recipe)

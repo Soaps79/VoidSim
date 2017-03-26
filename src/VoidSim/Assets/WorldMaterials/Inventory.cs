@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Assets.WorldMaterials;
 using Newtonsoft.Json;
 using QGame;
 using UnityEngine;
@@ -25,12 +26,18 @@ namespace Assets.Scripts.WorldMaterials
             //public int MaxAmount;
         }
 
+        public class Factory : Factory<Inventory> { }
+
+        public Action OnProductsChanged;
+
         [Inject]
         private ProductLookup _productLookup;
         public string Name;
         
         private readonly Dictionary<int, InventoryProductEntry> _productTable 
             = new Dictionary<int, InventoryProductEntry>();
+
+        private InventoryScriptable _scriptable;
 
         /// <summary>
         /// Add Products to an inventory
@@ -49,17 +56,26 @@ namespace Assets.Scripts.WorldMaterials
 
             // impl MaxAmount checks
             _productTable[product.ID].Amount += amount;
+            Debug.Log(string.Format("Inventory update: {0} {1}", amount, product.Name));
             return true;
         }
 
-        // early interface pass... update as usage requires
-        public bool TryRemoveProduct(int productId, int amount)
+        public bool TryAddProduct(string product, int amount)
         {
-            if (!HasProduct(productId, amount))
+            return TryAddProduct(_productLookup.GetProduct(product), amount);
+        }
+
+        // early interface pass... update as usage requires
+        public bool TryRemoveProduct(string productName, int amount)
+        {
+            if (!HasProduct(productName, amount))
                 return false;
 
-            _productTable[productId].Amount -= amount;
-                return true;
+            _productTable.First(i => i.Value.Product.Name == productName).Value.Amount -= amount;
+            if (OnProductsChanged != null)
+                OnProductsChanged();
+
+            return true;
         }
 
         public bool HasProduct(int productId, int amount)
@@ -67,15 +83,23 @@ namespace Assets.Scripts.WorldMaterials
             return _productTable.ContainsKey(productId) && _productTable[productId].Amount >= amount;
         }
 
-        public class Factory : Factory<Inventory>
+        public void BindToScriptable(InventoryScriptable inventoryScriptable, ProductLookup productLookup)
         {
+            _scriptable = inventoryScriptable;
+            _productLookup = productLookup;
+            _productTable.Clear();
+
+            foreach (var info in _scriptable.Products)
+            {
+                TryAddProduct(_productLookup.GetProduct(info.ProductName), info.Amount);
+            }
         }
 
-        private string LoadDataFromFile(string fileName)
+        public bool HasProduct(string productName, int quantity)
         {
-            var text = File.ReadAllText(string.Format("Assets/Resources/{0}.json", fileName));
-            return text;
-        }
+            var entry = _productTable.FirstOrDefault(i => i.Value.Product.Name == productName).Value;
+            return entry != null && entry.Amount >= quantity;
 
+        }
     }
 }

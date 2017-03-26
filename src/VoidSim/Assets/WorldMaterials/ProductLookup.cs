@@ -45,7 +45,7 @@ namespace Assets.Scripts.WorldMaterials
 			PopulateProductData();
 		}
 
-		// loads from file, and remaps the editor types to a more usable form
+		// loads the SO into a more usable form
 		private void PopulateProductData()
 		{
 		    var index = 0;
@@ -66,6 +66,7 @@ namespace Assets.Scripts.WorldMaterials
 		        Ingredients =
 		            i.Ingredients.Select(k => new Ingredient {ProductName = k.ProductName, Quantity = k.Quantity}).ToList(),
 		        ResultProduct = i.ResultProduct,
+                ResultAmount = i.ResultAmount,
 		        TimeLength = i.TimeLength
 		    }).ToList();
 		}
@@ -86,12 +87,6 @@ namespace Assets.Scripts.WorldMaterials
 			//return output;
 		}
 
-		private string LoadDataFromFile(string fileName)
-		{
-			var text = File.ReadAllText(string.Format("Assets/Resources/{0}.json", fileName));
-			return text;
-		}
-
 		public List<Product> GetProducts()
 		{
 			return _products;
@@ -99,10 +94,11 @@ namespace Assets.Scripts.WorldMaterials
 
         // Plan is to form interface as needs require
         // would like to avoid usage of getting full list so impl can be optimized
-	    public Product GetProduct(string name)
+	    public Product GetProduct(string productName)
 	    {
             // throw errors here for not found, or let users handle it?
-	        return _products.FirstOrDefault(i => i.Name == name);
+	        var product = _products.FirstOrDefault(i => i.Name == productName);
+	        return product;
 	    }
 
 		public List<CraftingContainerInfo> GetContainers()
