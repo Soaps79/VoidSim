@@ -70,7 +70,7 @@ namespace Assets.Model.Terrain
             {
                 for (var j = 0; j < RegionSize; j++)
                 {
-                    types[i, j] = TerrainType.GreenGrass;
+                    types[i, j] = TerrainType.Grass;
                 }
             }
             return types;

@@ -11,7 +11,7 @@ namespace Assets.Controllers.Terrain
     {
         public static void SetTooltip(BaseEventData arg, GameObject tileGo, TerrainTile tile, TerrainView view)
         {
-            var label = tile.Name;
+            var label = string.Format("Tile {0}", tile.Type);
             var typeView = view.TileViewDictionary[tile.Type];
             var flavorText = typeView.Description;
             var thumbnail = tileGo.GetComponent<SpriteRenderer>().sprite;
