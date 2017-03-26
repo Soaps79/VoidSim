@@ -19,7 +19,7 @@ namespace Assets.View
 
         public List<TileTypeView> TileViews;
 
-        private readonly Dictionary<TerrainType, TileTypeView> _tileViewDictionary = new Dictionary<TerrainType, TileTypeView>();
+        public readonly Dictionary<TerrainType, TileTypeView> TileViewDictionary = new Dictionary<TerrainType, TileTypeView>();
 
         protected override void OnStart()
         {
@@ -28,13 +28,13 @@ namespace Assets.View
             // create a handy dictionary from views
             for(var i = 0; i < TileViews.Count; i++)
             {
-                _tileViewDictionary.Add(TileViews[i].TileType, TileViews[i]);
+                TileViewDictionary.Add(TileViews[i].TileType, TileViews[i]);
             }
         }
 
         public Sprite GetRandomSprite(TerrainType type)
         {
-            var view = _tileViewDictionary[type];
+            var view = TileViewDictionary[type];
             var index = UnityEngine.Random.Range(0, view.Sprites.Count);
             return view.Sprites[index];
         }

@@ -180,7 +180,7 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: This is the longer form of the text and I want to see how far it goes woopty
-    shit. It goes out pretty far and wraps the right way.
+    doop. It goes out pretty far and wraps the right way.
 --- !u!114 &114161926987279396
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -503,7 +503,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -5, y: -5}
-  m_SizeDelta: {x: 48, y: 18}
+  m_SizeDelta: {x: 64, y: 18}
   m_Pivot: {x: 1, y: 1}
 --- !u!224 &224518262288513986
 RectTransform:
@@ -521,7 +521,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 48, y: 18}
+  m_SizeDelta: {x: 64, y: 18}
   m_Pivot: {x: 1, y: 1}
 --- !u!224 &224552934747834256
 RectTransform:

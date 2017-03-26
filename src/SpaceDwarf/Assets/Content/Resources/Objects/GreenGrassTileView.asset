@@ -17,6 +17,8 @@ MonoBehaviour:
   - {fileID: 21300006, guid: a43854610f6840c41b94a065801cb121, type: 3}
   - {fileID: 21300004, guid: a43854610f6840c41b94a065801cb121, type: 3}
   - {fileID: 21300000, guid: a43854610f6840c41b94a065801cb121, type: 3}
+  Description: Lush green grass, perfect to pave over for our glorious dwarven-robo
+    empire!
   DefaultMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   HighlightMaterial: {fileID: 2100000, guid: b3d9d8ee05bd5d04e95d454260e47471, type: 2}
   SelectedMaterial: {fileID: 2100000, guid: 4504a09fb77d00540bb7bc839de03acd, type: 2}

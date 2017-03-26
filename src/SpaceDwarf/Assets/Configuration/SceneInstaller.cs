@@ -1,4 +1,5 @@
 ﻿using Assets.Controllers;
+using Assets.Controllers.Player;
 using Assets.Model;
 using Assets.View;
 using UnityEngine;
@@ -14,7 +15,7 @@ namespace Assets.Configuration
     {
         public override void InstallBindings()
         {
-            Container.Bind<Vector2>().ToSelf().FromInstance(new Vector2(0, 0)).WhenInjectedInto<PlayerCharacter>();
+            Container.Bind<Vector2>().ToSelf().FromInstance(new Vector2(32, 32)).WhenInjectedInto<PlayerCharacter>();
             Container.Bind<PlayerCharacter>().AsSingle();
 
             // controllers from the scene

@@ -8,6 +8,7 @@ namespace Assets.Model
     {
         private Vector2 _position;
         private readonly string _name;
+        private readonly string _description;
         private bool _canMove = true;
 
         private Action<PlayerCharacter, Vector2> _onPositionChanged;
@@ -33,10 +34,15 @@ namespace Assets.Model
             }
         }
 
-        public PlayerCharacter(Vector2 position, string name = "PlayerCharacter")
+        public string Description { get { return _description; } }
+
+        public PlayerCharacter(Vector2 position, 
+            string name = "Theo, The King",
+            string description = "Regally rules robots recklessly. Twice.")
         {
             _position = position;
             _name = name;
+            _description = description;
         }
 
         public void Move(Vector2 movement)

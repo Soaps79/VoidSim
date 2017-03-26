@@ -1,4 +1,7 @@
-﻿using Assets.View;
+﻿using System.Diagnostics;
+using Assets.Controllers.GUI;
+using Assets.Model.Terrain;
+using Assets.View;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -6,6 +9,15 @@ namespace Assets.Controllers.Terrain
 {
     public class TerrainEvents
     {
+        public static void SetTooltip(BaseEventData arg, GameObject tileGo, TerrainTile tile, TerrainView view)
+        {
+            var label = tile.Name;
+            var typeView = view.TileViewDictionary[tile.Type];
+            var flavorText = typeView.Description;
+            var thumbnail = tileGo.GetComponent<SpriteRenderer>().sprite;
+            TooltipController.Instance.SetTooltip(label, flavorText, thumbnail, new Vector2(tile.X, tile.Y));
+        }
+
         public static void Highlight(BaseEventData arg, GameObject tileGo, TerrainView view)
         {
             if (SelectionController.Instance.CanSelect("Terrain"))

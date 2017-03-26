@@ -503,6 +503,12 @@ MonoBehaviour:
   SelectedMaterial: {fileID: 2100000, guid: 4504a09fb77d00540bb7bc839de03acd, type: 2}
   TileViews:
   - {fileID: 11400000, guid: bc485c494183b21489e219982965b52d, type: 2}
+--- !u!114 &278069728 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114505621702038486, guid: 8d9a5d6315b37924290fd66c51fa103d,
+    type: 2}
+  m_PrefabInternal: {fileID: 1864020175}
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
 --- !u!1 &420881299
 GameObject:
   m_ObjectHideFlags: 0
@@ -896,6 +902,12 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 629956413}
+--- !u!114 &656139156 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114390250438780742, guid: 8d9a5d6315b37924290fd66c51fa103d,
+    type: 2}
+  m_PrefabInternal: {fileID: 1864020175}
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
 --- !u!1 &659975112
 GameObject:
   m_ObjectHideFlags: 0
@@ -2848,6 +2860,12 @@ Transform:
   m_Father: {fileID: 2025697701}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1657584932 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114029335121039980, guid: 8d9a5d6315b37924290fd66c51fa103d,
+    type: 2}
+  m_PrefabInternal: {fileID: 1864020175}
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
 --- !u!1 &1705064681
 GameObject:
   m_ObjectHideFlags: 0
@@ -2960,7 +2978,7 @@ GameObject:
   - component: {fileID: 1742142742}
   - component: {fileID: 1742142743}
   m_Layer: 0
-  m_Name: FixedTooltipController
+  m_Name: TooltipController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2992,6 +3010,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TopText: {fileID: 469091014}
   BottomText: {fileID: 698292337}
+  Label: {fileID: 1811375859}
+  FlavorText: {fileID: 1657584932}
+  Thumbnail: {fileID: 656139156}
+  Coords: {fileID: 278069728}
 --- !u!1 &1785230531
 GameObject:
   m_ObjectHideFlags: 0
@@ -3032,6 +3054,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 482267092d0145047b6cd02f1fbccdbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1811375859 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114161926987279396, guid: 8d9a5d6315b37924290fd66c51fa103d,
+    type: 2}
+  m_PrefabInternal: {fileID: 1864020175}
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
 --- !u!1001 &1864020175
 Prefab:
   m_ObjectHideFlags: 0
@@ -3128,10 +3156,6 @@ Prefab:
         type: 2}
       propertyPath: m_Pivot.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1031480068232836, guid: 8d9a5d6315b37924290fd66c51fa103d, type: 2}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8d9a5d6315b37924290fd66c51fa103d, type: 2}

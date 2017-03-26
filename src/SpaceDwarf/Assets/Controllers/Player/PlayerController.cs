@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using Assets.Framework;
 using Assets.Model;
 using Assets.View;
 using QGame;
 using UnityEngine;
 using Zenject;
 
-namespace Assets.Controllers
+namespace Assets.Controllers.Player
 {
     public class PlayerController : SingletonBehavior<PlayerController>
     {
@@ -39,7 +38,9 @@ namespace Assets.Controllers
         private void OnCharacterPositionChanged(PlayerCharacter character, Vector2 oldPosition, GameObject characterGo)
         {
             // update game object to character position
-            characterGo.transform.position = character.Position;
+            // offset to from world space to view space (-0.5f*RegionSize)
+            var viewPosition = new Vector2(character.Position.x - 32f, character.Position.y - 32f);
+            characterGo.transform.position = viewPosition;
         }
 
         private void UpdateCharacter(float timeDelta)

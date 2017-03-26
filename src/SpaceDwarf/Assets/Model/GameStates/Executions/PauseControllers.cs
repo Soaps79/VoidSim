@@ -1,4 +1,5 @@
 ﻿using Assets.Controllers;
+using Assets.Controllers.Player;
 using QGame;
 using UnityEngine;
 

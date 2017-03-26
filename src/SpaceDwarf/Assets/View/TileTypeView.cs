@@ -8,6 +8,8 @@ public class TileTypeView : ScriptableObject
     public TerrainType TileType;
     public List<Sprite> Sprites;
 
+    public string Description;
+
     public Material DefaultMaterial;
     public Material HighlightMaterial;
     public Material SelectedMaterial;

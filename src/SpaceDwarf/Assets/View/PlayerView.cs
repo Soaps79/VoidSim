@@ -1,7 +1,9 @@
 ﻿using Assets.Controllers.GUI;
+using Assets.Controllers.Player;
 using Assets.Framework;
 using Assets.Model;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Assets.View
 {
@@ -25,19 +27,24 @@ namespace Assets.View
 
         public void Initialize(PlayerCharacter character)
         {
+            // offset position from world space to view space (-0.5*RegionSize)
+            var viewPosition = new Vector2(character.Position.x - 32f, character.Position.y - 32f);
             // assign parent and position
-            CharacterPrefab.transform.position = character.Position;
+            CharacterPrefab.transform.position = viewPosition;
             CharacterPrefab.layer = Layer;
 
             // grab reference to animator and canvas
             Animator = CharacterPrefab.GetComponent<Animator>();
             CanvasTransform = Canvas.transform as RectTransform;
 
-            // force add collider, this works but revisit
-            //CharacterPrefab.AddComponent<BoxCollider>();
-            var tooltip = CharacterPrefab.GetOrAddComponent<TooltipBehavior>();
-            tooltip.TooltipText1 = "Character";
-            tooltip.TooltipText2 = "The king baby!";
+            // add event system
+            var eventTrigger = CharacterPrefab.GetOrAddComponent<EventTrigger>();
+            var enterTrigger = new EventTrigger.Entry {eventID = EventTriggerType.PointerEnter};
+            var onEnter = new EventTrigger.TriggerEvent();
+            onEnter.AddListener((data) => PlayerEvents.SetTooltip(this, character));
+            enterTrigger.callback = onEnter;
+            eventTrigger.triggers.Add(enterTrigger);
+
         }
     }
 }

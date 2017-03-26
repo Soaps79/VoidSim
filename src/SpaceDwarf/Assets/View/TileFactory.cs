@@ -21,12 +21,12 @@ namespace Assets.View
             
             SetWorldDetails(tile, view, x, y, region, tileGo);
             SetSpriteComponents(tile, view, tileGo);
-            SetEventTriggers(view, tileGo);
+            SetEventTriggers(view, tileGo, tile);
             
             // create tooltip
-            var tooltip = tileGo.GetOrAddComponent<TooltipBehavior>();
-            tooltip.TooltipText1 = string.Format("{0} Tile", tile.Type);
-            tooltip.TooltipText2 = string.Format("{0}", tileGo.name);
+            //var tooltip = tileGo.GetOrAddComponent<TooltipBehavior>();
+            //tooltip.TooltipText1 = string.Format("{0} Tile", tile.Type);
+            //tooltip.TooltipText2 = string.Format("{0}", tileGo.name);
             
             return tileGo;
         }
@@ -53,13 +53,14 @@ namespace Assets.View
             return view.GetRandomSprite(type);
         }
 
-        private void SetEventTriggers(TerrainView view, GameObject tileGo)
+        private void SetEventTriggers(TerrainView view, GameObject tileGo, TerrainTile tile)
         {
             var trigger = tileGo.GetOrAddComponent<EventTrigger>();
 
             var enter = new EventTrigger.Entry {eventID = EventTriggerType.PointerEnter};
             var onEnter = new EventTrigger.TriggerEvent();
             onEnter.AddListener((data) => TerrainEvents.Highlight(data, tileGo, view));
+            onEnter.AddListener((data) => TerrainEvents.SetTooltip(data, tileGo, tile, view));
             enter.callback = onEnter;
             trigger.triggers.Add(enter);
 
