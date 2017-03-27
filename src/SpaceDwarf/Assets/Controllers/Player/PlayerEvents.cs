@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Assets.Controllers.GUI;
+﻿using Assets.Controllers.GUI;
 using Assets.Model;
 using Assets.View;
 using UnityEngine;

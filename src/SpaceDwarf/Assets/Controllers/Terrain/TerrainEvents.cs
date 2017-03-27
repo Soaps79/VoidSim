@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Assets.Controllers.GUI;
+﻿using Assets.Controllers.GUI;
 using Assets.Model.Terrain;
 using Assets.View;
 using UnityEngine;

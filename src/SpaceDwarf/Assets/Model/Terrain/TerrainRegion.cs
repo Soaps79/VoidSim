@@ -1,5 +1,7 @@
-﻿using Assets.Framework;
+﻿using System.Collections.Generic;
+using Assets.Framework;
 using QGame.Common;
+using UnityEngine;
 
 namespace Assets.Model.Terrain
 {
@@ -9,7 +11,7 @@ namespace Assets.Model.Terrain
     public class TerrainRegion : Grid<TerrainTile>
     {
         // todo: move to config
-        private const int RegionSize = 64;
+        public const int RegionSize = 64;
 
         private readonly int _x;
         private readonly int _y;
@@ -66,11 +68,23 @@ namespace Assets.Model.Terrain
         {
             // todo: read from map file
             var types = new TerrainType[RegionSize, RegionSize];
+            var options = new List<TerrainType>
+            {
+                TerrainType.Dirt,
+                TerrainType.Grass,
+                TerrainType.Grass,
+                TerrainType.Grass,
+                TerrainType.Grass,
+                TerrainType.Grass,
+                TerrainType.Grass
+            };
+
             for (var i = 0; i < RegionSize; i++)
             {
                 for (var j = 0; j < RegionSize; j++)
                 {
-                    types[i, j] = TerrainType.Grass;
+                    var index = UnityEngine.Random.Range(0, options.Count);
+                    types[i, j] = options[index];
                 }
             }
             return types;

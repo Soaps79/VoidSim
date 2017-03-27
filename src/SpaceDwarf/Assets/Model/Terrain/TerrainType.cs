@@ -2,6 +2,7 @@
 {
     public enum TerrainType
     {
-        Grass=0
+        Grass=0,
+        Dirt
     }
 }

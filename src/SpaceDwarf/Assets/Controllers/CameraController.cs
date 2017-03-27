@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Assets.Controllers.Player;
+using Assets.Controllers.Terrain;
 using Assets.Framework;
 using QGame;
 using UnityEngine;
@@ -96,11 +97,12 @@ namespace Assets.Controllers
 
         private static void CenterCameraOnPlayer(Component cameraComponent)
         {
+            var offset = TerrainController.Instance.TerrainViewOffset;
             var playerPosition = PlayerController.Instance.PlayerCharacter.Position;
             cameraComponent.transform.position = new Vector3(
-                playerPosition.x, 
-                playerPosition.y, 
-                cameraComponent.transform.position.z);
+                offset + playerPosition.x, 
+                offset + playerPosition.y, 
+                offset + cameraComponent.transform.position.z);
         }
 
         public void Revert()

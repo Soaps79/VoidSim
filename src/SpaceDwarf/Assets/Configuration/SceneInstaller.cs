@@ -1,5 +1,6 @@
 ﻿using Assets.Controllers;
 using Assets.Controllers.Player;
+using Assets.Controllers.Terrain;
 using Assets.Model;
 using Assets.View;
 using UnityEngine;

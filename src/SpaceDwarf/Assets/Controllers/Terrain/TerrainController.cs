@@ -4,7 +4,7 @@ using QGame;
 using UnityEngine;
 using Zenject;
 
-namespace Assets.Controllers
+namespace Assets.Controllers.Terrain
 {
     public class TerrainController : SingletonBehavior<TerrainController>
     {
@@ -16,6 +16,8 @@ namespace Assets.Controllers
         
         public TerrainWorld World { get; private set; }
 
+        public float TerrainViewOffset;
+
         [Inject]
         public ITileFactory TileFactory;
         
@@ -23,6 +25,8 @@ namespace Assets.Controllers
         {
             base.OnStart();
 
+            TerrainViewOffset = -0.5f * TerrainRegion.RegionSize;
+             
             Debug.Log("OnStart");
             World = new TerrainWorld();
 
@@ -32,7 +36,6 @@ namespace Assets.Controllers
             // initialize regions (after hooking!)
             // todo: load based on player position
             World.InitializeRegions();
-            
         }
 
         public void OnTerrainRegionAdded(TerrainWorld world, TerrainRegion region)
@@ -59,7 +62,7 @@ namespace Assets.Controllers
             }
 
             // translate the entire region to center
-            regionGo.transform.Translate(new Vector3(-0.5f * region.Width, -0.5f * region.Height, 0f));
+            regionGo.transform.Translate(new Vector3(TerrainViewOffset, TerrainViewOffset, 0f));
 
             //todo: translate to TerrainWorldView
         }

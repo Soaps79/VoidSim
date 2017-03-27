@@ -503,6 +503,7 @@ MonoBehaviour:
   SelectedMaterial: {fileID: 2100000, guid: 4504a09fb77d00540bb7bc839de03acd, type: 2}
   TileViews:
   - {fileID: 11400000, guid: bc485c494183b21489e219982965b52d, type: 2}
+  - {fileID: 11400000, guid: 7794e293e2a040b4fbc56b1d940449ca, type: 2}
 --- !u!114 &278069728 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114505621702038486, guid: 8d9a5d6315b37924290fd66c51fa103d,

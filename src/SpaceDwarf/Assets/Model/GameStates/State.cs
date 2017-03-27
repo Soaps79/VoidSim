@@ -16,9 +16,7 @@ namespace Assets.Model.GameStates
         public Action<State, StateMachine> OnEnter = null;
         public Action<State, StateMachine, float> OnExecute = null;
         public Action<State, StateMachine> OnExit = null;
-
-        private StateMachine _machine;
-
+        
         void OnEnable()
         {
             OnEnabled();
