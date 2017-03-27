@@ -78,6 +78,7 @@
     <Compile Include="QScript.cs" />
     <Compile Include="OrderedEventBehavior.cs" />
     <Compile Include="StopWatch.cs" />
+    <Compile Include="WorldClock.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
