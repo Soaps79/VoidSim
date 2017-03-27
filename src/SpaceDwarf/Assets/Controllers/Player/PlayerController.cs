@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Assets.Model;
+using Assets.Model.Terrain;
 using Assets.View;
 using QGame;
 using UnityEngine;
@@ -39,7 +40,8 @@ namespace Assets.Controllers.Player
         {
             // update game object to character position
             // offset to from world space to view space (-0.5f*RegionSize)
-            var viewPosition = new Vector2(character.Position.x - 32f, character.Position.y - 32f);
+            var offset = -0.5f * TerrainRegion.RegionSize;
+            var viewPosition = new Vector2(character.Position.x + offset, character.Position.y + offset);
             characterGo.transform.position = viewPosition;
         }
 

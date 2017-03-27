@@ -11,7 +11,7 @@ namespace Assets.Model.Terrain
     public class TerrainRegion : Grid<TerrainTile>
     {
         // todo: move to config
-        public const int RegionSize = 64;
+        public const int RegionSize = 128;
 
         private readonly int _x;
         private readonly int _y;

@@ -2,6 +2,7 @@
 using Assets.Controllers.Player;
 using Assets.Framework;
 using Assets.Model;
+using Assets.Model.Terrain;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -28,7 +29,8 @@ namespace Assets.View
         public void Initialize(PlayerCharacter character)
         {
             // offset position from world space to view space (-0.5*RegionSize)
-            var viewPosition = new Vector2(character.Position.x - 32f, character.Position.y - 32f);
+            var offset = -0.5f * TerrainRegion.RegionSize;
+            var viewPosition = new Vector2(character.Position.x + offset, character.Position.y + offset);
             // assign parent and position
             CharacterPrefab.transform.position = viewPosition;
             CharacterPrefab.layer = Layer;

@@ -2,6 +2,7 @@
 using Assets.Controllers.Player;
 using Assets.Controllers.Terrain;
 using Assets.Framework;
+using Assets.Model.Terrain;
 using QGame;
 using UnityEngine;
 
@@ -97,7 +98,7 @@ namespace Assets.Controllers
 
         private static void CenterCameraOnPlayer(Component cameraComponent)
         {
-            var offset = TerrainController.Instance.TerrainViewOffset;
+            var offset = -0.5f * TerrainRegion.RegionSize;
             var playerPosition = PlayerController.Instance.PlayerCharacter.Position;
             cameraComponent.transform.position = new Vector3(
                 offset + playerPosition.x, 

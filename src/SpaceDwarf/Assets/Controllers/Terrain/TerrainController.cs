@@ -15,9 +15,7 @@ namespace Assets.Controllers.Terrain
         public Transform TerrainRoot;
         
         public TerrainWorld World { get; private set; }
-
-        public float TerrainViewOffset;
-
+        
         [Inject]
         public ITileFactory TileFactory;
         
@@ -25,7 +23,7 @@ namespace Assets.Controllers.Terrain
         {
             base.OnStart();
 
-            TerrainViewOffset = -0.5f * TerrainRegion.RegionSize;
+            
              
             Debug.Log("OnStart");
             World = new TerrainWorld();
@@ -61,10 +59,9 @@ namespace Assets.Controllers.Terrain
                 }
             }
 
+            var terrainViewOffset = -0.5f * TerrainRegion.RegionSize;
             // translate the entire region to center
-            regionGo.transform.Translate(new Vector3(TerrainViewOffset, TerrainViewOffset, 0f));
-
-            //todo: translate to TerrainWorldView
+            regionGo.transform.Translate(new Vector3(terrainViewOffset, terrainViewOffset, 0f));
         }
 
         private void OnTileTypeChanged(TerrainTile tile, GameObject tileGo)
