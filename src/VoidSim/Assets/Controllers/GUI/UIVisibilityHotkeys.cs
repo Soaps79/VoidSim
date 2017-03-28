@@ -48,9 +48,6 @@ namespace Assets.Scripts.UIHelpers
 					});
 			}
 
-			var publisher = GetComponent<TextBindingPublisher>();
-			publisher.SetText(GenerateDisplayText());
-
 			OnEveryUpdate += CheckForKeyPress;
 		}
 

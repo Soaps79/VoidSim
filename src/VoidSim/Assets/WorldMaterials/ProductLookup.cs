@@ -35,13 +35,6 @@ namespace Assets.Scripts.WorldMaterials
 
         void Awake()
 		{
-			// was having issues with publisher being available in Awake(), may be fixed?
-			OnNextUpdate += (delta) =>
-			{
-				var publisher = GetComponent<TextBindingPublisher>();
-				publisher.SetText(GenerateDisplayText());
-			};
-
 			PopulateProductData();
 		}
 

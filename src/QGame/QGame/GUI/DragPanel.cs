@@ -13,7 +13,7 @@ namespace QGame.GUI
 
         public GameObject Panel;
 
-        protected override void OnAwake()
+        protected override void OnStart()
         {
             if (Panel == null)
             {
