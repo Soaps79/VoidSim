@@ -63,6 +63,7 @@ public class Station : QScript
     void Start ()
     {
         InstantiateInventory();
+        BindInventoryToUI();
         InstantiateCraftingContainer();
         BindCraftingToShop();
     }
@@ -79,7 +80,6 @@ public class Station : QScript
 
         // bind to container
         crafter.Info = _productLookup.GetContainers().FirstOrDefault();
-        crafter.OnCraftingComplete += OnCraftingComplete;
         _crafter = crafter;
 
         // remove once crafting UI is complete
@@ -103,9 +103,11 @@ public class Station : QScript
         _inventory.BindToScriptable(_inventoryScriptable, _productLookup);
     }
 
-    private void OnCraftingComplete(Recipe recipe)
+    private void BindInventoryToUI()
     {
-        Debug.Log(string.Format("Craft Complete: {0}", recipe.ResultProduct));
+        var go = (GameObject)Instantiate(Resources.Load("Prefabs/UI/inventory_viewmodel"));
+        var viewmodel = go.GetOrAddComponent<InventoryViewModel>();
+        viewmodel.BindToInventory(_inventory);
     }
 
     public StationLayer GetLayer(LayerType type)

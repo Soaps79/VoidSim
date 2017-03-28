@@ -35,13 +35,16 @@ namespace Assets.Scripts.WorldMaterials
 
         void Awake()
 		{
-			PopulateProductData();
+            PopulateProductData();
 		}
 
 		// loads the SO into a more usable form
 		private void PopulateProductData()
 		{
-		    var index = 0;
+            if (_LookupScriptable == null)
+                throw new UnityException("ProductLookup has no scriptable");
+
+            var index = 0;
 		    _products = _LookupScriptable.Products.Select(i =>
 		            {
 		                index++;

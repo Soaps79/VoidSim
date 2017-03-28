@@ -1,25 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using Assets.WorldMaterials;
-using Newtonsoft.Json;
+using Assets.Scripts.WorldMaterials;
 using QGame;
-using UnityEngine;
-using UnityEngine.VR;
 using Zenject;
 
-namespace Assets.Scripts.WorldMaterials
+namespace Assets.WorldMaterials
 {
     public class Inventory : QScript
     {
-        
 
         /// <summary>
         /// The idea here is that Products are one type of object that Inventory maintains.
         /// Another type will probably be some sort of Placeable.
         /// </summary>
-        private class InventoryProductEntry
+        public class InventoryProductEntry
         {
             public Product Product;
             public int Amount;
@@ -28,7 +23,8 @@ namespace Assets.Scripts.WorldMaterials
 
         public class Factory : Factory<Inventory> { }
 
-        public Action OnProductsChanged;
+        public Action OnInventoryChanged;
+        public Action<string, int> OnProductsChanged;
 
         [Inject]
         private ProductLookup _productLookup;
@@ -38,6 +34,12 @@ namespace Assets.Scripts.WorldMaterials
             = new Dictionary<int, InventoryProductEntry>();
 
         private InventoryScriptable _scriptable;
+
+        // only use for UI
+        public List<InventoryProductEntry> GetProductEntries()
+        {
+            return _productTable.Values.ToList();
+        }
 
         /// <summary>
         /// Add Products to an inventory
@@ -56,7 +58,10 @@ namespace Assets.Scripts.WorldMaterials
 
             // impl MaxAmount checks
             _productTable[product.ID].Amount += amount;
-            Debug.Log(string.Format("Inventory update: {0} {1}", amount, product.Name));
+
+            if (OnProductsChanged != null)
+                OnProductsChanged(product.Name, amount);
+
             return true;
         }
 
@@ -73,7 +78,7 @@ namespace Assets.Scripts.WorldMaterials
 
             _productTable.First(i => i.Value.Product.Name == productName).Value.Amount -= amount;
             if (OnProductsChanged != null)
-                OnProductsChanged();
+                OnProductsChanged(productName, -amount);
 
             return true;
         }

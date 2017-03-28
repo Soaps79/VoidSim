@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.WorldMaterials;
 using UnityEngine;
@@ -62,7 +61,7 @@ namespace Assets.WorldMaterials.UI
             _recipes = recipes;
 
             _inventory = inventory;
-            _inventory.OnProductsChanged += SetCanAffordOnButtons;
+            _inventory.OnInventoryChanged += SetCanAffordOnButtons;
 
             BindToUI();
         }
@@ -86,6 +85,7 @@ namespace Assets.WorldMaterials.UI
             // create buttons for each recipe
             BindRecipes();
             SetCanAffordOnButtons();
+            var go = new GameObject();
 
             // set the canvas and position. make positioning dynamic eventually
             PositionOnCanvas(craftingPanel);
@@ -93,7 +93,7 @@ namespace Assets.WorldMaterials.UI
 
         private static void PositionOnCanvas(Image craftingPanel)
         {
-            craftingPanel.rectTransform.position = new Vector3(45, 420, 0);
+            craftingPanel.rectTransform.position = new Vector3(10, 180, 0);
             var canvas = GameObject.Find("InfoCanvas");
             craftingPanel.transform.SetParent(canvas.transform);
         }
