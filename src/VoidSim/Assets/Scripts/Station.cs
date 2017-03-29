@@ -34,8 +34,6 @@ public class Station : QScript
     private ProductLookup _productLookup;
 
     [SerializeField]
-    private GameObject _craftingPrefab;
-    [SerializeField]
     private InventoryScriptable _inventoryScriptable;
     [SerializeField]
     private Inventory _inventoryPrefab;
@@ -71,7 +69,7 @@ public class Station : QScript
     private void InstantiateCraftingContainer()
     {
         // standard unity instantiation
-        var crafterGo = GameObject.Instantiate(_craftingPrefab);
+        var crafterGo = new GameObject();
         crafterGo.transform.SetParent(transform);
         var crafter = crafterGo.GetOrAddComponent<CraftingContainer>();
 
@@ -90,7 +88,8 @@ public class Station : QScript
     private void BindCraftingToShop()
     {
         // find the viewmodel and bind to it
-        var viewmodel = _crafter.gameObject.GetComponent<PlayerCraftingViewModel>();
+        var go = (GameObject) Instantiate(Resources.Load("Prefabs/crafting_container"));
+        var viewmodel = go.GetOrAddComponent<PlayerCraftingViewModel>();
         viewmodel.Bind(_productLookup.GetRecipes(), _crafter, _inventory);
     }
 
