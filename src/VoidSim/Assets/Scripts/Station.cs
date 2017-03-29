@@ -35,9 +35,7 @@ public class Station : QScript
 
     [SerializeField]
     private InventoryScriptable _inventoryScriptable;
-    [SerializeField]
-    private Inventory _inventoryPrefab;
-
+    
     private readonly Dictionary<LayerType, StationLayer> _layers =  new Dictionary<LayerType, StationLayer>();
     private CraftingContainer _crafter;
     private Inventory _inventory;
@@ -70,6 +68,7 @@ public class Station : QScript
     {
         // standard unity instantiation
         var crafterGo = new GameObject();
+        crafterGo.name = "crafting_container";
         crafterGo.transform.SetParent(transform);
         var crafter = crafterGo.GetOrAddComponent<CraftingContainer>();
 
@@ -88,14 +87,19 @@ public class Station : QScript
     private void BindCraftingToShop()
     {
         // find the viewmodel and bind to it
-        var go = (GameObject) Instantiate(Resources.Load("Prefabs/crafting_container"));
+        var go = (GameObject) Instantiate(Resources.Load("Views/player_crafting_viewmodel"));
+        go.transform.parent = transform;
+        go.name = "player_crafting_viewmodel";
         var viewmodel = go.GetOrAddComponent<PlayerCraftingViewModel>();
         viewmodel.Bind(_productLookup.GetRecipes(), _crafter, _inventory);
     }
 
     private void InstantiateInventory()
     {
-        _inventory = GameObject.Instantiate(_inventoryPrefab);
+        var go = new GameObject();
+        go.transform.parent = transform;
+        go.name = "inventory";
+        _inventory = go.GetOrAddComponent<Inventory>();
         if(_inventory == null || _inventoryScriptable == null)
             throw new UnityException("Station inventory missing a dependency");
         _inventory.transform.SetParent(transform);
@@ -104,7 +108,9 @@ public class Station : QScript
 
     private void BindInventoryToUI()
     {
-        var go = (GameObject)Instantiate(Resources.Load("Prefabs/UI/inventory_viewmodel"));
+        var go = (GameObject)Instantiate(Resources.Load("Views/inventory_viewmodel"));
+        go.transform.parent = transform;
+        go.name = "inventory_viewmodel";
         var viewmodel = go.GetOrAddComponent<InventoryViewModel>();
         viewmodel.BindToInventory(_inventory);
     }

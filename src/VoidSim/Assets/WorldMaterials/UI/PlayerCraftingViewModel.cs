@@ -85,7 +85,6 @@ namespace Assets.WorldMaterials.UI
             // create buttons for each recipe
             BindRecipes();
             SetCanAffordOnButtons();
-            var go = new GameObject();
 
             // set the canvas and position. make positioning dynamic eventually
             PositionOnCanvas(craftingPanel);
