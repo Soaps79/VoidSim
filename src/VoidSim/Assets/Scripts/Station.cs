@@ -62,6 +62,17 @@ public class Station : QScript
         BindInventoryToUI();
         InstantiateCraftingContainer();
         BindCraftingToShop();
+        TestAutomatedContainer();
+    }
+
+    private void TestAutomatedContainer()
+    {
+        var crafterGo = new GameObject();
+        crafterGo.name = "automated_container";
+        crafterGo.transform.SetParent(transform);
+        var crafter = crafterGo.GetOrAddComponent<AutomatedContainer>();
+        crafter.Initialize("Small Factory", _inventory);
+        crafter.BeginCrafting("Ammunition");
     }
 
     private void InstantiateCraftingContainer()
@@ -80,8 +91,8 @@ public class Station : QScript
         _crafter = crafter;
 
         // remove once crafting UI is complete
-        Locator.ValueDisplay.Add("Crafting Queue", () => _crafter.CurrentQueueCount);
-        Locator.ValueDisplay.Add("Current Craft", () => _crafter.CurrentCraftRemainingAsZeroToOne);
+        KeyValueDisplay.Instance.Add("Crafting Queue", () => _crafter.CurrentQueueCount);
+        KeyValueDisplay.Instance.Add("Current Craft", () => _crafter.CurrentCraftRemainingAsZeroToOne);
     }
 
     private void BindCraftingToShop()

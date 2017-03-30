@@ -54,7 +54,7 @@ public class WorldTime
     }
 }
 
-public class WorldClock : QScript, IMessageListener
+public class WorldClock : SingletonBehavior<WorldClock>, IMessageListener
 {
     public float RealSecondsToGameHour;
     public int MinutesPerHour;
@@ -119,9 +119,9 @@ public class WorldClock : QScript, IMessageListener
 
     private void RegisterWithServices()
     {
-        Locator.ValueDisplay.Add("GameTime", () => CurrentTime.TimeAsString);
-        Locator.ValueDisplay.Add("GameSpeed", () => CurrentTimeScale);
-        Locator.Messages.AddListener(this, GameMessages.GameSpeedChange);
+        KeyValueDisplay.Instance.Add("GameTime", () => CurrentTime.TimeAsString);
+        KeyValueDisplay.Instance.Add("GameSpeed", () => CurrentTimeScale);
+        MessageHub.Instance.AddListener(this, GameMessages.GameSpeedChange);
     }
 
     private void CheckForKeypress(float value)
@@ -174,7 +174,7 @@ public class WorldClock : QScript, IMessageListener
             NewSpeedTimeScale = value,
             NewSpeedName = speed
         };
-        Locator.Messages.QueueMessage(GameMessages.GameSpeedChange, args);
+        MessageHub.Instance.QueueMessage(GameMessages.GameSpeedChange, args);
     }
 
     private void UpdateClock(float delta)

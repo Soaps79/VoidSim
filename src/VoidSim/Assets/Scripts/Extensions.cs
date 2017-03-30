@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Messaging;
+using QGame;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -16,4 +18,19 @@ namespace Assets.Scripts
             return result;
         }
     }
+
+    //public static class LocatorExtensions
+    //{
+    //    private static IMessageHub _messageHub;
+    //    public static IMessageHub Messages(this Locator loc)
+    //    {
+    //        return _messageHub ?? (_messageHub = Locator.Get<IMessageHub>());
+    //    }
+
+    //    private static IKeyValueDisplay _valueDisplay;
+    //    public static IKeyValueDisplay ValueDisplay(this Locator loc)
+    //    {
+    //        return _valueDisplay ?? (_valueDisplay = Locator.Get<IKeyValueDisplay>());
+    //    }
+    //}
 }

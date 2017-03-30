@@ -51,7 +51,7 @@
         }
     }
 
-    public class WorldClock : QScript, IMessageListener
+    public class WorldClock : SingletonBehavior<WorldClock>, IMessageListener
     {
         public float RealSecondsToGameHour;
         public int MinutesPerHour;
@@ -111,7 +111,7 @@
 
         private void RegisterWithServices()
         {
-            Locator.Messages.AddListener(this, SpeedChangeMessageName);
+            Locator.Get<IMessageHub>().AddListener(this, SpeedChangeMessageName);
         }
 
         public void ChangeGameSpeed(string speed)
@@ -144,7 +144,7 @@
                 NewSpeedTimeScale = value,
                 NewSpeedName = speed
             };
-            Locator.Messages.QueueMessage(SpeedChangeMessageName, args);
+            Locator.Get<IMessageHub>().QueueMessage(SpeedChangeMessageName, args);
         }
 
         private void UpdateClock(float delta)

@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using QGame;
 
 namespace Messaging
 {
@@ -36,7 +37,7 @@ namespace Messaging
 		}
 	}
 
-	public class MessageHub : IMessageHub
+	public class MessageHub : SingletonBehavior<MessageHub>, IMessageHub
 	{
 		public const string AllMessages = "AllMessages";
 

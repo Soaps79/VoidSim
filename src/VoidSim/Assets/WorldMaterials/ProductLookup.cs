@@ -23,7 +23,7 @@ namespace Assets.Scripts.WorldMaterials
 	}
 
 	// TODO: Change from QScript to ScriptableObject, there's no need for this to Update()
-	public class ProductLookup : QScript, IProductLookup
+	public class ProductLookup : SingletonBehavior<ProductLookup>, IProductLookup
 	{
 		
 		// TODO: once there is more usage of this, reassess these containers and the interface
@@ -106,5 +106,15 @@ namespace Assets.Scripts.WorldMaterials
 		{
 			return _recipes;
 		}
-	}
+
+	    public CraftingContainerInfo GetContainer(string containerName)
+	    {
+	        return _containers.FirstOrDefault(i => i.Name == containerName);
+	    }
+
+        public List<Recipe> GetRecipesForContainer(string containerName)
+        {
+            return _recipes.Where(i => i.Container.Name == containerName).ToList();
+        }
+    }
 }

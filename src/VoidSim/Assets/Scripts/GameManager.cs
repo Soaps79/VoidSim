@@ -34,12 +34,7 @@ public class GameManager : QScript
 
     public GameManager()
     {
-        _messageHub = new MessageHub();
-        OnEveryUpdate += (delta) => _messageHub.Update();
-
-        _keyValueDisplay = new KeyValueDisplay();
-
-        Locator.Initialize(_messageHub, _keyValueDisplay);
+        OnEveryUpdate += (delta) => MessageHub.Instance.Update();
     }
 
     void Start()
@@ -60,7 +55,7 @@ public class GameManager : QScript
 
     private void BindMouseMovementToKvd()
     {
-        _keyValueDisplay.Add("MousePos", () => Input.mousePosition.ToString());
+        KeyValueDisplay.Instance.Add("MousePos", () => Input.mousePosition.ToString());
     }
 
     private void InititalizeKeyValueDisplay()
@@ -101,6 +96,6 @@ public class GameManager : QScript
     // Update is called once per frame
     private void UpdateKeyValueDisplayText(float delta)
     {
-        _textGameObject.text = _keyValueDisplay.CurrentDisplayString();
+        _textGameObject.text = KeyValueDisplay.Instance.CurrentDisplayString();
     }
 }

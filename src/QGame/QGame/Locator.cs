@@ -1,20 +1,26 @@
-﻿using Messaging;
+﻿using System;
+using System.Collections.Generic;
+using Messaging;
+using UnityEngine;
 
 
 namespace QGame
 {
-	public static class Locator
+	public class Locator
 	{
-		private static IMessageHub _messages = new NullMessageHub();
-		public static IMessageHub Messages { get { return _messages; } }
+	    private static Dictionary<Type, object> _registeredObjects;
 
-		private static IKeyValueDisplay _valueDisplay = new NullKeyValueDisplay();
-		public static IKeyValueDisplay ValueDisplay { get { return _valueDisplay; } }
+	    public static void Register<T>(object obj)
+	    {
+	        if(_registeredObjects.ContainsKey(typeof(T)))
+                throw new UnityException(string.Format("Locator given second instance of {0}", typeof (T)));
 
-		public static void Initialize(IMessageHub messageHub, IKeyValueDisplay valueDisplay)
-		{
-			_messages = messageHub;
-		    _valueDisplay = valueDisplay;
-		}
+            _registeredObjects.Add(typeof(T), obj);
+	    }
+
+	    public static T Get<T>()
+	    {
+	        return (T)_registeredObjects[typeof(T)];
+	    }
 	}
 }
