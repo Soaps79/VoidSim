@@ -75,11 +75,11 @@ public class WorldClock : SingletonBehavior<WorldClock>, IMessageListener
     private string _currentSpeedName;
     private string _prePauseSpeedName;
 
-    public static EventHandler OnHourUp;
-    public static EventHandler OnDayUp;
-    public static EventHandler OnWeekUp;
-    public static EventHandler OnMonthUp;
-    public static EventHandler OnYearUp;
+    public EventHandler OnHourUp;
+    public EventHandler OnDayUp;
+    public EventHandler OnWeekUp;
+    public EventHandler OnMonthUp;
+    public EventHandler OnYearUp;
 
     public WorldTime CurrentTime;
     private float _elapsedMS;

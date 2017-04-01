@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts;
 using Assets.Scripts.WorldMaterials;
+using Assets.Station;
 using Assets.WorldMaterials;
 using Assets.WorldMaterials.UI;
+using Messaging;
 using QGame;
 using UnityEngine;
 using UnityEngine.UI;
@@ -63,16 +65,32 @@ public class Station : QScript
         InstantiateCraftingContainer();
         BindCraftingToShop();
         TestAutomatedContainer();
+        TestPowerGrid();
+    }
+
+    private void TestPowerGrid()
+    {
+        // bind to station's inventory
+        var go = new GameObject();
+        go.name = "power_grid";
+        go.transform.SetParent(transform);
+        var grid = go.GetOrAddComponent<PowerGrid>();
+        grid.Initialize(_inventory);
+
+        // fire fake message to test consumption
+        MessageHub.Instance.QueueMessage(
+            PlaceableMessages.PlaceablePlacedMessageName, 
+            new PlaceablePlacedArgs { ObjectPlaced = new Placeable(3) });
     }
 
     private void TestAutomatedContainer()
     {
-        var crafterGo = new GameObject();
-        crafterGo.name = "automated_container";
-        crafterGo.transform.SetParent(transform);
-        var crafter = crafterGo.GetOrAddComponent<AutomatedContainer>();
-        crafter.Initialize("Small Factory", _inventory);
-        crafter.BeginCrafting("Ammunition");
+        var go = new GameObject();
+        go.name = "automated_container";
+        go.transform.SetParent(transform);
+        var crafter = go.GetOrAddComponent<AutomatedContainer>();
+        crafter.Initialize("Power Plant", _inventory);
+        crafter.BeginCrafting("Energy");
     }
 
     private void InstantiateCraftingContainer()

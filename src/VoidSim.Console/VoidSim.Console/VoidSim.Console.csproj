@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Energy\EnergyConsumerNode.cs" />
     <Compile Include="Products\Product.cs" />
     <Compile Include="Products\ProductTradingHub.cs" />
     <Compile Include="Program.cs" />

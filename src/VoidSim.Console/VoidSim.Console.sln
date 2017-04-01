@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoidSim.Console", "VoidSim.Console\VoidSim.Console.csproj", "{9C163DBD-ACED-422E-AA74-EECF0DDEF7E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoidSim.Console.Tests", "VoidSim.ConsoleTests\VoidSim.Console.Tests.csproj", "{D3FC3FDD-A0F3-4786-A67D-B2CA9B31EB2F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,17 +17,24 @@ Global
 		{9C163DBD-ACED-422E-AA74-EECF0DDEF7E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C163DBD-ACED-422E-AA74-EECF0DDEF7E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C163DBD-ACED-422E-AA74-EECF0DDEF7E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3FC3FDD-A0F3-4786-A67D-B2CA9B31EB2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3FC3FDD-A0F3-4786-A67D-B2CA9B31EB2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3FC3FDD-A0F3-4786-A67D-B2CA9B31EB2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3FC3FDD-A0F3-4786-A67D-B2CA9B31EB2F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 2
+		SccNumberOfProjects = 3
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tacticsiege.visualstudio.com/
-		SccProjectUniqueName0 = VoidSim.Console\\VoidSim.Console.csproj
-		SccProjectName0 = VoidSim.Console
-		SccLocalPath0 = VoidSim.Console
-		SccLocalPath1 = .
+		SccTeamFoundationServer = https://tacticsiege.visualstudio.com/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = VoidSim.Console\\VoidSim.Console.csproj
+		SccProjectName1 = VoidSim.Console
+		SccLocalPath1 = VoidSim.Console
+		SccProjectUniqueName2 = VoidSim.ConsoleTests\\VoidSim.Console.Tests.csproj
+		SccProjectName2 = VoidSim.ConsoleTests
+		SccLocalPath2 = VoidSim.ConsoleTests
 	EndGlobalSection
 EndGlobal
