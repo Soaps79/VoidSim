@@ -80,8 +80,8 @@
 			{
 				fixed4 c = SampleSpriteTexture (IN.texcoord) * IN.color;                  
 				  
-				c.rgba = fixed4(1, 0, 0, c.a);
-				c.rgb *= c.a;
+				c *= float4(0.75, 0.75, 0.75, 1);
+				c.r *= 2;
 				return c;
 			}
 		ENDCG

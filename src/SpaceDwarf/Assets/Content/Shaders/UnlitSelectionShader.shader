@@ -79,9 +79,12 @@
 			fixed4 frag(v2f IN) : SV_Target
 			{
 				fixed4 c = SampleSpriteTexture (IN.texcoord) * IN.color;                  
-				  
-				c.rgba = fixed4(1, 1, 1, c.a);
-				c.rgb *= c.a;
+				c *= float4(0.5, 0.5, 0.5, 1);
+				c.b *= 2;
+
+
+				//c.rgba = fixed4(1, 1, 1, c.a);
+				//c.rgb *= c.a;
 				return c;
 			}
 		ENDCG
