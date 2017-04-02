@@ -37,15 +37,18 @@ namespace Assets.HexGrid.Scripts
             _mesh.Triangulate(_cells);
         }
 
-        public void ColorCell(Vector3 position, Color color)
+        public void Refresh()
+        {
+            _mesh.Triangulate(_cells);
+        }
+
+        public HexCell GetCell(Vector3 position)
         {
             position = transform.InverseTransformPoint(position);
             var coordinates = HexCoordinates.FromPosition(position);
-
             var index = coordinates.X + coordinates.Z * Width + coordinates.Z / 2;
             var cell = _cells[index];
-            cell.Color = color;
-            _mesh.Triangulate(_cells);
+            return cell;
         }
 
         private void CreateCell(int x, int z, int i)
@@ -74,6 +77,7 @@ namespace Assets.HexGrid.Scripts
             label.rectTransform.SetParent(_gridCanvas.transform, false);
             label.rectTransform.anchoredPosition = new Vector2(position.x, position.z);
             label.text = cell.Coordinates.ToStringOnSeparateLines();
+            cell.UiRect = label.rectTransform;
         }
 
         private void SetNeighbors(int x, int z, int i, HexCell cell)

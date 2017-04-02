@@ -21,7 +21,16 @@ namespace Assets.HexGrid.Scripts
         // color blending zones
         public const float SolidFactor = 0.75f;
         public const float BlendFactor = 1f - SolidFactor;
-        
+
+        public const float ElevationStep = 5f;
+
+        public const int TerracesPerSlope = 2;
+        public const int TerraceSteps = TerracesPerSlope * 2 + 1;
+
+        public const float HorizontalTerraceStepSize = 1f / TerraceSteps;
+        public const float VerticalTerraceStepSize = 1f / (TerracesPerSlope + 1);
+
+
         private static readonly Vector3[] Corners =
         {
             new Vector3(0f, 0f, OuterRadius),
@@ -58,5 +67,51 @@ namespace Assets.HexGrid.Scripts
         {
             return (Corners[(int)direction] + Corners[(int)direction + 1]) * BlendFactor;
         }
+
+        public static Vector3 TerraceLerp(Vector3 a, Vector3 b, int step)
+        {
+            //var h = step * HorizontalTerraceStepSize;
+            //a.x += (b.x - a.x) * h;
+            //a.z += (b.z - a.z) * h;
+
+            //// ReSharper disable once PossibleLossOfFraction
+            //// reason: integer division
+            //var v = ((step + 1) / 2) * VerticalTerraceStepSize;
+            //a.y += (b.y - a.y) * v;
+
+            //return a;
+
+            float h = step * HexMetrics.HorizontalTerraceStepSize;
+            a.x += (b.x - a.x) * h;
+            a.z += (b.z - a.z) * h;
+            // ReSharper disable once PossibleLossOfFraction
+            float v = ((step + 1) / 2) * HexMetrics.VerticalTerraceStepSize;
+            a.y += (b.y - a.y) * v;
+            return a;
+        }
+
+        public static Color TerraceLerp(Color a, Color b, int step)
+        {
+            var h = step * HorizontalTerraceStepSize;
+            return Color.Lerp(a, b, h);
+        }
+
+        public static HexEdgeType GetEdgeType(int elevation1, int elevation2)
+        {
+            if (elevation1 == elevation2)
+            {
+                return HexEdgeType.Flat;
+            }
+
+            var delta = elevation2 - elevation1;
+            if (Mathf.Abs(delta) <= 1)
+            {
+                return HexEdgeType.Slope;
+            }
+
+            return HexEdgeType.Cliff;
+        }
+
+        
     }
 }
