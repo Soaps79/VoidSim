@@ -58,7 +58,7 @@ namespace Assets.HexGrid.Scripts
             Colors.Add(c3);
         }
 
-        protected void AddTriangle(Vector3 v1, Vector3 v2, Vector3 v3)
+        protected virtual void AddTriangle(Vector3 v1, Vector3 v2, Vector3 v3)
         {
             var vertexIndex = Vertices.Count;
             Vertices.Add(v1);
@@ -71,7 +71,7 @@ namespace Assets.HexGrid.Scripts
             Triangles.Add(vertexIndex + 2);
         }
 
-        protected void AddQuad(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4)
+        protected virtual void AddQuad(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4)
         {
             var vertexIndex = Vertices.Count;
             Vertices.Add(v1);

@@ -19,16 +19,22 @@ namespace Assets.HexGrid.Scripts
         public const float InnerRadius = EdgeLengthRatio * OuterRadius;
 
         // color blending zones
-        public const float SolidFactor = 0.75f;
+        public const float SolidFactor = 0.8f;
         public const float BlendFactor = 1f - SolidFactor;
 
-        public const float ElevationStep = 5f;
+        public const float ElevationStep = 3f;
 
         public const int TerracesPerSlope = 2;
         public const int TerraceSteps = TerracesPerSlope * 2 + 1;
 
         public const float HorizontalTerraceStepSize = 1f / TerraceSteps;
         public const float VerticalTerraceStepSize = 1f / (TerracesPerSlope + 1);
+
+        public static Texture2D NoiseSource;
+        public const float NoiseScale = 0.003f;
+
+        public const float CellPerturbStrength = 4f;
+        public const float ElevationPerturbStrength = 1.5f;
 
 
         private static readonly Vector3[] Corners =
@@ -112,6 +118,12 @@ namespace Assets.HexGrid.Scripts
             return HexEdgeType.Cliff;
         }
 
+        public static Vector4 SampleNoise(Vector3 position)
+        {
+            return NoiseSource.GetPixelBilinear(
+                position.x * NoiseScale, 
+                position.z * NoiseScale);
+        }
         
     }
 }

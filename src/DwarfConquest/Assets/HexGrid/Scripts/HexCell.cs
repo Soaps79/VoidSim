@@ -21,13 +21,18 @@ namespace Assets.HexGrid.Scripts
                 _elevation = value;
                 var position = transform.localPosition;
                 position.y = value * HexMetrics.ElevationStep;
+                position.y +=
+                    (HexMetrics.SampleNoise(position).y * 2f - 1f) * HexMetrics.ElevationPerturbStrength;
+
                 transform.localPosition = position;
 
                 var uiPosition = UiRect.localPosition;
-                uiPosition.z = _elevation * -HexMetrics.ElevationStep;
+                uiPosition.z = -position.y;
                 UiRect.localPosition = uiPosition;
             }
         }
+
+        public Vector3 Position {  get { return transform.localPosition; } }
 
         public HexCell GetNeighbor(HexDirection direction)
         {

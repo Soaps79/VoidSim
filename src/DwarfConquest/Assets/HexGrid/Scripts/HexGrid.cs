@@ -13,12 +13,16 @@ namespace Assets.HexGrid.Scripts
         public HexCell CellPrefab;
         public Text CellLabelPrefab;
 
+        public Texture2D NoiseSource;
+
         private HexCell[] _cells;
         private Canvas _gridCanvas;
         private HexMesh _mesh;
 
         private void Awake()
         {
+            HexMetrics.NoiseSource = NoiseSource;
+
             _gridCanvas = GetComponentInChildren<Canvas>();
             _mesh = GetComponentInChildren<HexMesh>();
 
@@ -30,6 +34,11 @@ namespace Assets.HexGrid.Scripts
                     CreateCell(x, z, i++);
                 }
             }
+        }
+
+        void OnEnable()
+        {
+            HexMetrics.NoiseSource = NoiseSource;
         }
 
         private void Start()
@@ -78,6 +87,9 @@ namespace Assets.HexGrid.Scripts
             label.rectTransform.anchoredPosition = new Vector2(position.x, position.z);
             label.text = cell.Coordinates.ToStringOnSeparateLines();
             cell.UiRect = label.rectTransform;
+
+            // set elevation to trigger perturb logic
+            cell.Elevation = 0;
         }
 
         private void SetNeighbors(int x, int z, int i, HexCell cell)
