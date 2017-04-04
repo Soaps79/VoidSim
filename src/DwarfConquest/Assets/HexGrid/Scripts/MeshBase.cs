@@ -7,12 +7,11 @@ namespace Assets.HexGrid.Scripts
     public abstract class MeshBase : MonoBehaviour
     {
         protected Mesh Mesh;
-        protected List<Vector3> Vertices;
-        protected List<int> Triangles;
-        
+        protected static List<Vector3> Vertices = new List<Vector3>();
+        protected static List<int> Triangles = new List<int>();
+        protected static List<Color> Colors = new List<Color>();
+
         protected MeshCollider MeshCollider;
-        
-        protected List<Color> Colors;
 
         private void Awake()
         {
@@ -23,10 +22,6 @@ namespace Assets.HexGrid.Scripts
         {
             GetComponent<MeshFilter>().mesh = Mesh = new Mesh();
             MeshCollider = gameObject.AddComponent<MeshCollider>();
-
-            Vertices = new List<Vector3>();
-            Triangles = new List<int>();
-            Colors = new List<Color>();
         }
 
         protected void Clear()

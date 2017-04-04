@@ -22,6 +22,7 @@ namespace Assets.HexGrid.Scripts
         public const float SolidFactor = 0.8f;
         public const float BlendFactor = 1f - SolidFactor;
 
+        // elevation and terraces
         public const float ElevationStep = 3f;
 
         public const int TerracesPerSlope = 2;
@@ -30,11 +31,16 @@ namespace Assets.HexGrid.Scripts
         public const float HorizontalTerraceStepSize = 1f / TerraceSteps;
         public const float VerticalTerraceStepSize = 1f / (TerracesPerSlope + 1);
 
+        // noise
         public static Texture2D NoiseSource;
         public const float NoiseScale = 0.003f;
 
         public const float CellPerturbStrength = 4f;
         public const float ElevationPerturbStrength = 1.5f;
+
+        // chunks
+        public const int ChunkSizeX = 5;
+        public const int ChunkSizeZ = 5;
 
 
         private static readonly Vector3[] Corners =

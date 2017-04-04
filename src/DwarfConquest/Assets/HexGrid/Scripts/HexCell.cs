@@ -5,10 +5,11 @@ namespace Assets.HexGrid.Scripts
     public class HexCell : MonoBehaviour
     {
         public HexCoordinates Coordinates;
-        public Color Color;
+        private Color _color;
         public RectTransform UiRect;
+        public HexGridChunk Chunk;
 
-        private int _elevation;
+        private int _elevation = int.MinValue;
 
         [SerializeField]
         public HexCell[] Neighbors;
@@ -18,6 +19,11 @@ namespace Assets.HexGrid.Scripts
             get { return _elevation; }
             set
             {
+                if (_elevation == value)
+                {
+                    return;
+                }
+
                 _elevation = value;
                 var position = transform.localPosition;
                 position.y = value * HexMetrics.ElevationStep;
@@ -29,10 +35,27 @@ namespace Assets.HexGrid.Scripts
                 var uiPosition = UiRect.localPosition;
                 uiPosition.z = -position.y;
                 UiRect.localPosition = uiPosition;
+
+                Refresh();
             }
         }
 
         public Vector3 Position {  get { return transform.localPosition; } }
+
+        public Color Color
+        {
+            get { return _color; }
+            set
+            {
+                if (_color == value)
+                {
+                    return;
+                }
+
+                _color = value;
+                Refresh();
+            }
+        }
 
         public HexCell GetNeighbor(HexDirection direction)
         {
@@ -54,6 +77,22 @@ namespace Assets.HexGrid.Scripts
         public HexEdgeType GetEdgeType(HexCell otherCell)
         {
             return HexMetrics.GetEdgeType(Elevation, otherCell.Elevation);
+        }
+
+        private void Refresh()
+        {
+            if (Chunk != null)
+            {
+                Chunk.Refresh();
+                for (var i = 0; i < Neighbors.Length; i++)
+                {
+                    var neighbor = Neighbors[i];
+                    if (neighbor != null && neighbor.Chunk != Chunk)
+                    {
+                        neighbor.Chunk.Refresh();
+                    }
+                }
+            }
         }
     }
 }
