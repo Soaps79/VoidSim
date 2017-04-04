@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Utility.Attributes;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.HexGrid.Scripts
@@ -13,11 +14,16 @@ namespace Assets.HexGrid.Scripts
 
         public Color DefaultColor = Color.white;
 
+        [RequireReference]
         public HexCell CellPrefab;
+
+        [RequireReference]
         public Text CellLabelPrefab;
 
+        [RequireReference]
         public Texture2D NoiseSource;
 
+        [RequireReference]
         public HexGridChunk ChunkPrefab;
 
         private HexCell[] _cells;

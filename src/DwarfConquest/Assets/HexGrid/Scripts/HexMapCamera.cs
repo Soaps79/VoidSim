@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
+﻿using Assets.Utility.Attributes;
 using UnityEngine;
 
 namespace Assets.HexGrid.Scripts
@@ -26,6 +22,7 @@ namespace Assets.HexGrid.Scripts
         public float RotationSpeed;
         private float _rotationAngle;
 
+        [RequireReference]
         public HexGrid Grid;
 
         void Awake()
@@ -47,7 +44,6 @@ namespace Assets.HexGrid.Scripts
             {
                 AdjustRotation(rotationDelta);
             }
-
 
             var xDelta = Input.GetAxis("Horizontal");
             var zDelta = Input.GetAxis("Vertical");

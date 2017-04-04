@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using Assets.Utility.Attributes;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -7,6 +8,9 @@ namespace Assets.HexGrid.Scripts
     public class HexMapEditor : MonoBehaviour
     {
         public Color[] Colors;
+
+        [RequireReference]
+        [SerializeField]
         public HexGrid HexGrid;
 
         private Color _activeColor;
