@@ -83,6 +83,11 @@ namespace Assets.HexGrid.Scripts
             Triangles.Add(vertexIndex + 3);
         }
 
+        protected void AddQuadColor(Color color)
+        {
+            AddQuadColor(color, color, color, color);
+        }
+
         protected void AddQuadColor(Color c1, Color c2)
         {
             AddQuadColor(c1, c1, c2, c2);

@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
 using Assets.Utility.Attributes;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -7,6 +7,8 @@ namespace Assets.HexGrid.Scripts
 {
     public class HexMapEditor : MonoBehaviour
     {
+        private enum OptionalToggle { Ignore=0, Yes, No };
+
         public Color[] Colors;
 
         [RequireReference]
@@ -20,6 +22,13 @@ namespace Assets.HexGrid.Scripts
         private bool _applyColor;
         private bool _applyElevation = true;
 
+        private OptionalToggle _riverMode = 0;
+
+        // drag support
+        private bool _isDrag;
+        private HexDirection _dragDirection;
+        private HexCell _prevCell;
+
         private void Awake()
         {
             SelectColor(0);
@@ -32,6 +41,10 @@ namespace Assets.HexGrid.Scripts
             {
                 HandleInput();
             }
+            else
+            {
+                _prevCell = null;
+            }
         }
 
         private void HandleInput()
@@ -40,8 +53,37 @@ namespace Assets.HexGrid.Scripts
             RaycastHit hit;
             if (Physics.Raycast(inputRay, out hit))
             {
-                EditCells(HexGrid.GetCell(hit.point));
+                var currentCell = HexGrid.GetCell(hit.point);
+
+                if (_prevCell != null && _prevCell != currentCell)
+                {
+                    ValidateDrag(currentCell);
+                }
+                else
+                {
+                    _isDrag = false;
+                }
+
+                EditCells(currentCell);
+                _prevCell = currentCell;
             }
+            else
+            {
+                _prevCell = null;
+            }
+        }
+
+        private void ValidateDrag(HexCell currentCell)
+        {
+            for (_dragDirection = HexDirection.NE; _dragDirection <= HexDirection.NW; _dragDirection++)
+            {
+                if (_prevCell.GetNeighbor(_dragDirection) == currentCell)
+                {
+                    _isDrag = true;
+                    return;
+                }
+            }
+            _isDrag = false;
         }
 
         private void EditCells(HexCell center)
@@ -80,6 +122,19 @@ namespace Assets.HexGrid.Scripts
             {
                 cell.Elevation = _activeElevation;
             }
+
+            if (_riverMode == OptionalToggle.No)
+            {
+                cell.RemoveRiver();
+            }
+            else if (_isDrag && _riverMode == OptionalToggle.Yes)
+            {
+                var otherCell = cell.GetNeighbor(_dragDirection.Opposite());
+                if (otherCell != null)
+                {
+                    otherCell.SetOutgoingRiver(_dragDirection);
+                }
+            }
         }
 
         public void SelectColor(int i)
@@ -109,6 +164,11 @@ namespace Assets.HexGrid.Scripts
         public void ShowUI(bool isVisible)
         {
             HexGrid.ShowUI(isVisible);
+        }
+
+        public void SetRiverMode(int mode)
+        {
+            _riverMode = (OptionalToggle) mode;
         }
     }
 }

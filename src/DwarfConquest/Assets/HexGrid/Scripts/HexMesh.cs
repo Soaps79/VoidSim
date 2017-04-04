@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.GameCenter;
 
 namespace Assets.HexGrid.Scripts
 {
@@ -41,13 +42,146 @@ namespace Assets.HexGrid.Scripts
                 center + HexMetrics.GetFirstSolidCorner(direction),
                 center + HexMetrics.GetSecondSolidCorner(direction)
             );
+            if (cell.HasRiver)
+            {
+                if (cell.HasRiverThroughEdge(direction))
+                {
+                    e.V3.y = cell.StreamBedY;
+                    if (cell.HasRiverTerminus)
+                    {
+                        TriangulateWithRiverTerminus(direction, cell, center, e);
+                    }
+                    else
+                    {
+                        TriangulateWithRiver(direction, cell, center, e);
+                    }
+                }
+                else
+                {
+                    TriangulateAdjacentToRiver(direction, cell, center, e);
+                }
+            }
+            else
+            {
+                TriangulateEdgeFan(center, e, cell.Color);
+            }
 
-            TriangulateEdgeFan(center, e, cell.Color);
+
 
             if (direction <= HexDirection.SE)
             {
                 TriangulateConnection(direction, cell, e);
             }
+        }
+
+        private void TriangulateAdjacentToRiver(HexDirection direction, HexCell cell, Vector3 center, EdgeVertices e)
+        {
+            if (cell.HasRiverThroughEdge(direction.Next()))
+            {
+                if (cell.HasRiverThroughEdge(direction.Previous()))
+                {
+                    // inside of a continuous curve
+                    center += HexMetrics.GetSolidEdgeMiddle(direction) *
+                              (HexMetrics.InnerToOuter * 0.5f);
+                }
+                else if (cell.HasRiverThroughEdge(direction.Previous2()))
+                {
+                    // straight through
+                    center += HexMetrics.GetFirstSolidCorner(direction) * 0.25f;
+                }
+            }
+            else if (cell.HasRiverThroughEdge(direction.Previous()) &&
+                     cell.HasRiverThroughEdge(direction.Next2()))
+            {
+                // other way, straight through
+                center += HexMetrics.GetSecondSolidCorner(direction) * 0.25f;
+            }
+
+
+
+            var m = new EdgeVertices(
+                Vector3.Lerp(center, e.V1, 0.5f),
+                Vector3.Lerp(center, e.V5, 0.5f));
+
+            TriangulateEdgeStrip(m, cell.Color, e, cell.Color);
+            TriangulateEdgeFan(center, m, cell.Color);
+        }
+
+        private void TriangulateWithRiverTerminus(HexDirection direction, HexCell cell, Vector3 center, EdgeVertices e)
+        {
+            var m = new EdgeVertices(
+                Vector3.Lerp(center, e.V1, 0.5f),
+                Vector3.Lerp(center, e.V5, 0.5f));
+
+            m.V3.y = e.V3.y;
+
+            TriangulateEdgeStrip(m, cell.Color, e, cell.Color);
+            TriangulateEdgeFan(center, m, cell.Color);
+        }
+
+        private void TriangulateWithRiver(HexDirection direction, HexCell cell, Vector3 center, EdgeVertices e)
+        {
+            // stretch center vertex into a line to run river
+            Vector3 centerL, centerR;
+
+            // determine if we're straight or curvy
+            if (cell.HasRiverThroughEdge(direction.Opposite()))
+            {
+                // straight through
+                centerL = center + HexMetrics.GetFirstSolidCorner(direction.Previous()) * 0.25f;
+                centerR = center + HexMetrics.GetSecondSolidCorner(direction.Next()) * 0.25f;
+            }
+            else if (cell.HasRiverThroughEdge(direction.Next()))
+            {
+                // sharp left
+                centerL = center;
+                centerR = Vector3.Lerp(center, e.V5, 2f / 3f);
+            }
+            else if (cell.HasRiverThroughEdge(direction.Previous()))
+            {
+                // sharp right
+                centerL = Vector3.Lerp(center, e.V1, 2f / 3f);
+                centerR = center;
+            }
+            else if (cell.HasRiverThroughEdge(direction.Next2()))
+            {
+                // gentle left
+                centerL = center;
+                centerR = center + 
+                    HexMetrics.GetSolidEdgeMiddle(direction.Next()) *
+                    (0.5f * HexMetrics.InnerToOuter);
+            }
+            else
+            {
+                // gentle right
+                centerL = center + 
+                    HexMetrics.GetSolidEdgeMiddle(direction.Previous()) *
+                    (0.5f * HexMetrics.InnerToOuter);
+                centerR = center;
+            }
+
+            // recenter midpoint
+            center = Vector3.Lerp(centerL, centerR, 0.5f);
+
+            var m = new EdgeVertices(
+                Vector3.Lerp(centerL, e.V1, 0.5f),
+                Vector3.Lerp(centerR, e.V5, 0.5f),
+                1f / 6f);
+
+            // outer center channel
+            m.V3.y = center.y = e.V3.y;
+            TriangulateEdgeStrip(m, cell.Color, e, cell.Color);
+
+            // tapezoid inner channel
+            AddTriangle(centerL, m.V1, m.V2);
+            AddTriangleColor(cell.Color);
+            AddQuad(centerL, center, m.V2, m.V3);
+            AddQuadColor(cell.Color);
+            AddQuad(center, centerR, m.V3, m.V4);
+            AddQuadColor(cell.Color);
+
+            AddTriangle(centerR, m.V4, m.V5);
+            AddTriangleColor(cell.Color);
         }
 
         private void TriangulateConnection(HexDirection direction, 
@@ -64,7 +198,12 @@ namespace Assets.HexGrid.Scripts
             // neighbor bridge
             var bridge = HexMetrics.GetBridge(direction);
             bridge.y = neighbor.Position.y - cell.Position.y;
-            var e2 = new EdgeVertices(e1.V1 + bridge, e1.V4 + bridge);
+            var e2 = new EdgeVertices(e1.V1 + bridge, e1.V5 + bridge);
+
+            if (cell.HasRiverThroughEdge(direction))
+            {
+                e2.V3.y = neighbor.StreamBedY;
+            }
             
             if (cell.GetEdgeType(direction) == HexEdgeType.Slope)
             {
@@ -79,27 +218,27 @@ namespace Assets.HexGrid.Scripts
             var nextNeighbor = cell.GetNeighbor(direction.Next());
             if (direction <= HexDirection.E && nextNeighbor != null)
             {
-                var v5 = e1.V4 + HexMetrics.GetBridge(direction.Next());
+                var v5 = e1.V5 + HexMetrics.GetBridge(direction.Next());
                 v5.y = nextNeighbor.Position.y;
 
                 if (cell.Elevation <= neighbor.Elevation)
                 {
                     if (cell.Elevation <= nextNeighbor.Elevation)
                     {
-                        TriangulateCorner(e1.V4, cell, e2.V4, neighbor, v5, nextNeighbor);
+                        TriangulateCorner(e1.V5, cell, e2.V5, neighbor, v5, nextNeighbor);
                     }
                     else
                     {
-                        TriangulateCorner(v5, nextNeighbor, e1.V4, cell, e2.V4, neighbor);
+                        TriangulateCorner(v5, nextNeighbor, e1.V5, cell, e2.V5, neighbor);
                     }
                 }
                 else if (neighbor.Elevation <= nextNeighbor.Elevation)
                 {
-                    TriangulateCorner(e2.V4, neighbor, v5, nextNeighbor, e1.V4, cell);
+                    TriangulateCorner(e2.V5, neighbor, v5, nextNeighbor, e1.V5, cell);
                 }
                 else
                 {
-                    TriangulateCorner(v5, nextNeighbor, e1.V4, cell, e2.V4, neighbor);
+                    TriangulateCorner(v5, nextNeighbor, e1.V5, cell, e2.V5, neighbor);
                 }
 
                 //AddTriangle(v2, v4, v5);
@@ -315,6 +454,8 @@ namespace Assets.HexGrid.Scripts
             AddTriangleColor(color);
             AddTriangle(center, edge.V3, edge.V4);
             AddTriangleColor(color);
+            AddTriangle(center, edge.V4, edge.V5);
+            AddTriangleColor(color);
         }
 
         private void TriangulateEdgeStrip(EdgeVertices e1, Color c1, EdgeVertices e2, Color c2)
@@ -324,6 +465,8 @@ namespace Assets.HexGrid.Scripts
             AddQuad(e1.V2, e1.V3, e2.V2, e2.V3);
             AddQuadColor(c1, c2);
             AddQuad(e1.V3, e1.V4, e2.V3, e2.V4);
+            AddQuadColor(c1, c2);
+            AddQuad(e1.V4, e1.V5, e2.V4, e2.V5);
             AddQuadColor(c1, c2);
         }
 

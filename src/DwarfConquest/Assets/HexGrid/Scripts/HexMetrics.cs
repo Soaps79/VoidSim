@@ -8,10 +8,13 @@ namespace Assets.HexGrid.Scripts
         /// Extent of hexagon
         /// </summary>
         public const float OuterRadius = 10f;
+        public const float InnterRadius = OuterRadius * OuterToInner;
 
         // given edge length e, inner radius is
         // sqrt(e^2 - (e/2)^2) == e * sqrt(3) / 2 ~= 0.886e
         private const float EdgeLengthRatio = 0.866025404f;
+        public const float OuterToInner = EdgeLengthRatio;
+        public const float InnerToOuter = 1f / OuterToInner;
 
         /// <summary>
         /// Inscribed tangent circle radius
@@ -42,6 +45,8 @@ namespace Assets.HexGrid.Scripts
         public const int ChunkSizeX = 5;
         public const int ChunkSizeZ = 5;
 
+        // rivers
+        public const float StreamBedElevationOffset = -1f;
 
         private static readonly Vector3[] Corners =
         {
@@ -130,6 +135,11 @@ namespace Assets.HexGrid.Scripts
                 position.x * NoiseScale, 
                 position.z * NoiseScale);
         }
-        
+
+        public static Vector3 GetSolidEdgeMiddle(HexDirection direction)
+        {
+            return (Corners[(int) direction] + Corners[(int) direction + 1]) *
+                   (0.5f * SolidFactor);
+        }
     }
 }
