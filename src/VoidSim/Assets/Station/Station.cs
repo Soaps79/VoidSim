@@ -9,7 +9,6 @@ using Assets.WorldMaterials.UI;
 using Messaging;
 using QGame;
 using UnityEngine;
-using UnityEngine.UI;
 using Zenject;
 
 public enum LayerType

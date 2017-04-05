@@ -52,7 +52,7 @@ namespace Assets.WorldMaterials
                 _productTable.Add(product.ID, new InventoryProductEntry()
                 {
                     Product = product,
-                    Amount = amount
+                    Amount = 0
                 });
             }
 
@@ -86,6 +86,12 @@ namespace Assets.WorldMaterials
         public bool HasProduct(int productId, int amount)
         {
             return _productTable.ContainsKey(productId) && _productTable[productId].Amount >= amount;
+        }
+
+        public int GetProductCurrentAmount(string productName)
+        {
+            var entry = _productTable.FirstOrDefault(i => i.Value.Product.Name == productName).Value;
+            return entry != null ? entry.Amount : 0;
         }
 
         public void BindToScriptable(InventoryScriptable inventoryScriptable, ProductLookup productLookup)
