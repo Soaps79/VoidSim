@@ -46,7 +46,9 @@ namespace Assets.HexGrid.Scripts
         public const int ChunkSizeZ = 5;
 
         // rivers
-        public const float StreamBedElevationOffset = -1f;
+        public const float StreamBedElevationOffset = -1.75f;
+        public const float RiverSurfaceElevationOffset = -0.5f;
+
 
         private static readonly Vector3[] Corners =
         {
@@ -87,22 +89,12 @@ namespace Assets.HexGrid.Scripts
 
         public static Vector3 TerraceLerp(Vector3 a, Vector3 b, int step)
         {
-            //var h = step * HorizontalTerraceStepSize;
-            //a.x += (b.x - a.x) * h;
-            //a.z += (b.z - a.z) * h;
-
-            //// ReSharper disable once PossibleLossOfFraction
-            //// reason: integer division
-            //var v = ((step + 1) / 2) * VerticalTerraceStepSize;
-            //a.y += (b.y - a.y) * v;
-
-            //return a;
-
-            float h = step * HexMetrics.HorizontalTerraceStepSize;
+            var h = step * HorizontalTerraceStepSize;
             a.x += (b.x - a.x) * h;
             a.z += (b.z - a.z) * h;
             // ReSharper disable once PossibleLossOfFraction
-            float v = ((step + 1) / 2) * HexMetrics.VerticalTerraceStepSize;
+            // reason: integer division
+            var v = ((step + 1) / 2) * VerticalTerraceStepSize;
             a.y += (b.y - a.y) * v;
             return a;
         }
@@ -140,6 +132,14 @@ namespace Assets.HexGrid.Scripts
         {
             return (Corners[(int) direction] + Corners[(int) direction + 1]) *
                    (0.5f * SolidFactor);
+        }
+
+        public static Vector3 Perturb(Vector3 position)
+        {
+            var sample = SampleNoise(position);
+            position.x += (sample.x * 2f - 1f) * CellPerturbStrength;
+            position.z += (sample.z * 2f - 1f) * CellPerturbStrength;
+            return position;
         }
     }
 }

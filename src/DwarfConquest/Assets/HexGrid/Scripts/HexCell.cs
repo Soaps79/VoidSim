@@ -68,6 +68,15 @@ namespace Assets.HexGrid.Scripts
             get { return (Elevation + HexMetrics.StreamBedElevationOffset) * HexMetrics.ElevationStep; }
         }
 
+        public float RiverSurfaceY
+        {
+            get
+            {
+                return (Elevation + HexMetrics.RiverSurfaceElevationOffset) *
+                       HexMetrics.ElevationStep;
+            }
+        }
+
         public void SetOutgoingRiver(HexDirection direction)
         {
             if (HasOutgoingRiver && OutgoingRiver == direction)
