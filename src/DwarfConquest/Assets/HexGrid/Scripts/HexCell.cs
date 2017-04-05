@@ -10,6 +10,23 @@ namespace Assets.HexGrid.Scripts
         public HexGridChunk Chunk;
 
         private int _elevation = int.MinValue;
+        private int _waterLevel;
+
+        public int WaterLevel
+        {
+            get { return _waterLevel; }
+            set
+            {
+                if (_waterLevel == value)
+                {
+                    return;
+                }
+                _waterLevel = value;
+                Refresh();
+            }
+        }
+
+        public bool IsUnderwater {  get { return _waterLevel > _elevation; } }
 
         public bool HasIncomingRiver { get; private set; }
 
@@ -72,7 +89,16 @@ namespace Assets.HexGrid.Scripts
         {
             get
             {
-                return (Elevation + HexMetrics.RiverSurfaceElevationOffset) *
+                return (Elevation + HexMetrics.WaterElevationOffset) *
+                       HexMetrics.ElevationStep;
+            }
+        }
+
+        public float WaterSurfaceY
+        {
+            get
+            {
+                return (WaterLevel + HexMetrics.WaterElevationOffset) *
                        HexMetrics.ElevationStep;
             }
         }

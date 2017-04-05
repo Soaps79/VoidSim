@@ -12,6 +12,9 @@ namespace Assets.HexGrid.Scripts
         [RequireReference]
         public HexMesh Rivers;
 
+        [RequireReference]
+        public HexMesh Water;
+
         private HexCell[] _cells;
         private Canvas _gridCanvas;
 
@@ -52,6 +55,7 @@ namespace Assets.HexGrid.Scripts
         {
             Terrain.Clear();
             Rivers.Clear();
+            Water.Clear();
 
             for (var i = 0; i < _cells.Length; i++)
             {
@@ -60,6 +64,7 @@ namespace Assets.HexGrid.Scripts
 
             Terrain.Apply();
             Rivers.Apply();
+            Water.Apply();
         }
 
         private void Triangulate(HexCell cell)
@@ -107,6 +112,47 @@ namespace Assets.HexGrid.Scripts
             if (direction <= HexDirection.SE)
             {
                 TriangulateConnection(direction, cell, e);
+            }
+
+            if (cell.IsUnderwater)
+            {
+                TriangulateWater(direction, cell, center);
+            }
+        }
+
+        private void TriangulateWater(HexDirection direction, HexCell cell, Vector3 center)
+        {
+            center.y = cell.WaterSurfaceY;
+            var c1 = center + HexMetrics.GetFirstSolidCorner(direction);
+            var c2 = center + HexMetrics.GetSecondSolidCorner(direction);
+
+            Water.AddTriangle(center, c1, c2);
+
+            if (direction <= HexDirection.SE)
+            {
+                var neighbor = cell.GetNeighbor(direction);
+                if (neighbor == null || !neighbor.IsUnderwater)
+                {
+                    return;
+                }
+
+                var bridge = HexMetrics.GetBridge(direction);
+                var e1 = c1 + bridge;
+                var e2 = c2 + bridge;
+
+                Water.AddQuad(c1, c2, e1, e2);
+
+                if (direction <= HexDirection.E)
+                {
+                    var nextNeighbor = cell.GetNeighbor(direction.Next());
+                    if (nextNeighbor == null || !nextNeighbor.IsUnderwater)
+                    {
+                        return;
+                    }
+                    Water.AddTriangle(
+                        c2, e2, c2 + HexMetrics.GetBridge(direction.Next()));
+
+                }
             }
         }
 

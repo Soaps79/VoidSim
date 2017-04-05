@@ -17,10 +17,12 @@ namespace Assets.HexGrid.Scripts
 
         private Color _activeColor;
         private int _activeElevation;
+        private int _activeWaterLevel;
         private int _brushSize = 0;
 
         private bool _applyColor;
         private bool _applyElevation = true;
+        private bool _applyWaterLevel = true;
 
         private OptionalToggle _riverMode = 0;
 
@@ -123,6 +125,11 @@ namespace Assets.HexGrid.Scripts
                 cell.Elevation = _activeElevation;
             }
 
+            if (_applyWaterLevel)
+            {
+                cell.WaterLevel = _activeWaterLevel;
+            }
+
             if (_riverMode == OptionalToggle.No)
             {
                 cell.RemoveRiver();
@@ -169,6 +176,16 @@ namespace Assets.HexGrid.Scripts
         public void SetRiverMode(int mode)
         {
             _riverMode = (OptionalToggle) mode;
+        }
+
+        public void SetApplyWaterLevel(bool toggle)
+        {
+            _applyWaterLevel = toggle;
+        }
+
+        public void SetWaterLevel(float level)
+        {
+            _activeWaterLevel = (int) level;
         }
     }
 }

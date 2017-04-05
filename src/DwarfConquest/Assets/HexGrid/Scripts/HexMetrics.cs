@@ -47,7 +47,7 @@ namespace Assets.HexGrid.Scripts
 
         // rivers
         public const float StreamBedElevationOffset = -1.75f;
-        public const float RiverSurfaceElevationOffset = -0.5f;
+        public const float WaterElevationOffset = -0.5f;
 
 
         private static readonly Vector3[] Corners =
