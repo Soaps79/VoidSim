@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Assets.Utility.Scripts;
 using UnityEngine;
+// ReSharper disable InconsistentNaming
 
 namespace Assets.HexGrid.Scripts
 {
@@ -11,12 +12,14 @@ namespace Assets.HexGrid.Scripts
         public bool UseCollider;
         public bool UseColors;
         public bool UseUVCoordinates;
+        public bool UseUV2Coordinates;
 
         private Mesh _mesh;
         [NonSerialized] private List<Vector3> _vertices;
         [NonSerialized] private List<int> _triangles;
         [NonSerialized] private List<Color> _colors;
         [NonSerialized] private List<Vector2> _uvs;
+        [NonSerialized] private List<Vector2> _uv2s;
 
         private MeshCollider _meshCollider;
 
@@ -46,6 +49,11 @@ namespace Assets.HexGrid.Scripts
             {
                 _uvs = ListPool<Vector2>.Get();
             }
+
+            if (UseUV2Coordinates)
+            {
+                _uv2s = ListPool<Vector2>.Get();
+            }
         }
 
         public void Apply()
@@ -66,6 +74,12 @@ namespace Assets.HexGrid.Scripts
             {
                 _mesh.SetUVs(0, _uvs);
                 ListPool<Vector2>.Add(_uvs);
+            }
+
+            if (UseUV2Coordinates)
+            {
+                _mesh.SetUVs(1, _uv2s);
+                ListPool<Vector2>.Add(_uv2s);
             }
 
             _mesh.RecalculateNormals();
@@ -112,6 +126,13 @@ namespace Assets.HexGrid.Scripts
             _uvs.Add(uv1);
             _uvs.Add(uv2);
             _uvs.Add(uv3);
+        }
+
+        public void AddTriangleUV2(Vector2 uv1, Vector2 uv2, Vector2 uv3)
+        {
+            _uv2s.Add(uv1);
+            _uv2s.Add(uv2);
+            _uv2s.Add(uv3);
         }
 
         #endregion
@@ -172,6 +193,22 @@ namespace Assets.HexGrid.Scripts
             _uvs.Add(new Vector2(uMax, vMin));
             _uvs.Add(new Vector2(uMin, vMax));
             _uvs.Add(new Vector2(uMax, vMax));
+        }
+
+        public void AddQuadUV2(Vector2 uv1, Vector2 uv2, Vector2 uv3, Vector2 uv4)
+        {
+            _uv2s.Add(uv1);
+            _uv2s.Add(uv2);
+            _uv2s.Add(uv3);
+            _uv2s.Add(uv4);
+        }
+
+        public void AddQuadUV2(float uMin, float uMax, float vMin, float vMax)
+        {
+            _uv2s.Add(new Vector2(uMin, vMin));
+            _uv2s.Add(new Vector2(uMax, vMin));
+            _uv2s.Add(new Vector2(uMin, vMax));
+            _uv2s.Add(new Vector2(uMax, vMax));
         }
 
         #endregion

@@ -49,6 +49,25 @@ namespace Assets.HexGrid.Scripts
         public const float StreamBedElevationOffset = -1.75f;
         public const float WaterElevationOffset = -0.5f;
 
+        // shores
+        public const float WaterFactor = 0.6f;
+        public const float WaterBlendFactor = 1f - WaterFactor;
+
+        public static Vector3 GetFirstWaterCorner(HexDirection direction)
+        {
+            return Corners[(int) direction] * WaterFactor;
+        }
+
+        public static Vector3 GetSecondWaterCorner(HexDirection direction)
+        {
+            return Corners[(int) direction + 1] * WaterFactor;
+        }
+
+        public static Vector3 GetWaterBridge(HexDirection direction)
+        {
+            return (Corners[(int) direction] + Corners[(int) direction + 1]) *
+                   WaterBlendFactor;
+        }
 
         private static readonly Vector3[] Corners =
         {

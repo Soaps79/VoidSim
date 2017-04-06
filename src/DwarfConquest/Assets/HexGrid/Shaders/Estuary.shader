@@ -1,4 +1,4 @@
-﻿Shader "Custom/Water" {
+﻿Shader "Custom/Estuary" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
@@ -11,17 +11,18 @@
 		
 		CGPROGRAM
 		// Physically based Standard lighting model
-		#pragma surface surf Standard alpha
+		#pragma surface surf Standard alpha vertex:vert
 
 		// Use shader model 3.0 target, to get nicer looking lighting
 		#pragma target 3.0
-
+		
 		#include "Water.cginc"
 
 		sampler2D _MainTex;
 
 		struct Input {
 			float2 uv_MainTex;
+			float2 riverUV;
 			float3 worldPos;
 		};
 
@@ -36,10 +37,26 @@
 			// put more per-instance properties here
 		UNITY_INSTANCING_CBUFFER_END
 
-		void surf (Input IN, inout SurfaceOutputStandard o) {		
-			float waves = Waves(IN.worldPos.xz, _MainTex, _Time.y);
+		void vert(inout appdata_full v, out Input o)
+		{
+			UNITY_INITIALIZE_OUTPUT(Input, o);
+			o.riverUV = v.texcoord1.xy;
+		}
 
-			fixed4 c = saturate(_Color + waves);
+		void surf (Input IN, inout SurfaceOutputStandard o) {
+			float shore = IN.uv_MainTex.y;
+			shore = sqrt(shore) * 0.9f;
+
+			float foam = Foam(shore, IN.worldPos.xz, _MainTex, _Time.y);
+			float waves = Waves(IN.worldPos.xz, _MainTex, _Time.y);
+			waves *= 1 - shore;
+
+			float river = River(IN.riverUV, _MainTex, _Time.y);
+
+			float shoreWater = max(foam, waves);
+			float water = lerp(shoreWater, river, IN.uv_MainTex.x);
+			
+			fixed4 c = saturate(_Color + water);
 			o.Albedo = c.rgb;
 			o.Metallic = _Metallic;
 			o.Smoothness = _Glossiness;

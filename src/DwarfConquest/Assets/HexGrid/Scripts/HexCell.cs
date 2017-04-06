@@ -22,6 +22,7 @@ namespace Assets.HexGrid.Scripts
                     return;
                 }
                 _waterLevel = value;
+                ValidateRivers();
                 Refresh();
             }
         }
@@ -103,6 +104,12 @@ namespace Assets.HexGrid.Scripts
             }
         }
 
+        private bool IsValidRiverDestination(HexCell neighbor)
+        {
+            return neighbor &&
+                   (Elevation >= neighbor.Elevation || WaterLevel == neighbor.Elevation);
+        }
+
         public void SetOutgoingRiver(HexDirection direction)
         {
             if (HasOutgoingRiver && OutgoingRiver == direction)
@@ -112,7 +119,7 @@ namespace Assets.HexGrid.Scripts
             }
 
             var neighbor = GetNeighbor(direction);
-            if (neighbor == null || Elevation < neighbor.Elevation)
+            if (!IsValidRiverDestination(neighbor))
             {
                 // can't flow into the void or up hill
                 return;
@@ -132,6 +139,21 @@ namespace Assets.HexGrid.Scripts
             neighbor.HasIncomingRiver = true;
             neighbor.IncomingRiver = direction.Opposite();
             neighbor.RefreshSelfOnly();
+        }
+
+        private void ValidateRivers()
+        {
+            if (HasOutgoingRiver &&
+                !IsValidRiverDestination(GetNeighbor(OutgoingRiver)))
+            {
+                RemoveOutgoingRiver();
+            }
+
+            if (HasIncomingRiver &&
+                !GetNeighbor(IncomingRiver).IsValidRiverDestination(this))
+            {
+                RemoveIncomingRiver();
+            }
         }
 
         [SerializeField]
@@ -159,14 +181,7 @@ namespace Assets.HexGrid.Scripts
                 uiPosition.z = -position.y;
                 UiRect.localPosition = uiPosition;
 
-                if (HasOutgoingRiver && Elevation < GetNeighbor(OutgoingRiver).Elevation)
-                {
-                    RemoveOutgoingRiver();
-                }
-                if (HasIncomingRiver && Elevation > GetNeighbor(IncomingRiver).Elevation)
-                {
-                    RemoveIncomingRiver();
-                }
+                ValidateRivers();
 
                 Refresh();
             }
