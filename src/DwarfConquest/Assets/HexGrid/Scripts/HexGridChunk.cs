@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Assets.Utility.Attributes;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -21,6 +22,9 @@ namespace Assets.HexGrid.Scripts
 
         [RequireReference]
         public HexMesh Estuaries;
+
+        [RequireReference]
+        public HexFeatureManager Features;
 
         private HexCell[] _cells;
         private Canvas _gridCanvas;
@@ -65,6 +69,7 @@ namespace Assets.HexGrid.Scripts
             Water.Clear();
             WaterShore.Clear();
             Estuaries.Clear();
+            Features.Clear();
 
             for (var i = 0; i < _cells.Length; i++)
             {
@@ -76,6 +81,7 @@ namespace Assets.HexGrid.Scripts
             Water.Apply();
             WaterShore.Apply();
             Estuaries.Apply();
+            Features.Apply();
         }
 
         private void Triangulate(HexCell cell)
@@ -83,6 +89,11 @@ namespace Assets.HexGrid.Scripts
             for (var d = HexDirection.NE; d <= HexDirection.NW; d++)
             {
                 Triangulate(d, cell);
+            }
+
+            if (!cell.IsUnderwater && !cell.HasRiver)
+            {
+                Features.AddFeature(cell.Position);
             }
         }
 
@@ -116,6 +127,11 @@ namespace Assets.HexGrid.Scripts
             else
             {
                 TriangulateEdgeFan(center, e, cell.Color);
+
+                if (!cell.IsUnderwater)
+                {
+                    Features.AddFeature((center + e.V1 + e.V5) * (1f / 3f));
+                }
             }
 
 
@@ -306,14 +322,12 @@ namespace Assets.HexGrid.Scripts
                     center += HexMetrics.GetFirstSolidCorner(direction) * 0.25f;
                 }
             }
-            else if (cell.HasRiverThroughEdge(direction.Previous()) &&
-                     cell.HasRiverThroughEdge(direction.Next2()))
-            {
+            else if (cell.HasRiverThroughEdge(direction.Previous()) 
+                && cell.HasRiverThroughEdge(direction.Next2()))
+            { 
                 // other way, straight through
                 center += HexMetrics.GetSecondSolidCorner(direction) * 0.25f;
             }
-
-
 
             var m = new EdgeVertices(
                 Vector3.Lerp(center, e.V1, 0.5f),
@@ -321,6 +335,11 @@ namespace Assets.HexGrid.Scripts
 
             TriangulateEdgeStrip(m, cell.Color, e, cell.Color);
             TriangulateEdgeFan(center, m, cell.Color);
+
+            if (!cell.IsUnderwater)
+            {
+                Features.AddFeature((center + e.V1 + e.V5) * (1f / 3f));
+            }
         }
 
         private void TriangulateWithRiverTerminus(HexDirection direction, HexCell cell, Vector3 center, EdgeVertices e)

@@ -26,18 +26,16 @@ namespace Assets.HexGrid.Scripts
         [RequireReference]
         public HexGridChunk ChunkPrefab;
 
+        public int Seed = 0;
+
         private HexCell[] _cells;
-        //private Canvas _gridCanvas;
-        //private HexMesh _mesh;
 
         private HexGridChunk[] _chunks;
 
         private void Awake()
         {
             HexMetrics.NoiseSource = NoiseSource;
-
-            //_gridCanvas = GetComponentInChildren<Canvas>();
-            //_mesh = GetComponentInChildren<HexMesh>();
+            HexMetrics.InitializeHashGrid(Seed);
 
             _cellCountX = ChunkCountX * HexMetrics.ChunkSizeX;
             _cellCountZ = ChunkCountZ * HexMetrics.ChunkSizeZ;
@@ -74,18 +72,12 @@ namespace Assets.HexGrid.Scripts
 
         void OnEnable()
         {
-            HexMetrics.NoiseSource = NoiseSource;
+            if (HexMetrics.NoiseSource == null)
+            {
+                HexMetrics.NoiseSource = NoiseSource;
+                HexMetrics.InitializeHashGrid(Seed);
+            }
         }
-
-        //private void Start()
-        //{
-        //    _mesh.Triangulate(_cells);
-        //}
-
-        //public void Refresh()
-        //{
-        //    _mesh.Triangulate(_cells);
-        //}
 
         public HexCell GetCell(Vector3 position)
         {

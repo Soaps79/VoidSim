@@ -53,6 +53,34 @@ namespace Assets.HexGrid.Scripts
         public const float WaterFactor = 0.6f;
         public const float WaterBlendFactor = 1f - WaterFactor;
 
+        public const int HashGridSize = 256;
+        public const float HashGridScale = 0.25f;
+
+        private static HexHash[] _hashGrid;
+
+        public static void InitializeHashGrid(int seed)
+        {
+            _hashGrid = new HexHash[HashGridSize * HashGridSize];
+            var currentState = Random.state;
+            Random.InitState(seed);
+            for (var i = 0; i < _hashGrid.Length; i++)
+            {
+                _hashGrid[i] = HexHash.Create();
+            }
+            Random.state = currentState;
+        }
+
+        public static HexHash SampleHashGrid(Vector3 position)
+        {
+            var x = (int) (position.x * HashGridScale) % HashGridSize;
+            if(x < 0) { x += HashGridSize; }
+
+            var z = (int) (position.z * HashGridScale) % HashGridSize;
+            if (z < 0) { z += HashGridSize; }
+
+            return _hashGrid[x + z * HashGridSize];
+        }
+
         public static Vector3 GetFirstWaterCorner(HexDirection direction)
         {
             return Corners[(int) direction] * WaterFactor;
