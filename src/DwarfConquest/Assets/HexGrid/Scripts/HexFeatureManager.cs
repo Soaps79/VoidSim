@@ -20,7 +20,6 @@ namespace Assets.HexGrid.Scripts
 
         public void Apply()
         {
-            
         }
 
         public void AddFeature(Vector3 position)

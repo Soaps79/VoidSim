@@ -1,5 +1,4 @@
-﻿using System;
-using Assets.Utility.Attributes;
+﻿using Assets.Utility.Attributes;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -7,7 +6,7 @@ namespace Assets.HexGrid.Scripts
 {
     public class HexMapEditor : MonoBehaviour
     {
-        private enum OptionalToggle { Ignore=0, Yes, No };
+        private enum OptionalToggle { Ignore = 0, Yes, No };
 
         public Color[] Colors;
 
@@ -28,12 +27,13 @@ namespace Assets.HexGrid.Scripts
 
         // drag support
         private bool _isDrag;
+
         private HexDirection _dragDirection;
         private HexCell _prevCell;
 
         private void Awake()
         {
-            SelectColor(0);
+            SetActiveColor(0);
         }
 
         private void Update()
@@ -109,7 +109,6 @@ namespace Assets.HexGrid.Scripts
                     EditCell(HexGrid.GetCell(new HexCoordinates(x, z)));
                 }
             }
-
         }
 
         private void EditCell(HexCell cell)
@@ -144,7 +143,29 @@ namespace Assets.HexGrid.Scripts
             }
         }
 
-        public void SelectColor(int i)
+        #region Editor UI Controls
+        // set should apply
+        public void SetApplyWaterLevel(bool toggle)
+        {
+            _applyWaterLevel = toggle;
+        }
+
+        public void SetApplyElevation(bool toggle)
+        {
+            _applyElevation = toggle;
+        }
+
+        // set values
+        public void SetRiverMode(int mode)
+        {
+            _riverMode = (OptionalToggle)mode;
+        }
+        public void SetWaterLevel(float level)
+        {
+            _activeWaterLevel = (int)level;
+        }
+
+        public void SetActiveColor(int i)
         {
             _applyColor = i >= 0;
             if (_applyColor)
@@ -158,34 +179,18 @@ namespace Assets.HexGrid.Scripts
             _activeElevation = (int)elevation;
         }
 
-        public void SetApplyElevation(bool toggle)
-        {
-            _applyElevation = toggle;
-        }
-
         public void SetBrushSize(float size)
         {
-            _brushSize = (int) size;
+            _brushSize = (int)size;
         }
 
+        // misc.
         public void ShowUI(bool isVisible)
         {
             HexGrid.ShowUI(isVisible);
         }
 
-        public void SetRiverMode(int mode)
-        {
-            _riverMode = (OptionalToggle) mode;
-        }
+        #endregion
 
-        public void SetApplyWaterLevel(bool toggle)
-        {
-            _applyWaterLevel = toggle;
-        }
-
-        public void SetWaterLevel(float level)
-        {
-            _activeWaterLevel = (int) level;
-        }
     }
 }

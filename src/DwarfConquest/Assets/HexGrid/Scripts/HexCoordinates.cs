@@ -6,27 +6,7 @@ namespace Assets.HexGrid.Scripts
     [Serializable]
     public class HexCoordinates
     {
-        [SerializeField] private int _x, _z;
-
-        public int X
-        {
-            get { return _x; }
-            private set { _x = value; }
-        }
-
-        public int Z
-        {
-            get { return _z; }
-            private set { _z = value; }
-        }
-
-        public int Y { get { return -X - Z; } }
-
-        public HexCoordinates(int x, int z)
-        {
-            X = x;
-            Z = z;
-        }
+        #region Factories
 
         public static HexCoordinates FromOffsetCoordinates(int x, int z)
         {
@@ -67,6 +47,30 @@ namespace Assets.HexGrid.Scripts
             }
 
             return new HexCoordinates(iX, iZ);
+        }
+
+        #endregion
+
+        [SerializeField] private int _x, _z;
+
+        public int X
+        {
+            get { return _x; }
+            private set { _x = value; }
+        }
+
+        public int Z
+        {
+            get { return _z; }
+            private set { _z = value; }
+        }
+
+        public int Y { get { return -X - Z; } }
+
+        public HexCoordinates(int x, int z)
+        {
+            X = x;
+            Z = z;
         }
 
         public override string ToString()

@@ -25,13 +25,13 @@ namespace Assets.HexGrid.Scripts
         [RequireReference]
         public HexGrid Grid;
 
-        void Awake()
+        private void Awake()
         {
             _swivel = transform.GetChild(0);
             _stick = _swivel.GetChild(0);
         }
 
-        void Update()
+        private void Update()
         {
             var zoomDelta = Input.GetAxis("Mouse ScrollWheel");
             if (Mathf.Abs(zoomDelta) > float.Epsilon)
@@ -71,14 +71,14 @@ namespace Assets.HexGrid.Scripts
 
         private void AdjustPosition(float xDelta, float zDelta)
         {
-            var direction = transform.localRotation 
+            var direction = transform.localRotation
                 * new Vector3(xDelta, 0f, zDelta).normalized;
             var damping = Mathf.Max(Mathf.Abs(xDelta), Mathf.Abs(zDelta));
             var moveSpeed = Mathf.Lerp(MoveSpeedMinZoom, MoveSpeedMaxZoom, _zoom);
             var distance = moveSpeed * damping * Time.deltaTime;
 
             var position = transform.localPosition;
-            position +=  direction * distance;
+            position += direction * distance;
             transform.localPosition = ClampPosition(position);
         }
 

@@ -20,6 +20,5 @@ namespace Assets.Utility.Scripts
             list.Clear();
             Stack.Push(list);
         }
-
     }
 }

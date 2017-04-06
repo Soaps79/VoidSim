@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Assets.Utility.Scripts;
+using System;
 using System.Collections.Generic;
-using Assets.Utility.Scripts;
 using UnityEngine;
+
 // ReSharper disable InconsistentNaming
 
 namespace Assets.HexGrid.Scripts
@@ -23,7 +24,7 @@ namespace Assets.HexGrid.Scripts
 
         private MeshCollider _meshCollider;
 
-        void Awake()
+        private void Awake()
         {
             GetComponent<MeshFilter>().mesh = _mesh = new Mesh();
             _mesh.name = "Hex Mesh";
@@ -88,7 +89,7 @@ namespace Assets.HexGrid.Scripts
                 _meshCollider.sharedMesh = _mesh;
             }
         }
-        
+
         #region Add Triangles
 
         public void AddTriangleUnperturbed(Vector3 v1, Vector3 v2, Vector3 v3)
@@ -97,7 +98,6 @@ namespace Assets.HexGrid.Scripts
             _vertices.Add(v1);
             _vertices.Add(v2);
             _vertices.Add(v3);
-
 
             _triangles.Add(vertexIndex);
             _triangles.Add(vertexIndex + 1);
@@ -135,7 +135,7 @@ namespace Assets.HexGrid.Scripts
             _uv2s.Add(uv3);
         }
 
-        #endregion
+        #endregion Add Triangles
 
         #region Add Quads
 
@@ -211,6 +211,6 @@ namespace Assets.HexGrid.Scripts
             _uv2s.Add(new Vector2(uMax, vMax));
         }
 
-        #endregion
+        #endregion Add Quads
     }
 }

@@ -5,11 +5,64 @@ namespace Assets.HexGrid.Scripts
     public class HexCell : MonoBehaviour
     {
         public HexCoordinates Coordinates;
-        private Color _color;
+        
         public RectTransform UiRect;
         public HexGridChunk Chunk;
 
+        [SerializeField]
+        public HexCell[] Neighbors;
+
+        private Color _color;
+
         private int _elevation = int.MinValue;
+        
+        public int Elevation
+        {
+            get { return _elevation; }
+            set
+            {
+                if (_elevation == value)
+                {
+                    return;
+                }
+
+                _elevation = value;
+                var position = transform.localPosition;
+                position.y = value * HexMetrics.ElevationStep;
+                position.y +=
+                    (HexMetrics.SampleNoise(position).y * 2f - 1f) * HexMetrics.ElevationPerturbStrength;
+
+                transform.localPosition = position;
+
+                var uiPosition = UiRect.localPosition;
+                uiPosition.z = -position.y;
+                UiRect.localPosition = uiPosition;
+
+                ValidateRivers();
+
+                Refresh();
+            }
+        }
+
+        public Vector3 Position { get { return transform.localPosition; } }
+
+        public Color Color
+        {
+            get { return _color; }
+            set
+            {
+                if (_color == value)
+                {
+                    return;
+                }
+
+                _color = value;
+                Refresh();
+            }
+        }
+
+        #region Water
+
         private int _waterLevel;
 
         public int WaterLevel
@@ -27,7 +80,20 @@ namespace Assets.HexGrid.Scripts
             }
         }
 
-        public bool IsUnderwater {  get { return _waterLevel > _elevation; } }
+        public bool IsUnderwater { get { return _waterLevel > _elevation; } }
+
+        public float WaterSurfaceY
+        {
+            get
+            {
+                return (WaterLevel + HexMetrics.WaterElevationOffset) *
+                       HexMetrics.ElevationStep;
+            }
+        }
+
+        #endregion
+
+        #region Rivers
 
         public bool HasIncomingRiver { get; private set; }
 
@@ -36,7 +102,7 @@ namespace Assets.HexGrid.Scripts
         public bool HasOutgoingRiver { get; private set; }
         public HexDirection OutgoingRiver { get; private set; }
 
-        public bool HasRiver { get {  return HasIncomingRiver || HasOutgoingRiver; } }
+        public bool HasRiver { get { return HasIncomingRiver || HasOutgoingRiver; } }
         public bool HasRiverTerminus { get { return HasIncomingRiver != HasOutgoingRiver; } }
 
         public bool HasRiverThroughEdge(HexDirection direction)
@@ -95,15 +161,6 @@ namespace Assets.HexGrid.Scripts
             }
         }
 
-        public float WaterSurfaceY
-        {
-            get
-            {
-                return (WaterLevel + HexMetrics.WaterElevationOffset) *
-                       HexMetrics.ElevationStep;
-            }
-        }
-
         private bool IsValidRiverDestination(HexCell neighbor)
         {
             return neighbor &&
@@ -156,54 +213,8 @@ namespace Assets.HexGrid.Scripts
             }
         }
 
-        [SerializeField]
-        public HexCell[] Neighbors;
-
-        public int Elevation
-        {
-            get { return _elevation; }
-            set
-            {
-                if (_elevation == value)
-                {
-                    return;
-                }
-
-                _elevation = value;
-                var position = transform.localPosition;
-                position.y = value * HexMetrics.ElevationStep;
-                position.y +=
-                    (HexMetrics.SampleNoise(position).y * 2f - 1f) * HexMetrics.ElevationPerturbStrength;
-
-                transform.localPosition = position;
-
-                var uiPosition = UiRect.localPosition;
-                uiPosition.z = -position.y;
-                UiRect.localPosition = uiPosition;
-
-                ValidateRivers();
-
-                Refresh();
-            }
-        }
-
-        public Vector3 Position {  get { return transform.localPosition; } }
-
-        public Color Color
-        {
-            get { return _color; }
-            set
-            {
-                if (_color == value)
-                {
-                    return;
-                }
-
-                _color = value;
-                Refresh();
-            }
-        }
-
+        #endregion
+        
         public HexCell GetNeighbor(HexDirection direction)
         {
             return Neighbors[(int)direction];

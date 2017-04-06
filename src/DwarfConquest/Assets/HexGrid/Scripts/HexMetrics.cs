@@ -8,11 +8,13 @@ namespace Assets.HexGrid.Scripts
         /// Extent of hexagon
         /// </summary>
         public const float OuterRadius = 10f;
+
         public const float InnterRadius = OuterRadius * OuterToInner;
 
         // given edge length e, inner radius is
         // sqrt(e^2 - (e/2)^2) == e * sqrt(3) / 2 ~= 0.886e
         private const float EdgeLengthRatio = 0.866025404f;
+
         public const float OuterToInner = EdgeLengthRatio;
         public const float InnerToOuter = 1f / OuterToInner;
 
@@ -58,6 +60,18 @@ namespace Assets.HexGrid.Scripts
 
         private static HexHash[] _hashGrid;
 
+        private static readonly Vector3[] Corners =
+        {
+            new Vector3(0f, 0f, OuterRadius),
+            new Vector3(InnerRadius, 0f, 0.5f * OuterRadius),
+            new Vector3(InnerRadius, 0f, -0.5f * OuterRadius),
+            new Vector3(0f, 0f, -OuterRadius),
+            new Vector3(-InnerRadius, 0f, -0.5f * OuterRadius),
+            new Vector3(-InnerRadius, 0f, 0.5f * OuterRadius),
+            // final corner coincident of first corner
+            new Vector3(0f, 0f, OuterRadius)
+        };
+        
         public static void InitializeHashGrid(int seed)
         {
             _hashGrid = new HexHash[HashGridSize * HashGridSize];
@@ -72,43 +86,41 @@ namespace Assets.HexGrid.Scripts
 
         public static HexHash SampleHashGrid(Vector3 position)
         {
-            var x = (int) (position.x * HashGridScale) % HashGridSize;
-            if(x < 0) { x += HashGridSize; }
+            var x = (int)(position.x * HashGridScale) % HashGridSize;
+            if (x < 0) { x += HashGridSize; }
 
-            var z = (int) (position.z * HashGridScale) % HashGridSize;
+            var z = (int)(position.z * HashGridScale) % HashGridSize;
             if (z < 0) { z += HashGridSize; }
 
             return _hashGrid[x + z * HashGridSize];
         }
 
+        public static Vector4 SampleNoise(Vector3 position)
+        {
+            return NoiseSource.GetPixelBilinear(
+                position.x * NoiseScale,
+                position.z * NoiseScale);
+        }
+
+        // water
         public static Vector3 GetFirstWaterCorner(HexDirection direction)
         {
-            return Corners[(int) direction] * WaterFactor;
+            return Corners[(int)direction] * WaterFactor;
         }
 
         public static Vector3 GetSecondWaterCorner(HexDirection direction)
         {
-            return Corners[(int) direction + 1] * WaterFactor;
+            return Corners[(int)direction + 1] * WaterFactor;
         }
 
         public static Vector3 GetWaterBridge(HexDirection direction)
         {
-            return (Corners[(int) direction] + Corners[(int) direction + 1]) *
+            return (Corners[(int)direction] + Corners[(int)direction + 1]) *
                    WaterBlendFactor;
         }
-
-        private static readonly Vector3[] Corners =
-        {
-            new Vector3(0f, 0f, OuterRadius),
-            new Vector3(InnerRadius, 0f, 0.5f * OuterRadius),
-            new Vector3(InnerRadius, 0f, -0.5f * OuterRadius),
-            new Vector3(0f, 0f, -OuterRadius),
-            new Vector3(-InnerRadius, 0f, -0.5f * OuterRadius),
-            new Vector3(-InnerRadius, 0f, 0.5f * OuterRadius),
-            // final corner coincident of first corner
-            new Vector3(0f, 0f, OuterRadius)
-        };
-
+        
+        
+        // land
         public static Vector3 GetFirstCorner(HexDirection direction)
         {
             return Corners[(int)direction];
@@ -129,6 +141,7 @@ namespace Assets.HexGrid.Scripts
             return Corners[(int)direction + 1] * SolidFactor;
         }
 
+        // edges
         public static Vector3 GetBridge(HexDirection direction)
         {
             return (Corners[(int)direction] + Corners[(int)direction + 1]) * BlendFactor;
@@ -168,19 +181,13 @@ namespace Assets.HexGrid.Scripts
             return HexEdgeType.Cliff;
         }
 
-        public static Vector4 SampleNoise(Vector3 position)
-        {
-            return NoiseSource.GetPixelBilinear(
-                position.x * NoiseScale, 
-                position.z * NoiseScale);
-        }
-
         public static Vector3 GetSolidEdgeMiddle(HexDirection direction)
         {
-            return (Corners[(int) direction] + Corners[(int) direction + 1]) *
+            return (Corners[(int)direction] + Corners[(int)direction + 1]) *
                    (0.5f * SolidFactor);
         }
 
+        // utility
         public static Vector3 Perturb(Vector3 position)
         {
             var sample = SampleNoise(position);

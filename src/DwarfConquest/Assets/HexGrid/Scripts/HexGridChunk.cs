@@ -1,8 +1,6 @@
-﻿using System;
-using System.Globalization;
-using Assets.Utility.Attributes;
+﻿using Assets.Utility.Attributes;
+using System;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace Assets.HexGrid.Scripts
 {
@@ -29,11 +27,17 @@ namespace Assets.HexGrid.Scripts
         private HexCell[] _cells;
         private Canvas _gridCanvas;
 
-        void Awake()
+        private void Awake()
         {
             _gridCanvas = GetComponentInChildren<Canvas>();
             _cells = new HexCell[HexMetrics.ChunkSizeX * HexMetrics.ChunkSizeZ];
             ShowUI(false);
+        }
+
+        private void LateUpdate()
+        {
+            Triangulate();
+            enabled = false;
         }
 
         public void AddCell(int index, HexCell cell)
@@ -46,7 +50,7 @@ namespace Assets.HexGrid.Scripts
 
         public void Refresh()
         {
-            // activate this component so that triangulation is called once 
+            // activate this component so that triangulation is called once
             // after the frame has been completely updated
             enabled = true;
         }
@@ -56,12 +60,6 @@ namespace Assets.HexGrid.Scripts
             _gridCanvas.gameObject.SetActive(isVisible);
         }
 
-        void LateUpdate()
-        {
-            Triangulate();
-            enabled = false;
-        }
-        
         public void Triangulate()
         {
             Terrain.Clear();
@@ -134,8 +132,6 @@ namespace Assets.HexGrid.Scripts
                 }
             }
 
-
-
             if (direction <= HexDirection.SE)
             {
                 TriangulateConnection(direction, cell, e);
@@ -146,6 +142,8 @@ namespace Assets.HexGrid.Scripts
                 TriangulateWater(direction, cell, center);
             }
         }
+
+        #region Water and Rivers
 
         private void TriangulateWater(HexDirection direction, HexCell cell, Vector3 center)
         {
@@ -222,7 +220,7 @@ namespace Assets.HexGrid.Scripts
             WaterShore.AddTriangle(e2.V1, e1.V2, e1.V1);
             WaterShore.AddTriangle(e2.V5, e1.V5, e1.V4);
             WaterShore.AddTriangleUV(
-                new Vector2(0f, 1f), 
+                new Vector2(0f, 1f),
                 new Vector2(0f, 0f),
                 new Vector2(0f, 0f));
             WaterShore.AddTriangleUV(
@@ -273,7 +271,6 @@ namespace Assets.HexGrid.Scripts
                     new Vector2(0.5f, -0.3f), new Vector2(0.7f, -0.35f),
                     new Vector2(1f, 0f), new Vector2(1.5f, -0.2f));
             }
-
         }
 
         private void TriangulateOpenWater(HexDirection direction, HexCell cell, HexCell neighbor, Vector3 center)
@@ -285,7 +282,6 @@ namespace Assets.HexGrid.Scripts
 
             if (direction <= HexDirection.SE && neighbor != null)
             {
-
                 var bridge = HexMetrics.GetWaterBridge(direction);
                 var e1 = c1 + bridge;
                 var e2 = c2 + bridge;
@@ -301,7 +297,6 @@ namespace Assets.HexGrid.Scripts
                     }
                     Water.AddTriangle(
                         c2, e2, c2 + HexMetrics.GetWaterBridge(direction.Next()));
-
                 }
             }
         }
@@ -322,9 +317,9 @@ namespace Assets.HexGrid.Scripts
                     center += HexMetrics.GetFirstSolidCorner(direction) * 0.25f;
                 }
             }
-            else if (cell.HasRiverThroughEdge(direction.Previous()) 
+            else if (cell.HasRiverThroughEdge(direction.Previous())
                 && cell.HasRiverThroughEdge(direction.Next2()))
-            { 
+            {
                 // other way, straight through
                 center += HexMetrics.GetSecondSolidCorner(direction) * 0.25f;
             }
@@ -376,7 +371,6 @@ namespace Assets.HexGrid.Scripts
                         new Vector2(1f, 0.6f));
                 }
             }
-
         }
 
         private void TriangulateWithRiver(HexDirection direction, HexCell cell, Vector3 center, EdgeVertices e)
@@ -452,6 +446,53 @@ namespace Assets.HexGrid.Scripts
             }
         }
 
+        private void TriangulateWaterfallInWater(
+            Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4,
+            float y1, float y2, float waterY)
+        {
+            v1.y = v2.y = y1;
+            v3.y = v4.y = y2;
+
+            v1 = HexMetrics.Perturb(v1);
+            v2 = HexMetrics.Perturb(v2);
+            v3 = HexMetrics.Perturb(v3);
+            v4 = HexMetrics.Perturb(v4);
+
+            var t = (waterY - y2) / (y1 - y2);
+            v3 = Vector3.Lerp(v3, v1, t);
+            v4 = Vector3.Lerp(v4, v2, t);
+
+            Rivers.AddQuadUnperturbed(v1, v2, v3, v4);
+            Rivers.AddQuadUV(0f, 1f, 0.8f, 1f);
+        }
+
+        private void TriangulateRiverQuad(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4,
+            float y1, float y2, float v, bool isReversed)
+        {
+            v1.y = v2.y = y1;
+            v3.y = v4.y = y2;
+            Rivers.AddQuad(v1, v2, v3, v4);
+
+            if (isReversed)
+            {
+                Rivers.AddQuadUV(1f, 0f, 0.8f - v, 0.6f - v);
+            }
+            else
+            {
+                Rivers.AddQuadUV(0f, 1f, v, v + 0.2f);
+            }
+        }
+
+        private void TriangulateRiverQuad(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4,
+            float y, float v, bool isReversed)
+        {
+            TriangulateRiverQuad(v1, v2, v3, v4, y, y, v, isReversed);
+        }
+
+        #endregion
+
+        #region  Edges, Cliffs and Terraces
+
         private void TriangulateConnection(HexDirection direction,
             HexCell cell, EdgeVertices e1)
         {
@@ -484,16 +525,16 @@ namespace Assets.HexGrid.Scripts
                     else if (cell.Elevation > neighbor.WaterLevel)
                     {
                         TriangulateWaterfallInWater(
-                            e1.V2, e1.V4, e2.V2, e2.V4, 
+                            e1.V2, e1.V4, e2.V2, e2.V4,
                             cell.RiverSurfaceY, neighbor.RiverSurfaceY,
                             neighbor.WaterSurfaceY);
                     }
                 }
-                else if (!neighbor.IsUnderwater 
+                else if (!neighbor.IsUnderwater
                     && neighbor.Elevation > cell.WaterLevel)
                 {
                     TriangulateWaterfallInWater(
-                        e2.V4, e2.V2, e1.V4, e1.V2, 
+                        e2.V4, e2.V2, e1.V4, e1.V2,
                         neighbor.RiverSurfaceY, cell.RiverSurfaceY,
                         cell.WaterSurfaceY);
                 }
@@ -539,27 +580,7 @@ namespace Assets.HexGrid.Scripts
                 //AddTriangleColor(cell.Color, neighbor.Color, nextNeighbor.Color);
             }
         }
-
-        private void TriangulateWaterfallInWater(
-            Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4,
-            float y1, float y2, float waterY)
-        {
-            v1.y = v2.y = y1;
-            v3.y = v4.y = y2;
-
-            v1 = HexMetrics.Perturb(v1);
-            v2 = HexMetrics.Perturb(v2);
-            v3 = HexMetrics.Perturb(v3);
-            v4 = HexMetrics.Perturb(v4);
-
-            var t = (waterY - y2) / (y1 - y2);
-            v3 = Vector3.Lerp(v3, v1, t);
-            v4 = Vector3.Lerp(v4, v2, t);
-
-            Rivers.AddQuadUnperturbed(v1, v2, v3, v4);
-            Rivers.AddQuadUV(0f, 1f, 0.8f, 1f);
-        }
-
+        
         private void TriangulateEdgeTerraces(
             EdgeVertices begin, HexCell beginCell,
             EdgeVertices end, HexCell endCell)
@@ -599,15 +620,18 @@ namespace Assets.HexGrid.Scripts
                         // SSF
                         TriangulateCornerTerraces(bottom, bottomCell, left, leftCell, right, rightCell);
                         break;
+
                     case HexEdgeType.Flat:
                         // SFS
                         TriangulateCornerTerraces(
                             left, leftCell, right, rightCell, bottom, bottomCell);
                         break;
+
                     case HexEdgeType.Cliff:
                         TriangulateCornerTerracesCliff(
                             bottom, bottomCell, left, leftCell, right, rightCell);
                         break;
+
                     default:
                         throw new ArgumentOutOfRangeException(
                             string.Format("Unknown HexEdgeType: {0}", rightEdgeType),
@@ -677,7 +701,6 @@ namespace Assets.HexGrid.Scripts
                 Terrain.AddQuadColor(c1, c2, c3, c4);
             }
 
-
             Terrain.AddQuad(v3, v4, left, right);
             Terrain.AddQuadColor(c3, c4, leftCell.Color, rightCell.Color);
         }
@@ -709,7 +732,7 @@ namespace Assets.HexGrid.Scripts
             {
                 Terrain.AddTriangleUnperturbed(
                     HexMetrics.Perturb(left),
-                    HexMetrics.Perturb(right), 
+                    HexMetrics.Perturb(right),
                     boundary);
                 Terrain.AddTriangleColor(leftCell.Color, rightCell.Color, boundaryColor);
             }
@@ -767,6 +790,8 @@ namespace Assets.HexGrid.Scripts
             Terrain.AddTriangleColor(c2, leftCell.Color, boundaryColor);
         }
 
+        #endregion
+
         private void TriangulateEdgeFan(Vector3 center, EdgeVertices edge, Color color)
         {
             Terrain.AddTriangle(center, edge.V1, edge.V2);
@@ -791,27 +816,6 @@ namespace Assets.HexGrid.Scripts
             Terrain.AddQuadColor(c1, c2);
         }
 
-        private void TriangulateRiverQuad(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4, 
-            float y1, float y2, float v, bool isReversed)
-        {
-            v1.y = v2.y = y1;
-            v3.y = v4.y = y2;
-            Rivers.AddQuad(v1, v2, v3, v4);
-
-            if (isReversed)
-            {
-                Rivers.AddQuadUV(1f, 0f, 0.8f - v, 0.6f - v);
-            }
-            else
-            {
-                Rivers.AddQuadUV(0f, 1f, v, v + 0.2f);
-            }
-        }
-
-        private void TriangulateRiverQuad(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4,
-            float y, float v, bool isReversed)
-        {
-            TriangulateRiverQuad(v1, v2, v3, v4, y, y, v, isReversed);
-        }
+        
     }
 }

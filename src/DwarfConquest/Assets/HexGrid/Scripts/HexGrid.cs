@@ -9,9 +9,6 @@ namespace Assets.HexGrid.Scripts
         public int ChunkCountX = 4;
         public int ChunkCountZ = 3;
 
-        private int _cellCountX;
-        private int _cellCountZ;
-
         public Color DefaultColor = Color.white;
 
         [RequireReference]
@@ -27,6 +24,9 @@ namespace Assets.HexGrid.Scripts
         public HexGridChunk ChunkPrefab;
 
         public int Seed = 0;
+
+        private int _cellCountX;
+        private int _cellCountZ;
 
         private HexCell[] _cells;
 
@@ -70,7 +70,7 @@ namespace Assets.HexGrid.Scripts
             }
         }
 
-        void OnEnable()
+        private void OnEnable()
         {
             if (HexMetrics.NoiseSource == null)
             {
@@ -91,10 +91,10 @@ namespace Assets.HexGrid.Scripts
         public HexCell GetCell(HexCoordinates coords)
         {
             var z = coords.Z;
-            if(z < 0 || z >= _cellCountZ) { return null; }
+            if (z < 0 || z >= _cellCountZ) { return null; }
 
             var x = coords.X + z / 2;
-            if(x < 0 || x >= _cellCountX) { return null; }
+            if (x < 0 || x >= _cellCountX) { return null; }
 
             return _cells[x + z * _cellCountX];
         }
@@ -130,7 +130,6 @@ namespace Assets.HexGrid.Scripts
 
             // create label
             var label = Instantiate(CellLabelPrefab);
-            //label.rectTransform.SetParent(_gridCanvas.transform, false);
             label.rectTransform.anchoredPosition = new Vector2(position.x, position.z);
             label.text = cell.Coordinates.ToStringOnSeparateLines();
             cell.UiRect = label.rectTransform;
@@ -150,8 +149,6 @@ namespace Assets.HexGrid.Scripts
             var localX = x - chunkX * HexMetrics.ChunkSizeX;
             var localZ = z - chunkZ * HexMetrics.ChunkSizeZ;
             chunk.AddCell(localX + localZ * HexMetrics.ChunkSizeX, cell);
-
-
         }
 
         private void SetNeighbors(int x, int z, int i, HexCell cell)
@@ -166,7 +163,7 @@ namespace Assets.HexGrid.Scripts
                 // no z neighbors have been created yet, bail
                 return;
             }
-            
+
             // are we in an even z row
             if ((z & 1) == 0)
             {

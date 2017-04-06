@@ -4,11 +4,11 @@ namespace Assets.HexGrid.Scripts
     public enum HexDirection
     {
         NE = 0,
-        E,
-        SE,
-        SW,
-        W,
-        NW
+        E = 1,
+        SE = 2,
+        SW = 3,
+        W = 4,
+        NW = 5
     }
 
     public static class HexDirectionExtensions
@@ -42,6 +42,7 @@ namespace Assets.HexGrid.Scripts
             direction -= 2;
             return direction >= HexDirection.NE ? direction : (direction + 6);
         }
+
         public static HexDirection Next2(this HexDirection direction)
         {
             direction += 2;
