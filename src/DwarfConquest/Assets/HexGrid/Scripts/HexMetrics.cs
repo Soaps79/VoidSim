@@ -96,6 +96,9 @@ namespace Assets.HexGrid.Scripts
 
         private static HexHash[] _hashGrid;
 
+
+        public static Color[] Colors;
+
         private static readonly Vector3[] Corners =
         {
             new Vector3(0f, 0f, OuterRadius),

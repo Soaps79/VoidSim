@@ -11,9 +11,7 @@ namespace Assets.HexGrid.Scripts
 
         [SerializeField]
         public HexCell[] Neighbors;
-
-        private Color _color;
-
+        
         private int _elevation = int.MinValue;
 
         public int Elevation
@@ -46,19 +44,24 @@ namespace Assets.HexGrid.Scripts
 
         public Vector3 Position { get { return transform.localPosition; } }
 
-        public Color Color
+        private int _terrainTypeIndex;
+
+        public int TerrainTypeIndex
         {
-            get { return _color; }
+            get { return _terrainTypeIndex; }
             set
             {
-                if (_color == value)
+                if (_terrainTypeIndex != value)
                 {
-                    return;
+                    _terrainTypeIndex = value;
+                    Refresh();
                 }
-
-                _color = value;
-                Refresh();
             }
+        }
+
+        public Color Color
+        {
+            get { return HexMetrics.Colors[_terrainTypeIndex]; }
         }
 
         #region Water
@@ -295,9 +298,7 @@ namespace Assets.HexGrid.Scripts
         }
 
         #endregion Features
-
-
-
+        
         public HexCell GetNeighbor(HexDirection direction)
         {
             return Neighbors[(int)direction];

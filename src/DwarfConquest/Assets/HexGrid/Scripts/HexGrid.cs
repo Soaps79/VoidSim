@@ -8,9 +8,7 @@ namespace Assets.HexGrid.Scripts
     {
         public int ChunkCountX = 4;
         public int ChunkCountZ = 3;
-
-        public Color DefaultColor = Color.white;
-
+        
         [RequireReference]
         public HexCell CellPrefab;
 
@@ -25,6 +23,8 @@ namespace Assets.HexGrid.Scripts
 
         public int Seed = 0;
 
+        public Color[] Colors;
+
         private int _cellCountX;
         private int _cellCountZ;
 
@@ -35,6 +35,7 @@ namespace Assets.HexGrid.Scripts
         private void Awake()
         {
             HexMetrics.NoiseSource = NoiseSource;
+            HexMetrics.Colors = Colors;
             HexMetrics.InitializeHashGrid(Seed);
 
             _cellCountX = ChunkCountX * HexMetrics.ChunkSizeX;
@@ -76,6 +77,7 @@ namespace Assets.HexGrid.Scripts
             {
                 HexMetrics.NoiseSource = NoiseSource;
                 HexMetrics.InitializeHashGrid(Seed);
+                HexMetrics.Colors = Colors;
             }
         }
 
@@ -124,7 +126,6 @@ namespace Assets.HexGrid.Scripts
             //cell.transform.SetParent(transform, false);
             cell.transform.localPosition = position;
             cell.Coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
-            cell.Color = DefaultColor;
 
             SetNeighbors(x, z, i, cell);
 

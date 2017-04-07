@@ -631,7 +631,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1690084246}
-        m_MethodName: SetActiveColor
+        m_MethodName: SetTerrainTypeIndex
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -882,7 +882,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1690084246}
-        m_MethodName: SetActiveColor
+        m_MethodName: SetTerrainTypeIndex
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1340,7 +1340,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1690084246}
-        m_MethodName: SetActiveColor
+        m_MethodName: SetTerrainTypeIndex
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1676,7 +1676,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ChunkCountX: 4
   ChunkCountZ: 3
-  DefaultColor: {r: 1, g: 1, b: 1, a: 1}
   CellPrefab: {fileID: 114281532097435590, guid: 77b14b976dce1654aabf02a689dd59c8,
     type: 2}
   CellLabelPrefab: {fileID: 114635542655118804, guid: 6cf7943c51ca5454392d4b5194459daf,
@@ -1685,6 +1684,12 @@ MonoBehaviour:
   ChunkPrefab: {fileID: 114927553246785774, guid: 7eddf6f01d195a44aaece5f4fe14391f,
     type: 2}
   Seed: 0
+  Colors:
+  - {r: 0.89705884, g: 0.52768165, b: 0.52768165, a: 0}
+  - {r: 0.33737025, g: 0.7647059, b: 0.4994632, a: 0}
+  - {r: 0.25108132, g: 0.54449046, b: 0.9485294, a: 0}
+  - {r: 0.8736726, g: 0.88235295, b: 0.25302765, a: 0}
+  - {r: 0.8014706, g: 0.54659116, b: 0.06482484, a: 0}
 --- !u!4 &517659019
 Transform:
   m_ObjectHideFlags: 0
@@ -3211,7 +3216,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1690084246}
-        m_MethodName: SetActiveColor
+        m_MethodName: SetTerrainTypeIndex
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3678,7 +3683,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1690084246}
-        m_MethodName: SetActiveColor
+        m_MethodName: SetTerrainTypeIndex
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4533,7 +4538,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1690084246}
-        m_MethodName: SetActiveColor
+        m_MethodName: SetTerrainTypeIndex
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4645,12 +4650,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a062c7e990629a347b5a7469a9084c10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Colors:
-  - {r: 0.89705884, g: 0.52768165, b: 0.52768165, a: 0}
-  - {r: 0.33737025, g: 0.7647059, b: 0.4994632, a: 0}
-  - {r: 0.25108132, g: 0.54449046, b: 0.9485294, a: 0}
-  - {r: 0.8736726, g: 0.88235295, b: 0.25302765, a: 0}
-  - {r: 0.8014706, g: 0.54659116, b: 0.06482484, a: 0}
   HexGrid: {fileID: 517659018}
 --- !u!114 &1690084247
 MonoBehaviour:

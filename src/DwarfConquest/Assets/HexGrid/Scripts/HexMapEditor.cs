@@ -7,14 +7,12 @@ namespace Assets.HexGrid.Scripts
     public class HexMapEditor : MonoBehaviour
     {
         private enum OptionalToggle { Ignore = 0, Yes, No };
-
-        public Color[] Colors;
-
+        
         [RequireReference]
         [SerializeField]
         public HexGrid HexGrid;
 
-        private Color _activeColor;
+        //private Color _activeColor;
         private int _activeElevation;
         private int _activeWaterLevel;
         private int _activeSpecialIndex;
@@ -24,7 +22,9 @@ namespace Assets.HexGrid.Scripts
         private int _activeFarmLevel;
         private int _activePlantLevel;
 
-        private bool _applyColor;
+        private int _activeTerrainTypeIndex;
+
+        //private bool _applyColor;
         private bool _applyElevation;
         private bool _applyWaterLevel;
 
@@ -44,7 +44,7 @@ namespace Assets.HexGrid.Scripts
 
         private void Awake()
         {
-            SetActiveColor(0);
+            //SetActiveColor(0);
         }
 
         private void Update()
@@ -177,9 +177,9 @@ namespace Assets.HexGrid.Scripts
 
         private void EditBasicBrush(HexCell cell)
         {
-            if (_applyColor)
+            if (_activeTerrainTypeIndex >= 0)
             {
-                cell.Color = _activeColor;
+                cell.TerrainTypeIndex = _activeTerrainTypeIndex;
             }
 
             if (_applyElevation)
@@ -242,13 +242,9 @@ namespace Assets.HexGrid.Scripts
             _activeWaterLevel = (int)level;
         }
 
-        public void SetActiveColor(int i)
+        public void SetTerrainTypeIndex(int index)
         {
-            _applyColor = i >= 0;
-            if (_applyColor)
-            {
-                _activeColor = Colors[i];
-            }
+            _activeTerrainTypeIndex = index;
         }
 
         public void SetElevation(float elevation)
