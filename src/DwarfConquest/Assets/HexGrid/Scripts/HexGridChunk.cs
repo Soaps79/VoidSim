@@ -107,6 +107,7 @@ namespace Assets.HexGrid.Scripts
             if (cell == null)
             {
                 Debug.Log("Cell is null!? wtf?");
+                return;
             }
 
             // solid inner region
@@ -117,22 +118,7 @@ namespace Assets.HexGrid.Scripts
             );
             if (cell.HasRiver)
             {
-                if (cell.HasRiverThroughEdge(direction))
-                {
-                    e.V3.y = cell.StreamBedY;
-                    if (cell.HasRiverTerminus)
-                    {
-                        TriangulateWithRiverTerminus(direction, cell, center, e);
-                    }
-                    else
-                    {
-                        TriangulateWithRiver(direction, cell, center, e);
-                    }
-                }
-                else
-                {
-                    TriangulateAdjacentToRiver(direction, cell, center, e);
-                }
+                e = TriangulateCellRiver(direction, cell, e, center);
             }
             else
             {
@@ -153,6 +139,27 @@ namespace Assets.HexGrid.Scripts
             {
                 TriangulateWater(direction, cell, center);
             }
+        }
+
+        private EdgeVertices TriangulateCellRiver(HexDirection direction, HexCell cell, EdgeVertices e, Vector3 center)
+        {
+            if (cell.HasRiverThroughEdge(direction))
+            {
+                e.V3.y = cell.StreamBedY;
+                if (cell.HasRiverTerminus)
+                {
+                    TriangulateWithRiverTerminus(direction, cell, center, e);
+                }
+                else
+                {
+                    TriangulateWithRiver(direction, cell, center, e);
+                }
+            }
+            else
+            {
+                TriangulateAdjacentToRiver(direction, cell, center, e);
+            }
+            return e;
         }
 
         #region Water and Rivers
@@ -517,41 +524,13 @@ namespace Assets.HexGrid.Scripts
             }
 
             // neighbor bridge
-            var bridge = HexMetrics.GetBridge(direction);
-            bridge.y = neighbor.Position.y - cell.Position.y;
-            var e2 = new EdgeVertices(e1.V1 + bridge, e1.V5 + bridge);
+            var e2 = GetCornerBridgeEdge(cell, e1, neighbor, direction);
 
             var hasRiver = cell.HasRiverThroughEdge(direction);
-
             if (hasRiver)
             {
                 e2.V3.y = neighbor.StreamBedY;
-                if (!cell.IsUnderwater)
-                {
-                    if (!neighbor.IsUnderwater)
-                    {
-                        // river
-                        TriangulateRiverQuad(
-                            e1.V2, e1.V4, e2.V2, e2.V4,
-                            cell.RiverSurfaceY, neighbor.RiverSurfaceY, 0.8f,
-                            cell.HasIncomingRiver && cell.IncomingRiver == direction);
-                    }
-                    else if (cell.Elevation > neighbor.WaterLevel)
-                    {
-                        TriangulateWaterfallInWater(
-                            e1.V2, e1.V4, e2.V2, e2.V4,
-                            cell.RiverSurfaceY, neighbor.RiverSurfaceY,
-                            neighbor.WaterSurfaceY);
-                    }
-                }
-                else if (!neighbor.IsUnderwater
-                    && neighbor.Elevation > cell.WaterLevel)
-                {
-                    TriangulateWaterfallInWater(
-                        e2.V4, e2.V2, e1.V4, e1.V2,
-                        neighbor.RiverSurfaceY, cell.RiverSurfaceY,
-                        cell.WaterSurfaceY);
-                }
+                HandleRiverConnection(direction, cell, e1, neighbor, e2);
             }
 
             if (cell.GetEdgeType(direction) == HexEdgeType.Slope)
@@ -566,6 +545,20 @@ namespace Assets.HexGrid.Scripts
             Features.AddWall(e1, cell, e2, neighbor, hasRiver, false);
 
             // triangle gap
+            HandleCornerConnection(direction, cell, e1, neighbor, e2);
+        }
+
+        private EdgeVertices GetCornerBridgeEdge(HexCell cell, EdgeVertices e1, HexCell neighbor, HexDirection direction)
+        {
+            var bridge = HexMetrics.GetBridge(direction);
+            bridge.y = neighbor.Position.y - cell.Position.y;
+            var e2 = new EdgeVertices(e1.V1 + bridge, e1.V5 + bridge);
+            return e2;
+        }
+
+        private void HandleCornerConnection(HexDirection direction, HexCell cell, EdgeVertices e1, HexCell neighbor,
+            EdgeVertices e2)
+        {
             var nextNeighbor = cell.GetNeighbor(direction.Next());
             if (direction <= HexDirection.E && nextNeighbor != null)
             {
@@ -591,9 +584,38 @@ namespace Assets.HexGrid.Scripts
                 {
                     TriangulateCorner(v5, nextNeighbor, e1.V5, cell, e2.V5, neighbor);
                 }
+            }
+        }
 
-                //AddTriangle(v2, v4, v5);
-                //AddTriangleColor(cell.Color, neighbor.Color, nextNeighbor.Color);
+        private void HandleRiverConnection(HexDirection direction, HexCell cell, EdgeVertices e1, HexCell neighbor,
+            EdgeVertices e2)
+        {
+            e2.V3.y = neighbor.StreamBedY;
+            if (!cell.IsUnderwater)
+            {
+                if (!neighbor.IsUnderwater)
+                {
+                    // river
+                    TriangulateRiverQuad(
+                        e1.V2, e1.V4, e2.V2, e2.V4,
+                        cell.RiverSurfaceY, neighbor.RiverSurfaceY, 0.8f,
+                        cell.HasIncomingRiver && cell.IncomingRiver == direction);
+                }
+                else if (cell.Elevation > neighbor.WaterLevel)
+                {
+                    TriangulateWaterfallInWater(
+                        e1.V2, e1.V4, e2.V2, e2.V4,
+                        cell.RiverSurfaceY, neighbor.RiverSurfaceY,
+                        neighbor.WaterSurfaceY);
+                }
+            }
+            else if (!neighbor.IsUnderwater
+                     && neighbor.Elevation > cell.WaterLevel)
+            {
+                TriangulateWaterfallInWater(
+                    e2.V4, e2.V2, e1.V4, e1.V2,
+                    neighbor.RiverSurfaceY, cell.RiverSurfaceY,
+                    cell.WaterSurfaceY);
             }
         }
 
@@ -630,43 +652,11 @@ namespace Assets.HexGrid.Scripts
 
             if (leftEdgeType == HexEdgeType.Slope)
             {
-                switch (rightEdgeType)
-                {
-                    case HexEdgeType.Slope:
-                        // SSF
-                        TriangulateCornerTerraces(bottom, bottomCell, left, leftCell, right, rightCell);
-                        break;
-
-                    case HexEdgeType.Flat:
-                        // SFS
-                        TriangulateCornerTerraces(
-                            left, leftCell, right, rightCell, bottom, bottomCell);
-                        break;
-
-                    case HexEdgeType.Cliff:
-                        TriangulateCornerTerracesCliff(
-                            bottom, bottomCell, left, leftCell, right, rightCell);
-                        break;
-
-                    default:
-                        throw new ArgumentOutOfRangeException(
-                            string.Format("Unknown HexEdgeType: {0}", rightEdgeType),
-                            new NotImplementedException());
-                }
+                TriangulateCornerWithLeftSlope(bottom, bottomCell, left, leftCell, right, rightCell, rightEdgeType);
             }
             else if (rightEdgeType == HexEdgeType.Slope)
             {
-                if (leftEdgeType == HexEdgeType.Flat)
-                {
-                    // FSS
-                    TriangulateCornerTerraces(
-                        right, rightCell, bottom, bottomCell, left, leftCell);
-                }
-                else
-                {
-                    TriangulateCornerCliffTerraces(
-                    bottom, bottomCell, left, leftCell, right, rightCell);
-                }
+                TriangulateCornerWithRightSlope(bottom, bottomCell, left, leftCell, right, rightCell, leftEdgeType);
             }
             else if (leftCell.GetEdgeType(rightCell) == HexEdgeType.Slope)
             {
@@ -688,6 +678,50 @@ namespace Assets.HexGrid.Scripts
             }
 
             Features.AddWall(bottom, bottomCell, left, leftCell, right, rightCell);
+        }
+
+        private void TriangulateCornerWithRightSlope(Vector3 bottom, HexCell bottomCell, Vector3 left, HexCell leftCell,
+            Vector3 right, HexCell rightCell, HexEdgeType leftEdgeType)
+        {
+            if (leftEdgeType == HexEdgeType.Flat)
+            {
+                // FSS
+                TriangulateCornerTerraces(
+                    right, rightCell, bottom, bottomCell, left, leftCell);
+            }
+            else
+            {
+                TriangulateCornerCliffTerraces(
+                    bottom, bottomCell, left, leftCell, right, rightCell);
+            }
+        }
+
+        private void TriangulateCornerWithLeftSlope(Vector3 bottom, HexCell bottomCell, Vector3 left, HexCell leftCell,
+            Vector3 right, HexCell rightCell, HexEdgeType rightEdgeType)
+        {
+            switch (rightEdgeType)
+            {
+                case HexEdgeType.Slope:
+                    // SSF
+                    TriangulateCornerTerraces(bottom, bottomCell, left, leftCell, right, rightCell);
+                    break;
+
+                case HexEdgeType.Flat:
+                    // SFS
+                    TriangulateCornerTerraces(
+                        left, leftCell, right, rightCell, bottom, bottomCell);
+                    break;
+
+                case HexEdgeType.Cliff:
+                    TriangulateCornerTerracesCliff(
+                        bottom, bottomCell, left, leftCell, right, rightCell);
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(
+                        string.Format("Unknown HexEdgeType: {0}", rightEdgeType),
+                        new NotImplementedException());
+            }
         }
 
         private void TriangulateCornerTerraces(

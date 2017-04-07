@@ -1,4 +1,6 @@
-﻿using Assets.Utility.Attributes;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Assets.Utility.Attributes;
 using UnityEngine;
 
 namespace Assets.HexGrid.Scripts
@@ -210,34 +212,52 @@ namespace Assets.HexGrid.Scripts
             {
                 if (hasRightWall)
                 {
-                    var hasTower = false;
-                    if (leftCell.Elevation == rightCell.Elevation)
-                    {
-                        var hash = HexMetrics.SampleHashGrid(
-                            (pivot + left + right) * (1f / 3f));
-                        hasTower = hash.E < HexMetrics.WallTowerThreshold;
-                    }
-                    AddWallSegment(pivot, left, pivot, right, hasTower);
-                }
-                else if (leftCell.Elevation < rightCell.Elevation)
-                {
-                    AddWallWedge(pivot, left, right);
+                    AddConnectingWall(pivot, left, leftCell, right, rightCell);
                 }
                 else
                 {
-                    AddWallCap(pivot, left);
+                    AddOnlyLeftWall(pivot, left, leftCell, right, rightCell);
                 }
             }
             else if (hasRightWall)
             {
-                if (rightCell.Elevation < leftCell.Elevation)
-                {
-                    AddWallWedge(right, pivot, left);
-                }
-                else
-                {
-                    AddWallCap(right, pivot);
-                }
+                AddOnlyRightWall(pivot, left, leftCell, right, rightCell);
+            }
+        }
+
+        private void AddOnlyLeftWall(Vector3 pivot, Vector3 left, HexCell leftCell, Vector3 right, HexCell rightCell)
+        {
+            if (leftCell.Elevation < rightCell.Elevation)
+            {
+                AddWallWedge(pivot, left, right);
+            }
+            else
+            {
+                AddWallCap(pivot, left);
+            }
+        }
+
+        private void AddConnectingWall(Vector3 pivot, Vector3 left, HexCell leftCell, Vector3 right, HexCell rightCell)
+        {
+            var hasTower = false;
+            if (leftCell.Elevation == rightCell.Elevation)
+            {
+                var hash = HexMetrics.SampleHashGrid(
+                    (pivot + left + right) * (1f / 3f));
+                hasTower = hash.E < HexMetrics.WallTowerThreshold;
+            }
+            AddWallSegment(pivot, left, pivot, right, hasTower);
+        }
+
+        private void AddOnlyRightWall(Vector3 pivot, Vector3 left, HexCell leftCell, Vector3 right, HexCell rightCell)
+        {
+            if (rightCell.Elevation < leftCell.Elevation)
+            {
+                AddWallWedge(right, pivot, left);
+            }
+            else
+            {
+                AddWallCap(right, pivot);
             }
         }
 
@@ -246,38 +266,9 @@ namespace Assets.HexGrid.Scripts
             if (cell.IsSpecial) { return; }
 
             var hash = HexMetrics.SampleHashGrid(position);
-            var prefab = PickPrefab(UrbanCollections, cell.UrbanLevel, hash.A, hash.D);
-            var otherPrefab = PickPrefab(FarmCollections, cell.FarmLevel, hash.B, hash.D);
+            var prefab = SelectPrefabForCell(cell, position, hash);
 
-            float usedHash = hash.A;
-            if (prefab != null)
-            {
-                if (otherPrefab != null && hash.B < hash.A)
-                {
-                    prefab = otherPrefab;
-                    usedHash = hash.B;
-                }
-            }
-            else if (otherPrefab)
-            {
-                prefab = otherPrefab;
-                usedHash = hash.B;
-            }
-
-            otherPrefab = PickPrefab(PlantCollections, cell.PlantLevel, hash.C, hash.D);
-
-            if (prefab != null)
-            {
-                if (otherPrefab != null && hash.C < usedHash)
-                {
-                    prefab = otherPrefab;
-                }
-            }
-            else if (otherPrefab != null)
-            {
-                prefab = otherPrefab;
-            }
-            else
+            if(prefab == null)
             {
                 return;
             }
@@ -289,6 +280,32 @@ namespace Assets.HexGrid.Scripts
             instance.localPosition = HexMetrics.Perturb(position);
             instance.localRotation = Quaternion.Euler(0f, 360f * hash.E, 0f);
             instance.SetParent(_container, false);
+        }
+
+        private Transform SelectPrefabForCell(HexCell cell, Vector3 position, HexHash hash)
+        {
+
+            var prefabs = new Dictionary<float, Transform>
+            {
+                {hash.A, PickPrefab(UrbanCollections, cell.UrbanLevel, hash.A, hash.D)},
+                {hash.B, PickPrefab(FarmCollections, cell.FarmLevel, hash.B, hash.D)},
+                {hash.C, PickPrefab(PlantCollections, cell.PlantLevel, hash.C, hash.D)}
+            };
+
+            var usedHash = float.MinValue;
+            Transform prefab = null;
+            foreach (var pair in prefabs)
+            {
+                if (pair.Value == null
+                    || pair.Key < usedHash)
+                {
+                    continue;
+                }
+                
+                usedHash = pair.Key;
+                prefab = pair.Value;
+            }
+            return prefab;
         }
 
         private Transform PickPrefab(

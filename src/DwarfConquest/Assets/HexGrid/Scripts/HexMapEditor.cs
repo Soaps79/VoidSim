@@ -126,36 +126,13 @@ namespace Assets.HexGrid.Scripts
         {
             if (cell == null) { return; }
 
-            if (_applyColor)
-            {
-                cell.Color = _activeColor;
-            }
-            if (_applyElevation)
-            {
-                cell.Elevation = _activeElevation;
-            }
+            EditBasicBrush(cell);
+            EditFeatures(cell);
+            EditRiver(cell);
+        }
 
-            if (_applyWaterLevel)
-            {
-                cell.WaterLevel = _activeWaterLevel;
-            }
-            if (_applySpecialIndex)
-            {
-                cell.SpecialIndex = _activeSpecialIndex;
-            }
-            if (_applyUrbanLevel)
-            {
-                cell.UrbanLevel = _activeUrbanLevel;
-            }
-            if (_applyFarmLevel)
-            {
-                cell.FarmLevel = _activeFarmLevel;
-            }
-            if (_applyPlantLevel)
-            {
-                cell.PlantLevel = _activePlantLevel;
-            }
-
+        private void EditRiver(HexCell cell)
+        {
             if (_riverMode == OptionalToggle.No)
             {
                 cell.RemoveRiver();
@@ -168,10 +145,51 @@ namespace Assets.HexGrid.Scripts
                     otherCell.SetOutgoingRiver(_dragDirection);
                 }
             }
+        }
+
+        private void EditFeatures(HexCell cell)
+        {
+            if (_applySpecialIndex)
+            {
+                cell.SpecialIndex = _activeSpecialIndex;
+            }
+
+            if (_applyUrbanLevel)
+            {
+                cell.UrbanLevel = _activeUrbanLevel;
+            }
+
+            if (_applyFarmLevel)
+            {
+                cell.FarmLevel = _activeFarmLevel;
+            }
+
+            if (_applyPlantLevel)
+            {
+                cell.PlantLevel = _activePlantLevel;
+            }
 
             if (_walledMode != OptionalToggle.Ignore)
             {
                 cell.IsWalled = _walledMode == OptionalToggle.Yes;
+            }
+        }
+
+        private void EditBasicBrush(HexCell cell)
+        {
+            if (_applyColor)
+            {
+                cell.Color = _activeColor;
+            }
+
+            if (_applyElevation)
+            {
+                cell.Elevation = _activeElevation;
+            }
+
+            if (_applyWaterLevel)
+            {
+                cell.WaterLevel = _activeWaterLevel;
             }
         }
 
