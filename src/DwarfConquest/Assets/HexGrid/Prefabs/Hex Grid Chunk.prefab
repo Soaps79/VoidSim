@@ -520,8 +520,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88b4c52404f62044d9706990b29e600d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FeaturePrefab: {fileID: 4160861219400190, guid: 66d602756a779b14c815897c436b9488,
-    type: 2}
+  UrbanCollections:
+  - Prefabs:
+    - {fileID: 4382631486034282, guid: 7ed4a3f502c2b514ba60fc07882c5c2d, type: 2}
+    - {fileID: 4752748328334782, guid: 3b51356f222ec3742aeaa1ec312372e5, type: 2}
+    - {fileID: 4756951660346530, guid: b6e5f00a4b35aa441afdf60b12197bd5, type: 2}
+  - Prefabs:
+    - {fileID: 4281463487384712, guid: 95778ace8026fdc4094644e4e678a973, type: 2}
+    - {fileID: 4028508263113166, guid: c508e6a46229b644ba2246007041e94c, type: 2}
+    - {fileID: 4372431757518154, guid: 966b3ddfb9bea134ebccae90b56805b2, type: 2}
+  - Prefabs:
+    - {fileID: 4586188984953438, guid: 552867e9877d17b4e9fa4faa67284ecd, type: 2}
+    - {fileID: 4889958962487818, guid: a6d27320f767f6144a28f3c23ca2e999, type: 2}
+  FarmCollections:
+  - Prefabs:
+    - {fileID: 4555871386416624, guid: ec632520248638448a897fcf487cbf7a, type: 2}
+    - {fileID: 4744355741249704, guid: d7963d0bb2ed179489e7518af09de4b5, type: 2}
+  - Prefabs:
+    - {fileID: 4130134865918494, guid: 114f4abb2fc5d5145a3ca97e1716b4a4, type: 2}
+    - {fileID: 4958783692109078, guid: 273f3498001971e428ef80d55f0eb155, type: 2}
+  - Prefabs:
+    - {fileID: 4994361695830414, guid: 584903c9b586f404699a2c04ce4d96ff, type: 2}
+    - {fileID: 4978772565467262, guid: a1e3b09d2ffc380418a43bd869e123b1, type: 2}
+  PlantCollections:
+  - Prefabs:
+    - {fileID: 4657444181728444, guid: 320234692b21c8641b2640b3a657a31e, type: 2}
+    - {fileID: 4300223331627398, guid: fc616946e323b8d45957ffd0fe0619a4, type: 2}
+  - Prefabs:
+    - {fileID: 4747857924960460, guid: 8b27830a81e72034f9be30e4776a35a7, type: 2}
+    - {fileID: 4097072926796016, guid: 63ac7c10797c56f43beec9bae25c10bf, type: 2}
+  - Prefabs:
+    - {fileID: 4216434721527690, guid: c5e96e2839df8d443a89d45c9dd8eddf, type: 2}
+    - {fileID: 4009662299419030, guid: 064770379f3f36a43974ad2a409caca4, type: 2}
 --- !u!114 &114783350691247680
 MonoBehaviour:
   m_ObjectHideFlags: 1

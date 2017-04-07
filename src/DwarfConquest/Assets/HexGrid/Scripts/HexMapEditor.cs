@@ -18,10 +18,18 @@ namespace Assets.HexGrid.Scripts
         private int _activeElevation;
         private int _activeWaterLevel;
         private int _brushSize = 0;
+        
+        private int _activeUrbanLevel;
+        private int _activeFarmLevel;
+        private int _activePlantLevel;
 
         private bool _applyColor;
         private bool _applyElevation = true;
         private bool _applyWaterLevel = true;
+
+        private bool _applyUrbanLevel;
+        private bool _applyFarmLevel;
+        private bool _applyPlantLevel;
 
         private OptionalToggle _riverMode = 0;
 
@@ -128,6 +136,18 @@ namespace Assets.HexGrid.Scripts
             {
                 cell.WaterLevel = _activeWaterLevel;
             }
+            if (_applyUrbanLevel)
+            {
+                cell.UrbanLevel = _activeUrbanLevel;
+            }
+            if (_applyFarmLevel)
+            {
+                cell.FarmLevel = _activeFarmLevel;
+            }
+            if (_applyPlantLevel)
+            {
+                cell.PlantLevel = _activePlantLevel;
+            }
 
             if (_riverMode == OptionalToggle.No)
             {
@@ -155,6 +175,20 @@ namespace Assets.HexGrid.Scripts
             _applyElevation = toggle;
         }
 
+        public void SetApplyUrbanLevel(bool toggle)
+        {
+            _applyUrbanLevel = toggle;
+        }
+
+        public void SetApplyFarmLevel(bool toggle)
+        {
+            _applyFarmLevel = toggle;
+        }
+
+        public void SetApplyPlantLevel(bool toggle)
+        {
+            _applyPlantLevel = toggle;
+        }
         // set values
         public void SetRiverMode(int mode)
         {
@@ -182,6 +216,21 @@ namespace Assets.HexGrid.Scripts
         public void SetBrushSize(float size)
         {
             _brushSize = (int)size;
+        }
+
+        public void SetUrbanLevel(float level)
+        {
+            _activeUrbanLevel = (int) level;
+        }
+
+        public void SetFarmLevel(float level)
+        {
+            _activeFarmLevel = (int)level;
+        }
+
+        public void SetPlantLevel(float level)
+        {
+            _activePlantLevel = (int)level;
         }
 
         // misc.

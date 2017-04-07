@@ -91,12 +91,17 @@ namespace Assets.HexGrid.Scripts
 
             if (!cell.IsUnderwater && !cell.HasRiver)
             {
-                Features.AddFeature(cell.Position);
+                Features.AddFeature(cell, cell.Position);
             }
         }
 
         private void Triangulate(HexDirection direction, HexCell cell)
         {
+            if (cell == null)
+            {
+                Debug.Log("Cell is null!? wtf?");
+            }
+
             // solid inner region
             var center = cell.Position;
             var e = new EdgeVertices(
@@ -128,7 +133,7 @@ namespace Assets.HexGrid.Scripts
 
                 if (!cell.IsUnderwater)
                 {
-                    Features.AddFeature((center + e.V1 + e.V5) * (1f / 3f));
+                    Features.AddFeature(cell, (center + e.V1 + e.V5) * (1f / 3f));
                 }
             }
 
@@ -333,7 +338,7 @@ namespace Assets.HexGrid.Scripts
 
             if (!cell.IsUnderwater)
             {
-                Features.AddFeature((center + e.V1 + e.V5) * (1f / 3f));
+                Features.AddFeature(cell, (center + e.V1 + e.V5) * (1f / 3f));
             }
         }
 

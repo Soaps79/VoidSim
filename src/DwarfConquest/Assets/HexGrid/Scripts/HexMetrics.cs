@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using NUnit.Framework.Constraints;
+using UnityEngine;
 
 namespace Assets.HexGrid.Scripts
 {
@@ -54,6 +56,20 @@ namespace Assets.HexGrid.Scripts
         // shores
         public const float WaterFactor = 0.6f;
         public const float WaterBlendFactor = 1f - WaterFactor;
+
+        // features
+        private static readonly float[][] FeatureThresholds =
+        {
+            // least likely <-> most likely
+            new [] {0.0f, 0.0f, 0.4f}, 
+            new [] {0.0f, 0.4f, 0.6f}, 
+            new [] {0.4f, 0.6f, 0.8f}
+        };
+
+        public static float[] GetFeatureThresholds(int level)
+        {
+            return FeatureThresholds[level];
+        }
 
         public const int HashGridSize = 256;
         public const float HashGridScale = 0.25f;

@@ -214,7 +214,54 @@ namespace Assets.HexGrid.Scripts
         }
 
         #endregion
-        
+
+        #region Features
+
+        private int _urbanLevel;
+        private int _farmLevel;
+        private int _plantLevel;
+
+        public int UrbanLevel
+        {
+            get { return _urbanLevel; }
+            set
+            {
+                if (_urbanLevel != value)
+                {
+                    _urbanLevel = value;
+                    RefreshSelfOnly();
+                }
+            }
+        }
+
+        public int FarmLevel
+        {
+            get { return _farmLevel; }
+            set
+            {
+                if (_farmLevel != value)
+                {
+                    _farmLevel = value;
+                    RefreshSelfOnly();
+                }
+            }
+        }
+
+        public int PlantLevel
+        {
+            get { return _plantLevel; }
+            set
+            {
+                if (_plantLevel != value)
+                {
+                    _plantLevel = value;
+                    RefreshSelfOnly();
+                }
+            }
+        }
+
+        #endregion  
+
         public HexCell GetNeighbor(HexDirection direction)
         {
             return Neighbors[(int)direction];
