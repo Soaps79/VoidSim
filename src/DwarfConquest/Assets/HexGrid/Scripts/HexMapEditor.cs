@@ -24,14 +24,15 @@ namespace Assets.HexGrid.Scripts
         private int _activePlantLevel;
 
         private bool _applyColor;
-        private bool _applyElevation = true;
-        private bool _applyWaterLevel = true;
+        private bool _applyElevation;
+        private bool _applyWaterLevel;
 
         private bool _applyUrbanLevel;
         private bool _applyFarmLevel;
         private bool _applyPlantLevel;
 
         private OptionalToggle _riverMode = 0;
+        private OptionalToggle _walledMode = 0;
 
         // drag support
         private bool _isDrag;
@@ -161,6 +162,11 @@ namespace Assets.HexGrid.Scripts
                     otherCell.SetOutgoingRiver(_dragDirection);
                 }
             }
+
+            if (_walledMode != OptionalToggle.Ignore)
+            {
+                cell.IsWalled = _walledMode == OptionalToggle.Yes;
+            }
         }
 
         #region Editor UI Controls
@@ -194,6 +200,12 @@ namespace Assets.HexGrid.Scripts
         {
             _riverMode = (OptionalToggle)mode;
         }
+
+        public void SetWalledMode(int mode)
+        {
+            _walledMode = (OptionalToggle) mode;
+        }
+
         public void SetWaterLevel(float level)
         {
             _activeWaterLevel = (int)level;

@@ -20,10 +20,10 @@ namespace Assets.HexGrid.Scripts
 
         [RequireReference]
         public HexMesh Estuaries;
-
+        
         [RequireReference]
         public HexFeatureManager Features;
-
+        
         private HexCell[] _cells;
         private Canvas _gridCanvas;
 
@@ -514,7 +514,9 @@ namespace Assets.HexGrid.Scripts
             bridge.y = neighbor.Position.y - cell.Position.y;
             var e2 = new EdgeVertices(e1.V1 + bridge, e1.V5 + bridge);
 
-            if (cell.HasRiverThroughEdge(direction))
+            var hasRiver = cell.HasRiverThroughEdge(direction);
+
+            if (hasRiver)
             {
                 e2.V3.y = neighbor.StreamBedY;
                 if (!cell.IsUnderwater)
@@ -553,6 +555,8 @@ namespace Assets.HexGrid.Scripts
             {
                 TriangulateEdgeStrip(e1, cell.Color, e2, neighbor.Color);
             }
+
+            Features.AddWall(e1, cell, e2, neighbor, hasRiver, false);
 
             // triangle gap
             var nextNeighbor = cell.GetNeighbor(direction.Next());
@@ -675,6 +679,8 @@ namespace Assets.HexGrid.Scripts
                 Terrain.AddTriangle(bottom, left, right);
                 Terrain.AddTriangleColor(bottomCell.Color, leftCell.Color, rightCell.Color);
             }
+
+            Features.AddWall(bottom, bottomCell, left, leftCell, right, rightCell);
         }
 
         private void TriangulateCornerTerraces(

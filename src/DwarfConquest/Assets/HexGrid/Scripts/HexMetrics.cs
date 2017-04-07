@@ -57,6 +57,8 @@ namespace Assets.HexGrid.Scripts
         public const float WaterFactor = 0.6f;
         public const float WaterBlendFactor = 1f - WaterFactor;
 
+        public const float WallElevationOffset = VerticalTerraceStepSize;
+
         // features
         private static readonly float[][] FeatureThresholds =
         {
@@ -69,6 +71,19 @@ namespace Assets.HexGrid.Scripts
         public static float[] GetFeatureThresholds(int level)
         {
             return FeatureThresholds[level];
+        }
+
+        // walls
+        public const float WallHeight = 3f;
+        public const float WallThickness = 0.75f;
+
+        public static Vector3 WallThicknessOffset(Vector3 near, Vector3 far)
+        {
+            Vector3 offset;
+            offset.x = far.x - near.x;
+            offset.y = 0f;
+            offset.z = far.z - near.z;
+            return offset.normalized * (WallThickness * 0.5f);
         }
 
         public const int HashGridSize = 256;
@@ -179,6 +194,15 @@ namespace Assets.HexGrid.Scripts
         {
             var h = step * HorizontalTerraceStepSize;
             return Color.Lerp(a, b, h);
+        }
+
+        public static Vector3 WallLerp(Vector3 near, Vector3 far)
+        {
+            near.x += (far.x - near.x) * 0.5f;
+            near.z += (far.z - near.z) * 0.5f;
+            var v = near.y < far.y ? WallElevationOffset : (1f - WallElevationOffset);
+            near.y += (far.y - near.y) * v;
+            return near;
         }
 
         public static HexEdgeType GetEdgeType(int elevation1, int elevation2)

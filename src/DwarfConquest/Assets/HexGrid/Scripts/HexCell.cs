@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Assets.HexGrid.Scripts
 {
@@ -256,6 +257,21 @@ namespace Assets.HexGrid.Scripts
                 {
                     _plantLevel = value;
                     RefreshSelfOnly();
+                }
+            }
+        }
+
+        private bool _isWalled;
+
+        public bool IsWalled
+        {
+            get { return _isWalled; }
+            set
+            {
+                if (_isWalled != value)
+                {
+                    _isWalled = value;
+                    Refresh();
                 }
             }
         }
