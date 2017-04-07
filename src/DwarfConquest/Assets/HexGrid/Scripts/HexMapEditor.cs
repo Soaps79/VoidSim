@@ -17,8 +17,9 @@ namespace Assets.HexGrid.Scripts
         private Color _activeColor;
         private int _activeElevation;
         private int _activeWaterLevel;
+        private int _activeSpecialIndex;
         private int _brushSize = 0;
-        
+
         private int _activeUrbanLevel;
         private int _activeFarmLevel;
         private int _activePlantLevel;
@@ -31,10 +32,11 @@ namespace Assets.HexGrid.Scripts
         private bool _applyFarmLevel;
         private bool _applyPlantLevel;
 
+        private bool _applySpecialIndex;
+
         private OptionalToggle _riverMode = 0;
         private OptionalToggle _walledMode = 0;
-
-        // drag support
+        
         private bool _isDrag;
 
         private HexDirection _dragDirection;
@@ -137,6 +139,10 @@ namespace Assets.HexGrid.Scripts
             {
                 cell.WaterLevel = _activeWaterLevel;
             }
+            if (_applySpecialIndex)
+            {
+                cell.SpecialIndex = _activeSpecialIndex;
+            }
             if (_applyUrbanLevel)
             {
                 cell.UrbanLevel = _activeUrbanLevel;
@@ -170,7 +176,8 @@ namespace Assets.HexGrid.Scripts
         }
 
         #region Editor UI Controls
-        // set should apply
+
+        // --- Set should apply ---
         public void SetApplyWaterLevel(bool toggle)
         {
             _applyWaterLevel = toggle;
@@ -195,7 +202,13 @@ namespace Assets.HexGrid.Scripts
         {
             _applyPlantLevel = toggle;
         }
-        // set values
+
+        public void SetApplySpecialIndex(bool toggle)
+        {
+            _applySpecialIndex = toggle;
+        }
+
+        // --- Set values ---
         public void SetRiverMode(int mode)
         {
             _riverMode = (OptionalToggle)mode;
@@ -203,7 +216,7 @@ namespace Assets.HexGrid.Scripts
 
         public void SetWalledMode(int mode)
         {
-            _walledMode = (OptionalToggle) mode;
+            _walledMode = (OptionalToggle)mode;
         }
 
         public void SetWaterLevel(float level)
@@ -232,7 +245,7 @@ namespace Assets.HexGrid.Scripts
 
         public void SetUrbanLevel(float level)
         {
-            _activeUrbanLevel = (int) level;
+            _activeUrbanLevel = (int)level;
         }
 
         public void SetFarmLevel(float level)
@@ -245,13 +258,17 @@ namespace Assets.HexGrid.Scripts
             _activePlantLevel = (int)level;
         }
 
+        public void SetSpecialIndex(int index)
+        {
+            _activeSpecialIndex = index;
+        }
+
         // misc.
         public void ShowUI(bool isVisible)
         {
             HexGrid.ShowUI(isVisible);
         }
 
-        #endregion
-
+        #endregion Editor UI Controls
     }
 }

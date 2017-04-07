@@ -49,7 +49,7 @@ namespace Assets.HexGrid.Scripts
             return new HexCoordinates(iX, iZ);
         }
 
-        #endregion
+        #endregion Factories
 
         [SerializeField] private int _x, _z;
 

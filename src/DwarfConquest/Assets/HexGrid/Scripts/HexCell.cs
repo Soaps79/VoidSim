@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.HexGrid.Scripts
 {
     public class HexCell : MonoBehaviour
     {
         public HexCoordinates Coordinates;
-        
+
         public RectTransform UiRect;
         public HexGridChunk Chunk;
 
@@ -16,7 +15,7 @@ namespace Assets.HexGrid.Scripts
         private Color _color;
 
         private int _elevation = int.MinValue;
-        
+
         public int Elevation
         {
             get { return _elevation; }
@@ -92,7 +91,7 @@ namespace Assets.HexGrid.Scripts
             }
         }
 
-        #endregion
+        #endregion Water
 
         #region Rivers
 
@@ -191,11 +190,13 @@ namespace Assets.HexGrid.Scripts
 
             HasOutgoingRiver = true;
             OutgoingRiver = direction;
+            _specialIndex = 0;
             RefreshSelfOnly();
 
             neighbor.RemoveIncomingRiver();
             neighbor.HasIncomingRiver = true;
             neighbor.IncomingRiver = direction.Opposite();
+            neighbor._specialIndex = 0;
             neighbor.RefreshSelfOnly();
         }
 
@@ -214,13 +215,17 @@ namespace Assets.HexGrid.Scripts
             }
         }
 
-        #endregion
+        #endregion Rivers
 
         #region Features
 
         private int _urbanLevel;
         private int _farmLevel;
         private int _plantLevel;
+
+        private int _specialIndex;
+
+        private bool _isWalled;
 
         public int UrbanLevel
         {
@@ -261,7 +266,20 @@ namespace Assets.HexGrid.Scripts
             }
         }
 
-        private bool _isWalled;
+        public int SpecialIndex
+        {
+            get { return _specialIndex; }
+            set
+            {
+                if (_specialIndex != value && !HasRiver)
+                {
+                    _specialIndex = value;
+                    RefreshSelfOnly();
+                }
+            }
+        }
+
+        public bool IsSpecial { get { return _specialIndex > 0; } }
 
         public bool IsWalled
         {
@@ -276,7 +294,9 @@ namespace Assets.HexGrid.Scripts
             }
         }
 
-        #endregion  
+        #endregion Features
+
+
 
         public HexCell GetNeighbor(HexDirection direction)
         {

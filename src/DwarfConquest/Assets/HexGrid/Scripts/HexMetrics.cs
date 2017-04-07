@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using NUnit.Framework.Constraints;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.HexGrid.Scripts
 {
@@ -27,6 +25,7 @@ namespace Assets.HexGrid.Scripts
 
         // color blending zones
         public const float SolidFactor = 0.8f;
+
         public const float BlendFactor = 1f - SolidFactor;
 
         // elevation and terraces
@@ -40,6 +39,7 @@ namespace Assets.HexGrid.Scripts
 
         // noise
         public static Texture2D NoiseSource;
+
         public const float NoiseScale = 0.003f;
 
         public const float CellPerturbStrength = 4f;
@@ -47,24 +47,25 @@ namespace Assets.HexGrid.Scripts
 
         // chunks
         public const int ChunkSizeX = 5;
+
         public const int ChunkSizeZ = 5;
 
         // rivers
         public const float StreamBedElevationOffset = -1.75f;
+
         public const float WaterElevationOffset = -0.5f;
 
         // shores
         public const float WaterFactor = 0.6f;
-        public const float WaterBlendFactor = 1f - WaterFactor;
 
-        public const float WallElevationOffset = VerticalTerraceStepSize;
+        public const float WaterBlendFactor = 1f - WaterFactor;
 
         // features
         private static readonly float[][] FeatureThresholds =
         {
             // least likely <-> most likely
-            new [] {0.0f, 0.0f, 0.4f}, 
-            new [] {0.0f, 0.4f, 0.6f}, 
+            new [] {0.0f, 0.0f, 0.4f},
+            new [] {0.0f, 0.4f, 0.6f},
             new [] {0.4f, 0.6f, 0.8f}
         };
 
@@ -74,8 +75,12 @@ namespace Assets.HexGrid.Scripts
         }
 
         // walls
-        public const float WallHeight = 3f;
+        public const float WallHeight = 4f;
+
+        public const float WallYOffset = -1f;
         public const float WallThickness = 0.75f;
+        public const float WallElevationOffset = VerticalTerraceStepSize;
+        public const float WallTowerThreshold = 0.7f;
 
         public static Vector3 WallThicknessOffset(Vector3 near, Vector3 far)
         {
@@ -102,7 +107,7 @@ namespace Assets.HexGrid.Scripts
             // final corner coincident of first corner
             new Vector3(0f, 0f, OuterRadius)
         };
-        
+
         public static void InitializeHashGrid(int seed)
         {
             _hashGrid = new HexHash[HashGridSize * HashGridSize];
@@ -149,8 +154,7 @@ namespace Assets.HexGrid.Scripts
             return (Corners[(int)direction] + Corners[(int)direction + 1]) *
                    WaterBlendFactor;
         }
-        
-        
+
         // land
         public static Vector3 GetFirstCorner(HexDirection direction)
         {
@@ -201,7 +205,7 @@ namespace Assets.HexGrid.Scripts
             near.x += (far.x - near.x) * 0.5f;
             near.z += (far.z - near.z) * 0.5f;
             var v = near.y < far.y ? WallElevationOffset : (1f - WallElevationOffset);
-            near.y += (far.y - near.y) * v;
+            near.y += (far.y - near.y) * v + WallYOffset;
             return near;
         }
 

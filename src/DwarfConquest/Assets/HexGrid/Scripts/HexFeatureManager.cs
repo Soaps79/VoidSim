@@ -12,6 +12,11 @@ namespace Assets.HexGrid.Scripts
         [RequireReference]
         public HexMesh Walls;
 
+        [RequireReference]
+        public Transform WallTower;
+
+        public Transform[] Special;
+
         private Transform _container;
 
         public void Clear()
@@ -136,14 +141,15 @@ namespace Assets.HexGrid.Scripts
         }
 
         private void AddWallSegment(
-            Vector3 nearLeft, Vector3 farLeft, Vector3 nearRight, Vector3 farRight)
+            Vector3 nearLeft, Vector3 farLeft, Vector3 nearRight, Vector3 farRight,
+            bool addTower = false)
         {
             nearLeft = HexMetrics.Perturb(nearLeft);
             farLeft = HexMetrics.Perturb(farLeft);
             nearRight = HexMetrics.Perturb(nearRight);
             farRight = HexMetrics.Perturb(farRight);
 
-            var left =  HexMetrics.WallLerp(nearLeft, farLeft);
+            var left = HexMetrics.WallLerp(nearLeft, farLeft);
             var right = HexMetrics.WallLerp(nearRight, farRight);
 
             var leftThicknessOffset = HexMetrics.WallThicknessOffset(nearLeft, farLeft);
@@ -173,6 +179,16 @@ namespace Assets.HexGrid.Scripts
 
             // top segment
             Walls.AddQuadUnperturbed(t1, t2, v3, v4);
+
+            if (addTower)
+            {
+                var towerInstance = Instantiate(WallTower);
+                towerInstance.transform.localPosition = (left + right) * 0.5f;
+                var rightDirection = right - left;
+                rightDirection.y = 0;
+                towerInstance.transform.right = rightDirection;
+                towerInstance.SetParent(_container, false);
+            }
         }
 
         private void AddWallSegment(
@@ -194,7 +210,14 @@ namespace Assets.HexGrid.Scripts
             {
                 if (hasRightWall)
                 {
-                    AddWallSegment(pivot, left, pivot, right);
+                    var hasTower = false;
+                    if (leftCell.Elevation == rightCell.Elevation)
+                    {
+                        var hash = HexMetrics.SampleHashGrid(
+                            (pivot + left + right) * (1f / 3f));
+                        hasTower = hash.E < HexMetrics.WallTowerThreshold;
+                    }
+                    AddWallSegment(pivot, left, pivot, right, hasTower);
                 }
                 else if (leftCell.Elevation < rightCell.Elevation)
                 {
@@ -220,6 +243,8 @@ namespace Assets.HexGrid.Scripts
 
         public void AddFeature(HexCell cell, Vector3 position)
         {
+            if (cell.IsSpecial) { return; }
+
             var hash = HexMetrics.SampleHashGrid(position);
             var prefab = PickPrefab(UrbanCollections, cell.UrbanLevel, hash.A, hash.D);
             var otherPrefab = PickPrefab(FarmCollections, cell.FarmLevel, hash.B, hash.D);
@@ -256,7 +281,6 @@ namespace Assets.HexGrid.Scripts
             {
                 return;
             }
-            
 
             var instance = Instantiate(prefab);
 
@@ -283,6 +307,17 @@ namespace Assets.HexGrid.Scripts
                 }
             }
             return null;
+        }
+
+        public void AddSpecialFeature(HexCell cell, Vector3 position)
+        {
+            if (cell.SpecialIndex <= 0) return;
+
+            var instance = Instantiate(Special[cell.SpecialIndex - 1]);
+            instance.localPosition = HexMetrics.Perturb(position);
+            var hash = HexMetrics.SampleHashGrid(position);
+            instance.localRotation = Quaternion.Euler(0f, 360f * hash.E, 0f);
+            instance.SetParent(_container, false);
         }
     }
 }

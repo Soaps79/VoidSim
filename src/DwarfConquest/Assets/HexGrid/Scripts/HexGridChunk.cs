@@ -20,10 +20,10 @@ namespace Assets.HexGrid.Scripts
 
         [RequireReference]
         public HexMesh Estuaries;
-        
+
         [RequireReference]
         public HexFeatureManager Features;
-        
+
         private HexCell[] _cells;
         private Canvas _gridCanvas;
 
@@ -89,9 +89,16 @@ namespace Assets.HexGrid.Scripts
                 Triangulate(d, cell);
             }
 
-            if (!cell.IsUnderwater && !cell.HasRiver)
+            if (!cell.IsUnderwater)
             {
-                Features.AddFeature(cell, cell.Position);
+                if (!cell.HasRiver)
+                {
+                    Features.AddFeature(cell, cell.Position);
+                }
+                if (cell.IsSpecial)
+                {
+                    Features.AddSpecialFeature(cell, cell.Position);
+                }
             }
         }
 
@@ -494,9 +501,9 @@ namespace Assets.HexGrid.Scripts
             TriangulateRiverQuad(v1, v2, v3, v4, y, y, v, isReversed);
         }
 
-        #endregion
+        #endregion Water and Rivers
 
-        #region  Edges, Cliffs and Terraces
+        #region Edges, Cliffs and Terraces
 
         private void TriangulateConnection(HexDirection direction,
             HexCell cell, EdgeVertices e1)
@@ -589,7 +596,7 @@ namespace Assets.HexGrid.Scripts
                 //AddTriangleColor(cell.Color, neighbor.Color, nextNeighbor.Color);
             }
         }
-        
+
         private void TriangulateEdgeTerraces(
             EdgeVertices begin, HexCell beginCell,
             EdgeVertices end, HexCell endCell)
@@ -801,7 +808,7 @@ namespace Assets.HexGrid.Scripts
             Terrain.AddTriangleColor(c2, leftCell.Color, boundaryColor);
         }
 
-        #endregion
+        #endregion Edges, Cliffs and Terraces
 
         private void TriangulateEdgeFan(Vector3 center, EdgeVertices edge, Color color)
         {
@@ -826,7 +833,5 @@ namespace Assets.HexGrid.Scripts
             Terrain.AddQuad(e1.V4, e1.V5, e2.V4, e2.V5);
             Terrain.AddQuadColor(c1, c2);
         }
-
-        
     }
 }

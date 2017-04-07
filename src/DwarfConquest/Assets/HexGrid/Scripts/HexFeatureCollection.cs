@@ -9,7 +9,7 @@ namespace Assets.HexGrid.Scripts
 
         public Transform Pick(float choice)
         {
-            return Prefabs[(int) (choice * Prefabs.Length)];
+            return Prefabs[(int)(choice * Prefabs.Length)];
         }
     }
 }
