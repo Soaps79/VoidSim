@@ -15,7 +15,7 @@ namespace Assets.Scripts.WorldMaterials
     [Serializable]
     public enum ProductCategory
     {
-        Raw, Refined, Luxury
+        Raw, Refined, Placeable
     }
 
     [Serializable]

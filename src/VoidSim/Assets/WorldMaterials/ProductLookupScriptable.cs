@@ -41,11 +41,11 @@ namespace Assets.Scripts.WorldMaterials
         public List<CraftingContainerInfo> Containers;
         public List<RecipeInfo> Recipes;
 
-        [MenuItem("Assets/Create/ProductLookup")]
+        [MenuItem("Assets/WorldMaterials/ProductLookup")]
         public static void CreateMyAsset()
         {
             var asset = ScriptableObject.CreateInstance<ProductLookupScriptable>();
-            AssetDatabase.CreateAsset(asset, "Assets/NewScripableObject.asset");
+            AssetDatabase.CreateAsset(asset, "Assets/Resources/Scriptables/NewScripableObject.asset");
             AssetDatabase.SaveAssets();
 
             EditorUtility.FocusProjectWindow();

@@ -2,6 +2,7 @@
 using System.Linq;
 using Assets.Scripts;
 using Assets.Scripts.WorldMaterials;
+using Assets.Station;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,18 +13,23 @@ namespace Assets.WorldMaterials.UI
         [SerializeField]
         private Image _productEntryPrefab;
         [SerializeField]
+        private Button _placeableEntryPrefab;
+        [SerializeField]
         private Image _inventoryPanelPrefab;
         [SerializeField]
         private List<int> _productsToIgnore = new List<int>();
 
-        private Transform _contentHolder;
+        private Transform _productContentHolder;
+        private Transform _placeablesContentHolder;
         private Inventory _inventory;
         private readonly List<GameObject> _entryList = new List<GameObject>();
+        private PlaceablesLookup _placeablesLookup;
 
-        public void BindToInventory(Inventory inventory, InventoryScriptable inventoryScriptable)
+        public void BindToInventory(Inventory inventory, InventoryScriptable inventoryScriptable, PlaceablesLookup placeablesLookup)
         {
             _inventory = inventory;
             _inventory.OnProductsChanged += UpdateEntries;
+            _placeablesLookup = placeablesLookup;
 
             UpdateIgnoreList(inventoryScriptable);
             BindToUI();
@@ -40,14 +46,15 @@ namespace Assets.WorldMaterials.UI
         private void BindToUI()
         {
             var craftingPanel = GameObject.Instantiate(_inventoryPanelPrefab);
-            var list = craftingPanel.transform.FindChild("content_holder/product_list");
-            _contentHolder = list;
+            _productContentHolder = craftingPanel.transform.FindChild("content_holder/product_list");
+            _placeablesContentHolder = craftingPanel.transform.FindChild("content_holder/placeable_list");
 
             PositionOnCanvas(craftingPanel);
-            DrawEntries();
+            DrawProductEntries();
+            DrawPlaceableEntries();
         }
 
-        private void DrawEntries()
+        private void DrawProductEntries()
         {
             foreach (var entryInfo in _inventory.GetProductEntries())
             {
@@ -55,10 +62,31 @@ namespace Assets.WorldMaterials.UI
                     continue;
 
                 var go = Instantiate(_productEntryPrefab).gameObject;
-                go.transform.SetParent(_contentHolder.transform);
+                go.transform.SetParent(_productContentHolder.transform);
                 var binder = go.gameObject.GetOrAddComponent<ProductEntryBinder>();
                 binder.Bind(entryInfo.Product.Name, entryInfo.Amount);
                 _entryList.Add(go);
+            }
+        }
+
+        private void DrawPlaceableEntries()
+        {
+            foreach (var placeable in _inventory.Placeables)
+            {
+                var scriptable = _placeablesLookup.Placeables.FirstOrDefault(i => i.ProductName == placeable);
+
+                if(scriptable == null)
+                    throw new UnityException("Placeable name in inventory has no lookup value");
+
+
+
+
+                var button = Instantiate(_placeableEntryPrefab);
+                button.transform.SetParent(_placeablesContentHolder.transform);
+                //var binder = go.gameObject.GetOrAddComponent<ProductEntryBinder>();
+                //binder.Bind(entryInfo.Product.Name, entryInfo.Amount);
+                var image = button.GetComponent<Image>();
+                image.sprite = scriptable.IconSprite;
             }
         }
 
@@ -66,7 +94,7 @@ namespace Assets.WorldMaterials.UI
         {
             ClearEntries();
             // save incoming values here to light up entry
-            DrawEntries();
+            DrawProductEntries();
         }
 
         private void ClearEntries()
@@ -81,7 +109,7 @@ namespace Assets.WorldMaterials.UI
         {
             var canvas = GameObject.Find("InfoCanvas");
             craftingPanel.transform.SetParent(canvas.transform);
-            craftingPanel.rectTransform.position = new Vector3(10, 500, 0);
+            craftingPanel.rectTransform.position = new Vector3(10, 600, 0);
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.WorldMaterials;
+using Assets.Station;
 using QGame;
 using Zenject;
 
@@ -9,7 +10,6 @@ namespace Assets.WorldMaterials
 {
     public class Inventory : QScript
     {
-
         /// <summary>
         /// The idea here is that Products are one type of object that Inventory maintains.
         /// Another type will probably be some sort of Placeable.
@@ -25,14 +25,15 @@ namespace Assets.WorldMaterials
 
         public Action OnInventoryChanged;
         public Action<string, int> OnProductsChanged;
+        public Action<string, bool> OnPlaceablesChanged;
 
-        [Inject]
-        private ProductLookup _productLookup;
+        [Inject] private ProductLookup _productLookup;
         public string Name;
         
         private readonly Dictionary<int, InventoryProductEntry> _productTable 
             = new Dictionary<int, InventoryProductEntry>();
 
+        public List<string> Placeables = new List<string>();
         private InventoryScriptable _scriptable;
 
         // only use for UI
@@ -109,6 +110,8 @@ namespace Assets.WorldMaterials
             {
                 TryAddProduct(_productLookup.GetProduct(info.ProductName), info.Amount);
             }
+
+            Placeables.AddRange(_scriptable.Placeables);
         }
 
         public bool HasProduct(string productName, int quantity)

@@ -34,9 +34,9 @@ public class Station : QScript
     [Inject]
     private ProductLookup _productLookup;
 
-    [SerializeField]
-    private InventoryScriptable _inventoryScriptable;
-    
+    [SerializeField] private InventoryScriptable _inventoryScriptable;
+    [SerializeField] private PlaceablesLookup _placeablesLookup;
+
     private readonly Dictionary<LayerType, StationLayer> _layers =  new Dictionary<LayerType, StationLayer>();
     private CraftingContainer _crafter;
     private Inventory _inventory;
@@ -154,7 +154,7 @@ public class Station : QScript
         go.transform.parent = transform;
         go.name = "inventory_viewmodel";
         var viewmodel = go.GetOrAddComponent<InventoryViewModel>();
-        viewmodel.BindToInventory(_inventory, _inventoryScriptable);
+        viewmodel.BindToInventory(_inventory, _inventoryScriptable, _placeablesLookup);
     }
 
     public StationLayer GetLayer(LayerType type)

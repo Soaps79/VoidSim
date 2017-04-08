@@ -17,6 +17,7 @@ namespace Assets.WorldMaterials
     {
         public static ProductLookupScriptable ProductLookup;
         public static string[] ProductNames;
+        public List<string> Placeables;
         public List<string> ProductsToIgnore;
 
         public List<ProductEntryInfo> Products;
@@ -28,12 +29,12 @@ namespace Assets.WorldMaterials
 
         }
 
-        [MenuItem("Assets/Create/Inventory")]
+        [MenuItem("Assets/WorldMaterials/Inventory")]
         public static void CreateMyAsset()
         {
             var asset = ScriptableObject.CreateInstance<InventoryScriptable>();
 
-            AssetDatabase.CreateAsset(asset, "Assets/NewScripableObject.asset");
+            AssetDatabase.CreateAsset(asset, "Assets/Resources/Scriptables/NewScripableObject.asset");
             AssetDatabase.SaveAssets();
 
             EditorUtility.FocusProjectWindow();
