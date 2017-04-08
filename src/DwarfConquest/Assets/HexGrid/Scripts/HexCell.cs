@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.IO;
+using UnityEngine;
 
 namespace Assets.HexGrid.Scripts
 {
@@ -25,21 +26,26 @@ namespace Assets.HexGrid.Scripts
                 }
 
                 _elevation = value;
-                var position = transform.localPosition;
-                position.y = value * HexMetrics.ElevationStep;
-                position.y +=
-                    (HexMetrics.SampleNoise(position).y * 2f - 1f) * HexMetrics.ElevationPerturbStrength;
-
-                transform.localPosition = position;
-
-                var uiPosition = UiRect.localPosition;
-                uiPosition.z = -position.y;
-                UiRect.localPosition = uiPosition;
+                RefreshPosition();
 
                 ValidateRivers();
 
                 Refresh();
             }
+        }
+
+        private void RefreshPosition()
+        {
+            var position = transform.localPosition;
+            position.y = _elevation * HexMetrics.ElevationStep;
+            position.y +=
+                (HexMetrics.SampleNoise(position).y * 2f - 1f) * HexMetrics.ElevationPerturbStrength;
+
+            transform.localPosition = position;
+
+            var uiPosition = UiRect.localPosition;
+            uiPosition.z = -position.y;
+            UiRect.localPosition = uiPosition;
         }
 
         public Vector3 Position { get { return transform.localPosition; } }
@@ -298,7 +304,80 @@ namespace Assets.HexGrid.Scripts
         }
 
         #endregion Features
-        
+
+        #region Save/Load
+
+        public void Save(BinaryWriter writer)
+        {
+            writer.Write((byte)_terrainTypeIndex);
+            writer.Write((byte)_elevation);
+            writer.Write((byte)_waterLevel);
+            writer.Write((byte)_urbanLevel);
+            writer.Write((byte)_farmLevel);
+            writer.Write((byte)_plantLevel);
+            writer.Write((byte)_specialIndex);
+
+            writer.Write(_isWalled);
+            
+            if (HasIncomingRiver)
+            {
+                writer.Write((byte)(IncomingRiver + 128));
+            }
+            else
+            {
+                writer.Write((byte)0);
+            }
+
+            if (HasOutgoingRiver)
+            {
+                writer.Write((byte)(OutgoingRiver + 128));
+            }
+            else
+            {
+                writer.Write((byte)0);
+            }
+        }
+
+        public void Load(BinaryReader reader)
+        {
+            _terrainTypeIndex = reader.ReadByte();
+            _elevation = reader.ReadByte();
+            RefreshPosition();
+
+            _waterLevel = reader.ReadByte();
+            _urbanLevel = reader.ReadByte();
+            _farmLevel = reader.ReadByte();
+            _plantLevel = reader.ReadByte();
+            _specialIndex = reader.ReadByte();
+
+            _isWalled = reader.ReadBoolean();
+
+            var riverData = reader.ReadByte();
+            if (riverData >= 128)
+            {
+                HasIncomingRiver = true;
+                IncomingRiver = (HexDirection) (riverData - 128);
+            }
+            else
+            {
+                HasIncomingRiver = false;
+            }
+
+            riverData = reader.ReadByte();
+            if (riverData >= 128)
+            {
+                HasOutgoingRiver = true;
+                OutgoingRiver = (HexDirection) (riverData - 128);
+            }
+            else
+            {
+                HasOutgoingRiver = false;
+            }
+
+        }
+
+        #endregion
+
         public HexCell GetNeighbor(HexDirection direction)
         {
             return Neighbors[(int)direction];

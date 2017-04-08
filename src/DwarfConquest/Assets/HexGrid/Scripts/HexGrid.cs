@@ -1,4 +1,5 @@
-﻿using Assets.Utility.Attributes;
+﻿using System.IO;
+using Assets.Utility.Attributes;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -183,6 +184,27 @@ namespace Assets.HexGrid.Scripts
                 {
                     cell.SetNeighbor(HexDirection.SE, _cells[i - _cellCountX + 1]);
                 }
+            }
+        }
+
+        public void Save(BinaryWriter writer)
+        {
+            for (var i = 0; i < _cells.Length; i++)
+            {
+                _cells[i].Save(writer);
+            }
+        }
+
+        public void Load(BinaryReader reader)
+        {
+            for (var i = 0; i < _cells.Length; i++)
+            {
+                _cells[i].Load(reader);
+            }
+
+            for (var i = 0; i < _chunks.Length; i++)
+            {
+                _chunks[i].Refresh();
             }
         }
     }

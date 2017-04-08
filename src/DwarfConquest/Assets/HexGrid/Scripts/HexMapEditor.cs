@@ -1,4 +1,5 @@
-﻿using Assets.Utility.Attributes;
+﻿using System.IO;
+using Assets.Utility.Attributes;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -44,7 +45,6 @@ namespace Assets.HexGrid.Scripts
 
         private void Awake()
         {
-            //SetActiveColor(0);
         }
 
         private void Update()
@@ -98,6 +98,8 @@ namespace Assets.HexGrid.Scripts
             }
             _isDrag = false;
         }
+
+        #region Edit
 
         private void EditCells(HexCell center)
         {
@@ -193,9 +195,10 @@ namespace Assets.HexGrid.Scripts
             }
         }
 
-        #region Editor UI Controls
+        #endregion
 
-        // --- Set should apply ---
+        #region Set Should Apply
+
         public void SetApplyWaterLevel(bool toggle)
         {
             _applyWaterLevel = toggle;
@@ -226,7 +229,10 @@ namespace Assets.HexGrid.Scripts
             _applySpecialIndex = toggle;
         }
 
-        // --- Set values ---
+        #endregion
+
+        #region Set Values
+
         public void SetRiverMode(int mode)
         {
             _riverMode = (OptionalToggle)mode;
@@ -284,5 +290,38 @@ namespace Assets.HexGrid.Scripts
         }
 
         #endregion Editor UI Controls
+
+        #region Save/Load
+
+        public void Save()
+        {
+            Debug.Log(Application.persistentDataPath);
+            var path = Path.Combine(Application.persistentDataPath, "test.map");
+            using (var writer = new BinaryWriter(File.Open(path, FileMode.Create)))
+            {
+                // write a header (v0)
+                writer.Write(0);
+                HexGrid.Save(writer);
+            }
+        }
+
+        public void Load()
+        {
+            var path = Path.Combine(Application.persistentDataPath, "test.map");
+            using (var reader = new BinaryReader(File.OpenRead(path)))
+            {
+                var header = reader.ReadInt32();
+                if (header == 0)
+                {
+                    HexGrid.Load(reader);
+                }
+                else
+                {
+                    Debug.LogError(string.Format("Unknown map format, version: {0}", header));
+                }
+            }
+        }
+
+        #endregion
     }
 }
