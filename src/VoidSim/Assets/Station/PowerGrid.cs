@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.WorldMaterials;
 using Assets.Station.UI;
 using Assets.WorldMaterials;
 
@@ -22,8 +23,9 @@ namespace Assets.Station
         private Inventory _inventory;
         private WorldClock _worldClock;
         private readonly List<EnergyConsumerNode> _consumers = new List<EnergyConsumerNode>();
+        private Product _energyProduct;
+
         private float _currentTotalDemand;
-        private float _lastTotalProvided;
         private float _currentTotalProvided;
         public bool HasShortage { get; private set; }
         public float TotalDemand { get { return _currentTotalDemand; } }
@@ -39,45 +41,23 @@ namespace Assets.Station
         public void Initialize(Inventory inventory)
         {
             _inventory = inventory;
-            _inventory.OnProductsChanged += CheckForEnergyChange;
             if (_worldClock == null)
             {
                 _worldClock = WorldClock.Instance;
                 _worldClock.OnDayUp += TickEnergyCosts;
             }
 
-            MessageHub.Instance.QueueMessage(StatsMessages.StatProviderCreated, 
-                new StatProviderCreatedMessageArgs
+            if (_energyProduct == null)
             {
-                ValueProvider = new StatProvider
-                {
-                    Name = "Energy: ",
-                    Value = GenerateCurrentPowerDisplayValue
-                }
-            });
-        }
-
-        private string GenerateCurrentPowerDisplayValue()
-        {
-            return string.Format("{0} ({1})",
-                _inventory.GetProductCurrentAmount(ENERGY_PRODUCT_NAME),
-                    _lastTotalProvided - _currentTotalDemand);
-        }
-
-        private void CheckForEnergyChange(string productName, int amount)
-        {
-            if (productName == ENERGY_PRODUCT_NAME)
-                _currentTotalProvided += amount;
+                _energyProduct = ProductLookup.Instance.GetProduct(ENERGY_PRODUCT_NAME);
+            }
         }
 
         private void TickEnergyCosts(object sender, EventArgs e)
         {
-            _lastTotalProvided = _currentTotalProvided;
-            _currentTotalProvided = 0;
-
             if (HasShortage)
             {
-                if (_inventory.HasProduct(ENERGY_PRODUCT_NAME, (int) _currentTotalDemand))
+                if (_inventory.HasProduct(_energyProduct.ID, (int) _currentTotalDemand))
                 {
                     HasShortage = false;
                 }

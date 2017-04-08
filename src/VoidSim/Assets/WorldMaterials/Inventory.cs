@@ -94,6 +94,11 @@ namespace Assets.WorldMaterials
             return entry != null ? entry.Amount : 0;
         }
 
+        public int GetProductCurrentAmount(int id)
+        {
+            return _productTable.ContainsKey(id) ? _productTable[id].Amount : 0;
+        }
+
         public void BindToScriptable(InventoryScriptable inventoryScriptable, ProductLookup productLookup)
         {
             _scriptable = inventoryScriptable;

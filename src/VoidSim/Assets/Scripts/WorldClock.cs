@@ -119,7 +119,6 @@ public class WorldClock : SingletonBehavior<WorldClock>, IMessageListener
 
     private void RegisterWithServices()
     {
-        KeyValueDisplay.Instance.Add("GameTime", () => CurrentTime.TimeAsString);
         KeyValueDisplay.Instance.Add("GameSpeed", () => CurrentTimeScale);
         MessageHub.Instance.AddListener(this, GameMessages.GameSpeedChange);
     }
@@ -320,6 +319,30 @@ public class WorldClock : SingletonBehavior<WorldClock>, IMessageListener
                 return SecondsPerYear* timeLength.Length;
             default:
                 throw new ArgumentOutOfRangeException("timeLength", timeLength.TimeUnit, "Unsupported Unit in GetSeconds");
+        }
+    }
+
+    public void RegisterCallback(TimeUnit unit, EventHandler callback)
+    {
+        switch (unit)
+        {
+            case TimeUnit.Hour:
+                OnHourUp += callback;
+                break;
+            case TimeUnit.Day:
+                OnDayUp += callback;
+                break;
+            case TimeUnit.Week:
+                OnWeekUp += callback;
+                break;
+            case TimeUnit.Month:
+                OnMonthUp += callback;
+                break;
+            case TimeUnit.Year:
+                OnYearUp += callback;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException("unit", unit, null);
         }
     }
 }

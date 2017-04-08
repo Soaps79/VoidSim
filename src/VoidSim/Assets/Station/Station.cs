@@ -65,6 +65,20 @@ public class Station : QScript
         BindCraftingToShop();
         TestAutomatedContainer();
         TestPowerGrid();
+        RegisterEnergySupplyMonitor();
+    }
+
+    private void RegisterEnergySupplyMonitor()
+    {
+        var product = _productLookup.GetProduct("Energy");
+        if (product == null)
+            throw new UnityException("Energy product not found in lookup");
+
+        MessageHub.Instance.QueueMessage(ProductSupplyMonitor.CreatedMessageType,
+            new ProductSupplyMonitorCreatedMessageArgs
+            {
+                SupplyMonitor = new ProductSupplyMonitor(product, _inventory, TimeUnit.Hour, TimeUnit.Day)
+            });
     }
 
     private void TestPowerGrid()
@@ -140,7 +154,7 @@ public class Station : QScript
         go.transform.parent = transform;
         go.name = "inventory_viewmodel";
         var viewmodel = go.GetOrAddComponent<InventoryViewModel>();
-        viewmodel.BindToInventory(_inventory);
+        viewmodel.BindToInventory(_inventory, _inventoryScriptable);
     }
 
     public StationLayer GetLayer(LayerType type)

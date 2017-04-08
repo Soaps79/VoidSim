@@ -17,7 +17,7 @@ namespace Assets.WorldMaterials
     {
         public static ProductLookupScriptable ProductLookup;
         public static string[] ProductNames;
-
+        public List<string> ProductsToIgnore;
 
         public List<ProductEntryInfo> Products;
 
