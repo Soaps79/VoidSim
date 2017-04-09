@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.WorldMaterials;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -178,7 +179,7 @@ namespace Assets.WorldMaterials.UI
         private Button CreateRecipeButton(Recipe recipe)
         {
             var button = GameObject.Instantiate(_craftingButtonPrefab).GetComponent<Button>();
-            var text = button.GetComponentInChildren<Text>();
+            var text = button.GetComponentInChildren<TextMeshProUGUI>();
             text.text = GenerateText(recipe);
             button.gameObject.transform.SetParent(_recipesViewContext.transform);
             _recipeButtons.Add(new RecipeButton { Button = button, Recipe = recipe });
@@ -189,7 +190,7 @@ namespace Assets.WorldMaterials.UI
         private Button CreateQueuedButton(Recipe recipe)
         {
             var button = GameObject.Instantiate(_queueButtonPrefab).GetComponent<Button>();
-            var text = button.GetComponentInChildren<Text>();
+            var text = button.GetComponentInChildren<TextMeshProUGUI>();
             text.text = GenerateText(recipe);
             button.gameObject.transform.SetParent(_queueViewContext.transform);
             return button;

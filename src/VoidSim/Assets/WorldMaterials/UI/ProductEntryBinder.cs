@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.WorldMaterials.UI
@@ -6,9 +7,9 @@ namespace Assets.WorldMaterials.UI
     public class ProductEntryBinder : MonoBehaviour
     {
         [SerializeField]
-        private Text _productNameField;
+        private TextMeshProUGUI _productNameField;
         [SerializeField]
-        private Text _AmountField;
+        private TextMeshProUGUI _AmountField;
 
         public void Bind(string productName, int amount)
         {

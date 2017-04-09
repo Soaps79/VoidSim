@@ -2,6 +2,7 @@
 using Assets.WorldMaterials;
 using Messaging;
 using QGame;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,7 +21,7 @@ namespace Assets.Station.UI
         // acts as a binding between UI elements and inventory
         private class SupplyMonitorEntry
         {
-            public Text Text;
+            public TextMeshProUGUI Text;
             public ProductSupplyMonitor Monitor;
         }
 
@@ -32,7 +33,7 @@ namespace Assets.Station.UI
         private readonly List<SupplyMonitorEntry> _monitorEntries = new List<SupplyMonitorEntry>();
         private Image _display;
         private WorldClock _worldClock;
-        private Text _clockDisplay;
+        private TextMeshProUGUI _clockDisplay;
 
         void Start ()
         {
@@ -76,7 +77,7 @@ namespace Assets.Station.UI
         }
 
 
-        private Text InstantiateNewUIEntry(string displayName)
+        private TextMeshProUGUI InstantiateNewUIEntry(string displayName)
         {
             // instantiate UI element
             var contentHolder = _display.transform.FindChild("content_holder");
@@ -84,11 +85,11 @@ namespace Assets.Station.UI
             displayProduct.transform.SetParent(contentHolder, false);
 
             // set its name
-            var productName = displayProduct.transform.FindChild("product_name").GetComponent<Text>();
+            var productName = displayProduct.transform.FindChild("product_name").GetComponent<TextMeshProUGUI>();
             productName.text = displayName;
 
             // return the text field to be updated every frame
-            return displayProduct.transform.FindChild("product_value").GetComponent<Text>();
+            return displayProduct.transform.FindChild("product_value").GetComponent<TextMeshProUGUI>();
         }
 
         private string GenerateCurrentTimeString()
