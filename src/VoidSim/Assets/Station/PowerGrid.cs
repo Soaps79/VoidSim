@@ -25,8 +25,8 @@ namespace Assets.Station
         private readonly List<EnergyConsumerNode> _consumers = new List<EnergyConsumerNode>();
         private Product _energyProduct;
 
-        private float _currentTotalDemand;
-        private float _currentTotalProvided;
+        [SerializeField] private float _currentTotalDemand;
+        [SerializeField] private float _currentTotalProvided;
         public bool HasShortage { get; private set; }
         public float TotalDemand { get { return _currentTotalDemand; } }
 

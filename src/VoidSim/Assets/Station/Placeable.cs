@@ -1,12 +1,20 @@
-﻿using Assets.Scripts.WorldMaterials;
+﻿using Assets.Scripts;
+using Assets.Scripts.WorldMaterials;
+using QGame;
+using UnityEngine;
 
 namespace Assets.Station
 {
-    // extremely placeholder, need to explore the placeable system as a whole
-    public class Placeable : IEnergyConsumer
+    /// <summary>
+    /// Represents any structure or module or any other object placed into the game world.
+    /// </summary>
+    public class Placeable : QScript, IEnergyConsumer
     {
+        [HideInInspector] public LayerType Layer;
+
         private Product _baseProduct;
-        private int _energyConsumption;
+        [SerializeField] private int _energyConsumption;
+        private PlaceableScriptable _scriptable;
 
         // extract energy info to child class?
         public EnergyConsumerNode EnergyConsumerNode { get; private set; }
@@ -16,10 +24,19 @@ namespace Assets.Station
             EnergyConsumerNode.AmountConsumed = _energyConsumption;
         }
 
-        public Placeable(int energyConsumption)
+        public void BindToScriptable(PlaceableScriptable scriptable)
         {
-            _energyConsumption = energyConsumption;
-            InitializeEnergyConsumer();
+            _scriptable = scriptable;
+            Layer = scriptable.Layer;
+            _baseProduct = ProductLookup.Instance.GetProduct(scriptable.ProductName);
+
+            gameObject.TrimCloneFromName();
+            var rend = this.gameObject.AddComponent<SpriteRenderer>();
+            rend.sprite = scriptable.PlacedSprite;
+            rend.sortingLayerName = Layer.ToString();
+
+            if (_energyConsumption > 0)
+                InitializeEnergyConsumer();
         }
     }
 }

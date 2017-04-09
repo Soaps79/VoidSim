@@ -15,20 +15,19 @@ namespace Assets.WorldMaterials
     /// </summary>
     public class AutomatedContainer : QScript
     {
-        private string _containerName;
+        [SerializeField] private string _containerName;
         private readonly List<Recipe> _recipes = new List<Recipe>();
-        [SerializeField]
         private Inventory _inventory;
+        public string CurrentlyCrafting;
 
         // save for cancel
         private int _currentCraftId;
 
         private CraftingContainer _container;
 
-        public void Initialize(string containerName, Inventory inventory)
+        public void Initialize(Inventory inventory)
         {
             _inventory = inventory;
-            _containerName = containerName;
             if (_container == null)
             {
                 _container = gameObject.GetOrAddComponent<CraftingContainer>();
@@ -37,6 +36,8 @@ namespace Assets.WorldMaterials
             }
             // tell container its type?
             LoadRecipes();
+            if(!string.IsNullOrEmpty(CurrentlyCrafting))
+                BeginCrafting(CurrentlyCrafting);
         }
 
         private void LoadRecipes()

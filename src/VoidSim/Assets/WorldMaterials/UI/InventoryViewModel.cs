@@ -22,17 +22,37 @@ namespace Assets.WorldMaterials.UI
         private Transform _productContentHolder;
         private Transform _placeablesContentHolder;
         private Inventory _inventory;
-        private readonly List<GameObject> _entryList = new List<GameObject>();
+        private readonly List<GameObject> _productEntryList = new List<GameObject>();
+        private readonly List<Button> _placeableEntryList = new List<Button>();
         private PlaceablesLookup _placeablesLookup;
+        private Placer _placer;
 
         public void BindToInventory(Inventory inventory, InventoryScriptable inventoryScriptable, PlaceablesLookup placeablesLookup)
         {
             _inventory = inventory;
-            _inventory.OnProductsChanged += UpdateEntries;
+            _inventory.OnProductsChanged += RefreshProducts;
             _placeablesLookup = placeablesLookup;
 
+            InitializePlacer();
             UpdateIgnoreList(inventoryScriptable);
             BindToUI();
+        }
+
+        private void InitializePlacer()
+        {
+            _placer = gameObject.GetOrAddComponent<Placer>();
+            _placer.Initialize(_placeablesLookup);
+            _placer.OnPlacementComplete += HandlePlacementComplete;
+        }
+
+        private void HandlePlacementComplete(int id)
+        {
+            if(id <= 0)
+                return;
+
+            _inventory.TryRemovePlaceable(id);
+            ClearPlaceableEntries();
+            DrawPlaceableEntries();
         }
 
         private void UpdateIgnoreList(InventoryScriptable inventoryScriptable)
@@ -65,7 +85,7 @@ namespace Assets.WorldMaterials.UI
                 go.transform.SetParent(_productContentHolder.transform);
                 var binder = go.gameObject.GetOrAddComponent<ProductEntryBinder>();
                 binder.Bind(entryInfo.Product.Name, entryInfo.Amount);
-                _entryList.Add(go);
+                _productEntryList.Add(go);
             }
         }
 
@@ -73,36 +93,44 @@ namespace Assets.WorldMaterials.UI
         {
             foreach (var placeable in _inventory.Placeables)
             {
-                var scriptable = _placeablesLookup.Placeables.FirstOrDefault(i => i.ProductName == placeable);
+                var scriptable = _placeablesLookup.Placeables.FirstOrDefault(i => i.ProductName == placeable.Name );
 
                 if(scriptable == null)
                     throw new UnityException("Placeable name in inventory has no lookup value");
 
-
-
-
                 var button = Instantiate(_placeableEntryPrefab);
                 button.transform.SetParent(_placeablesContentHolder.transform);
-                //var binder = go.gameObject.GetOrAddComponent<ProductEntryBinder>();
-                //binder.Bind(entryInfo.Product.Name, entryInfo.Amount);
                 var image = button.GetComponent<Image>();
                 image.sprite = scriptable.IconSprite;
+                button.onClick.AddListener(() => { BeginPlacement(placeable.Name, placeable.Id); });
+                _placeableEntryList.Add(button);
             }
         }
 
-        private void UpdateEntries(string name, int amount)
+        private void RefreshProducts(string productName, int amountChanged)
         {
-            ClearEntries();
+            ClearProductEntries();
             // save incoming values here to light up entry
             DrawProductEntries();
         }
 
-        private void ClearEntries()
+        private void ClearProductEntries()
         {
-            foreach (var entry in _entryList)
+            foreach (var entry in _productEntryList)
             {
                 Destroy(entry);
             }
+            _productEntryList.Clear();
+        }
+
+        private void ClearPlaceableEntries()
+        {
+            foreach (var entry in _placeableEntryList)
+            {
+                entry.gameObject.SetActive(false);
+                Destroy(entry);
+            }
+            _placeableEntryList.Clear();
         }
 
         private static void PositionOnCanvas(Image craftingPanel)
@@ -110,6 +138,11 @@ namespace Assets.WorldMaterials.UI
             var canvas = GameObject.Find("InfoCanvas");
             craftingPanel.transform.SetParent(canvas.transform);
             craftingPanel.rectTransform.position = new Vector3(10, 600, 0);
+        }
+
+        private void BeginPlacement(string placeableName, int inventoryId)
+        {
+            _placer.BeginPlacement(placeableName, inventoryId);
         }
     }
 }

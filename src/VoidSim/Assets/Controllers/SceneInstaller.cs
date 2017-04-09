@@ -1,23 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Assets.Scripts.WorldMaterials;
+﻿using Assets.Scripts.WorldMaterials;
 using Assets.WorldMaterials;
-using UnityEngine;
 using Zenject;
 
-public class SceneInstaller : MonoInstaller<SceneInstaller>
+namespace Assets.Controllers
 {
-    public WorldClock WorldClock;
-    public Station Station;
-    public ProductLookup ProductLookup;
-
-
-    public override void InstallBindings()
+    public class SceneInstaller : MonoInstaller<SceneInstaller>
     {
-        // Core game objects
-        Container.Bind<WorldClock>().FromInstance(WorldClock).AsSingle();
-        Container.Bind<ProductLookup>().FromInstance(ProductLookup).AsSingle();
-        Container.Bind<Station>().FromInstance(Station).AsSingle();
-        Container.BindFactory<Inventory, Inventory.Factory>();
+        public WorldClock WorldClock;
+        public Station.Station Station;
+        public ProductLookup ProductLookup;
+
+
+        public override void InstallBindings()
+        {
+            // Core game objects
+            Container.Bind<WorldClock>().FromInstance(WorldClock).AsSingle();
+            Container.Bind<ProductLookup>().FromInstance(ProductLookup).AsSingle();
+            Container.Bind<Station.Station>().FromInstance(Station).AsSingle();
+            Container.BindFactory<Inventory, Inventory.Factory>();
+        }
     }
 }

@@ -21,6 +21,12 @@ namespace Assets.WorldMaterials
             //public int MaxAmount;
         }
 
+        public class InventoryPlaceableEntry
+        {
+            public string Name;
+            public int Id;
+        }
+
         public class Factory : Factory<Inventory> { }
 
         public Action OnInventoryChanged;
@@ -33,8 +39,9 @@ namespace Assets.WorldMaterials
         private readonly Dictionary<int, InventoryProductEntry> _productTable 
             = new Dictionary<int, InventoryProductEntry>();
 
-        public List<string> Placeables = new List<string>();
+        public List<InventoryPlaceableEntry> Placeables = new List<InventoryPlaceableEntry>();
         private InventoryScriptable _scriptable;
+        private int _lastPlaceableId;
 
         // only use for UI
         public List<InventoryProductEntry> GetProductEntries()
@@ -81,6 +88,9 @@ namespace Assets.WorldMaterials
             if (OnProductsChanged != null)
                 OnProductsChanged(productName, -amount);
 
+            if (OnInventoryChanged != null)
+                OnInventoryChanged();
+
             return true;
         }
 
@@ -111,7 +121,11 @@ namespace Assets.WorldMaterials
                 TryAddProduct(_productLookup.GetProduct(info.ProductName), info.Amount);
             }
 
-            Placeables.AddRange(_scriptable.Placeables);
+            foreach (var placeable in _scriptable.Placeables)
+            {
+                _lastPlaceableId++;
+                Placeables.Add(new InventoryPlaceableEntry { Name = placeable, Id = _lastPlaceableId });
+            }
         }
 
         public bool HasProduct(string productName, int quantity)
@@ -119,6 +133,22 @@ namespace Assets.WorldMaterials
             var entry = _productTable.FirstOrDefault(i => i.Value.Product.Name == productName).Value;
             return entry != null && entry.Amount >= quantity;
 
+        }
+
+        public bool TryRemovePlaceable(int id)
+        {
+            var placeable = Placeables.FirstOrDefault(i => i.Id == id);
+            if (placeable == null)
+                return false;
+
+            Placeables.Remove(placeable);
+            if (OnPlaceablesChanged != null)
+                OnPlaceablesChanged(placeable.Name, false);
+
+            if (OnInventoryChanged != null)
+                OnInventoryChanged();
+
+            return true;
         }
     }
 }
