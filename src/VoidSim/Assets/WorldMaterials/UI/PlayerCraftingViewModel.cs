@@ -93,7 +93,7 @@ namespace Assets.WorldMaterials.UI
 
         private static void PositionOnCanvas(Image craftingPanel)
         {
-            craftingPanel.rectTransform.position = new Vector3(10, 180, 0);
+            craftingPanel.rectTransform.position = new Vector3(10, 240, 0);
             var canvas = GameObject.Find("InfoCanvas");
             craftingPanel.transform.SetParent(canvas.transform);
         }
