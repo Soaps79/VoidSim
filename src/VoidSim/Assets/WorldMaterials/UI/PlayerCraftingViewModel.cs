@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Assets.Controllers.GUI;
 using Assets.Scripts.WorldMaterials;
 using TMPro;
 using UnityEngine;
@@ -49,6 +50,7 @@ namespace Assets.WorldMaterials.UI
 
         private readonly List<RecipeButton> _queuedButtons = new List<RecipeButton>();
         private readonly List<RecipeButton> _recipeButtons = new List<RecipeButton>();
+        private RecipeButton _activeCraft;
 
         /// <summary>
         /// Typically called by the owner of the CraftingContainer
@@ -58,6 +60,7 @@ namespace Assets.WorldMaterials.UI
             _crafter = crafter;
             _crafter.OnCraftingQueued += OnCraftingQueued;
             _crafter.OnCraftingCompleteUI += OnCraftingComplete;
+            _crafter.OnCraftingBegin += StartProgressBar;
 
             _recipes = recipes;
 
@@ -65,6 +68,17 @@ namespace Assets.WorldMaterials.UI
             _inventory.OnInventoryChanged += SetCanAffordOnButtons;
 
             BindToUI();
+        }
+
+        private void StartProgressBar(Recipe recipe, int id)
+        {
+            _activeCraft = _queuedButtons.FirstOrDefault(i => i.QueueID == id);
+            if(_activeCraft == null)
+                throw new UnityException("PlayerCraftingViewModel got bad things");
+
+            var slider = _activeCraft.Button.transform.GetComponentInChildren<Slider>();
+            var binding = slider.gameObject.AddComponent<SliderBinding>();
+            binding.Initialize(() => _crafter.CurrentCraftRemainingAsZeroToOne);
         }
 
         private void BindToUI()
@@ -192,6 +206,7 @@ namespace Assets.WorldMaterials.UI
             var button = GameObject.Instantiate(_queueButtonPrefab).GetComponent<Button>();
             var text = button.GetComponentInChildren<TextMeshProUGUI>();
             text.text = GenerateText(recipe);
+
             button.gameObject.transform.SetParent(_queueViewContext.transform);
             return button;
         }

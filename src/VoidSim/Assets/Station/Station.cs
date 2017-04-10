@@ -107,10 +107,6 @@ namespace Assets.Station
             // bind to container
             crafter.Info = _productLookup.GetContainers().FirstOrDefault();
             _crafter = crafter;
-
-            // remove once crafting UI is complete
-            KeyValueDisplay.Instance.Add("Crafting Queue", () => _crafter.CurrentQueueCount);
-            KeyValueDisplay.Instance.Add("Current Craft", () => _crafter.CurrentCraftRemainingAsZeroToOne);
         }
 
         // expose build menu to player
