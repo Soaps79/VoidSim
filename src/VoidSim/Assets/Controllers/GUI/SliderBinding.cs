@@ -22,7 +22,7 @@ namespace Assets.Controllers.GUI
             if(_func == null || _slider == null)
                 throw new UnityException("SliderBinding initialized with bad things");
 
-            OnEveryUpdate += UpdateSlider;
+            OnEveryUpdate = UpdateSlider;
         }
 
         private void UpdateSlider(float obj)
