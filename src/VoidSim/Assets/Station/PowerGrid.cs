@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Placeables;
+using Assets.Placeables.Nodes;
 using Assets.Scripts.WorldMaterials;
-using Assets.Station.UI;
 using Assets.WorldMaterials;
 
 using UnityEngine;
@@ -22,7 +23,7 @@ namespace Assets.Station
 
         private Inventory _inventory;
         private WorldClock _worldClock;
-        private readonly List<EnergyConsumerNode> _consumers = new List<EnergyConsumerNode>();
+        private readonly List<EnergyConsumer> _consumers = new List<EnergyConsumer>();
         private Product _energyProduct;
 
         [SerializeField] private float _currentTotalDemand;
@@ -35,7 +36,7 @@ namespace Assets.Station
         void Start ()
         {
             // learns of new consumers through messages
-            MessageHub.Instance.AddListener(this, PlaceableMessages.PlaceablePlacedMessageName);
+            MessageHub.Instance.AddListener(this, EnergyConsumer.MessageName);
         }
 
         public void Initialize(Inventory inventory)
@@ -70,7 +71,7 @@ namespace Assets.Station
             }
         }
 
-        private void AddConsumer(EnergyConsumerNode consumer)
+        private void AddConsumer(EnergyConsumer consumer)
         {
             if (consumer == null) return;
             consumer.OnAmountConsumedChanged += HandleConsumerAmountChanged;
@@ -92,7 +93,7 @@ namespace Assets.Station
 
         private void HandleConsumerAmountChanged(object sender, EventArgs e)
         {
-            var consumer = sender as EnergyConsumerNode;
+            var consumer = sender as EnergyConsumer;
             if (consumer == null) return;
 
             UpdateDemand();
@@ -100,15 +101,15 @@ namespace Assets.Station
 
         public void HandleMessage(string type, MessageArgs args)
         {
-            if (type != PlaceableMessages.PlaceablePlacedMessageName)
+            if (type != EnergyConsumer.MessageName)
                 return;
 
-            var placed = args as PlaceablePlacedArgs;
+            var placed = args as EnergyConsumerMessageArgs;
             if (placed == null) return;
 
-            var consumer = placed.ObjectPlaced as IEnergyConsumer;
+            var consumer = placed.EnergyConsumer;
             if (consumer != null)
-                AddConsumer(consumer.EnergyConsumerNode);
+                AddConsumer(consumer);
         }
 
         public string Name

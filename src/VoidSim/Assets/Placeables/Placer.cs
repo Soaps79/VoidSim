@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Linq;
-using Assets.Scripts;
 using Assets.Station;
 using Messaging;
 using QGame;
 using UnityEngine;
 
-namespace Assets.WorldMaterials.UI
+namespace Assets.Placeables
 {
     public class Placer : QScript
     {
@@ -45,6 +44,10 @@ namespace Assets.WorldMaterials.UI
             MessageHub.Instance.QueueMessage(
                 PlaceableMessages.PlaceablePlacedMessageName, 
                 new PlaceablePlacedArgs {ObjectPlaced = placeable});
+
+            placeable.Nodes.ForEach(i => i.Initialize());
+            placeable.Nodes.ForEach(i => i.BroadcastPlacement());
+
             CompletePlacement(true);
         }
         

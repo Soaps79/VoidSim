@@ -1,28 +1,37 @@
-﻿using Assets.Scripts;
+﻿using System.Collections.Generic;
+using Assets.Placeables;
+using Assets.Placeables.Nodes;
+using Assets.Scripts;
 using Assets.Scripts.WorldMaterials;
+using Messaging;
 using QGame;
 using UnityEngine;
 
 namespace Assets.Station
 {
+
+    // These will be moved and evolve alongside the Placeables system
+    public static class PlaceableMessages
+    {
+        public const string PlaceablePlacedMessageName = "PlaceablePlaced";
+    }
+
+    public class PlaceablePlacedArgs : MessageArgs
+    {
+        public Placeable ObjectPlaced;
+    }
+
     /// <summary>
     /// Represents any structure or module or any other object placed into the game world.
     /// </summary>
-    public class Placeable : QScript, IEnergyConsumer
+    public class Placeable : QScript
     {
+        public List<PlaceableNode> Nodes;
+
         [HideInInspector] public LayerType Layer;
 
         private Product _baseProduct;
-        [SerializeField] private int _energyConsumption;
         private PlaceableScriptable _scriptable;
-
-        // extract energy info to child class?
-        public EnergyConsumerNode EnergyConsumerNode { get; private set; }
-        private void InitializeEnergyConsumer()
-        {
-            EnergyConsumerNode = new EnergyConsumerNode();
-            EnergyConsumerNode.AmountConsumed = _energyConsumption;
-        }
 
         public void BindToScriptable(PlaceableScriptable scriptable)
         {
@@ -34,9 +43,6 @@ namespace Assets.Station
             var rend = this.gameObject.AddComponent<SpriteRenderer>();
             rend.sprite = scriptable.PlacedSprite;
             rend.sortingLayerName = Layer.ToString();
-
-            if (_energyConsumption > 0)
-                InitializeEnergyConsumer();
         }
     }
 }
