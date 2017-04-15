@@ -45,7 +45,11 @@ namespace Assets.Placeables
                 PlaceableMessages.PlaceablePlacedMessageName, 
                 new PlaceablePlacedArgs {ObjectPlaced = placeable});
 
-            placeable.Nodes.ForEach(i => i.BroadcastPlacement());
+            var nodes = placeable.GetComponents<PlaceableNode>();
+            foreach (var node in nodes)
+            {
+                node.BroadcastPlacement();
+            }
 
             CompletePlacement(true);
         }

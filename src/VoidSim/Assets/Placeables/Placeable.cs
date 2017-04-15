@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-using Assets.Placeables;
-using Assets.Placeables.Nodes;
-using Assets.Scripts;
+﻿using Assets.Scripts;
 using Assets.Scripts.WorldMaterials;
+using Assets.Station;
 using Messaging;
 using QGame;
 using UnityEngine;
 
-namespace Assets.Station
+namespace Assets.Placeables
 {
 
     // These will be moved and evolve alongside the Placeables system
@@ -26,8 +24,6 @@ namespace Assets.Station
     /// </summary>
     public class Placeable : QScript
     {
-        public List<PlaceableNode> Nodes;
-
         [HideInInspector] public LayerType Layer;
 
         private Product _baseProduct;

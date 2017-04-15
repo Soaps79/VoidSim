@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Assets.Station
+namespace Assets.Placeables
 {
     public class PlaceablesLookup : ScriptableObject
     {
