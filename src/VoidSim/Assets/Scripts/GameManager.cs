@@ -11,7 +11,7 @@ public class GameMessages
     public const string ItemPlaced = "ItemPlaced";
 }
 
-public class GameManager : QScript
+public class GameManager : QScript, IMessageListener
 {
     [SerializeField]
     private GameObject KVDUIGameObject;
@@ -43,6 +43,7 @@ public class GameManager : QScript
         BindMouseMovementToKvd();
         InitializeScreenBounds();
         InitializeProductLookup();
+        MessageHub.Instance.AddListener(this, GameMessages.GameSpeedChange);
     }
 
     private void InitializeProductLookup()
@@ -98,4 +99,19 @@ public class GameManager : QScript
     {
         _textGameObject.text = KeyValueDisplay.Instance.CurrentDisplayString();
     }
+
+    public void HandleMessage(string type, MessageArgs args)
+    {
+        if (type == GameMessages.GameSpeedChange && args != null)
+            HandleTimeChange(args as GameSpeedMessageArgs);
+    }
+
+    private void HandleTimeChange(GameSpeedMessageArgs args)
+    {
+        if (args == null) return;
+        if (args.PreviousSpeedTimeScale != args.NewSpeedTimeScale)
+            QScript.TimeModifier = args.NewSpeedTimeScale;
+    }
+
+    public string Name { get { return "GameManager"; } }
 }

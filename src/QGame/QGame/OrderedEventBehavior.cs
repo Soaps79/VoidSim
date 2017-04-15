@@ -5,6 +5,9 @@ namespace QGame
 {
     public abstract class OrderedEventBehavior : MonoBehaviour
     {
+        public static float TimeModifier { get; set; } = 1.0f;
+        public bool UseTimeModifier { get; set; } = true;
+
         private bool _isEnabled = true;
 
         public Action<OrderedEventBehavior> EnableChanged;
@@ -46,6 +49,7 @@ namespace QGame
 
         private void Update(float delta)
         {
+            if(UseTimeModifier) delta =  delta*TimeModifier;
             OnUpdateStart(delta);
             OnUpdate(delta);
             OnUpdateEnd(delta);

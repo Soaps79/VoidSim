@@ -83,7 +83,5 @@ namespace QGame
 
             base.OnUpdate(delta);
         }
-
-        public virtual void Initialize() { }
     }
 }
