@@ -45,7 +45,6 @@ namespace Assets.Placeables
                 PlaceableMessages.PlaceablePlacedMessageName, 
                 new PlaceablePlacedArgs {ObjectPlaced = placeable});
 
-            placeable.Nodes.ForEach(i => i.Initialize());
             placeable.Nodes.ForEach(i => i.BroadcastPlacement());
 
             CompletePlacement(true);
@@ -80,6 +79,7 @@ namespace Assets.Placeables
             var rend = go.AddComponent<SpriteRenderer>();
             rend.sprite = placeable.PlacedSprite;
             rend.sortingLayerName = placeable.Layer.ToString();
+            rend.sortingOrder = 1;
             _toPlaceGo = go;
 
             enabled = true;

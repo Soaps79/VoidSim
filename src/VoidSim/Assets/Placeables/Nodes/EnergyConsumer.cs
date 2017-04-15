@@ -31,6 +31,12 @@ namespace Assets.Placeables.Nodes
         // called any time the total consumption changes
         public event EventHandler OnAmountConsumedChanged;
 
+        protected override void OnStart()
+        {
+            _personalAmountConsumed = _initialValue;
+            UpdateTotalAmount();
+        }
+
         // represents the needs of this object alone
         // Will update total if it is changed
         public float AmountConsumed
@@ -84,12 +90,6 @@ namespace Assets.Placeables.Nodes
         public override void BroadcastPlacement()
         {
             MessageHub.Instance.QueueMessage(MessageName, new EnergyConsumerMessageArgs { EnergyConsumer = this } );
-        }
-
-        public override void Initialize()
-        {
-            _personalAmountConsumed = _initialValue;
-            UpdateTotalAmount();
         }
     }
 }

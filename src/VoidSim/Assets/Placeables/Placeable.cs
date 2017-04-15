@@ -43,6 +43,7 @@ namespace Assets.Station
             var rend = this.gameObject.AddComponent<SpriteRenderer>();
             rend.sprite = scriptable.PlacedSprite;
             rend.sortingLayerName = Layer.ToString();
+            rend.sortingOrder = 1;
         }
     }
 }

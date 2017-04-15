@@ -1,4 +1,5 @@
-﻿using Assets.WorldMaterials;
+﻿using Assets.Placeables.Nodes;
+using Assets.WorldMaterials;
 using Messaging;
 using QGame;
 using UnityEngine;
@@ -26,22 +27,16 @@ namespace Assets.Station
 
         public void HandleMessage(string type, MessageArgs args)
         {
-            if (type != PlaceableMessages.PlaceablePlacedMessageName)
-                return;
-
-            var pArgs = args as PlaceablePlacedArgs;
-            if (pArgs == null || pArgs.ObjectPlaced.Layer != LayerType)
-                return;
-
-            pArgs.ObjectPlaced.transform.SetParent(this.transform);
-            HandlePlaceableAdd(pArgs.ObjectPlaced);
+            if (type == PlaceableMessages.PlaceablePlacedMessageName)
+                HandlePlaceableAdd(args as PlaceablePlacedArgs);
         }
 
-        private void HandlePlaceableAdd(Placeable objectPlaced)
+        private void HandlePlaceableAdd(PlaceablePlacedArgs placed)
         {
-            var automated = objectPlaced.GetComponent<AutomatedContainer>();
-            if(automated != null)
-                automated.Initialize(_inventory);
+            if (placed == null)
+                return;
+
+            // this was used for energy, figure its bound to come in handy
         }
 
         public string Name { get { return string.Format("StationLayer {0}", LayerType); } }

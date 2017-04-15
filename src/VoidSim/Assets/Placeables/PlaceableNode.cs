@@ -5,7 +5,6 @@ namespace Assets.Placeables
     public abstract class PlaceableNode : QScript
     {
         public abstract void BroadcastPlacement();
-        public abstract void Initialize();
     }
 
     // how to handle interactions with other nodes?

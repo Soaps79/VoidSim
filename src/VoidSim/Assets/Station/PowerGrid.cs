@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Placeables;
 using Assets.Placeables.Nodes;
 using Assets.Scripts.WorldMaterials;
 using Assets.WorldMaterials;
@@ -9,6 +8,7 @@ using Assets.WorldMaterials;
 using UnityEngine;
 using Messaging;
 using QGame;
+using Zenject;
 
 namespace Assets.Station
 {
@@ -37,6 +37,7 @@ namespace Assets.Station
         {
             // learns of new consumers through messages
             MessageHub.Instance.AddListener(this, EnergyConsumer.MessageName);
+            MessageHub.Instance.AddListener(this, ProductFactory.MessageName);
         }
 
         public void Initialize(Inventory inventory)
@@ -54,6 +55,7 @@ namespace Assets.Station
             }
         }
 
+        // this was written quickly, might need to be made more robust later
         private void TickEnergyCosts(object sender, EventArgs e)
         {
             if (HasShortage)
@@ -99,17 +101,38 @@ namespace Assets.Station
             UpdateDemand();
         }
 
+        // Grid gains consumers and providers through messaging
         public void HandleMessage(string type, MessageArgs args)
         {
-            if (type != EnergyConsumer.MessageName)
-                return;
+            if (type == EnergyConsumer.MessageName)
+                HandleConsumerMessage(args as EnergyConsumerMessageArgs);
+            
+            // Providers aren't currently stored here, but as this is the energy manager,
+            // it takes responsibility for initialization    
+            else if (type == ProductFactory.MessageName)
+                HandleProviderMessage(args as ProductFactoryMessageArgs);
+        }
 
-            var placed = args as EnergyConsumerMessageArgs;
-            if (placed == null) return;
+        // make sure the messages are good and handle the additions
+        private void HandleConsumerMessage(EnergyConsumerMessageArgs args)
+        {
+            if (args == null || args.EnergyConsumer == null)
+                Debug.Log("PowerGrid given bad consumer message args.");
 
-            var consumer = placed.EnergyConsumer;
-            if (consumer != null)
-                AddConsumer(consumer);
+            AddConsumer(args.EnergyConsumer);
+        }
+
+        private void HandleProviderMessage(ProductFactoryMessageArgs args)
+        {
+            if (args == null || args.ProductFactory == null)
+                Debug.Log("PowerGrid given bad provider message args.");
+
+            AddProvider(args.ProductFactory);
+        }
+
+        private void AddProvider(ProductFactory factory)
+        {
+            factory.Initialize(_inventory);
         }
 
         public string Name
