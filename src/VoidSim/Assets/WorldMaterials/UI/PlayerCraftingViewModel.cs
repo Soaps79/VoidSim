@@ -148,8 +148,7 @@ namespace Assets.WorldMaterials.UI
 
             _inventory.TryAddProduct(recipe.ResultProduct, recipe.ResultAmount);
             _queuedButtons.Remove(button);
-            button.Button.gameObject.SetActive(false);
-            Destroy(button.Button);
+            Destroy(button.Button.gameObject);
         }
 
         // add button to queued list, hook in cancel action
@@ -185,8 +184,7 @@ namespace Assets.WorldMaterials.UI
             _crafter.CancelCrafting(buttonId);
 
             var queued = _queuedButtons.FirstOrDefault(i => i.QueueID == buttonId);
-            queued.Button.gameObject.SetActive(false);
-            Destroy(queued.Button);
+            Destroy(queued.Button.gameObject);
         }
 
         // creates a button in recipe list

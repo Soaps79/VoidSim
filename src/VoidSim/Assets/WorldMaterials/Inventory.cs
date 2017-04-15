@@ -152,6 +152,7 @@ namespace Assets.WorldMaterials
             _scriptable = inventoryScriptable;
             _productLookup = productLookup;
             _productTable.Clear();
+            _defaultProductMaxAmount = inventoryScriptable.ProductMaxAmount;
 
             foreach (var info in _scriptable.Products)
             {
