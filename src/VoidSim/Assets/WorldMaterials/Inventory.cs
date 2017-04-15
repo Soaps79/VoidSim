@@ -18,7 +18,7 @@ namespace Assets.WorldMaterials
         {
             public Product Product;
             public int Amount;
-            //public int MaxAmount;
+            public int MaxAmount;
         }
 
         public class InventoryPlaceableEntry
@@ -31,6 +31,7 @@ namespace Assets.WorldMaterials
 
         public Action OnInventoryChanged;
         public Action<string, int> OnProductsChanged;
+        public Action<int, int> OnProductMaxAmountChanged;
         public Action<string, bool> OnPlaceablesChanged;
 
         [Inject] private ProductLookup _productLookup;
@@ -42,6 +43,7 @@ namespace Assets.WorldMaterials
         public List<InventoryPlaceableEntry> Placeables = new List<InventoryPlaceableEntry>();
         private InventoryScriptable _scriptable;
         private int _lastPlaceableId;
+        private int _defaultProductMaxAmount;
 
         // only use for UI
         public List<InventoryProductEntry> GetProductEntries()
@@ -50,32 +52,52 @@ namespace Assets.WorldMaterials
         }
 
         /// <summary>
-        /// Add Products to an inventory
-        /// TODO: Returning false if Product is full. May require method to consume to max and refund rest?
+        /// TryAdd Products to inventory, returns amount that could not be added because max
         /// </summary>
-        public bool TryAddProduct(Product product, int amount)
+        public int TryAddProduct(Product product, int amount)
+        {
+            // add a product entry if there is none, if it already exists, see if it has any room
+            if (!TryAddProductEntry(product)
+                && _productTable[product.ID].Amount >= _productTable[product.ID].MaxAmount)
+            {
+                // return whole amount if we're full
+                return amount;
+            }
+
+            var amountConsumed = amount;
+
+            // if there is not room for amount, only consume what we can
+            if (_productTable[product.ID].Amount + amount > _productTable[product.ID].MaxAmount)
+                amountConsumed = _productTable[product.ID].MaxAmount - _productTable[product.ID].Amount;
+
+            // add to inventory
+            _productTable[product.ID].Amount += amountConsumed;
+
+            if (OnProductsChanged != null)
+                OnProductsChanged(product.Name, amountConsumed);
+
+            // return any remainder
+            return amount - amountConsumed;
+        }
+
+        public int TryAddProduct(string product, int amount)
+        {
+            return TryAddProduct(_productLookup.GetProduct(product), amount);
+        }
+
+        private bool TryAddProductEntry(Product product)
         {
             if (!_productTable.ContainsKey(product.ID))
             {
                 _productTable.Add(product.ID, new InventoryProductEntry()
                 {
                     Product = product,
-                    Amount = 0
+                    Amount = 0,
+                    MaxAmount = _defaultProductMaxAmount
                 });
+                return true;
             }
-
-            // impl MaxAmount checks
-            _productTable[product.ID].Amount += amount;
-
-            if (OnProductsChanged != null)
-                OnProductsChanged(product.Name, amount);
-
-            return true;
-        }
-
-        public bool TryAddProduct(string product, int amount)
-        {
-            return TryAddProduct(_productLookup.GetProduct(product), amount);
+            return false;
         }
 
         // early interface pass... update as usage requires
@@ -103,6 +125,21 @@ namespace Assets.WorldMaterials
         {
             var entry = _productTable.FirstOrDefault(i => i.Value.Product.Name == productName).Value;
             return entry != null ? entry.Amount : 0;
+        }
+
+        public int GetProductMaxAmount(int id)
+        {
+            return _productTable.ContainsKey(id) ? _productTable[id].MaxAmount : 0;
+        }
+
+        public void SetProductMaxAmount(int id, int max)
+        {
+            if (!_productTable.ContainsKey(id))
+                TryAddProductEntry(_productLookup.GetProduct(id));
+
+            _productTable[id].MaxAmount = max;
+            if (OnProductMaxAmountChanged != null)
+                OnProductMaxAmountChanged(id, max);
         }
 
         public int GetProductCurrentAmount(int id)

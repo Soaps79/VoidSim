@@ -15,10 +15,11 @@ namespace Assets.WorldMaterials
 
     public class InventoryScriptable : ScriptableObject
     {
+        public int ProductMaxAmount;
         public static ProductLookupScriptable ProductLookup;
         public static string[] ProductNames;
         public List<string> Placeables;
-        public List<string> ProductsToIgnore;
+        public List<ProductCategory> ProductsToIgnore;
 
         public List<ProductEntryInfo> Products;
 

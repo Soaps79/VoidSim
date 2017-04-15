@@ -14,9 +14,9 @@ namespace Assets.Station
         [MenuItem("Assets/WorldMaterials/Placeable")]
         public static void CreateMyAsset()
         {
-            var asset = ScriptableObject.CreateInstance<PlaceableScriptable>();
+            var asset = CreateInstance<PlaceableScriptable>();
 
-            AssetDatabase.CreateAsset(asset, "Assets/Resources/Scriptables/NewScripableObject.asset");
+            AssetDatabase.CreateAsset(asset, "Assets/Placeables/Resources/NewPlaceable.asset");
             AssetDatabase.SaveAssets();
 
             EditorUtility.FocusProjectWindow();

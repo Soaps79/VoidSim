@@ -18,7 +18,7 @@ namespace Assets.WorldMaterials.UI
         [SerializeField]
         private Image _inventoryPanelPrefab;
         [SerializeField]
-        private List<int> _productsToIgnore = new List<int>();
+        private List<ProductCategory> _productsToIgnore = new List<ProductCategory>();
 
         private Transform _productContentHolder;
         private Transform _placeablesContentHolder;
@@ -59,9 +59,9 @@ namespace Assets.WorldMaterials.UI
         private void UpdateIgnoreList(InventoryScriptable inventoryScriptable)
         {
             var products = ProductLookup.Instance.GetProducts()
-                .Where(i => inventoryScriptable.ProductsToIgnore.Contains(i.Name));
+                .Where(i => inventoryScriptable.ProductsToIgnore.Contains(i.Category));
             _productsToIgnore.Clear();
-            _productsToIgnore.AddRange(products.Select(i => i.ID).ToList());
+            _productsToIgnore.AddRange(products.Select(i => i.Category).ToList());
         }
 
         private void BindToUI()
@@ -79,7 +79,7 @@ namespace Assets.WorldMaterials.UI
         {
             foreach (var entryInfo in _inventory.GetProductEntries())
             {
-                if (_productsToIgnore.Contains(entryInfo.Product.ID))
+                if (_productsToIgnore.Contains(entryInfo.Product.Category))
                     continue;
 
                 var go = Instantiate(_productEntryPrefab).gameObject;

@@ -70,6 +70,7 @@ namespace Assets.Scripts.WorldMaterials
 		string GenerateDisplayText()
 		{
 			return "";
+            // I can't bring myself to delete this, it was like 20 minutes jamming on one statement
 			//var output = _products.Aggregate("Products:", (current, product) => current + "\n" + product.Name.ToString());
 			//if (_recipes.Any())
 			//{
@@ -97,7 +98,13 @@ namespace Assets.Scripts.WorldMaterials
 	        return product;
 	    }
 
-		public List<CraftingContainerInfo> GetContainers()
+        public Product GetProduct(int productId)
+        {
+            // throw errors here for not found, or let users handle it?
+            return _products.First(i => i.ID == productId);
+        }
+
+        public List<CraftingContainerInfo> GetContainers()
 		{
 			return _containers;
 		}
