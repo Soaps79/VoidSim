@@ -14,13 +14,13 @@ namespace Assets.WorldMaterials
         public readonly List<ProductTradeRequest> Providing = new List<ProductTradeRequest>();
         public readonly List<ProductTradeRequest> Consuming = new List<ProductTradeRequest>();
 
-        public Action<int, int> OnProvideSucess;
+        public Action<int, int> OnProvideSuccess;
         public Action<int, int> OnConsumeSucess;
 
         public void HandleProvideSuccess(int productId, int amount)
         {
-            if (OnProvideSucess != null)
-                OnProvideSucess(productId, amount);
+            if (OnProvideSuccess != null)
+                OnProvideSuccess(productId, amount);
         }
 
         public void HandleConsumeSuccess(int productId, int amount)

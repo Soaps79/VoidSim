@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Messaging;
 using QGame;
 using UnityEngine;
@@ -39,21 +38,19 @@ namespace Assets.WorldMaterials
                 HandleTraderAdd(args as TraderInstanceMessageArgs);
         }
 
-        private void HandleTraderAdd(TraderInstanceMessageArgs args)
+        protected void HandleTraderAdd(TraderInstanceMessageArgs args)
         {
             if(args == null || args.Trader == null)
                 throw new UnityException("TradeHub given bad message data");
 
             if(_traders.All(i => i.name != args.Trader.name))
                 _traders.Add(args.Trader);
-
-            CheckForTrades();
         }
 
-        private void CheckForTrades()
+        protected void CheckForTrades()
         {
-            var providers = _traders.Where(i => i.Providing.Any());
-            var consumers = _traders.Where(i => i.Consuming.Any());
+            var providers = _traders.Where(i => i.Providing.Any()).ToList();
+            var consumers = _traders.Where(i => i.Consuming.Any()).ToList();
 
             // will be set to true if any provide or consume request is completed
             var needsPruning = false;
@@ -64,6 +61,7 @@ namespace Assets.WorldMaterials
                 foreach (var provided in provider.Providing)
                 {
                     var totalAmountConsumed = 0;
+                    var totalAmountProvided = provided.Amount;
 
                     foreach (var consumer in consumers)
                     {
@@ -97,13 +95,12 @@ namespace Assets.WorldMaterials
 
                         // move on to the next consumer, break if provider has emptied its stock
                         totalAmountConsumed += amountConsumed;
-                        if (totalAmountConsumed >= provided.Amount) break;
+                        if (totalAmountConsumed >= totalAmountProvided) break;
                     }
                     
                     // only tell the provider once how much has been consumed
                     if (totalAmountConsumed > 0)
                     {
-                        provided.Amount -= totalAmountConsumed;
                         provider.HandleProvideSuccess(provided.ProductId, totalAmountConsumed);
                     }
 
@@ -120,6 +117,11 @@ namespace Assets.WorldMaterials
                 trader.Consuming.RemoveAll(i => i.Amount <= 0);
                 trader.Providing.RemoveAll(i => i.Amount <= 0);
             }
+        }
+
+        protected void ClearLists()
+        {
+            _traders.Clear();
         }
 
         public string Name { get { return "ProductTradingHub"; } }

@@ -4,12 +4,9 @@ namespace Assets.Scripts.Testing
 {
     public class ConcreteScript : QScript
     {
-        private int _onUpdateCount = 0;
-        public int OnUpdateCount { get { return _onUpdateCount; } }
-
-        protected override void OnAwake()
+        public void MockUpdate(float delta)
         {
-            OnEveryUpdate += (delta) => _onUpdateCount++;
+            OnUpdate(delta);
         }
     }
 }
