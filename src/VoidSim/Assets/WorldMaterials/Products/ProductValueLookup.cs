@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.WorldMaterials;
 using QGame;
 using UnityEngine;
 
-namespace Assets.WorldMaterials
+namespace Assets.WorldMaterials.Products
 {
     public class ProductValueLookup : QScript
     {

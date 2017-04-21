@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace Assets.Scripts.WorldMaterials
+namespace Assets.WorldMaterials.Products
 {
     /// <summary>
     /// This scriptable and its Info objects are an abstraction of the

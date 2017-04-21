@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.WorldMaterials;
 using Assets.WorldMaterials;
+using Assets.WorldMaterials.Products;
 using Zenject;
 
 namespace Assets.Controllers

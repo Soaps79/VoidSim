@@ -3,6 +3,7 @@ using System.Linq;
 using Assets.Placeables.Nodes;
 using Assets.Scripts.WorldMaterials;
 using Assets.WorldMaterials;
+using Assets.WorldMaterials.Products;
 using Messaging;
 using QGame;
 using UnityEngine;

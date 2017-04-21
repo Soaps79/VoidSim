@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Assets.Scripts.WorldMaterials
+namespace Assets.WorldMaterials.Products
 {
     /// <summary>
     /// Products define the material of the world. 

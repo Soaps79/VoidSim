@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Assets.Scripts.WorldMaterials;
+using Assets.WorldMaterials.Products;
 using UnityEditor;
 
 namespace Assets.WorldMaterials.Editor

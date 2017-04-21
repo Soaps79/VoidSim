@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Assets.WorldMaterials;
+using Assets.WorldMaterials.Products;
 using Messaging;
 using QGame;
 using TMPro;

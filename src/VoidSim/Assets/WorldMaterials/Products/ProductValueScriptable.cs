@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Assets.Scripts.WorldMaterials;
 using UnityEditor;
 using UnityEngine;
 
-namespace Assets.WorldMaterials
+namespace Assets.WorldMaterials.Products
 {
     [Serializable]
     public class ProductValueInfo

@@ -1,9 +1,7 @@
 ﻿using System;
-using Assets.Scripts.WorldMaterials;
 using Messaging;
-using UnityEngine;
 
-namespace Assets.WorldMaterials
+namespace Assets.WorldMaterials.Products
 {
     public class ProductSupplyMonitorCreatedMessageArgs : MessageArgs
     {

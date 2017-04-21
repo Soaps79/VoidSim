@@ -2,6 +2,7 @@
 using System.Linq;
 using Assets.Controllers.GUI;
 using Assets.Scripts.WorldMaterials;
+using Assets.WorldMaterials.Products;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

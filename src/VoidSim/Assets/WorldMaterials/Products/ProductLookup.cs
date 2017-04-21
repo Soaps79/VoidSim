@@ -1,15 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-
-using Assets.Scripts.UIHelpers;
+using Assets.Scripts.WorldMaterials;
 using QGame;
 using UnityEngine;
-using Newtonsoft.Json;
-using UnityEditor;
-using Formatting = Newtonsoft.Json.Formatting;
 
-namespace Assets.Scripts.WorldMaterials
+namespace Assets.WorldMaterials.Products
 {
 	/// <summary>
 	/// Repository for Products, Containers and Recipes loaded in the game.

@@ -4,6 +4,7 @@ using Assets.Placeables;
 using Assets.Scripts;
 using Assets.Scripts.WorldMaterials;
 using Assets.WorldMaterials;
+using Assets.WorldMaterials.Products;
 using Assets.WorldMaterials.UI;
 using Messaging;
 using QGame;
