@@ -9,6 +9,22 @@ namespace Assets.WorldMaterials.Products
     /// Products define the material of the world. 
     /// Recipes have ingredients and a container they can be made in.
     /// </summary>
+    
+    // used for product transactions
+    [Serializable]
+    public class ProductAmount
+    {
+        public int ProductId;
+        public int Amount;
+
+        public ProductAmount() { }
+
+        public ProductAmount(int id, int amount)
+        {
+            ProductId = id;
+            Amount = amount;
+        }
+    }
 
     // For sorting? Feels like it could be useful in many instances
     [Serializable]

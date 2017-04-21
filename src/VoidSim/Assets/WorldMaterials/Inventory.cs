@@ -101,7 +101,7 @@ namespace Assets.WorldMaterials
             return false;
         }
 
-        // early interface pass... update as usage requires
+        [Obsolete]
         public bool TryRemoveProduct(string productName, int amount)
         {
             if (!HasProduct(productName, amount))
@@ -115,6 +115,40 @@ namespace Assets.WorldMaterials
                 OnInventoryChanged();
 
             return true;
+        }
+
+        /// <summary>
+        /// If inventory has product, depletes the inventory by amount or however much it can.
+        /// Returns amount depleted.
+        /// </summary>
+        public int RemoveProduct(int productId, int amount)
+        {
+            // also returns 0 when the product is unknown
+            if (GetProductCurrentAmount(productId) == 0 )
+                return 0;
+
+            // either deplete by whole amount, or as much as the inventory has
+            var product = _productTable[productId];
+            var amountConsumed = 0;
+            if (amount > product.Amount)
+            {
+                amountConsumed = product.Amount;
+                product.Amount = 0;
+            }
+            else
+            {
+                amountConsumed = amount;
+                product.Amount -= amount;
+            }
+
+            // tell the world and return the difference
+            if (OnProductsChanged != null)
+                OnProductsChanged(product.Product.Name, -amountConsumed);
+
+            if (OnInventoryChanged != null)
+                OnInventoryChanged();
+
+            return amountConsumed;
         }
 
         public bool HasProduct(int productId, int amount)
@@ -133,6 +167,7 @@ namespace Assets.WorldMaterials
             return _productTable.ContainsKey(id) ? _productTable[id].MaxAmount : 0;
         }
 
+        // TODO: Enable unlimited amounts
         public void SetProductMaxAmount(int id, int max)
         {
             if (!_productTable.ContainsKey(id))

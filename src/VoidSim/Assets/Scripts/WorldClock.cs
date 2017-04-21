@@ -101,6 +101,7 @@ public class WorldClock : SingletonBehavior<WorldClock>, IMessageListener
             throw new UnityException("Initial speed name has no matching value");
         }
         _gameSpeeds.Add(PAUSE_NAME, 0);
+        UseTimeModifier = false;
     }
 
     void Start()

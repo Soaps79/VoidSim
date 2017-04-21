@@ -47,6 +47,8 @@ namespace Assets.Station
         {
             MapLayers();
             InstantiateInventory();
+            InstantiateTrader();
+            InstantiateVoidTrader();
             BindInventoryToUI();
             InstantiateCraftingContainer();
             BindCraftingToShop();
@@ -58,7 +60,6 @@ namespace Assets.Station
             InitializeLayers();
         }
 
-        // convert editor-friendly objects to more usable dictionary
         private void MapLayers()
         {
             foreach (var layer in _initialLayers)
@@ -172,8 +173,36 @@ namespace Assets.Station
                 throw new UnityException("Station inventory missing a dependency");
             _inventory.transform.SetParent(transform);
             _inventory.BindToScriptable(_inventoryScriptable, _productLookup);
+
+            var energy = _productLookup.GetProduct("Credits");
+            _inventory.SetProductMaxAmount(energy.ID, 1000000);
         }
 
+        private void InstantiateTrader()
+        {
+            var go = new GameObject();
+            go.transform.SetParent(_layers[LayerType.Core].transform);
+            go.name = "station_trader";
+            var trader = go.AddComponent<StationTrader>();
+            trader.Initialize(_inventory);
+        }
+
+        private void InstantiateVoidTrader()
+        {
+            var go = new GameObject();
+            go.transform.SetParent(_layers[LayerType.Core].transform);
+            go.name = "void_trader";
+            var trader = go.AddComponent<ProductTrader>();
+
+            foreach (var product in _productLookup.GetProducts())
+            {
+                trader.Consuming.Add(new ProductAmount(product.ID, 10000));
+            }
+
+            MessageHub.Instance.QueueMessage(ProductTrader.MessageName, new TraderInstanceMessageArgs { Trader = trader});
+        }
+
+        // convert editor-friendly objects to more usable dictionary
         private void BindInventoryToUI()
         {
             var go = (GameObject)Instantiate(Resources.Load("Views/inventory_viewmodel"));

@@ -11,12 +11,6 @@ namespace Assets.WorldMaterials
         public ProductTrader Trader;
     }
 
-    public class ProductTradeRequest
-    {
-        public int ProductId;
-        public int Amount;
-    }
-
     /// <summary>
     /// Manages the supply and demand of Products between game actors. 
     /// Traders are added through messaging, can expose requests to provide or consume
@@ -30,6 +24,10 @@ namespace Assets.WorldMaterials
         void Start()
         {
             MessageHub.Instance.AddListener(this, ProductTrader.MessageName);
+
+            // TODO: re-assess when to tick trades
+            var node =  StopWatch.AddNode("CheckForTrades", 5);
+            node.OnTick += CheckForTrades;
         }
 
         public void HandleMessage(string type, MessageArgs args)

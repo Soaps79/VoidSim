@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Assets.WorldMaterials;
+using Assets.WorldMaterials.Products;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -29,9 +30,9 @@ namespace Assets.Editor
             go.name = "Test" + _index;
             var trader = go.AddComponent<ProductTrader>();
             if(isProviding)
-                trader.Providing.Add(new ProductTradeRequest { ProductId = productId, Amount = amount });
+                trader.Providing.Add(new ProductAmount { ProductId = productId, Amount = amount });
             else
-                trader.Consuming.Add(new ProductTradeRequest { ProductId = productId, Amount = amount });
+                trader.Consuming.Add(new ProductAmount { ProductId = productId, Amount = amount });
             HandleTraderAdd(new TraderInstanceMessageArgs { Trader = trader });
             return trader;
         }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Assets.WorldMaterials.Products
 {
-    public class ProductValueLookup : QScript
+    public class ProductValueLookup : SingletonBehavior<ProductValueLookup>
     {
         /// <summary>
         /// Placeholder - This object's purpose is to provide a currency value to products in order 
