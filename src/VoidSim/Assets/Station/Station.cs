@@ -36,13 +36,13 @@ namespace Assets.Station
 
         private CraftingContainer _crafter;
         private Inventory _inventory;
+        private InventoryReserve _inventoryReserve;
 
         // _initialLayers for editor, converted to _layers
         [SerializeField]
         private List<StationLayer> _initialLayers;
         private readonly Dictionary<LayerType, StationLayer> _layers = new Dictionary<LayerType, StationLayer>();
-
-
+        
         void Start()
         {
             MapLayers();
@@ -176,6 +176,9 @@ namespace Assets.Station
 
             var energy = _productLookup.GetProduct("Credits");
             _inventory.SetProductMaxAmount(energy.ID, 1000000);
+
+            _inventoryReserve = new InventoryReserve();
+            _inventoryReserve.Initialize(_inventory);
         }
 
         private void InstantiateTrader()
@@ -184,7 +187,7 @@ namespace Assets.Station
             go.transform.SetParent(_layers[LayerType.Core].transform);
             go.name = "station_trader";
             var trader = go.AddComponent<StationTrader>();
-            trader.Initialize(_inventory);
+            trader.Initialize(_inventory, _inventoryReserve);
         }
 
         private void InstantiateVoidTrader()
@@ -209,7 +212,7 @@ namespace Assets.Station
             go.transform.SetParent(_layers[LayerType.Core].transform);
             go.name = "inventory_viewmodel";
             var viewmodel = go.GetOrAddComponent<InventoryViewModel>();
-            viewmodel.BindToInventory(_inventory, _inventoryScriptable, _placeablesLookup);
+            viewmodel.BindToInventory(_inventory, _inventoryScriptable, _placeablesLookup, _inventoryReserve);
         }
     }
 }

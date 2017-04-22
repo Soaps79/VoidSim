@@ -31,6 +31,19 @@ namespace Assets.WorldMaterials
                 OnConsumeSucess(productId, amount);
         }
 
+        public void SetProvide(ProductAmount productAmount)
+        {
+            var product = Providing.FirstOrDefault(i => i.ProductId == productAmount.ProductId);
+            if (product == null)
+            {
+                Providing.Add(new ProductAmount(productAmount.ProductId, productAmount.Amount));
+            }
+            else
+            {
+                product.Amount = productAmount.Amount;
+            }
+        }
+
         public void AddProvide(ProductAmount productAmount)
         {
             AddProvide(productAmount.ProductId, productAmount.Amount);

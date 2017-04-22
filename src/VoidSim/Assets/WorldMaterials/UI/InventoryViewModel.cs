@@ -2,8 +2,6 @@
 using System.Linq;
 using Assets.Placeables;
 using Assets.Scripts;
-using Assets.Scripts.WorldMaterials;
-using Assets.Station;
 using Assets.WorldMaterials.Products;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,16 +22,18 @@ namespace Assets.WorldMaterials.UI
         private Transform _productContentHolder;
         private Transform _placeablesContentHolder;
         private Inventory _inventory;
+        private InventoryReserve _inventoryReserve;
         private readonly List<GameObject> _productEntryList = new List<GameObject>();
         private readonly List<Button> _placeableEntryList = new List<Button>();
         private PlaceablesLookup _placeablesLookup;
         private Placer _placer;
 
-        public void BindToInventory(Inventory inventory, InventoryScriptable inventoryScriptable, PlaceablesLookup placeablesLookup)
+        public void BindToInventory(Inventory inventory, InventoryScriptable inventoryScriptable, PlaceablesLookup placeablesLookup, InventoryReserve inventoryReserve)
         {
             _inventory = inventory;
             _inventory.OnProductsChanged += RefreshProducts;
             _placeablesLookup = placeablesLookup;
+            _inventoryReserve = inventoryReserve;
 
             InitializePlacer();
             UpdateIgnoreList(inventoryScriptable);
@@ -83,10 +83,18 @@ namespace Assets.WorldMaterials.UI
                 if (_productsToIgnore.Contains(entryInfo.Product.Category))
                     continue;
 
+                // informational entry
                 var go = Instantiate(_productEntryPrefab).gameObject;
                 go.transform.SetParent(_productContentHolder.transform);
                 var binder = go.gameObject.GetOrAddComponent<ProductEntryBinder>();
                 binder.Bind(entryInfo.Product.Name, entryInfo.Amount);
+
+                // player interface for buying and selling
+                var go2 = go.transform.FindChild("reserve_amount").gameObject;
+                var reserve = go2.GetComponent<InventoryReserveViewModel>();
+                reserve.Initialize(_inventoryReserve, entryInfo.Product.ID, entryInfo.MaxAmount);
+                reserve.gameObject.SetActive(false);
+
                 _productEntryList.Add(go);
             }
         }
