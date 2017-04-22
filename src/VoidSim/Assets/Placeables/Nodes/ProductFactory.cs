@@ -15,6 +15,8 @@ namespace Assets.Placeables.Nodes
         public ProductFactory ProductFactory;
     }
 
+    // This code was refactored to use ID's instead of strings
+    // Should probably get a cleanup pass
     public class ProductFactory : PlaceableNode
     {
         public const string MessageName = "ProductFactoryPlaced";
@@ -28,30 +30,36 @@ namespace Assets.Placeables.Nodes
         private readonly List<Recipe> _recipes = new List<Recipe>();
         private Inventory _inventory;
         public string CurrentlyCrafting;
+        private ProductLookup _productLookup;
 
         // save for cancel
         private int _currentCraftId;
 
         private CraftingContainer _container;
 
-        public void Initialize(Inventory inventory)
+        public void Initialize(Inventory inventory, ProductLookup productLookup)
         {
             _inventory = inventory;
+            _productLookup = productLookup;
             if (_container == null)
             {
                 _container = gameObject.GetOrAddComponent<CraftingContainer>();
                 _container.Info = ProductLookup.Instance.GetContainer(_containerType);
-                _container.OnCraftingComplete += RestartCrafting;
+                _container.OnCraftingComplete += StoreProductAndRestartCrafting;
             }
             // tell container its type?
             LoadRecipes();
             if (!string.IsNullOrEmpty(CurrentlyCrafting))
-                BeginCrafting(CurrentlyCrafting);
+            {
+                _currentCraftId = _productLookup.GetProduct(CurrentlyCrafting).ID;
+                BeginCrafting();
+            }
+                
         }
 
         private void LoadRecipes()
         {
-            var recipes = ProductLookup.Instance.GetRecipesForContainer(_containerType);
+            var recipes = _productLookup.GetRecipesForContainer(_containerType);
             if (!recipes.Any())
                 throw new UnityException(string.Format("No recipes found for container {0}", _containerType));
 
@@ -59,26 +67,26 @@ namespace Assets.Placeables.Nodes
             _recipes.AddRange(recipes);
         }
 
-        public void BeginCrafting(string productName)
+        public void BeginCrafting()
         {
-            _container.QueueCrafting(_recipes.FirstOrDefault(i => i.ResultProduct == productName));
+            _container.QueueCrafting(_recipes.FirstOrDefault(i => i.ResultProductID == _currentCraftId));
         }
 
-        private void RestartCrafting(Recipe recipe)
+        private void StoreProductAndRestartCrafting(Recipe recipe)
         {
-            _inventory.TryAddProduct(ProductLookup.Instance.GetProduct(recipe.ResultProduct), recipe.ResultAmount);
+            _inventory.TryAddProduct(recipe.ResultProductID, recipe.ResultAmount);
             foreach (var ingredient in recipe.Ingredients)
             {
-                if (_inventory.HasProduct(ingredient.ProductName, ingredient.Quantity))
+                if (_inventory.HasProduct(ingredient.ProductId, ingredient.Quantity))
                     continue;
 
-                Debug.Log(string.Format("Automated container ran out of Product {0}", ingredient.ProductName));
+                Debug.Log(string.Format("Automated container ran out of Product {0}", ingredient.ProductId));
                 return;
             }
 
             foreach (var ingredient in recipe.Ingredients)
             {
-                _inventory.TryRemoveProduct(ingredient.ProductName, ingredient.Quantity);
+                _inventory.RemoveProduct(ingredient.ProductId, ingredient.Quantity);
             }
 
             _currentCraftId = _container.QueueCrafting(recipe);

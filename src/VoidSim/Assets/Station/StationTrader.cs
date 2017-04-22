@@ -17,7 +17,7 @@ namespace Assets.Station
         [SerializeField] private Inventory _inventory;
         private ProductTrader _trader;
         private WorldClock _worldClock;
-        private Product _creditsProduct;
+        private int _creditsProductId;
 
         public void Initialize(Inventory inventory, InventoryReserve reserve)
         {
@@ -31,14 +31,14 @@ namespace Assets.Station
 
             MessageHub.Instance.QueueMessage(ProductTrader.MessageName, new TraderInstanceMessageArgs { Trader = _trader });
 
-            _creditsProduct = ProductLookup.Instance.GetProduct("Credits");
+            _creditsProductId = ProductLookup.Instance.GetProduct("Credits").ID;
         }
 
         private void HandleProvideSuccess(int productId, int amount)
         {
             _inventory.RemoveProduct(productId, amount);
             var value = _valueLookup.GetValueOfProduct(productId);
-            _inventory.TryAddProduct(_creditsProduct, amount * value);
+            _inventory.TryAddProduct(_creditsProductId, amount * value);
         }
 
         private void CheckForTrade(object sender, EventArgs e)

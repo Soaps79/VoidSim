@@ -129,7 +129,7 @@ namespace Assets.WorldMaterials.UI
             foreach (var button in _recipeButtons)
             {
                 if (!button.Recipe.Ingredients.All(
-                    ingredient => _inventory.HasProduct(ingredient.ProductName, ingredient.Quantity)))
+                    ingredient => _inventory.HasProduct(ingredient.ProductId, ingredient.Quantity)))
                 {
                     button.Button.interactable = false;
                 }
@@ -145,9 +145,9 @@ namespace Assets.WorldMaterials.UI
         {
             var button = _queuedButtons.FirstOrDefault(i => i.QueueID == id);
             if(button == null)
-                throw new UnityException(string.Format("Recipe {0} complete, has no button", recipe.ResultProduct));
+                throw new UnityException(string.Format("Recipe {0} complete, has no button", recipe.ResultProductID));
 
-            _inventory.TryAddProduct(recipe.ResultProduct, recipe.ResultAmount);
+            _inventory.TryAddProduct(recipe.ResultProductID, recipe.ResultAmount);
             _queuedButtons.Remove(button);
             Destroy(button.Button.gameObject);
         }
@@ -157,10 +157,8 @@ namespace Assets.WorldMaterials.UI
         {
             foreach (var ingredient in recipe.Ingredients)
             {
-                if(!_inventory.TryRemoveProduct(ingredient.ProductName, ingredient.Quantity))
+                if(_inventory.RemoveProduct(ingredient.ProductId, ingredient.Quantity) < ingredient.Quantity)
                     Debug.Log("Craft button requested good is could not afford");
-
-
             }
             var button = CreateQueuedButton(recipe);
             var queued = new RecipeButton
@@ -212,7 +210,7 @@ namespace Assets.WorldMaterials.UI
 
         private string GenerateText(Recipe recipe)
         {
-            return recipe.ResultProduct;
+            return recipe.ResultProductName;
         }
     }
 }

@@ -172,7 +172,7 @@ namespace Assets.Station
             if (_inventory == null || _inventoryScriptable == null)
                 throw new UnityException("Station inventory missing a dependency");
             _inventory.transform.SetParent(transform);
-            _inventory.BindToScriptable(_inventoryScriptable, _productLookup);
+            _inventory.BindToScriptable(_inventoryScriptable, _productLookup, true);
 
             var energy = _productLookup.GetProduct("Credits");
             _inventory.SetProductMaxAmount(energy.ID, 1000000);

@@ -36,14 +36,15 @@ namespace Assets.WorldMaterials.Products
     [Serializable]
     public class Ingredient
     {
-        public string ProductName;
+        public int ProductId;
         public int Quantity;
     }
 
     [Serializable]
     public class Recipe
     {
-        public string ResultProduct;
+        public int ResultProductID;
+        public string ResultProductName;
         public int ResultAmount;
         public List<Ingredient> Ingredients;
         public TimeLength TimeLength;

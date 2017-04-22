@@ -23,7 +23,7 @@ namespace Assets.WorldMaterials.UI
         private Transform _placeablesContentHolder;
         private Inventory _inventory;
         private InventoryReserve _inventoryReserve;
-        private readonly List<GameObject> _productEntryList = new List<GameObject>();
+        private readonly List<ProductEntryBinder> _productEntryList = new List<ProductEntryBinder>();
         private readonly List<Button> _placeableEntryList = new List<Button>();
         private PlaceablesLookup _placeablesLookup;
         private Placer _placer;
@@ -31,7 +31,7 @@ namespace Assets.WorldMaterials.UI
         public void BindToInventory(Inventory inventory, InventoryScriptable inventoryScriptable, PlaceablesLookup placeablesLookup, InventoryReserve inventoryReserve)
         {
             _inventory = inventory;
-            _inventory.OnProductsChanged += RefreshProducts;
+            _inventory.OnProductsChanged += UpdateProductEntry;
             _placeablesLookup = placeablesLookup;
             _inventoryReserve = inventoryReserve;
 
@@ -87,7 +87,7 @@ namespace Assets.WorldMaterials.UI
                 var go = Instantiate(_productEntryPrefab).gameObject;
                 go.transform.SetParent(_productContentHolder.transform);
                 var binder = go.gameObject.GetOrAddComponent<ProductEntryBinder>();
-                binder.Bind(entryInfo.Product.Name, entryInfo.Amount);
+                binder.Bind(entryInfo.Product.Name, entryInfo.Amount, entryInfo.Product.ID);
 
                 // player interface for buying and selling
                 var go2 = go.transform.FindChild("reserve_amount").gameObject;
@@ -95,7 +95,7 @@ namespace Assets.WorldMaterials.UI
                 reserve.Initialize(_inventoryReserve, entryInfo.Product.ID, entryInfo.MaxAmount);
                 reserve.gameObject.SetActive(false);
 
-                _productEntryList.Add(go);
+                _productEntryList.Add(binder);
             }
         }
 
@@ -117,11 +117,10 @@ namespace Assets.WorldMaterials.UI
             }
         }
 
-        private void RefreshProducts(string productName, int amountChanged)
+        private void UpdateProductEntry(int productId, int amountChanged)
         {
-            ClearProductEntries();
-            // save incoming values here to light up entry
-            DrawProductEntries();
+            var entry = _productEntryList.FirstOrDefault(i => i.ProductId == productId);
+            if(entry != null) entry.SetAmount(_inventory.GetProductCurrentAmount(productId));
         }
 
         private void ClearProductEntries()

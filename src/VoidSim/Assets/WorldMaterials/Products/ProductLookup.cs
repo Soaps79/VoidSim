@@ -51,12 +51,21 @@ namespace Assets.WorldMaterials.Products
 		        _LookupScriptable.Containers.Select(
 		            i => new CraftingContainerInfo {CraftingSpeed = i.CraftingSpeed, Name = i.Name}).ToList();
 
+            // real basic, should have better messaging on what is bad
+            if(_LookupScriptable.Recipes.Any(i => i.Ingredients.Any(j => _LookupScriptable.Products.All(k => k.Name != j.ProductName))))
+                throw new UnityException("ProductLookup: Recipe has unkown ingredient");
+
 		    _recipes = _LookupScriptable.Recipes.Select(i => new Recipe
 		    {
 		        Container = _containers.FirstOrDefault(j => j.Name == i.ContainerName),
 		        Ingredients =
-		            i.Ingredients.Select(k => new Ingredient {ProductName = k.ProductName, Quantity = k.Quantity}).ToList(),
-		        ResultProduct = i.ResultProduct,
+		            i.Ingredients.Select(ing => new Ingredient
+		            {
+		                ProductId = _products.First(j => j.Name == ing.ProductName).ID,
+                        Quantity = ing.Quantity
+		            }).ToList(),
+                ResultProductName = i.ResultProduct,
+		        ResultProductID = _products.First(j => j.Name == i.ResultProduct).ID,
                 ResultAmount = i.ResultAmount,
 		        TimeLength = i.TimeLength
 		    }).ToList();
@@ -73,7 +82,7 @@ namespace Assets.WorldMaterials.Products
 			//	output = _recipes.Aggregate(output + "\n\nRecipes", 
 			//		(current1, recipe) => current1 + recipe.Value.Aggregate(
 			//			string.Format("\n{0}:", recipe.Key), (current, rec) => current + rec.Ingredients.Aggregate(
-			//				" ", (c, r) => c + string.Format("{0} {1} ", r.Quantity, r.ProductName))));
+			//				" ", (c, r) => c + string.Format("{0} {1} ", r.Quantity, r.ProductId))));
 			//}
 
 			//return output;

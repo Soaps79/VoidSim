@@ -36,7 +36,7 @@ namespace Assets.WorldMaterials.Editor
 
             // grab the current name and list
             var names = ProductLookupEditor.ProductNames;
-            var nameProperty = property.FindPropertyRelative("ProductName");
+            var nameProperty = property.FindPropertyRelative("ProductId");
 
 
             // make this better and extract it

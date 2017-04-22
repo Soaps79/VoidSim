@@ -68,7 +68,7 @@ namespace Assets.Station
 
             foreach (var consumer in _consumers)
             {
-                if (!_inventory.TryRemoveProduct(ENERGY_PRODUCT_NAME, (int) consumer.TotalAmountConsumed))
+                if (_inventory.RemoveProduct(_energyProduct.ID, (int) consumer.TotalAmountConsumed) < consumer.TotalAmountConsumed)
                     HasShortage = true;
             }
         }
@@ -132,7 +132,7 @@ namespace Assets.Station
 
         private void AddProvider(ProductFactory factory)
         {
-            factory.Initialize(_inventory);
+            factory.Initialize(_inventory, ProductLookup.Instance);
         }
 
         public string Name

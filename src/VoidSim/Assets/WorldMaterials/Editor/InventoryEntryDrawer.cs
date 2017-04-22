@@ -36,7 +36,7 @@ namespace Assets.WorldMaterials.Editor
             // grab the current name and list
             //var names = ProductLookupEditor.ProductNames;
             var names = InventoryScriptable.ProductLookup.GenerateProductNames();
-            var nameProperty = property.FindPropertyRelative("ProductName");
+            var nameProperty = property.FindPropertyRelative("ProductId");
             if (string.IsNullOrEmpty(nameProperty.stringValue))
                 nameProperty.stringValue = names.First();
 
