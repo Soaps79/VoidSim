@@ -10,7 +10,7 @@ using UnityEngine.UI;
 namespace Assets.WorldMaterials.UI
 {
     /// <summary>
-    /// Acts as a gate between the player's inventory and a list of available objects
+    /// Acts as a gate between the player's inventory and a list of available crafts
     /// Facilitates binding the crafting system to the UI, which is complex because actions 
     /// come from both sides (buttons trigger craft/cancel, container informs when finished)
     /// Handles the game view of recipes and current queue.
@@ -140,7 +140,7 @@ namespace Assets.WorldMaterials.UI
             }
         }
 
-        // crafting complete, kill button
+        // crafting complete, kill queue button
         private void OnCraftingComplete(Recipe recipe, int id)
         {
             var button = _queuedButtons.FirstOrDefault(i => i.QueueID == id);
@@ -172,6 +172,8 @@ namespace Assets.WorldMaterials.UI
             });
         }
 
+        // hooked to recipe button, calls queue on the crafter, which triggers the above function
+        // it's an odd sequence, but allows this view model to know of queue adds coming from elsewhere
         private void QueueCrafting(Recipe recipe)
         {
             _crafter.QueueCrafting(recipe);

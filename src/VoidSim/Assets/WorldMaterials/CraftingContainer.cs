@@ -114,9 +114,19 @@ namespace Assets.Scripts.WorldMaterials
             CheckForBeginCrafting();
         }
 
+        public void CancelAllCrafting()
+        {
+            
+        }
+
         public void CancelCrafting(int recipeId)
         {
             Recipe recipe = null;
+            if (_currentlyCrafting == null)
+            {
+                CheckForBeginCrafting();
+                return;
+            }
             
             // check whether to cancel current build or one from the queue
             if (_currentlyCrafting.ID == recipeId)

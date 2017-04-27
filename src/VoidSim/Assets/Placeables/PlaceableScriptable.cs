@@ -11,7 +11,7 @@ namespace Assets.Placeables
         public Sprite PlacedSprite;
         public LayerType Layer;
         public Placeable Prefab;
-
+        
         [MenuItem("Assets/WorldMaterials/Placeable")]
         public static void CreateMyAsset()
         {

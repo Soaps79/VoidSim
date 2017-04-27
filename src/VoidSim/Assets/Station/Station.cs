@@ -52,6 +52,7 @@ namespace Assets.Station
             BindInventoryToUI();
             InstantiateCraftingContainer();
             BindCraftingToShop();
+            BindCraftingArray();
 
             TestPowerGrid();
             TestPopulationControl();
@@ -160,6 +161,13 @@ namespace Assets.Station
             go.name = "player_crafting_viewmodel";
             var viewmodel = go.GetOrAddComponent<PlayerCraftingViewModel>();
             viewmodel.Bind(_productLookup.GetRecipes(), _crafter, _inventory);
+        }
+
+        private void BindCraftingArray()
+        {
+            var go = (GameObject)Instantiate(Resources.Load("Views/player_crafting_array_viewmodel"));
+            go.transform.SetParent(_layers[LayerType.Core].transform);
+            go.name = "player_crafting_array_viewmodel";
         }
 
         // centralized inventory for the station
