@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Assets.Controllers.GUI;
 using Assets.Placeables.Nodes;
 using Assets.WorldMaterials.Products;
 using QGame;
@@ -17,6 +18,7 @@ namespace Assets.WorldMaterials.UI
         private ProductFactory _factory;
         [SerializeField] private TMP_Dropdown _dropdown;
         [SerializeField] private Toggle _toggle;
+        [SerializeField] private SliderBinding _slider;
 
         private readonly List<string> _recipeNames = new List<string>();
         private readonly List<Recipe> _recipes = new List<Recipe>();
@@ -27,7 +29,13 @@ namespace Assets.WorldMaterials.UI
             // responsible for populating the dropdown and the on/off toggle
             BindRecipes();
             BindToggle();
+            BindSlider();
             _dropdown.onValueChanged.AddListener(HandleCurrentCraftingChanged);
+        }
+
+        private void BindSlider()
+        {
+            _slider.Initialize(() => _factory.CurrentCraftRemainingAsZeroToOne);
         }
 
         private void BindToggle()

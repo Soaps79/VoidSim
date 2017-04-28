@@ -38,6 +38,11 @@ namespace Assets.Placeables.Nodes
 
         public Recipe CurrentlyCrafting { get; private set; }
 
+        public float CurrentCraftRemainingAsZeroToOne
+        {
+            get { return _container.CurrentCraftRemainingAsZeroToOne; }
+        }
+
         // set in prefab
         public bool IsInPlayerArray;
         public string InitialRecipe;
