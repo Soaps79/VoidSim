@@ -38,10 +38,8 @@ namespace Assets.WorldMaterials.UI
 
         private void CreatePanel()
         {
-            _arrayPanel = Instantiate(_arrayPrefab);
             var canvas = GameObject.Find("InfoCanvas");
-            _arrayPanel.transform.SetParent(canvas.transform);
-            _arrayPanel.rectTransform.position = new Vector3(500, 240, 0);
+            _arrayPanel = Instantiate(_arrayPrefab, canvas.transform, false);
             _arrayContent = _arrayPanel.transform.FindChild("content_holder").GetComponent<Image>();
         }
 
@@ -58,8 +56,8 @@ namespace Assets.WorldMaterials.UI
             if (!_arrayPanel.gameObject.activeSelf)
                 _arrayPanel.gameObject.SetActive(true);
             
-            var go = Instantiate(_factoryPrefab);
-            go.transform.SetParent(_arrayContent.transform);
+            var go = Instantiate(_factoryPrefab, _arrayContent.transform, false);
+            //go.transform.SetParent(_arrayContent.transform);
 
             var viewmodel = go.gameObject.GetOrAddComponent<ProductFactoryViewModel>();
             viewmodel.Bind(args.ProductFactory);

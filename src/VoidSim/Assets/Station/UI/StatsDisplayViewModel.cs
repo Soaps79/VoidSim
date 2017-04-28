@@ -46,11 +46,8 @@ namespace Assets.Station.UI
         }
         private void InitializeDisplay()
         {
-            _display = Instantiate(_displayPanelPrefab);
-            _display.rectTransform.anchoredPosition = new Vector2(10, 700);
-            //_display.rectTransform.position = new Vector3(10, 700, 0);
             var canvas = GameObject.Find("InfoCanvas");
-            _display.transform.SetParent(canvas.transform);
+            _display = Instantiate(_displayPanelPrefab, canvas.transform, false);
         }
 
         private void BindWorldClock()

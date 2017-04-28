@@ -67,11 +67,14 @@ namespace Assets.WorldMaterials.UI
 
         private void BindToUI()
         {
-            var craftingPanel = GameObject.Instantiate(_inventoryPanelPrefab);
+            var canvas = GameObject.Find("InfoCanvas");
+            //_display = Instantiate(_displayPanelPrefab, canvas.transform, false);
+
+            var craftingPanel = Instantiate(_inventoryPanelPrefab, canvas.transform, false);
             _productContentHolder = craftingPanel.transform.FindChild("content_holder/product_list");
             _placeablesContentHolder = craftingPanel.transform.FindChild("content_holder/placeable_list");
 
-            PositionOnCanvas(craftingPanel);
+            //PositionOnCanvas(craftingPanel);
             DrawProductEntries();
             DrawPlaceableEntries();
         }
@@ -84,8 +87,7 @@ namespace Assets.WorldMaterials.UI
                     continue;
 
                 // informational entry
-                var go = Instantiate(_productEntryPrefab).gameObject;
-                go.transform.SetParent(_productContentHolder.transform);
+                var go = Instantiate(_productEntryPrefab, _productContentHolder.transform, false).gameObject;
                 var binder = go.gameObject.GetOrAddComponent<ProductEntryBinder>();
                 binder.Bind(entryInfo.Product.Name, entryInfo.Amount, entryInfo.Product.ID);
 
@@ -108,8 +110,7 @@ namespace Assets.WorldMaterials.UI
                 if(scriptable == null)
                     throw new UnityException("Placeable name in inventory has no lookup value");
 
-                var button = Instantiate(_placeableEntryPrefab);
-                button.transform.SetParent(_placeablesContentHolder.transform);
+                var button = Instantiate(_placeableEntryPrefab, _placeablesContentHolder.transform, false);
                 var image = button.GetComponent<Image>();
                 image.sprite = scriptable.IconSprite;
                 button.onClick.AddListener(() => { BeginPlacement(placeable.Name, placeable.Id); });

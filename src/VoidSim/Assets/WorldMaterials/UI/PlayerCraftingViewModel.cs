@@ -84,8 +84,10 @@ namespace Assets.WorldMaterials.UI
 
         private void BindToUI()
         {
+            var canvas = GameObject.Find("InfoCanvas");
+
             // Instantiate the UI prefab
-            var craftingPanel = GameObject.Instantiate(_craftingPanelPrefab);
+            var craftingPanel = GameObject.Instantiate(_craftingPanelPrefab, canvas.transform, false);
 
             // get refs to recipes and queue views
             var scrollview = craftingPanel.transform.Find("content_holder/recipes_scroll_view");
@@ -101,16 +103,6 @@ namespace Assets.WorldMaterials.UI
             // create buttons for each recipe
             BindRecipes();
             SetCanAffordOnButtons();
-
-            // set the canvas and position. make positioning dynamic eventually
-            PositionOnCanvas(craftingPanel);
-        }
-
-        private static void PositionOnCanvas(Image craftingPanel)
-        {
-            craftingPanel.rectTransform.position = new Vector3(10, 240, 0);
-            var canvas = GameObject.Find("InfoCanvas");
-            craftingPanel.transform.SetParent(canvas.transform);
         }
 
         // binds all recipes to the list of recipe buttons
@@ -191,10 +183,9 @@ namespace Assets.WorldMaterials.UI
         // creates a button in recipe list
         private Button CreateRecipeButton(Recipe recipe)
         {
-            var button = GameObject.Instantiate(_craftingButtonPrefab).GetComponent<Button>();
+            var button = Instantiate(_craftingButtonPrefab, _recipesViewContext.transform, false).GetComponent<Button>();
             var text = button.GetComponentInChildren<TextMeshProUGUI>();
             text.text = GenerateText(recipe);
-            button.gameObject.transform.SetParent(_recipesViewContext.transform);
             _recipeButtons.Add(new RecipeButton { Button = button, Recipe = recipe });
             return button;
         }
@@ -202,11 +193,9 @@ namespace Assets.WorldMaterials.UI
         // create button in queue list
         private Button CreateQueuedButton(Recipe recipe)
         {
-            var button = GameObject.Instantiate(_queueButtonPrefab).GetComponent<Button>();
+            var button = Instantiate(_queueButtonPrefab, _queueViewContext.transform, false).GetComponent<Button>();
             var text = button.GetComponentInChildren<TextMeshProUGUI>();
             text.text = GenerateText(recipe);
-
-            button.gameObject.transform.SetParent(_queueViewContext.transform);
             return button;
         }
 
