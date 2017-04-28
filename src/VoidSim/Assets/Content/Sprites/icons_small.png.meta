@@ -1,10 +1,15 @@
 fileFormatVersion: 2
 guid: 7e17a6d09f97b4043b2e6a2616e7841e
-timeCreated: 1489541235
+timeCreated: 1493352995
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
     21300000: icons_drag_corner
+    21300002: sm_ico_energy
+    21300004: sm_ico_pop
+    21300006: sm_ico_credits
+    21300008: sm_ico_default
+    21300010: sm_ico_time
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -91,6 +96,71 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
+        y: 112
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: sm_ico_energy
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 112
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: sm_ico_pop
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 112
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: sm_ico_credits
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 112
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: sm_ico_default
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 112
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: sm_ico_time
+      rect:
+        serializedVersion: 2
+        x: 80
         y: 112
         width: 16
         height: 16

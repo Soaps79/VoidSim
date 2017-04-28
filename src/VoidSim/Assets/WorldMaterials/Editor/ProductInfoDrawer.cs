@@ -23,8 +23,13 @@ namespace Assets.WorldMaterials.Editor
             EditorGUI.PropertyField(nameRect, property.FindPropertyRelative("Name"), GUIContent.none);
             position.x += 140;
 
-            var categoryRect = new Rect(position.x, position.y, 80, position.height);
+            var categoryRect = new Rect(position.x, position.y, 70, position.height);
             EditorGUI.PropertyField(categoryRect, property.FindPropertyRelative("Category"), GUIContent.none);
+
+            position.x += 60;
+
+            var iconRect = new Rect(position.x, position.y, 80, position.height);
+            EditorGUI.PropertyField(iconRect, property.FindPropertyRelative("IconSprite"), GUIContent.none);
 
             EditorGUI.EndProperty();
         }

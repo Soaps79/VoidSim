@@ -43,7 +43,7 @@ namespace Assets.WorldMaterials.Products
 		    _products = _LookupScriptable.Products.Select(i =>
 		            {
 		                index++;
-		                return new Product {Category = i.Category, Name = i.Name, ID = index};
+		                return new Product {Category = i.Category, Name = i.Name, ID = index, Icon = i.IconSprite ?? _LookupScriptable.DefaultSmallIcon};
 		            }
 		        ).ToList();
 

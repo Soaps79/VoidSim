@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using UnityEngine;
 
 namespace Assets.WorldMaterials.Products
 {
@@ -65,6 +66,8 @@ namespace Assets.WorldMaterials.Products
         public string Name;
         [JsonConverter(typeof(StringEnumConverter))]
         public ProductCategory Category;
+
+        public Sprite Icon;
 
         // Value? If common currency (credits?) is a thing
         // Quality?

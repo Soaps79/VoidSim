@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Placeables.Nodes;
-using Assets.Scripts.WorldMaterials;
 using Assets.WorldMaterials;
 using Assets.WorldMaterials.Products;
 using Messaging;
@@ -16,16 +15,22 @@ namespace Assets.Station
     public class PopulationControl : QScript, IMessageListener
     {
         [SerializeField] private int _totalCapacity;
+        [SerializeField] private int _initialCapacity;
         private readonly List<PopHousing> _housing = new List<PopHousing>();
         private const string POPULATION_PRODUCT_NAME = "Population";
         private Inventory _inventory;
         private int _populationProductId;
 
-        public void Initialize(Inventory inventory)
+        public void Initialize(Inventory inventory, int initialCapacity = 0)
         {
+            _initialCapacity = initialCapacity;
             _inventory = inventory;
             var pop = ProductLookup.Instance.GetProduct(POPULATION_PRODUCT_NAME);
             _populationProductId = pop.ID;
+
+            if (_initialCapacity > 0)
+                _inventory.SetProductMaxAmount(_populationProductId, _initialCapacity);
+
             MessageHub.Instance.AddListener(this, PopHousing.MessageName);
         }
 
@@ -55,7 +60,7 @@ namespace Assets.Station
 
         private void UpdateCapacity()
         {
-            _totalCapacity = _housing.Sum(i => i.Capacity);
+            _totalCapacity = _initialCapacity + _housing.Sum(i => i.Capacity);
 
         }
 

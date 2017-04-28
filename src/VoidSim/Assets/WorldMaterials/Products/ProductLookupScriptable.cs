@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.WorldMaterials.Products
 {
@@ -32,6 +33,7 @@ namespace Assets.WorldMaterials.Products
     {
         public int ID;
         public string Name;
+        public Sprite IconSprite;
         public ProductCategory Category;
     }
 
@@ -40,6 +42,7 @@ namespace Assets.WorldMaterials.Products
         public List<ProductInfo> Products;
         public List<CraftingContainerInfo> Containers;
         public List<RecipeInfo> Recipes;
+        public Sprite DefaultSmallIcon;
 
         [MenuItem("Assets/WorldMaterials/ProductLookup")]
         public static void CreateMyAsset()

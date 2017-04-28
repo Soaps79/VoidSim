@@ -13,7 +13,6 @@ namespace Assets.Station.UI
     /// Feeds a UI panel that shows information that is constantly relevant to the player.
     /// Listens for ProductSupplyMonitor created messages, and adds their output to the UI display
     /// Logic will need to be written so that the panel itself resizes to accomodate additional values.
-    /// Further, the providers should provide their icon instead of string DisplayName.
     /// 
     /// Possible future usage would be for the player to add and remove products to the display as they come and go in relevency.
     /// </summary>
@@ -28,6 +27,8 @@ namespace Assets.Station.UI
 
         [SerializeField]
         private Image _displayPanelPrefab;
+        [SerializeField]
+        private Image _displayTimePrefab;
         [SerializeField]
         private Image _displayProductPrefab;
 
@@ -55,7 +56,14 @@ namespace Assets.Station.UI
         private void BindWorldClock()
         {
             _worldClock = WorldClock.Instance;
-            _clockDisplay = InstantiateNewUIEntry("Date: ");
+
+            // instantiate UI element
+            var contentHolder = _display.transform.FindChild("content_holder");
+            var displayProduct = Instantiate(_displayTimePrefab);
+            displayProduct.transform.SetParent(contentHolder, false);
+
+            // return the text field to be updated every frame
+            _clockDisplay = displayProduct.transform.FindChild("product_value").GetComponent<TextMeshProUGUI>();
             _clockDisplay.text = GenerateCurrentTimeString();
         }
 
@@ -71,14 +79,14 @@ namespace Assets.Station.UI
 
         private void AddMonitor(ProductSupplyMonitor supplyMonitor)
         {
-            var valueDisplay = InstantiateNewUIEntry(supplyMonitor.DisplayName);
+            var valueDisplay = InstantiateNewUIEntry(supplyMonitor);
             valueDisplay.text = supplyMonitor.GetAmountOutput();
 
             _monitorEntries.Add(new SupplyMonitorEntry { Monitor = supplyMonitor, Text = valueDisplay });
         }
 
 
-        private TextMeshProUGUI InstantiateNewUIEntry(string displayName)
+        private TextMeshProUGUI InstantiateNewUIEntry(ProductSupplyMonitor monitor)
         {
             // instantiate UI element
             var contentHolder = _display.transform.FindChild("content_holder");
@@ -86,8 +94,8 @@ namespace Assets.Station.UI
             displayProduct.transform.SetParent(contentHolder, false);
 
             // set its name
-            var productName = displayProduct.transform.FindChild("product_name").GetComponent<TextMeshProUGUI>();
-            productName.text = displayName;
+            var productName = displayProduct.transform.FindChild("product_image").GetComponent<Image>();
+            productName.sprite = monitor.Product.Icon;
 
             // return the text field to be updated every frame
             return displayProduct.transform.FindChild("product_value").GetComponent<TextMeshProUGUI>();

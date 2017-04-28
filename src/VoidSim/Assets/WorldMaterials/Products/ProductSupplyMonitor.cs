@@ -10,7 +10,7 @@ namespace Assets.WorldMaterials.Products
 
     public enum ProductSupplyDisplayMode
     {
-        Difference, OutOfMax
+        Difference, OutOfMax, SupplyOnly
     }
 
     /// <summary>
@@ -31,7 +31,7 @@ namespace Assets.WorldMaterials.Products
 
         public const string CreatedMessageType = "ProductSupplyMonitor created";
 
-        private Product _product;
+        public Product Product { get; private set; }
         private Inventory _inventory;
         private TimeUnit _supplyUpdatefrequency;
         private TimeUnit _changeUpdateFrequency;
@@ -46,12 +46,12 @@ namespace Assets.WorldMaterials.Products
 
         public ProductSupplyMonitor(Data data)
         {
-            _product = data.Product;
+            Product = data.Product;
             _inventory = data.Inventory;
             _supplyUpdatefrequency = data.SupplyUpdatefrequency;
             _changeUpdateFrequency = data.ChangeUpdateFrequency;
 
-            SetDisplayName(string.IsNullOrEmpty(data.DisplayName) ? _product.Name : data.DisplayName);
+            SetDisplayName(string.IsNullOrEmpty(data.DisplayName) ? Product.Name : data.DisplayName);
             SetDisplayMode(data.Mode);
 
             BindToWorldClock();
@@ -78,7 +78,11 @@ namespace Assets.WorldMaterials.Products
                 case ProductSupplyDisplayMode.OutOfMax:
                     _getAmountOutput = GetAmountOutOfMax;
                     break;
+                case ProductSupplyDisplayMode.SupplyOnly:
+                    _getAmountOutput = GetAmountSupplyOnly;
+                    break;
                 default:
+
                     throw new ArgumentOutOfRangeException("ProductSupplyDisplayMode", mode, null);
             }
         }
@@ -97,8 +101,8 @@ namespace Assets.WorldMaterials.Products
 
         private void UpdateSupply(object sender, EventArgs e)
         {
-            _currentSupply = _inventory.GetProductCurrentAmount(_product.ID);
-            _currentMax = _inventory.GetProductMaxAmount(_product.ID);
+            _currentSupply = _inventory.GetProductCurrentAmount(Product.ID);
+            _currentMax = _inventory.GetProductMaxAmount(Product.ID);
         }
 
         public string GetAmountOutput()
@@ -115,5 +119,11 @@ namespace Assets.WorldMaterials.Products
         {
             return string.Format("{0} ({1})", _currentSupply, _currentMax);
         }
+
+        private string GetAmountSupplyOnly()
+        {
+            return _currentSupply.ToString();
+        }
+
     }
 }

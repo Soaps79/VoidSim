@@ -115,6 +115,24 @@ namespace Assets.Station
                         DisplayName = "Pop"
                     })
                 });
+
+            product = _productLookup.GetProduct("Credits");
+            if (product == null)
+                throw new UnityException("Credits product not found in lookup");
+
+            MessageHub.Instance.QueueMessage(ProductSupplyMonitor.CreatedMessageType,
+                new ProductSupplyMonitorCreatedMessageArgs
+                {
+                    SupplyMonitor = new ProductSupplyMonitor(new ProductSupplyMonitor.Data
+                    {
+                        Product = product,
+                        Inventory = _inventory,
+                        SupplyUpdatefrequency = TimeUnit.Hour,
+                        ChangeUpdateFrequency = TimeUnit.Day,
+                        Mode = ProductSupplyDisplayMode.SupplyOnly,
+                        DisplayName = "Pop"
+                    })
+                });
         }
 
         // instantiate a PowerGrid
@@ -133,7 +151,7 @@ namespace Assets.Station
             go.name = "population_control";
             go.transform.SetParent(_layers[LayerType.Core].transform);
             var pop = go.GetOrAddComponent<PopulationControl>();
-            pop.Initialize(_inventory);
+            pop.Initialize(_inventory, 60);
         }
 
         // Crafting items here are temporary. They will eventually work entirely through Placeables
