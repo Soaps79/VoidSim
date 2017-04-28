@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Controllers.GUI;
+using Assets.Scripts;
 using Assets.Scripts.WorldMaterials;
 using Assets.WorldMaterials.Products;
 using TMPro;
@@ -87,7 +88,7 @@ namespace Assets.WorldMaterials.UI
             var canvas = GameObject.Find("InfoCanvas");
 
             // Instantiate the UI prefab
-            var craftingPanel = GameObject.Instantiate(_craftingPanelPrefab, canvas.transform, false);
+            var craftingPanel = Instantiate(_craftingPanelPrefab, canvas.transform, false);
 
             // get refs to recipes and queue views
             var scrollview = craftingPanel.transform.Find("content_holder/recipes_scroll_view");
@@ -103,6 +104,7 @@ namespace Assets.WorldMaterials.UI
             // create buttons for each recipe
             BindRecipes();
             SetCanAffordOnButtons();
+            gameObject.RegisterSystemPanel(craftingPanel.gameObject);
         }
 
         // binds all recipes to the list of recipe buttons

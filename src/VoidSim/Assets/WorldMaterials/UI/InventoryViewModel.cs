@@ -74,6 +74,8 @@ namespace Assets.WorldMaterials.UI
             _productContentHolder = craftingPanel.transform.FindChild("content_holder/product_list");
             _placeablesContentHolder = craftingPanel.transform.FindChild("content_holder/placeable_list");
 
+            gameObject.RegisterSystemPanel(craftingPanel.gameObject);
+
             //PositionOnCanvas(craftingPanel);
             DrawProductEntries();
             DrawPlaceableEntries();

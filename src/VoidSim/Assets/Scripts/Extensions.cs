@@ -1,4 +1,5 @@
-﻿using Messaging;
+﻿using Assets.Station;
+using Messaging;
 using QGame;
 using UnityEngine;
 
@@ -21,6 +22,15 @@ namespace Assets.Scripts
         public static void TrimCloneFromName(this GameObject go)
         {
             go.name = go.name.Replace("(Clone)", "");
+        }
+
+        public static void RegisterSystemPanel(this GameObject go, GameObject panel)
+        {
+            var systemPanel = go.GetComponent<SystemPanel>();
+            if(systemPanel == null)
+                throw new UnityException("Attempted to register system panel with null component");
+
+            systemPanel.Register(panel);
         }
     }
 }

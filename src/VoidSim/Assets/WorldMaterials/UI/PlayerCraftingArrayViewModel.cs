@@ -25,15 +25,7 @@ namespace Assets.WorldMaterials.UI
             MessageHub.Instance.AddListener(this, ProductFactory.MessageName);
             CreatePanel();
             _arrayPanel.gameObject.SetActive(false);
-            OnEveryUpdate += CheckForVisibilityToggle;
-        }
-
-        private void CheckForVisibilityToggle(float delta)
-        {
-            if (Input.GetButtonDown("FactoryArray"))
-            {
-                _arrayPanel.gameObject.SetActive(!_arrayPanel.gameObject.activeSelf);
-            }
+            gameObject.RegisterSystemPanel(_arrayPanel.gameObject);
         }
 
         private void CreatePanel()
@@ -57,8 +49,6 @@ namespace Assets.WorldMaterials.UI
                 _arrayPanel.gameObject.SetActive(true);
             
             var go = Instantiate(_factoryPrefab, _arrayContent.transform, false);
-            //go.transform.SetParent(_arrayContent.transform);
-
             var viewmodel = go.gameObject.GetOrAddComponent<ProductFactoryViewModel>();
             viewmodel.Bind(args.ProductFactory);
         }
