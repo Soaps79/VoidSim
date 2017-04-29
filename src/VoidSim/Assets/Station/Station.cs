@@ -29,10 +29,9 @@ namespace Assets.Station
         [Inject]
         private ProductLookup _productLookup;
 
-        [SerializeField]
-        private InventoryScriptable _inventoryScriptable;
-        [SerializeField]
-        private PlaceablesLookup _placeablesLookup;
+        [SerializeField] private InventoryScriptable _inventoryScriptable;
+        [SerializeField] private PlaceablesLookup _placeablesLookup;
+        [SerializeField] private TraderRequestsSO _voidTradeRequests;
 
         private CraftingContainer _crafter;
         private Inventory _inventory;
@@ -200,8 +199,11 @@ namespace Assets.Station
             _inventory.transform.SetParent(transform);
             _inventory.BindToScriptable(_inventoryScriptable, _productLookup, true);
 
-            var energy = _productLookup.GetProduct("Credits");
-            _inventory.SetProductMaxAmount(energy.ID, 1000000);
+            var product = _productLookup.GetProduct("Credits");
+            _inventory.SetProductMaxAmount(product.ID, 1000000);
+
+            product = _productLookup.GetProduct("Energy");
+            _inventory.SetProductMaxAmount(product.ID, 1000000);
 
             _inventoryReserve = new InventoryReserve();
             _inventoryReserve.Initialize(_inventory);
@@ -222,13 +224,10 @@ namespace Assets.Station
             go.transform.SetParent(_layers[LayerType.Core].transform);
             go.name = "void_trader";
             var trader = go.AddComponent<ProductTrader>();
-
-            foreach (var product in _productLookup.GetProducts())
-            {
-                trader.Consuming.Add(new ProductAmount(product.ID, 10000));
-            }
-
             MessageHub.Instance.QueueMessage(ProductTrader.MessageName, new TraderInstanceMessageArgs { Trader = trader});
+
+            var automater = go.AddComponent<ProductTradeAutomater>();
+            automater.Initialize(_voidTradeRequests, trader, _worldClock);
         }
 
         // convert editor-friendly objects to more usable dictionary

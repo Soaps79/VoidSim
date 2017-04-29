@@ -47,10 +47,10 @@ namespace Assets.Editor
             var consumed = false;
 
             var provider = GenerateAndAddTrader(true, PRODUCT_ID, AMOUNT);
-            provider.OnProvideSuccess += (i, j) => { provided = true; };
+            provider.OnProvideSuccess += (i, j, k) => { provided = true; };
 
             var consumer = GenerateAndAddTrader(false, PRODUCT_ID, AMOUNT);
-            consumer.OnConsumeSucess += (i, j) => { consumed = true; };
+            consumer.OnConsumeSucess += (i, j, k) => { consumed = true; };
 
             CheckForTrades();
 
@@ -69,10 +69,10 @@ namespace Assets.Editor
             var consumed = false;
 
             var provider = GenerateAndAddTrader(true, PRODUCT_ID, PROVIDE_AMOUNT);
-            provider.OnProvideSuccess += (i, j) => { provided = true; };
+            provider.OnProvideSuccess += (i, j, k) => { provided = true; };
 
             var consumer = GenerateAndAddTrader(false, PRODUCT_ID, CONSUME_AMOUNT);
-            consumer.OnConsumeSucess += (i, j) => { consumed = true; };
+            consumer.OnConsumeSucess += (i, j, k) => { consumed = true; };
 
             CheckForTrades();
 
@@ -92,10 +92,10 @@ namespace Assets.Editor
             var consumed = false;
 
             var provider = GenerateAndAddTrader(true, PRODUCT_ID, PROVIDE_AMOUNT);
-            provider.OnProvideSuccess += (i, j) => { provided = true; };
+            provider.OnProvideSuccess += (i, j, k) => { provided = true; };
 
             var consumer = GenerateAndAddTrader(false, PRODUCT_ID, CONSUME_AMOUNT);
-            consumer.OnConsumeSucess += (i, j) => { consumed = true; };
+            consumer.OnConsumeSucess += (i, j, k) => { consumed = true; };
 
             CheckForTrades();
 
@@ -115,16 +115,16 @@ namespace Assets.Editor
             var consumed = 0;
 
             var provider = GenerateAndAddTrader(true, PRODUCT_ID, PROVIDE_AMOUNT);
-            provider.OnProvideSuccess += (i, j) => { provided++; };
+            provider.OnProvideSuccess += (i, j, k) => { provided++; };
 
             var consumer = GenerateAndAddTrader(false, PRODUCT_ID, CONSUME_AMOUNT);
-            consumer.OnConsumeSucess += (i, j) => { consumed++; };
+            consumer.OnConsumeSucess += (i, j, k) => { consumed++; };
 
             var consumer2 = GenerateAndAddTrader(false, PRODUCT_ID, CONSUME_AMOUNT);
-            consumer2.OnConsumeSucess += (i, j) => { consumed++; };
+            consumer2.OnConsumeSucess += (i, j, k) => { consumed++; };
 
             var consumer3 = GenerateAndAddTrader(false, PRODUCT_ID, CONSUME_AMOUNT);
-            consumer3.OnConsumeSucess += (i, j) => { consumed++; };
+            consumer3.OnConsumeSucess += (i, j, k) => { consumed++; };
 
             CheckForTrades();
 
@@ -143,16 +143,16 @@ namespace Assets.Editor
             var consumed = 0;
 
             var provider = GenerateAndAddTrader(true, PRODUCT_ID, PROVIDE_AMOUNT);
-            provider.OnProvideSuccess += (i, j) => { provided++; };
+            provider.OnProvideSuccess += (i, j, k) => { provided++; };
 
             var provider2 = GenerateAndAddTrader(true, PRODUCT_ID, PROVIDE_AMOUNT);
-            provider2.OnProvideSuccess += (i, j) => { provided++; };
+            provider2.OnProvideSuccess += (i, j, k) => { provided++; };
 
             var provider3 = GenerateAndAddTrader(true, PRODUCT_ID, PROVIDE_AMOUNT);
-            provider3.OnProvideSuccess += (i, j) => { provided++; };
+            provider3.OnProvideSuccess += (i, j, k) => { provided++; };
 
             var consumer = GenerateAndAddTrader(false, PRODUCT_ID, CONSUME_AMOUNT);
-            consumer.OnConsumeSucess += (i, j) => { consumed++; };
+            consumer.OnConsumeSucess += (i, j, k) => { consumed++; };
 
             CheckForTrades();
 

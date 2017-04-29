@@ -11,6 +11,13 @@ namespace Assets.WorldMaterials
         public ProductTrader Trader;
     }
 
+    public class ProductTransactionComplete
+    {
+        public ProductTrader Provider;
+        public ProductTrader Consumer;
+
+    }
+
     /// <summary>
     /// Manages the supply and demand of Products between game actors. 
     /// Traders are added through messaging, can expose requests to provide or consume
@@ -88,20 +95,16 @@ namespace Assets.WorldMaterials
                         }
 
                         // tell the consumer it got its goods
-                        if(amountConsumed >= 0)
-                            consumer.HandleConsumeSuccess(provided.ProductId, amountConsumed);
+                        if (amountConsumed >= 0)
+                        {
+                            provider.HandleProvideSuccess(provided.ProductId, amountConsumed, consumer);
+                            consumer.HandleConsumeSuccess(provided.ProductId, amountConsumed, provider);
+                        }
 
                         // move on to the next consumer, break if provider has emptied its stock
                         totalAmountConsumed += amountConsumed;
                         if (totalAmountConsumed >= totalAmountProvided) break;
                     }
-                    
-                    // only tell the provider once how much has been consumed
-                    if (totalAmountConsumed > 0)
-                    {
-                        provider.HandleProvideSuccess(provided.ProductId, totalAmountConsumed);
-                    }
-
                 }
             }
 

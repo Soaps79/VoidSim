@@ -16,19 +16,19 @@ namespace Assets.WorldMaterials
         public readonly List<ProductAmount> Providing = new List<ProductAmount>();
         public readonly List<ProductAmount> Consuming = new List<ProductAmount>();
 
-        public Action<int, int> OnProvideSuccess;
-        public Action<int, int> OnConsumeSucess;
+        public Action<int, int, ProductTrader> OnProvideSuccess;
+        public Action<int, int, ProductTrader> OnConsumeSucess;
 
-        public void HandleProvideSuccess(int productId, int amount)
+        public void HandleProvideSuccess(int productId, int amount, ProductTrader consumer)
         {
             if (OnProvideSuccess != null)
-                OnProvideSuccess(productId, amount);
+                OnProvideSuccess(productId, amount, consumer);
         }
 
-        public void HandleConsumeSuccess(int productId, int amount)
+        public void HandleConsumeSuccess(int productId, int amount, ProductTrader provider)
         {
             if (OnConsumeSucess != null)
-                OnConsumeSucess(productId, amount);
+                OnConsumeSucess(productId, amount, provider);
         }
 
         public void SetProvide(ProductAmount productAmount)
@@ -37,6 +37,19 @@ namespace Assets.WorldMaterials
             if (product == null)
             {
                 Providing.Add(new ProductAmount(productAmount.ProductId, productAmount.Amount));
+            }
+            else
+            {
+                product.Amount = productAmount.Amount;
+            }
+        }
+
+        public void SetConsume(ProductAmount productAmount)
+        {
+            var product = Consuming.FirstOrDefault(i => i.ProductId == productAmount.ProductId);
+            if (product == null)
+            {
+                Consuming.Add(new ProductAmount(productAmount.ProductId, productAmount.Amount));
             }
             else
             {

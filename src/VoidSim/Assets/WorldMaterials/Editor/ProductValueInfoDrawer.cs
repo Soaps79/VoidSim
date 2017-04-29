@@ -23,7 +23,7 @@ namespace Assets.WorldMaterials.Editor
 
             // grab the current name and list
             var names = ProductValueScriptable.ProductLookup.GenerateProductNames();
-            var nameProperty = property.FindPropertyRelative("ProductId");
+            var nameProperty = property.FindPropertyRelative("ProductName");
             if (string.IsNullOrEmpty(nameProperty.stringValue))
                 nameProperty.stringValue = names.First();
 

@@ -35,6 +35,7 @@ namespace Assets.WorldMaterials
         }
 
         // Updating of reserve lists happens in these three functions
+        // could be refactored into one loop
         private void UpdateReserve()
         {
             UpdateCollect();
@@ -69,12 +70,12 @@ namespace Assets.WorldMaterials
             }
         }
 
-        public List<ProductAmount> GetReleaseProducts()
+        public List<ProductAmount> GetProvideProducts()
         {
             return _toRelease;
         }
 
-        public List<ProductAmount> GetCollectProducts()
+        public List<ProductAmount> GetConsumeProducts()
         {
             return _toCollect;
         }
