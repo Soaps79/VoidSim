@@ -30,7 +30,8 @@ namespace Assets.WorldMaterials.Editor
 
             // make this better and extract it
             // find the object's current name index, get the index from state of the popup
-            var currentName = names.ToList().FindIndex(i => i == nameProperty.stringValue);
+            var currentName = names.Contains(nameProperty.stringValue) 
+                ? names.ToList().FindIndex(i => i == nameProperty.stringValue) : 0;
             var current = EditorGUI.Popup(nameRect, currentName, names, GUIStyle.none);
 
             // if they're different, the popup changed, grab its result

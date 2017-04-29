@@ -23,12 +23,12 @@ namespace Assets.WorldMaterials.Editor
             position.x -= 12;
 
             // create a rect for and add the amount
-            var amountRect = new Rect(position.x, position.y, 65, position.height);
+            var amountRect = new Rect(position.x, position.y, 80, position.height);
             EditorGUI.PropertyField(amountRect, property.FindPropertyRelative("Amount"), GUIContent.none);
 
             // prepare rect for product selector
             // learn how to snap right
-            EditorGUI.indentLevel = 4;
+            EditorGUI.indentLevel = 5;
             position.x -= 18;
             position = EditorGUI.IndentedRect(position);
             var nameRect = new Rect(position.x, position.y, 100, position.height);

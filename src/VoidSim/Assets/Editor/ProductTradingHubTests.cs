@@ -128,7 +128,7 @@ namespace Assets.Editor
 
             CheckForTrades();
 
-            Assert.AreEqual(1, provided);
+            Assert.AreEqual(3, provided);
             Assert.AreEqual(3, consumed);
             Assert.IsTrue(!provider.Providing.Any());
         }
