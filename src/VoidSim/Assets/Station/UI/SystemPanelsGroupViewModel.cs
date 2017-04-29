@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Assets.Controllers.GUI;
 using Messaging;
 using QGame;
 using UnityEngine;
@@ -6,16 +7,20 @@ using UnityEngine.UI;
 
 namespace Assets.Station.UI
 {
+    /// <summary>
+    /// Manages the UI panels for main game systems.  Listens for SystemPanel messages.
+    /// Will add the panel, and handle binding it to a visiblity toggle button and keypress
+    /// </summary>
     public class SystemPanelsGroupViewModel : QScript, IMessageListener
     {
         private class SystemPanelEntry
         {
-            public Toggle Toggle;
+            public ToggleButtonPressBinder Binder;
             public SystemPanel Panel;
         }
 
-        public RectTransform PanelPrefab;
-        public Toggle ButtonPrefab;
+        [SerializeField] private RectTransform _panelPrefab;
+        [SerializeField] private Toggle _buttonPrefab;
 
         private RectTransform _panelInstance;
         private RectTransform _contentHolder;
@@ -24,12 +29,10 @@ namespace Assets.Station.UI
         void Start()
         {
             var canvas = GameObject.Find("InfoCanvas");
-            _panelInstance = Instantiate(PanelPrefab, canvas.transform, false);
+            _panelInstance = Instantiate(_panelPrefab, canvas.transform, false);
             _contentHolder = _panelInstance.FindChild("content_holder").GetComponent<RectTransform>();
-            //_panelInstance.gameObject.SetActive(false);
 
             MessageHub.Instance.AddListener(this, SystemPanel.MessageName);
-            OnEveryUpdate += CheckForVisibilityToggleKeypress;
         }
 
         public void HandleMessage(string type, MessageArgs args)
@@ -44,43 +47,27 @@ namespace Assets.Station.UI
                 throw new UnityException("SystemPanelsViewModel recieved bad message data");
 
             // binds system panel to a toggle button, setting toggle isOn to current state
-            var toggle = Instantiate(ButtonPrefab, _contentHolder, false);
+            var toggle = Instantiate(_buttonPrefab, _contentHolder, false);
             toggle.isOn = args.SystemPanel.Panel.activeSelf;
 
-            // set the icon and add local tracking
+            // set the icon
             var icon = toggle.transform.FindChild("icon").GetComponent<Image>();
             icon.sprite = args.SystemPanel.Icon;
 
-            var entry = new SystemPanelEntry {Panel = args.SystemPanel, Toggle = toggle};
+            // bind the UI Toggle with the keypress, set it to trigger panel visiblity
+            var binder = new GameObject().AddComponent<ToggleButtonPressBinder>();
+            binder.Bind(toggle, args.SystemPanel.InputAxis);
+            binder.transform.SetParent(this.transform);
+            binder.OnToggle += (isOn) => SetVisibility(isOn, args.SystemPanel.Panel.gameObject);
+
+            // save the reference
+            var entry = new SystemPanelEntry {Panel = args.SystemPanel, Binder = binder};
             _entries.Add(entry);
-            toggle.onValueChanged.AddListener(isOn => SetVisibility(isOn, entry));
-
-            // turn main panel visible if it is not already
-            if (!_panelInstance.gameObject.activeSelf)
-                _panelInstance.gameObject.SetActive(true);
         }
 
-        // Complicated relationship warning!
-        // This object subscribes to a toggle's value changed event, and shows/hides based on that.
-        // So, if a keypress comes in, this object flips the toggle, to call that same event
-        private void CheckForVisibilityToggleKeypress(float obj)
+        private void SetVisibility(bool isOn, GameObject panel)
         {
-            foreach (var entry in _entries)
-            {
-                if (Input.GetButtonDown(entry.Panel.InputAxis))
-                    ToggleVisibility(entry);
-            }
-        }
-
-        private void ToggleVisibility(SystemPanelEntry entry)
-        {
-            entry.Toggle.isOn = !entry.Toggle.isOn;
-            //SetVisibility(!entry.Panel.gameObject.activeSelf, entry);
-        }
-
-        private void SetVisibility(bool isOn, SystemPanelEntry entry)
-        {
-            entry.Panel.Panel.gameObject.SetActive(isOn);
+            panel.SetActive(isOn);
         }
 
         public string Name { get; private set; }

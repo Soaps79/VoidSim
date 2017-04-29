@@ -16,7 +16,6 @@ namespace Assets.WorldMaterials.UI
     {
         [SerializeField] private Image _arrayPrefab;
         [SerializeField] private Image _factoryPrefab;
-        private List<ProductFactory> _factories = new List<ProductFactory>();
         private Image _arrayPanel;
         private Image _arrayContent;
 
@@ -45,9 +44,6 @@ namespace Assets.WorldMaterials.UI
         {   
             if (args == null || args.ProductFactory == null || !args.ProductFactory.IsInPlayerArray) return;
 
-            if (!_arrayPanel.gameObject.activeSelf)
-                _arrayPanel.gameObject.SetActive(true);
-            
             var go = Instantiate(_factoryPrefab, _arrayContent.transform, false);
             var viewmodel = go.gameObject.GetOrAddComponent<ProductFactoryViewModel>();
             viewmodel.Bind(args.ProductFactory);
