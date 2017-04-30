@@ -9,7 +9,7 @@ namespace Assets.WorldMaterials.Editor
     [CustomPropertyDrawer(typeof(IngredientInfo))]
     public class IngredientInfoDrawer : PropertyDrawer
     {
-        int _nameIndex;
+        private EditorStringListBinder _productNameBinder = new EditorStringListBinder();
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -38,19 +38,7 @@ namespace Assets.WorldMaterials.Editor
             var names = ProductLookupEditor.ProductNames;
             var nameProperty = property.FindPropertyRelative("ProductName");
 
-
-            // make this better and extract it
-            // find the object's current name index, get the index from state of the popup
-            var currentName = names.Contains(nameProperty.stringValue) 
-                ? names.ToList().FindIndex(i => i == nameProperty.stringValue) : 0;
-            var current  = EditorGUI.Popup(nameRect, currentName, names, GUIStyle.none);
-
-            // if they're different, the popup changed, grab its result
-            if (current != _nameIndex)
-            {
-                nameProperty.stringValue = names[current];
-                _nameIndex = current;
-            }
+            _productNameBinder.SetStringValueFromList(nameProperty, names, nameRect);
 
             EditorGUI.EndProperty();
         }

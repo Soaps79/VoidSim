@@ -1,4 +1,5 @@
 ﻿using Assets.Station;
+using Assets.WorldMaterials.Products;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,7 +12,15 @@ namespace Assets.Placeables
         public Sprite PlacedSprite;
         public LayerType Layer;
         public Placeable Prefab;
-        
+
+        public static ProductLookupScriptable ProductLookup;
+
+        void OnEnable()
+        {
+            ProductLookup = ScriptableObject.Instantiate(
+                Resources.Load("Scriptables/product_lookup")) as ProductLookupScriptable;
+        }
+
         [MenuItem("Assets/WorldMaterials/Placeable")]
         public static void CreateMyAsset()
         {

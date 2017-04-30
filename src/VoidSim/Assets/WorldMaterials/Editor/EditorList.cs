@@ -30,9 +30,8 @@ namespace Assets.WorldMaterials.Editor
                 return;
             }
 
-            bool
-                showListLabel = (options & EditorListOption.ListLabel) != 0,
-                showListSize = (options & EditorListOption.ListSize) != 0;
+            var showListLabel = (options & EditorListOption.ListLabel) != 0;
+            var showListSize = (options & EditorListOption.ListSize) != 0;
 
             if (showListLabel)
             {
@@ -55,9 +54,8 @@ namespace Assets.WorldMaterials.Editor
 
         private static void ShowElements(SerializedProperty list, EditorListOption options)
         {
-            bool
-                showElementLabels = (options & EditorListOption.ElementLabels) != 0,
-                showButtons = (options & EditorListOption.Buttons) != 0;
+            var showElementLabels = (options & EditorListOption.ElementLabels) != 0;
+            var showButtons = (options & EditorListOption.Buttons) != 0;
 
             for (int i = 0; i < list.arraySize; i++)
             {

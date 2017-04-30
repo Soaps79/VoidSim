@@ -21,7 +21,6 @@ namespace Assets.WorldMaterials.Products
         {
             ProductLookup = ScriptableObject.Instantiate(
                 Resources.Load("Scriptables/product_lookup")) as ProductLookupScriptable;
-
         }
 
         [MenuItem("Assets/WorldMaterials/ProductValue")]

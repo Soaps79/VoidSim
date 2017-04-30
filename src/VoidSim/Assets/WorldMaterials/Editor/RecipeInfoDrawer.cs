@@ -20,16 +20,18 @@ namespace Assets.WorldMaterials.Editor
         //}
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            // Using BeginProperty / EndProperty on the parent property means that
-            // prefab override logic works on the entire property.
             EditorGUI.BeginProperty(position, label, property);
             EditorGUI.indentLevel = 1;
             var startX = position.x;
-
+            
             var names = ProductLookupEditor.ProductNames;
-            var productRect = new Rect(position.x, position.y, 140, position.height);
+            var productRect = new Rect(position.x, position.y, 110, position.height);
             _productNameBinder.SetStringValueFromList(property.FindPropertyRelative("ResultProduct"), names, productRect);
-            position.x += 140;
+            position.x += 110;
+
+            var labelRect = new Rect(position.x, position.y, 40, position.height);
+            EditorGUI.LabelField(labelRect, "Qty");
+            position.x += 35;
 
             var amountRect = new Rect(position.x, position.y, 40, position.height);
             EditorGUI.PropertyField(amountRect, property.FindPropertyRelative("ResultAmount"), GUIContent.none);
@@ -50,12 +52,11 @@ namespace Assets.WorldMaterials.Editor
 
 
             EditorGUI.indentLevel = 11;
-            //EditorGUI.LabelField(position, "Result:");
             EditorList.Show(property.FindPropertyRelative("Ingredients"), EditorListOption.ListLabel | EditorListOption.Buttons);
 
-            //var ingRect = new Rect(position.x + 50, position.y, position.width, position.height);
-            //var ing = property.FindPropertyRelative("Ingredients");
-            //EditorGUI.PropertyField(ingRect, ing, true);
+            GUILayout.Box("", GUILayout.ExpandWidth(true), GUILayout.Height(1));
+            GUILayout.Space(10);
+            EditorGUI.EndProperty();
         }
     }
 }

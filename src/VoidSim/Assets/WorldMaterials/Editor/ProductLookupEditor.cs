@@ -38,6 +38,8 @@ namespace Assets.WorldMaterials.Editor
             EditorList.Show(serializedObject.FindProperty("Products"), EditorListOption.Buttons | EditorListOption.ListLabel);
             EditorList.Show(serializedObject.FindProperty("Containers"), EditorListOption.Buttons | EditorListOption.ListLabel);
             EditorList.Show(serializedObject.FindProperty("Recipes"));
+
+            //EditorGUI.PropertyField(nameRect, property.FindPropertyRelative("Name"), GUIContent.none);
             serializedObject.ApplyModifiedProperties();
         }
     }

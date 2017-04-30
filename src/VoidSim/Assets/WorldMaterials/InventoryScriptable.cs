@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Assets.Placeables;
 using Assets.Scripts.WorldMaterials;
 using Assets.WorldMaterials.Products;
 using UnityEditor;
@@ -18,6 +19,7 @@ namespace Assets.WorldMaterials
     {
         public int ProductMaxAmount;
         public static ProductLookupScriptable ProductLookup;
+        public static PlaceablesLookup PlaceablesLookup;
         public static string[] ProductNames;
         public List<string> Placeables;
         public List<ProductCategory> ProductsToIgnore;
@@ -29,6 +31,8 @@ namespace Assets.WorldMaterials
             ProductLookup = ScriptableObject.Instantiate(
                 Resources.Load("Scriptables/product_lookup")) as ProductLookupScriptable;
 
+            PlaceablesLookup = ScriptableObject.Instantiate(
+                Resources.Load("placeables_lookup")) as PlaceablesLookup;
         }
 
         [MenuItem("Assets/WorldMaterials/Inventory")]

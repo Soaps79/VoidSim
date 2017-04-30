@@ -8,50 +8,24 @@ namespace Assets.WorldMaterials.Editor
     [CustomPropertyDrawer(typeof(ProductEntryInfo))]
     public class InventoryEntryDrawer : PropertyDrawer
     {
-        int _nameIndex;
+        private readonly EditorStringListBinder _productNameBinder = new EditorStringListBinder();
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             EditorGUI.BeginProperty(position, label, property);
-
-            // Draw label
-            //position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
-
-            // this looks good local, scaling not yet implemented
-            EditorGUI.indentLevel = 2;
-            position = EditorGUI.IndentedRect(position);
-            position.x -= 12;
-
+            
             // create a rect for and add the amount
             var amountRect = new Rect(position.x, position.y, 80, position.height);
             EditorGUI.PropertyField(amountRect, property.FindPropertyRelative("Amount"), GUIContent.none);
+            position.x += 80;
 
-            // prepare rect for product selector
-            // learn how to snap right
-            EditorGUI.indentLevel = 5;
-            position.x -= 18;
-            position = EditorGUI.IndentedRect(position);
             var nameRect = new Rect(position.x, position.y, 100, position.height);
-
-            // grab the current name and list
-            //var names = ProductLookupEditor.ProductNames;
             var names = InventoryScriptable.ProductLookup.GenerateProductNames();
             var nameProperty = property.FindPropertyRelative("ProductName");
-            if (string.IsNullOrEmpty(nameProperty.stringValue))
-                nameProperty.stringValue = names.First();
 
+            _productNameBinder.SetStringValueFromList(nameProperty, names, nameRect);
 
-            // make this better and extract it
-            // find the object's current name index, get the index from state of the popup
-            var currentName = names.ToList().FindIndex(i => i == nameProperty.stringValue);
-            var current = EditorGUI.Popup(nameRect, currentName, names, GUIStyle.none);
-
-            // if they're different, the popup changed, grab its result
-            if (current != _nameIndex)
-            {
-                nameProperty.stringValue = names[current];
-                _nameIndex = current;
-            }
+            EditorGUI.indentLevel = 1;
 
             EditorGUI.EndProperty();
         }
