@@ -14,29 +14,18 @@ namespace Assets.WorldMaterials.Editor
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             EditorGUI.BeginProperty(position, label, property);
-            
-            // Draw label
-            //position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
-
-            // this looks good local, scaling not yet implemented
             EditorGUI.indentLevel = 2;
             position = EditorGUI.IndentedRect(position);
-            position.x -= 12;
 
             // create a rect for and add the amount
             var amountRect = new Rect(position.x, position.y, 65, position.height);
             EditorGUI.PropertyField(amountRect, property.FindPropertyRelative("Quantity"), GUIContent.none);
-            
-            // prepare rect for product selector
-            // learn how to snap right
-            EditorGUI.indentLevel = 4;
-            position.x -= 18;
-            position = EditorGUI.IndentedRect(position);
-            var nameRect = new Rect(position.x, position.y, 100, position.height);
+            position.x += 65;
 
             // grab the current name and list
             var names = ProductLookupEditor.ProductNames;
             var nameProperty = property.FindPropertyRelative("ProductName");
+            var nameRect = new Rect(position.x, position.y, 100, position.height);
 
             _productNameBinder.SetStringValueFromList(nameProperty, names, nameRect);
 
