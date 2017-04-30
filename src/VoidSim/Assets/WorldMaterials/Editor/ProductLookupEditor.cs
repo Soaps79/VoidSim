@@ -19,19 +19,26 @@ namespace Assets.WorldMaterials.Editor
 
         private ProductLookupScriptable _lookup;
 
-        
+
+        //public List<ProductInfo> Products;
+        //public List<CraftingContainerInfo> Containers;
+        //public List<RecipeInfo> Recipes;
+        //public Sprite DefaultSmallIcon;
+
         public override void OnInspectorGUI()
         {
+            serializedObject.Update();
+
             // do we have to do this every time?
             _lookup = (ProductLookupScriptable)this.serializedObject.targetObject;
 
             ProductNames = _lookup.GenerateProductNames();
             ContainerNames = _lookup.GenerateContainerNames();
-            DrawDefaultInspector();
-
-            // this will make it check every cycle, is this necessary?
-            // must be a way to redraw on a real Dirty
-            EditorUtility.SetDirty(this);
+            
+            EditorList.Show(serializedObject.FindProperty("Products"), EditorListOption.Buttons | EditorListOption.ListLabel);
+            EditorList.Show(serializedObject.FindProperty("Containers"), EditorListOption.Buttons | EditorListOption.ListLabel);
+            EditorList.Show(serializedObject.FindProperty("Recipes"));
+            serializedObject.ApplyModifiedProperties();
         }
     }
 }
