@@ -16,14 +16,14 @@ namespace Assets.WorldMaterials
         {
             public int ProductId;
             public int Amount;
-            public bool ShouldCollect;
-            public bool ShouldRelease;
+            public bool ShouldConsume;
+            public bool ShouldProvide;
         }
 
         [SerializeField] private Inventory _inventory;
-        private List<InventoryReserveEntry> _reserveEntries = new List<InventoryReserveEntry>();
-        private readonly List<ProductAmount> _toCollect = new List<ProductAmount>();
-        private readonly List<ProductAmount> _toRelease = new List<ProductAmount>();
+        private readonly List<InventoryReserveEntry> _reserveEntries = new List<InventoryReserveEntry>();
+        private readonly List<ProductAmount> _toConsume = new List<ProductAmount>();
+        private readonly List<ProductAmount> _toProvide = new List<ProductAmount>();
 
 
         public void Initialize(Inventory inventory)
@@ -38,46 +38,46 @@ namespace Assets.WorldMaterials
         // could be refactored into one loop
         private void UpdateReserve()
         {
-            UpdateCollect();
-            UpdateRelease();
+            UpdateConsume();
+            UpdateProvide();
         }
 
-        private void UpdateCollect()
+        private void UpdateConsume()
         {
-            _toCollect.Clear();
+            _toConsume.Clear();
 
-            foreach (var productAmount in _reserveEntries.Where(i => i.ShouldCollect))
+            foreach (var productAmount in _reserveEntries.Where(i => i.ShouldConsume))
             {
                 var current = _inventory.GetProductCurrentAmount(productAmount.ProductId);
                 if (current >= productAmount.Amount) continue;
 
                 var difference = productAmount.Amount - current;
-                _toCollect.Add(new ProductAmount { ProductId = productAmount.ProductId, Amount = difference });
+                _toConsume.Add(new ProductAmount { ProductId = productAmount.ProductId, Amount = difference });
             }
         }
 
-        private void UpdateRelease()
+        private void UpdateProvide()
         {
-            _toRelease.Clear();
+            _toProvide.Clear();
 
-            foreach (var productAmount in _reserveEntries.Where(i => i.ShouldRelease))
+            foreach (var productAmount in _reserveEntries.Where(i => i.ShouldProvide))
             {
                 var current = _inventory.GetProductCurrentAmount(productAmount.ProductId);
                 if (current <= productAmount.Amount) continue;
 
                 var difference = current - productAmount.Amount;
-                _toRelease.Add(new ProductAmount { ProductId = productAmount.ProductId, Amount = difference });
+                _toProvide.Add(new ProductAmount { ProductId = productAmount.ProductId, Amount = difference });
             }
         }
 
         public List<ProductAmount> GetProvideProducts()
         {
-            return _toRelease;
+            return _toProvide;
         }
 
         public List<ProductAmount> GetConsumeProducts()
         {
-            return _toCollect;
+            return _toConsume;
         }
 
         public InventoryReserveEntry GetProductStatus(int productId)
@@ -85,30 +85,34 @@ namespace Assets.WorldMaterials
             return _reserveEntries.FirstOrDefault(i => i.ProductId == productId);
         }
 
-        public void SetCollect(int productId, bool shouldCollect)
+        public void SetConsume(int productId, bool shouldConsume)
         {
             var collect = _reserveEntries.FirstOrDefault(i => i.ProductId == productId);
             if (collect == null) return;
 
-            collect.ShouldCollect = shouldCollect;
+            collect.ShouldConsume = shouldConsume;
             UpdateReserve();
         }
 
-        public void SetRelease(int productId, bool shouldRelease)
+        public void SetProvide(int productId, bool shouldProvide)
         {
             var release = _reserveEntries.FirstOrDefault(i => i.ProductId == productId);
             if (release == null) return;
 
-            release.ShouldRelease = shouldRelease;
+            release.ShouldProvide = shouldProvide;
             UpdateReserve();
         }
 
-        public void AddReservation(int productId, int amount, bool shouldCollect, bool shouldRelease)
+        public void AddReservation(int productId, int amount, bool shouldConsume, bool shouldProvide)
         {
             _reserveEntries.Add(new InventoryReserveEntry
             {
-                ProductId = productId, Amount = amount, ShouldCollect = shouldCollect, ShouldRelease = shouldRelease
+                ProductId = productId,
+                Amount = amount,
+                ShouldConsume = shouldConsume,
+                ShouldProvide = shouldProvide
             });
+            UpdateReserve();
         }
 
         public void SetAmount(int productId, int amount)

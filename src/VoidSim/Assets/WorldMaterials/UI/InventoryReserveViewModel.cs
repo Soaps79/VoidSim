@@ -35,15 +35,15 @@ namespace Assets.WorldMaterials.UI
         private void HandleBuyChanged(bool value)
         {
             var current = _reserve.GetProductStatus(_productId);
-            if(value != current.ShouldCollect)
-                _reserve.SetCollect(_productId, value);
+            if(value != current.ShouldConsume)
+                _reserve.SetConsume(_productId, value);
         }
 
         private void HandleSellChanged(bool value)
         {
             var current = _reserve.GetProductStatus(_productId);
-            if (value != current.ShouldRelease)
-                _reserve.SetRelease(_productId, value);
+            if (value != current.ShouldProvide)
+                _reserve.SetProvide(_productId, value);
         }
 
         private void HandleAmountChanged(float amount)

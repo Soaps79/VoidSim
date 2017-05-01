@@ -75,6 +75,9 @@ namespace Assets.WorldMaterials
             if (OnProductsChanged != null)
                 OnProductsChanged(productId, amountConsumed);
 
+            if (OnInventoryChanged != null)
+                OnInventoryChanged();
+
             // return any remainder
             return amount - amountConsumed;
         }

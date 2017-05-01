@@ -25,7 +25,7 @@ namespace Assets.Editor
             _inventory = go.AddComponent<Inventory>();
             _lookup = go.AddComponent<MockProductLookup>();
 
-            _lookup.AddProduct(new Product { Category = ProductCategory.Raw, ID = ProductId, Name = ProductName});
+            _lookup.AddProduct(new Product { Category = ProductCategory.Raw, ID = ProductId, Name = ProductName });
 
             _scriptable = ScriptableObject.CreateInstance<InventoryScriptable>();
             _scriptable.Products = new List<ProductEntryInfo>();
@@ -96,7 +96,7 @@ namespace Assets.Editor
 
             _scriptable.Products.Add(new ProductEntryInfo { ProductName = ProductName, Amount = amount });
             _inventory.BindToScriptable(_scriptable, _lookup);
-            
+
             var removed = _inventory.TryRemoveProduct(ProductId, amount);
             var current = _inventory.GetProductCurrentAmount(ProductId);
 
@@ -118,6 +118,55 @@ namespace Assets.Editor
 
             Assert.AreEqual(available, removed);
             Assert.AreEqual(0, current);
+        }
+
+        [Test]
+        public void Callback_AddProduct()
+        {
+            const int amount = 100;
+
+            var callbackId = 0;
+            var callbackAmount = 0;
+            var callbackBaseHappened = false;
+
+            _inventory.BindToScriptable(_scriptable, _lookup);
+            _inventory.OnInventoryChanged += () => callbackBaseHappened = true;
+            _inventory.OnProductsChanged += (i, a) =>
+            {
+                callbackId = i;
+                callbackAmount = a;
+            };
+
+            _inventory.TryAddProduct(ProductId, amount);
+
+            Assert.AreEqual(ProductId, callbackId);
+            Assert.AreEqual(amount, callbackAmount);
+            Assert.IsTrue(callbackBaseHappened);
+        }
+
+        [Test]
+        public void Callback_RemoveProduct()
+        {
+            const int amount = 100;
+
+            var callbackId = 0;
+            var callbackAmount = 0;
+            var callbackBaseHappened = false;
+
+            _scriptable.Products.Add(new ProductEntryInfo { ProductName = ProductName, Amount = amount });
+            _inventory.BindToScriptable(_scriptable, _lookup);
+            _inventory.OnInventoryChanged += () => callbackBaseHappened = true;
+            _inventory.OnProductsChanged += (i, a) =>
+            {
+                callbackId = i;
+                callbackAmount = a;
+            };
+
+            _inventory.TryRemoveProduct(ProductId, amount);
+
+            Assert.AreEqual(ProductId, callbackId);
+            Assert.AreEqual(-amount, callbackAmount);
+            Assert.IsTrue(callbackBaseHappened);
         }
     }
 }
