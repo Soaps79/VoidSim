@@ -33,7 +33,7 @@ namespace Assets.WorldMaterials
         public Action<int, int> OnProductMaxAmountChanged;
         public Action<string, bool> OnPlaceablesChanged;
 
-        [Inject] private ProductLookup _productLookup;
+        private IProductLookup _productLookup;
         public string Name;
         
         private readonly Dictionary<int, InventoryProductEntry> _productTable 
@@ -111,7 +111,7 @@ namespace Assets.WorldMaterials
         /// If inventory has product, depletes the inventory by amount or however much it can.
         /// Returns amount depleted.
         /// </summary>
-        public int RemoveProduct(int productId, int amount)
+        public int TryRemoveProduct(int productId, int amount)
         {
             // also returns 0 when the product is unknown
             if (GetProductCurrentAmount(productId) == 0 )
@@ -168,7 +168,7 @@ namespace Assets.WorldMaterials
             return _productTable.ContainsKey(id) ? _productTable[id].Amount : 0;
         }
 
-        public void BindToScriptable(InventoryScriptable inventoryScriptable, ProductLookup productLookup, bool addAllEntries = false)
+        public void BindToScriptable(InventoryScriptable inventoryScriptable, IProductLookup productLookup, bool addAllEntries = false)
         {
             _scriptable = inventoryScriptable;
             _productLookup = productLookup;

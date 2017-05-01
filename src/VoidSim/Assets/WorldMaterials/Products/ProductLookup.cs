@@ -13,8 +13,11 @@ namespace Assets.WorldMaterials.Products
 	public interface IProductLookup
 	{
 		List<Product> GetProducts();
-		List<CraftingContainerInfo> GetContainers();
+        List<CraftingContainerInfo> GetContainers();
 		List<Recipe> GetRecipes();
+
+	    Product GetProduct(int productId);
+	    Product GetProduct(string productName);
 	}
 
 	// TODO: Change from QScript to ScriptableObject, there's no need for this to Update()
@@ -30,7 +33,8 @@ namespace Assets.WorldMaterials.Products
 
         void Awake()
 		{
-            PopulateProductData();
+            if(_LookupScriptable != null)
+                PopulateProductData();
 		}
 
 		// loads the SO into a more usable form

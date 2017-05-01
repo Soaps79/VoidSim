@@ -152,7 +152,7 @@ namespace Assets.Placeables.Nodes
 
             foreach (var ingredient in recipe.Ingredients)
             {
-                _inventory.RemoveProduct(ingredient.ProductId, ingredient.Quantity);
+                _inventory.TryRemoveProduct(ingredient.ProductId, ingredient.Quantity);
             }
             return true;
         }

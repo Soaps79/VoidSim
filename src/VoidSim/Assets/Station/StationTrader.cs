@@ -59,7 +59,7 @@ namespace Assets.Station
 
         private void HandleProvideSuccess(int productId, int amount, ProductTrader consumer)
         {
-            _inventory.RemoveProduct(productId, amount);
+            _inventory.TryRemoveProduct(productId, amount);
             var currencyTraded = GetCreditsValue(productId, amount);
             _inventory.TryAddProduct(_creditsProductId, currencyTraded);
             MessageHub.Instance.QueueMessage(
@@ -77,7 +77,7 @@ namespace Assets.Station
         {
             _inventory.TryAddProduct(productId, amount);
             var currencyTraded = GetCreditsValue(productId, amount);
-            _inventory.RemoveProduct(_creditsProductId, currencyTraded);
+            _inventory.TryRemoveProduct(_creditsProductId, currencyTraded);
 
             MessageHub.Instance.QueueMessage(
                 TradeSuccessMessageArgs.MessageName, new TradeSuccessMessageArgs

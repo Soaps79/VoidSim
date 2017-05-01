@@ -68,7 +68,7 @@ namespace Assets.Station
 
             foreach (var consumer in _consumers)
             {
-                if (_inventory.RemoveProduct(_energyProduct.ID, (int) consumer.TotalAmountConsumed) < consumer.TotalAmountConsumed)
+                if (_inventory.TryRemoveProduct(_energyProduct.ID, (int) consumer.TotalAmountConsumed) < consumer.TotalAmountConsumed)
                     HasShortage = true;
             }
         }

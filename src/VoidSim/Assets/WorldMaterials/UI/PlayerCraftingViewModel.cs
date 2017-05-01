@@ -151,7 +151,7 @@ namespace Assets.WorldMaterials.UI
         {
             foreach (var ingredient in recipe.Ingredients)
             {
-                if(_inventory.RemoveProduct(ingredient.ProductId, ingredient.Quantity) < ingredient.Quantity)
+                if(_inventory.TryRemoveProduct(ingredient.ProductId, ingredient.Quantity) < ingredient.Quantity)
                     Debug.Log("Craft button requested good is could not afford");
             }
             var button = CreateQueuedButton(recipe);
