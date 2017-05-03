@@ -9,11 +9,11 @@ namespace Zenject.SpaceFighter
 {
     public class EnemySpawner : ITickable, IInitializable
     {
-        readonly GameEvents _gameEvents;
         readonly LevelBoundary _levelBoundary;
         readonly EnemyFacade.Pool _enemyFactory;
         readonly Settings _settings;
 
+        EnemyKilledSignal _enemyKilledSignal;
         float _desiredNumEnemies;
         int _enemyCount;
         float _lastSpawnTime;
@@ -22,9 +22,9 @@ namespace Zenject.SpaceFighter
             Settings settings,
             EnemyFacade.Pool enemyFactory,
             LevelBoundary levelBoundary,
-            GameEvents gameEvents)
+            EnemyKilledSignal enemyKilledSignal)
         {
-            _gameEvents = gameEvents;
+            _enemyKilledSignal = enemyKilledSignal;
             _levelBoundary = levelBoundary;
             _enemyFactory = enemyFactory;
             _settings = settings;
@@ -34,7 +34,7 @@ namespace Zenject.SpaceFighter
 
         public void Initialize()
         {
-            _gameEvents.EnemyKilled += OnEnemyKilled;
+            _enemyKilledSignal += OnEnemyKilled;
         }
 
         void OnEnemyKilled()

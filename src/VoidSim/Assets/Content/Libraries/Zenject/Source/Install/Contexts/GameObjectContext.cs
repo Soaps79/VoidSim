@@ -36,9 +36,7 @@ namespace Zenject
 
         [Inject]
         public void Construct(
-            DiContainer parentContainer,
-            [InjectOptional]
-            InstallerExtraArgs installerExtraArgs)
+            DiContainer parentContainer)
         {
             Assert.IsNull(_container);
 
@@ -59,7 +57,7 @@ namespace Zenject
 
             try
             {
-                InstallBindings(installerExtraArgs);
+                InstallBindings();
             }
             finally
             {
@@ -132,8 +130,7 @@ namespace Zenject
             }
         }
 
-        void InstallBindings(
-            InstallerExtraArgs installerExtraArgs)
+        void InstallBindings()
         {
             _container.DefaultParent = this.transform;
 
@@ -151,22 +148,7 @@ namespace Zenject
             }
 
             InstallSceneBindings();
-
-            var extraArgsMap = new Dictionary<Type, List<TypeValuePair>>();
-
-            if (installerExtraArgs != null)
-            {
-                extraArgsMap.Add(
-                    installerExtraArgs.InstallerType, installerExtraArgs.ExtraArgs);
-            }
-
             InstallInstallers();
-        }
-
-        public class InstallerExtraArgs
-        {
-            public Type InstallerType;
-            public List<TypeValuePair> ExtraArgs;
         }
     }
 }

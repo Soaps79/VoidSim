@@ -89,6 +89,20 @@ namespace Zenject
             return this;
         }
 
+        public ConditionCopyNonLazyBinder FromNewComponentOn(
+            Func<InjectContext, GameObject> gameObjectGetter)
+        {
+            BindingUtil.AssertIsComponent(ContractType);
+            BindingUtil.AssertIsNotAbstract(ContractType);
+
+            ProviderFunc =
+                (container) => new AddToExistingGameObjectComponentProviderGetter(
+                    gameObjectGetter, container, ContractType,
+                    null, new List<TypeValuePair>());
+
+            return this;
+        }
+
         public NameTransformConditionCopyNonLazyBinder FromNewComponentOnNewGameObject()
         {
             BindingUtil.AssertIsComponent(ContractType);
@@ -145,10 +159,23 @@ namespace Zenject
 
             ProviderFunc =
                 (container) => new ScriptableObjectResourceProvider(
-                    resourcePath, ContractType, container, null, new List<TypeValuePair>());
+                    resourcePath, ContractType, container, null, new List<TypeValuePair>(), true);
 
             return this;
         }
+
+        public ConditionCopyNonLazyBinder FromScriptableObjectResource(string resourcePath)
+        {
+            BindingUtil.AssertIsValidResourcePath(resourcePath);
+            BindingUtil.AssertIsInterfaceOrScriptableObject(ContractType);
+
+            ProviderFunc =
+                (container) => new ScriptableObjectResourceProvider(
+                    resourcePath, ContractType, container, null, new List<TypeValuePair>(), false);
+
+            return this;
+        }
+
 #endif
     }
 }

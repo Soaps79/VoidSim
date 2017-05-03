@@ -6,7 +6,7 @@ namespace Zenject.SpaceFighter
 {
     public class EnemyDeathHandler
     {
-        readonly GameEvents _gameEvents;
+        readonly EnemyKilledSignal _enemyKilledSignal;
         readonly EnemyFacade.Pool _selfFactory;
         readonly Settings _settings;
         readonly Explosion.Pool _explosionPool;
@@ -20,11 +20,11 @@ namespace Zenject.SpaceFighter
             Explosion.Pool explosionPool,
             Settings settings,
             EnemyFacade.Pool selfFactory,
-            GameEvents gameEvents,
-            EnemyFacade facade)
+            EnemyFacade facade,
+            EnemyKilledSignal enemyKilledSignal)
         {
+            _enemyKilledSignal = enemyKilledSignal;
             _facade = facade;
-            _gameEvents = gameEvents;
             _selfFactory = selfFactory;
             _settings = settings;
             _explosionPool = explosionPool;
@@ -39,7 +39,7 @@ namespace Zenject.SpaceFighter
 
             _audioPlayer.Play(_settings.DeathSound, _settings.DeathSoundVolume);
 
-            _gameEvents.EnemyKilled();
+            _enemyKilledSignal.Fire();
 
             _selfFactory.Despawn(_facade);
         }

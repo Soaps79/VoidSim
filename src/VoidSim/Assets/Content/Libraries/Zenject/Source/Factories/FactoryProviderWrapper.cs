@@ -21,6 +21,12 @@ namespace Zenject
         {
             var instance = _provider.GetInstance(_injectContext);
 
+            if (_injectContext.Container.IsValidating)
+            {
+                // During validation it is sufficient to just call the _provider.GetInstance
+                return default(TContract);
+            }
+
             Assert.That(instance == null
                 || instance.GetType().DerivesFromOrEqual(_injectContext.MemberType));
 

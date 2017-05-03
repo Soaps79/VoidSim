@@ -9,26 +9,26 @@ namespace Zenject.Asteroids
         readonly Settings _settings;
         readonly AudioSource _audioSource;
 
-        GameEvents _gameEvents;
+        ShipCrashedSignal _shipCrashedSignal;
 
         public AudioHandler(
-            GameEvents gameEvents,
             AudioSource audioSource,
-            Settings settings)
+            Settings settings,
+            ShipCrashedSignal shipCrashedSignal)
         {
+            _shipCrashedSignal = shipCrashedSignal;
             _settings = settings;
             _audioSource = audioSource;
-            _gameEvents = gameEvents;
         }
 
         public void Initialize()
         {
-            _gameEvents.ShipCrashed += OnShipCrashed;
+            _shipCrashedSignal += OnShipCrashed;
         }
 
         public void Dispose()
         {
-            _gameEvents.ShipCrashed -= OnShipCrashed;
+            _shipCrashedSignal -= OnShipCrashed;
         }
 
         void OnShipCrashed()

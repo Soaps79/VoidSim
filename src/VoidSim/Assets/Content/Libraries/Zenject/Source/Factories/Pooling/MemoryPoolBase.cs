@@ -22,11 +22,11 @@ namespace Zenject
 
     public abstract class MemoryPoolBase<TContract> : IValidatable, IMemoryPool
     {
-        readonly HashSet<TContract> _activeItems = new HashSet<TContract>();
-
         Stack<TContract> _inactiveItems;
         IFactory<TContract> _factory;
         MemoryPoolSettings _settings;
+
+        int _activeCount;
 
         [Inject]
         void Construct(
@@ -65,7 +65,7 @@ namespace Zenject
 
         public int NumActive
         {
-            get { return _activeItems.Count; }
+            get { return _activeCount; }
         }
 
         public Type ItemType
@@ -73,23 +73,12 @@ namespace Zenject
             get { return typeof(TContract); }
         }
 
-        public void DespawnAll()
-        {
-            foreach (var item in _activeItems.ToList())
-            {
-                Despawn(item);
-            }
-        }
-
         public void Despawn(TContract item)
         {
             Assert.That(!_inactiveItems.Contains(item),
             "Tried to return an item to pool {0} twice", this.GetType());
 
-            bool removed = _activeItems.Remove(item);
-
-            Assert.That(removed,
-                "Tried to return an item to the pool that was not originally created in pool");
+            _activeCount--;
 
             _inactiveItems.Push(item);
 
@@ -138,8 +127,7 @@ namespace Zenject
 
             item = _inactiveItems.Pop();
 
-            bool added = _activeItems.Add(item);
-            Assert.That(added);
+            _activeCount++;
 
             OnSpawned(item);
             return item;

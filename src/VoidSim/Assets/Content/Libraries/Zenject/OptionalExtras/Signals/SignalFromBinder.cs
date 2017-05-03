@@ -153,6 +153,12 @@ namespace Zenject
             return this;
         }
 
+        public ScopeArgNonLazyBinder FromScriptableObjectResource(string resourcePath)
+        {
+            _subBinder.FromScriptableObjectResource(resourcePath);
+            return this;
+        }
+
         public ScopeNonLazyBinder FromResource(string resourcePath)
         {
             _subBinder.FromResource(resourcePath);

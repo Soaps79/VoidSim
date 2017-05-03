@@ -14,7 +14,8 @@ namespace Zenject.SpaceFighter
 
         public override void InstallBindings()
         {
-            Container.Bind<GameEvents>().AsSingle();
+            Container.DeclareSignal<EnemyKilledSignal>();
+            Container.DeclareSignal<PlayerDiedSignal>();
 
             Container.BindInterfacesTo<EnemySpawner>().AsSingle();
 

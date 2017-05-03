@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
+#if UNITY_5_6
+using NUnit.Framework.Interfaces;
+#endif
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using ModestTree;
@@ -10,11 +13,6 @@ using Assert = ModestTree.Assert;
 
 namespace Zenject
 {
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class ValidateOnlyAttribute : Attribute
-    {
-    }
-
     public abstract class ZenjectIntegrationTestFixture
     {
         SceneContext _sceneContext;
@@ -25,6 +23,11 @@ namespace Zenject
         protected DiContainer Container
         {
             get { return _sceneContext.Container; }
+        }
+
+        protected SceneContext SceneContext
+        {
+            get { return _sceneContext; }
         }
 
         [SetUp]
@@ -69,6 +72,12 @@ namespace Zenject
         [TearDown]
         public void TearDown()
         {
+#if UNITY_5_6
+            if (TestContext.CurrentContext.Result.Outcome == ResultState.Success)
+            {
+                Assert.That(_hasStarted, "ZenjectIntegrationTestFixture.Initialize was not called by current test");
+            }
+#else
             if (TestContext.CurrentContext.Result.Status == TestStatus.Passed)
             {
                 // If we expected an exception then initialize would normally not be called
@@ -78,6 +87,7 @@ namespace Zenject
                     Assert.That(_hasStarted, "ZenjectIntegrationTestFixture.Initialize was not called by current test");
                 }
             }
+#endif
 
             ClearScene();
         }
@@ -119,3 +129,4 @@ namespace Zenject
         }
     }
 }
+

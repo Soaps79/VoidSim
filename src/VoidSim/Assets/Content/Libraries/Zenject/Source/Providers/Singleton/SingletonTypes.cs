@@ -19,5 +19,6 @@ namespace Zenject
         FromNewScriptableObjectResource,
         FromSubContainerPrefab,
         FromSubContainerPrefabResource,
+        FromScriptableObjectResource,
     }
 }

@@ -57,7 +57,7 @@ namespace Zenject
 
 #if !NOT_UNITY3D
 
-        public ScopeArgConditionCopyNonLazyBinder FromComponentInChildren()
+        public ScopeArgConditionCopyNonLazyBinder FromComponentInChildren(bool excludeSelf = false)
         {
             BindingUtil.AssertIsInterfaceOrComponent(AllParentTypes);
 
@@ -66,12 +66,16 @@ namespace Zenject
                     Assert.That(ctx.ObjectType.DerivesFromOrEqual<MonoBehaviour>());
                     Assert.IsNotNull(ctx.ObjectInstance);
 
-                    return ((MonoBehaviour)ctx.ObjectInstance).GetComponentsInChildren<TContract>()
-                        .Where(x => !ReferenceEquals(x, ctx.ObjectInstance));
+                    var res = ((MonoBehaviour)ctx.ObjectInstance).GetComponentsInChildren<TContract>()
+                                                                 .Where(x => !ReferenceEquals(x, ctx.ObjectInstance));
+
+                    if (excludeSelf) res = res.Where(x => (x as Component).gameObject != (ctx.ObjectInstance as Component).gameObject);
+
+                    return res;
                 });
         }
 
-        public ScopeArgConditionCopyNonLazyBinder FromComponentInParents()
+        public ScopeArgConditionCopyNonLazyBinder FromComponentInParents(bool excludeSelf = false)
         {
             BindingUtil.AssertIsInterfaceOrComponent(AllParentTypes);
 
@@ -80,8 +84,12 @@ namespace Zenject
                     Assert.That(ctx.ObjectType.DerivesFromOrEqual<MonoBehaviour>());
                     Assert.IsNotNull(ctx.ObjectInstance);
 
-                    return ((MonoBehaviour)ctx.ObjectInstance).GetComponentsInParent<TContract>()
+                    var res = ((MonoBehaviour)ctx.ObjectInstance).GetComponentsInParent<TContract>()
                         .Where(x => !ReferenceEquals(x, ctx.ObjectInstance));
+
+                    if (excludeSelf) res = res.Where(x => (x as Component).gameObject != (ctx.ObjectInstance as Component).gameObject);
+
+                    return res;
                 });
         }
 

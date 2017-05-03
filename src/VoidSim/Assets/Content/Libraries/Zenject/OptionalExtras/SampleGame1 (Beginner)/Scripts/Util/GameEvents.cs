@@ -2,8 +2,7 @@ using System;
 
 namespace Zenject.Asteroids
 {
-    public class GameEvents
+    public class ShipCrashedSignal : Signal<ShipCrashedSignal>
     {
-        public Action ShipCrashed = delegate {};
     }
 }

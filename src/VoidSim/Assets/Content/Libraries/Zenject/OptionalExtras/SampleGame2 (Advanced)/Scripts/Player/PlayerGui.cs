@@ -41,14 +41,14 @@ namespace Zenject.SpaceFighter
         int _killCount;
 
         [Inject]
-        public void Construct(Player player, GameEvents gameEvents)
+        public void Construct(Player player, EnemyKilledSignal enemyKilledSignal)
         {
             _player = player;
 
             _textureForeground = CreateColorTexture(_foregroundColor);
             _textureBackground = CreateColorTexture(_backgroundColor);
 
-            gameEvents.EnemyKilled += OnEnemyKilled;
+            enemyKilledSignal += OnEnemyKilled;
         }
 
         void OnEnemyKilled()

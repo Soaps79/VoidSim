@@ -11,8 +11,6 @@ namespace Zenject
         {
             get;
         }
-
-        void DespawnAll();
     }
 
     public interface IMemoryPool<TValue> : IMemoryPool

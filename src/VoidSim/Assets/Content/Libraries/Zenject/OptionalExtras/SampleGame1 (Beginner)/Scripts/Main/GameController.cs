@@ -18,15 +18,15 @@ namespace Zenject.Asteroids
         readonly Ship _ship;
         readonly AsteroidManager _asteroidSpawner;
 
-        GameEvents _gameEvents;
+        ShipCrashedSignal _shipCrashedSignal;
         GameStates _state = GameStates.WaitingToStart;
         float _elapsedTime;
 
         public GameController(
             Ship ship, AsteroidManager asteroidSpawner,
-            GameEvents gameEvents)
+            ShipCrashedSignal shipCrashedSignal)
         {
-            _gameEvents = gameEvents;
+            _shipCrashedSignal = shipCrashedSignal;
             _asteroidSpawner = asteroidSpawner;
             _ship = ship;
         }
@@ -47,12 +47,12 @@ namespace Zenject.Asteroids
 
             Cursor.visible = false;
 
-            _gameEvents.ShipCrashed += OnShipCrashed;
+            _shipCrashedSignal += OnShipCrashed;
         }
 
         public void Dispose()
         {
-            _gameEvents.ShipCrashed -= OnShipCrashed;
+            _shipCrashedSignal -= OnShipCrashed;
         }
 
         public void Tick()

@@ -577,6 +577,14 @@ namespace Zenject
 
         public object Resolve(InjectContext context)
         {
+            if (context.Container != this)
+            // Sometimes it's useful to forward context directly from one container to another
+            // So make sure the container is correct in this case
+            {
+                context = context.Clone();
+                context.Container = this;
+            }
+
             Assert.IsNotNull(context);
 
             ProviderPair providerPair;
@@ -630,6 +638,11 @@ namespace Zenject
 
             if (instances.IsEmpty())
             {
+                if (context.Optional)
+                {
+                    return context.FallBackValue;
+                }
+
                 throw Assert.CreateException("Provider returned zero instances when one was expected!  While resolving type '{0}'{1}. \nObject graph:\n{2}",
                     context.MemberType.ToString() + (context.Identifier == null ? "" : " with ID '{0}'".Fmt(context.Identifier.ToString())),
                     (context.ObjectType == null ? "" : " while building object with type '{0}'".Fmt(context.ObjectType)),
@@ -968,7 +981,17 @@ namespace Zenject
 
                     if (!isDryRun)
                     {
-                        method.MethodInfo.Invoke(injectable, paramValues.ToArray());
+#if !NOT_UNITY3D
+                        // Handle IEnumerators (Coroutines) as a special case by calling StartCoroutine() instead of invoking directly.
+                        if (method.MethodInfo.ReturnType == typeof(IEnumerator))
+                        {
+                            StartCoroutine(injectable, method, paramValues);
+                        }
+                        else
+#endif
+                        {
+                            method.MethodInfo.Invoke(injectable, paramValues.ToArray());
+                        }
                     }
                 }
             }
@@ -983,17 +1006,42 @@ namespace Zenject
 
 #if !NOT_UNITY3D
 
+        void StartCoroutine(object injectable, PostInjectableInfo method, List<object> paramValues)
+        {
+            var startCoroutineOn = injectable as MonoBehaviour;
+
+            // If the injectable isn't a MonoBehaviour, then start the coroutine on the context associated
+            // with this container
+            if (startCoroutineOn == null)
+            {
+                startCoroutineOn = TryResolve<Context>();
+            }
+
+            if (startCoroutineOn == null)
+            {
+                throw Assert.CreateException(
+                    "Unable to find a suitable MonoBehaviour to start the '{0}.{1}' coroutine on.",
+                    method.MethodInfo.DeclaringType, method.MethodInfo.Name);
+            }
+
+            var result = method.MethodInfo.Invoke(injectable, paramValues.ToArray()) as IEnumerator;
+
+            startCoroutineOn.StartCoroutine(result);
+        }
+
         // Don't use this unless you know what you're doing
         // You probably want to use InstantiatePrefab instead
         // This one will only create the prefab and will not inject into it
-        public GameObject CreateAndParentPrefabResource(string resourcePath, GameObjectCreationParameters gameObjectBindInfo)
+        // Also, this will always return the new game object as disabled, so that injection can occur before Awake / OnEnable / Start
+        internal GameObject CreateAndParentPrefabResource(
+            string resourcePath, GameObjectCreationParameters gameObjectBindInfo, InjectContext context, out bool shouldMakeActive)
         {
             var prefab = (GameObject)Resources.Load(resourcePath);
 
             Assert.IsNotNull(prefab,
                 "Could not find prefab at resource location '{0}'".Fmt(resourcePath));
 
-            return CreateAndParentPrefab(prefab, gameObjectBindInfo);
+            return CreateAndParentPrefab(prefab, gameObjectBindInfo, context, out shouldMakeActive);
         }
 
         GameObject GetPrefabAsGameObject(UnityEngine.Object prefab)
@@ -1010,9 +1058,12 @@ namespace Zenject
         // Don't use this unless you know what you're doing
         // You probably want to use InstantiatePrefab instead
         // This one will only create the prefab and will not inject into it
-        public GameObject CreateAndParentPrefab(
-            UnityEngine.Object prefab, GameObjectCreationParameters gameObjectBindInfo)
+        internal GameObject CreateAndParentPrefab(
+            UnityEngine.Object prefab, GameObjectCreationParameters gameObjectBindInfo,
+            InjectContext context, out bool shouldMakeActive)
         {
+            Assert.That(prefab != null, "Null prefab found when instantiating game object");
+
             Assert.That(!AssertOnNewGameObjects,
                 "Given DiContainer does not support creating new game objects");
 
@@ -1020,23 +1071,45 @@ namespace Zenject
 
             var prefabAsGameObject = GetPrefabAsGameObject(prefab);
 
-            var gameObj = (GameObject)GameObject.Instantiate(
-                prefabAsGameObject, GetTransformGroup(gameObjectBindInfo), false);
+            var wasActive = prefabAsGameObject.activeSelf;
 
-            if (gameObjectBindInfo.Name != null)
+            if (wasActive)
             {
-                gameObj.name = gameObjectBindInfo.Name;
+                prefabAsGameObject.SetActive(false);
             }
 
-            return gameObj;
+            shouldMakeActive = wasActive;
+
+            try
+            {
+                var gameObj = (GameObject)GameObject.Instantiate(
+                    prefabAsGameObject, GetTransformGroup(gameObjectBindInfo, context), false);
+
+                if (gameObjectBindInfo.Name != null)
+                {
+                    gameObj.name = gameObjectBindInfo.Name;
+                }
+
+                return gameObj;
+            }
+            finally
+            {
+                if (wasActive)
+                {
+                    // Always make sure to reset prefab state otherwise this change could be saved
+                    // persistently
+                    prefabAsGameObject.SetActive(true);
+                }
+            }
         }
 
         public GameObject CreateEmptyGameObject(string name)
         {
-            return CreateEmptyGameObject(new GameObjectCreationParameters() { Name = name });
+            return CreateEmptyGameObject(new GameObjectCreationParameters() { Name = name }, null);
         }
 
-        public GameObject CreateEmptyGameObject(GameObjectCreationParameters gameObjectBindInfo)
+        public GameObject CreateEmptyGameObject(
+            GameObjectCreationParameters gameObjectBindInfo, InjectContext context)
         {
             Assert.That(!AssertOnNewGameObjects,
                 "Given DiContainer does not support creating new game objects");
@@ -1044,11 +1117,12 @@ namespace Zenject
             FlushBindings();
 
             var gameObj = new GameObject(gameObjectBindInfo.Name ?? "GameObject");
-            gameObj.transform.SetParent(GetTransformGroup(gameObjectBindInfo), false);
+            gameObj.transform.SetParent(GetTransformGroup(gameObjectBindInfo, context), false);
             return gameObj;
         }
 
-        Transform GetTransformGroup(GameObjectCreationParameters gameObjectBindInfo)
+        Transform GetTransformGroup(
+            GameObjectCreationParameters gameObjectBindInfo, InjectContext context)
         {
             Assert.That(!AssertOnNewGameObjects,
                 "Given DiContainer does not support creating new game objects");
@@ -1065,9 +1139,17 @@ namespace Zenject
             {
                 Assert.IsNull(gameObjectBindInfo.GroupName);
 
-                // TODO: Pass in InjectContext instead of container here
+                if (context == null)
+                {
+                    context = new InjectContext()
+                    {
+                        // This is the only information we can supply in this case
+                        Container = this,
+                    };
+                }
+
                 // NOTE: Null is fine here, will just be a root game object in that case
-                return gameObjectBindInfo.ParentTransformGetter(this);
+                return gameObjectBindInfo.ParentTransformGetter(context);
             }
 
             var groupName = gameObjectBindInfo.GroupName;
@@ -1197,7 +1279,7 @@ namespace Zenject
             where T : Component
         {
             return InstantiateComponent<T>(
-                CreateEmptyGameObject(new GameObjectCreationParameters() { Name = gameObjectName }),
+                CreateEmptyGameObject(gameObjectName),
                 extraArgs);
         }
 
@@ -1221,9 +1303,16 @@ namespace Zenject
         {
             FlushBindings();
 
-            var gameObj = CreateAndParentPrefab(prefab, gameObjectBindInfo);
+            bool shouldMakeActive;
+            var gameObj = CreateAndParentPrefab(
+                prefab, gameObjectBindInfo, null, out shouldMakeActive);
 
             InjectGameObject(gameObj);
+
+            if (shouldMakeActive)
+            {
+                gameObj.SetActive(true);
+            }
 
             return gameObj;
         }
@@ -1447,7 +1536,7 @@ namespace Zenject
                 }
             }
 
-            var matches = gameObject.GetComponentsInChildren(componentType);
+            var matches = gameObject.GetComponentsInChildren(componentType, true);
 
             Assert.That(!matches.IsEmpty(),
                 "Expected to find component with type '{0}' when injecting into game object '{1}'", componentType, gameObject.name);
@@ -1879,36 +1968,36 @@ namespace Zenject
             return BindFactoryInternal<TContract, TFactory, TFactory>();
         }
 
-        MemoryPoolInitialSizeBinder<TContract> BindMemoryPoolInternal<TContract, TFactoryContract, TFactoryConcrete>()
-            where TFactoryConcrete : TFactoryContract, IMemoryPool
-            where TFactoryContract : IMemoryPool
+        public MemoryPoolInitialSizeBinder<TItemContract> BindMemoryPool<TItemContract>()
         {
-            var bindInfo = new BindInfo(typeof(TFactoryContract));
+            return BindMemoryPool<TItemContract, MemoryPool<TItemContract>>();
+        }
+
+        public MemoryPoolInitialSizeBinder<TItemContract> BindMemoryPool<TItemContract, TPool>()
+            where TPool : IMemoryPool
+        {
+            return BindMemoryPool<TItemContract, TPool, TPool>();
+        }
+
+        public MemoryPoolInitialSizeBinder<TItemContract> BindMemoryPool<TItemContract, TPoolConcrete, TPoolContract>()
+            where TPoolConcrete : TPoolContract, IMemoryPool
+            where TPoolContract : IMemoryPool
+        {
+            var bindInfo = new BindInfo(typeof(TPoolContract));
 
             // This interface is used in the optional class PoolCleanupChecker
             // And also allow people to manually call DespawnAll() for all IMemoryPool
             // if they want
             bindInfo.ContractTypes.Add(typeof(IMemoryPool));
 
-            var factoryBindInfo = new FactoryBindInfo(typeof(TFactoryConcrete));
+            var factoryBindInfo = new FactoryBindInfo(typeof(TPoolConcrete));
             var poolBindInfo = new MemoryPoolBindInfo();
 
-            StartBinding().SubFinalizer = new MemoryPoolBindingFinalizer<TContract>(
+            StartBinding().SubFinalizer = new MemoryPoolBindingFinalizer<TItemContract>(
                 bindInfo, factoryBindInfo, poolBindInfo);
 
-            return new MemoryPoolInitialSizeBinder<TContract>(
+            return new MemoryPoolInitialSizeBinder<TItemContract>(
                 bindInfo, factoryBindInfo, poolBindInfo);
-        }
-
-        public MemoryPoolInitialSizeBinder<TContract> BindMemoryPool<TContract>()
-        {
-            return BindMemoryPool<TContract, MemoryPool<TContract>>();
-        }
-
-        public MemoryPoolInitialSizeBinder<TContract> BindMemoryPool<TContract, TFactory>()
-            where TFactory : IMemoryPool
-        {
-            return BindMemoryPoolInternal<TContract, TFactory, TFactory>();
         }
 
         FactoryToChoiceIdBinder<TParam1, TContract> BindFactoryInternal<TParam1, TContract, TFactoryContract, TFactoryConcrete>()
@@ -2165,18 +2254,21 @@ namespace Zenject
 
             FlushBindings();
 
-            Assert.That(prefab != null, "Null prefab found when instantiating game object");
-
             Assert.That(componentType.IsInterface() || componentType.DerivesFrom<Component>(),
                 "Expected type '{0}' to derive from UnityEngine.Component", componentType);
 
-            GameObject prefabAsGameObject = GetPrefabAsGameObject(prefab);
+            bool shouldMakeActive;
+            var gameObj = CreateAndParentPrefab(prefab, gameObjectBindInfo, args.Context, out shouldMakeActive);
 
-            var gameObj = (GameObject)GameObject.Instantiate(
-                prefabAsGameObject, GetTransformGroup(gameObjectBindInfo), false);
-
-            return InjectGameObjectForComponentExplicit(
+            var component = InjectGameObjectForComponentExplicit(
                 gameObj, componentType, args);
+
+            if (shouldMakeActive)
+            {
+                gameObj.SetActive(true);
+            }
+
+            return component;
         }
 #endif
 
@@ -2247,3 +2339,4 @@ namespace Zenject
         }
     }
 }
+

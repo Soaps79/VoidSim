@@ -13,10 +13,18 @@ namespace Zenject
     public interface ISignal<TParam1, TParam2> : ISignalBase
     {
         void Fire(TParam1 p1, TParam2 p2);
+
+        void Unlisten(Action<TParam1, TParam2> listener);
+        void Listen(Action<TParam1, TParam2> listener);
     }
 
     public abstract class Signal<TParam1, TParam2, TDerived> : SignalBase, ISignal<TParam1, TParam2>
         where TDerived : Signal<TParam1, TParam2, TDerived>
+#if ENABLE_IL2CPP
+        // See discussion here for why we do this: https://github.com/modesttree/Zenject/issues/219#issuecomment-284751679
+        where TParam1 : class
+        where TParam2 : class
+#endif
     {
         readonly List<Action<TParam1, TParam2>> _listeners = new List<Action<TParam1, TParam2>>();
 
