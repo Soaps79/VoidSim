@@ -4,7 +4,7 @@ using System.Linq;
 using Assets.WorldMaterials.Products;
 using QGame;
 
-namespace Assets.WorldMaterials
+namespace Assets.WorldMaterials.Trade
 {
     /// <summary>
     /// Actors will use one of these objects to manage their participation in the galaxy's trading system
@@ -16,19 +16,19 @@ namespace Assets.WorldMaterials
         public readonly List<ProductAmount> Providing = new List<ProductAmount>();
         public readonly List<ProductAmount> Consuming = new List<ProductAmount>();
 
-        public Action<int, int, ProductTrader> OnProvideSuccess;
-        public Action<int, int, ProductTrader> OnConsumeSucess;
+        public Action<TradeInfo> OnProvideMatch;
+        public Action<TradeInfo> OnConsumeMatch;
 
-        public void HandleProvideSuccess(int productId, int amount, ProductTrader consumer)
+        public void HandleProvideSuccess(TradeInfo info)
         {
-            if (OnProvideSuccess != null)
-                OnProvideSuccess(productId, amount, consumer);
+            if (OnProvideMatch != null)
+                OnProvideMatch(info);
         }
 
-        public void HandleConsumeSuccess(int productId, int amount, ProductTrader provider)
+        public void HandleConsumeSuccess(TradeInfo info)
         {
-            if (OnConsumeSucess != null)
-                OnConsumeSucess(productId, amount, provider);
+            if (OnConsumeMatch != null)
+                OnConsumeMatch(info);
         }
 
         public void SetProvide(ProductAmount productAmount)

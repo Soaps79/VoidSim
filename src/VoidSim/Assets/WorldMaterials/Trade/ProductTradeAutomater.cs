@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Assets.WorldMaterials.Products;
 using QGame;
 
-namespace Assets.WorldMaterials
+namespace Assets.WorldMaterials.Trade
 {
     /// <summary>
     /// Bound from a TraderRequests SO, this behavior will direct 

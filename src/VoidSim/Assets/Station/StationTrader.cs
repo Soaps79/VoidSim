@@ -1,13 +1,19 @@
 ﻿using System;
 using Assets.WorldMaterials;
 using Assets.WorldMaterials.Products;
+using Assets.WorldMaterials.Trade;
 using Messaging;
 using QGame;
 using UnityEngine;
 
 namespace Assets.Station
 {
-    public class TradeSuccessMessageArgs : MessageArgs
+    public enum TradeStatus
+    {
+        Accepted, Rejected, Complete
+    }
+
+    public class TradeStatusChangedMessageArgs : MessageArgs
     {
         public const string MessageName = "TradeSuccess";
         public ProductTrader Provider;
@@ -15,13 +21,14 @@ namespace Assets.Station
         public int ProductId;
         public int Amount;
         public int Credits;
+        public TradeStatus Status;
     }
 
     /// <summary>
     /// This is currently doing multiple small jobs that will most likely become their own behaviors or systems.
     /// Acts as a driver for ProductTrader, telling it what to buy and sell on the market. 
     /// Ties an Inventory to a ProductTrader, moving products in and out as transactions complete.
-    /// Handles broadcasting of successful trades. Currently works because Station is one of 2 actors, involved in every trade.
+    /// Handles broadcasting of successful trades. Currently works only because Station is one of 2 actors, involved in every trade.
     ///     As Void develops, trades between other actors will not be broadcast. Not sure if will be relevant.
     ///     This seems like a job that should be handled by TradingHub, but then it has to know about currency, so ???
     /// </summary>
@@ -53,40 +60,42 @@ namespace Assets.Station
         private void BindToTrader()
         {
             _trader = gameObject.AddComponent<ProductTrader>();
-            _trader.OnProvideSuccess += HandleProvideSuccess;
-            _trader.OnConsumeSucess += HandleConsumeSuccess;
+            _trader.OnProvideMatch += HandleProvideMatch;
+            _trader.OnConsumeMatch += HandleConsumeMatch;
         }
 
-        private void HandleProvideSuccess(int productId, int amount, ProductTrader consumer)
+        private void HandleProvideMatch(TradeInfo info)
         {
-            _inventory.TryRemoveProduct(productId, amount);
-            var currencyTraded = GetCreditsValue(productId, amount);
+            _inventory.TryRemoveProduct(info.ProductId, info.Amount);
+            var currencyTraded = GetCreditsValue(info.ProductId, info.Amount);
             _inventory.TryAddProduct(_creditsProductId, currencyTraded);
             MessageHub.Instance.QueueMessage(
-                TradeSuccessMessageArgs.MessageName, new TradeSuccessMessageArgs
+                TradeStatusChangedMessageArgs.MessageName, new TradeStatusChangedMessageArgs
                 {
                     Provider = _trader,
-                    Consumer = consumer,
-                    ProductId = productId,
-                    Amount = amount,
-                    Credits = currencyTraded
+                    Consumer = info.Consumer,
+                    ProductId = info.ProductId,
+                    Amount = info.Amount,
+                    Credits = currencyTraded,
+                    Status = TradeStatus.Accepted
                 });
         }
 
-        private void HandleConsumeSuccess(int productId, int amount, ProductTrader provider)
+        private void HandleConsumeMatch(TradeInfo info)
         {
-            _inventory.TryAddProduct(productId, amount);
-            var currencyTraded = GetCreditsValue(productId, amount);
+            _inventory.TryAddProduct(info.ProductId, info.Amount);
+            var currencyTraded = GetCreditsValue(info.ProductId, info.Amount);
             _inventory.TryRemoveProduct(_creditsProductId, currencyTraded);
 
             MessageHub.Instance.QueueMessage(
-                TradeSuccessMessageArgs.MessageName, new TradeSuccessMessageArgs
+                TradeStatusChangedMessageArgs.MessageName, new TradeStatusChangedMessageArgs
                 {
-                    Provider = provider,
+                    Provider = info.Provider,
                     Consumer = _trader,
-                    ProductId = productId,
-                    Amount = amount,
-                    Credits = currencyTraded
+                    ProductId = info.ProductId,
+                    Amount = info.Amount,
+                    Credits = currencyTraded,
+                    Status = TradeStatus.Accepted
                 });
 
         }

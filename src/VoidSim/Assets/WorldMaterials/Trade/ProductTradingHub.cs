@@ -4,18 +4,20 @@ using Messaging;
 using QGame;
 using UnityEngine;
 
-namespace Assets.WorldMaterials
+namespace Assets.WorldMaterials.Trade
 {
     public class TraderInstanceMessageArgs : MessageArgs
     {
         public ProductTrader Trader;
     }
 
-    public class ProductTransactionComplete
+    public class TradeInfo
     {
+        public int Id;
         public ProductTrader Provider;
         public ProductTrader Consumer;
-
+        public int ProductId;
+        public int Amount;
     }
 
     /// <summary>
@@ -27,6 +29,7 @@ namespace Assets.WorldMaterials
     public class ProductTradingHub : QScript, IMessageListener
     {
         private readonly List<ProductTrader> _traders = new List<ProductTrader>();
+        private int _lastId;
 
         void Start()
         {
@@ -97,8 +100,18 @@ namespace Assets.WorldMaterials
                         // tell the consumer it got its goods
                         if (amountConsumed >= 0)
                         {
-                            provider.HandleProvideSuccess(provided.ProductId, amountConsumed, consumer);
-                            consumer.HandleConsumeSuccess(provided.ProductId, amountConsumed, provider);
+                            _lastId++;
+                            var info = new TradeInfo
+                            {
+                                Id = _lastId,
+                                Consumer = consumer,
+                                Provider = provider,
+                                Amount = amountConsumed,
+                                ProductId = provided.ProductId
+                            };
+
+                            provider.HandleProvideSuccess(info);
+                            consumer.HandleConsumeSuccess(info);
                         }
 
                         // move on to the next consumer, break if provider has emptied its stock

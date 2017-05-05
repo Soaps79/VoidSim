@@ -4,7 +4,7 @@ using Assets.WorldMaterials.Products;
 using UnityEditor;
 using UnityEngine;
 
-namespace Assets.WorldMaterials
+namespace Assets.WorldMaterials.Trade
 {
     [Serializable]
     public class TradeRequestInfo
