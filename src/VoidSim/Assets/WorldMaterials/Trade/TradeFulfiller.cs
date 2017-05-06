@@ -2,7 +2,8 @@
 
 namespace Assets.WorldMaterials.Trade
 {
-	public class TradeFulfiller : MonoBehaviour {
+	public class TradeFulfiller : MonoBehaviour
+    {
 
 		// Use this for initialization
 		void Start () {

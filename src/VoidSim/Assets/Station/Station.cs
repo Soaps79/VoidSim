@@ -197,7 +197,6 @@ namespace Assets.Station
             _inventory = go.GetOrAddComponent<Inventory>();
             if (_inventory == null || _inventoryScriptable == null)
                 throw new UnityException("Station inventory missing a dependency");
-            _inventory.transform.SetParent(transform);
             _inventory.BindToScriptable(_inventoryScriptable, _productLookup, true);
 
             var product = _productLookup.GetProduct("Credits");
