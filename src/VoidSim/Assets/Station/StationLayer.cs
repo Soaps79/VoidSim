@@ -31,10 +31,10 @@ namespace Assets.Station
 
         private void HandlePlaceableAdd(PlaceablePlacedArgs placed)
         {
-            if (placed == null)
+            if (placed == null || placed.Layer != LayerType)
                 return;
 
-            // this was used for energy, figure its bound to come in handy
+            placed.ObjectPlaced.transform.SetParent(transform);
         }
 
         public string Name { get { return string.Format("StationLayer {0}", LayerType); } }

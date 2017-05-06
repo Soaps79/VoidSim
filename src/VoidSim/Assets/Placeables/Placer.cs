@@ -42,7 +42,11 @@ namespace Assets.Placeables
             placeable.BindToScriptable(_toPlaceableScriptable);
             MessageHub.Instance.QueueMessage(
                 PlaceableMessages.PlaceablePlacedMessageName, 
-                new PlaceablePlacedArgs {ObjectPlaced = placeable});
+                new PlaceablePlacedArgs
+                {
+                    ObjectPlaced = placeable,
+                    Layer = _toPlaceableScriptable.Layer
+                });
 
             var nodes = placeable.GetComponents<PlaceableNode>();
             foreach (var node in nodes)

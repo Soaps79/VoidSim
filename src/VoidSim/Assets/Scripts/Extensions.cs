@@ -15,7 +15,8 @@ namespace Assets.Scripts
         /// </summary>
         public static T GetOrAddComponent<T>(this GameObject go) where T : Component
         {
-            var result = go.GetComponent<T>() ?? go.AddComponent<T>();
+            var result = go.GetComponent<T>();
+            if (result == null) result = go.AddComponent<T>();
             return result;
         }
 

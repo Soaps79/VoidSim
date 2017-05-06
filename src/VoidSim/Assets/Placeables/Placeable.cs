@@ -18,6 +18,7 @@ namespace Assets.Placeables
     public class PlaceablePlacedArgs : MessageArgs
     {
         public Placeable ObjectPlaced;
+        public LayerType Layer;
     }
 
     /// <summary>
