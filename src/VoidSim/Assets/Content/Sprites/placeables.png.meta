@@ -1,12 +1,13 @@
 fileFormatVersion: 2
 guid: ed48e76a45db81345859da8cd1747f0a
-timeCreated: 1492219931
+timeCreated: 1494098802
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
     21300000: plc_sm_factory
     21300002: plc_sm_power_plant
     21300004: plc_sm_housing
+    21300006: plc_sm_bays
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -119,11 +120,24 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 276
-        y: 894
-        width: 95
-        height: 130
+        y: 927
+        width: 71
+        height: 97
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: plc_sm_bays
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 792
+        width: 109
+        height: 85
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0

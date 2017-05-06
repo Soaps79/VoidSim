@@ -18,6 +18,7 @@ namespace Assets.Placeables.Nodes
     /// Example: A factory has attached upgrades that have energy needs. They are made children because the 
     /// energy draw should represent the whole. If there is low energy, the whole factory should be cut off.
     /// </summary>
+    [RequireComponent(typeof(Placeable))]
     public class EnergyConsumer : PlaceableNode
     {
         public const string MessageName = "EnergyConsumerCreated";

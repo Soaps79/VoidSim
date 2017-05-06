@@ -37,7 +37,8 @@ namespace Assets.Placeables
             _baseProduct = ProductLookup.Instance.GetProduct(scriptable.ProductName);
 
             gameObject.TrimCloneFromName();
-            var rend = this.gameObject.AddComponent<SpriteRenderer>();
+            var rend = gameObject.GetOrAddComponent<SpriteRenderer>();
+            rend.enabled = true;
             rend.sprite = scriptable.PlacedSprite;
             rend.sortingLayerName = Layer.ToString();
             rend.sortingOrder = 1;

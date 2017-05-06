@@ -18,6 +18,7 @@ namespace Assets.Placeables.Nodes
     /// <summary>
     /// Gives placeable an automated crafting container
     /// </summary>
+    [RequireComponent(typeof(Placeable))]
     public class ProductFactory : PlaceableNode
     {
         public const string MessageName = "ProductFactoryPlaced";

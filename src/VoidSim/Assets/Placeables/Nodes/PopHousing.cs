@@ -12,6 +12,7 @@ namespace Assets.Placeables.Nodes
     /// Placeholder
     /// Written as a hook for population when it comes time
     /// </summary>
+    [RequireComponent(typeof(Placeable))]
     public class PopHousing : PlaceableNode
     {
         public const string MessageName = "PopHousingCreated";

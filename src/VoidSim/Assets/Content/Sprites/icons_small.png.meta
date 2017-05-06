@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 7e17a6d09f97b4043b2e6a2616e7841e
-timeCreated: 1493352995
+timeCreated: 1494099262
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -10,6 +10,7 @@ TextureImporter:
     21300006: sm_ico_credits
     21300008: sm_ico_default
     21300010: sm_ico_time
+    21300012: sm_ico_berth
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -166,6 +167,19 @@ TextureImporter:
         height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: sm_ico_berth
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 112
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
