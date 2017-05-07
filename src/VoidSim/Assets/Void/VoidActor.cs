@@ -1,4 +1,6 @@
-﻿using Assets.Placeables;
+﻿using System.Collections.Generic;
+using Assets.Logistics;
+using Assets.Placeables;
 using Assets.Placeables.Nodes;
 using Assets.Station;
 using Assets.WorldMaterials;
@@ -16,6 +18,7 @@ namespace Assets.Void
         [Inject] private WorldClock _worldClock;
         [Inject] private ProductLookup _productLookup;
 
+        [SerializeField] private ProductValueLookup _valueLookup;
         [SerializeField] private TraderRequestsSO _tradeRequests;
         [SerializeField] private string _clientName;
         private ProductTradeAutomater _automater;
@@ -23,8 +26,9 @@ namespace Assets.Void
 
         void Start()
         {
-            InstantiateTransitRegister();
+            _valueLookup = ProductValueLookup.Instance;
             InstantiateVoidTrader();
+            MessageHub.Instance.QueueMessage(ProductTrader.MessageName, new TraderInstanceMessageArgs { Trader = _trader });
             MessageHub.Instance.QueueMessage(TransitMessages.RegisterLocation, new TransitLocationMessageArgs{ TransitLocation = this });
         }
 
@@ -42,6 +46,7 @@ namespace Assets.Void
             go.transform.SetParent(transform);
             go.name = "void_trader";
             _trader = go.AddComponent<ProductTrader>();
+            _trader.ClientName = ClientName;
             _trader.OnProvideMatch += HandleProvideMatch;
             MessageHub.Instance.QueueMessage(ProductTrader.MessageName, new TraderInstanceMessageArgs { Trader = _trader });
 
@@ -51,17 +56,26 @@ namespace Assets.Void
 
         private void HandleProvideMatch(TradeInfo info)
         {
-            // create ship and add to transit
-            MessageHub.Instance.QueueMessage(TransitMessages.TransitRequested, new TransitRequestedMessageArgs
+            // request cargo for trade
+            MessageHub.Instance.QueueMessage(TransitMessages.CargoRequested, new CargoRequestedMessageArgs
             {
-                TravelingFrom = this,
-                TravelingTo = info.Consumer.ClientName,
-                Ship = new Ship { Type = ShipType.Corvette }
+                Manifest = new TradeManifest
+                {
+                    Seller = ClientName,
+                    Buyer = info.Consumer.ClientName,
+                    Currency = _valueLookup.GetValueOfProductAmount(info.ProductId, info.Amount),
+                    Products = new List<ProductAmount> { new ProductAmount { ProductId = info.ProductId, Amount = info.Amount } }
+                }
             });
         }
 
         public string ClientName { get { return _clientName; } }
-        public void OnTransitComplete(TransitRegister.Entry entry)
+        public void OnTransitArrival(TransitRegister.Entry entry)
+        {
+            entry.Ship.CompleteVisit();
+        }
+
+        public void OnTransitDeparture(TransitRegister.Entry entry)
         {
             
         }

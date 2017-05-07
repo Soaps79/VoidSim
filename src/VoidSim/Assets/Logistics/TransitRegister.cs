@@ -1,30 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Assets.Placeables.Nodes;
-using Assets.WorldMaterials.Products;
 using Messaging;
 using QGame;
 using UnityEngine;
 
-namespace Assets.Void
+namespace Assets.Logistics
 {
     public static class TransitMessages
     {
         public const string RegisterLocation = "RegisterTransitLocation";
         public const string TransitRequested = "TransitRequested";
+        public const string CargoRequested = "CargoRequested";
     }
 
-    public class Ship
+    public class CargoRequestedMessageArgs : MessageArgs
     {
-        public ShipType Type;
-        public List<ProductAmount> ProductCargo;
+        public string TravelingTo;
+        public string TravelingFrom;
+        public TradeManifest Manifest;
     }
 
     public class TransitRequestedMessageArgs : MessageArgs
     {
         public string TravelingTo;
-        public ITransitLocation TravelingFrom;
+        public string TravelingFrom;
         public Ship Ship;
     }
 
@@ -37,7 +36,8 @@ namespace Assets.Void
     {
         string ClientName { get; }
 
-        void OnTransitComplete(TransitRegister.Entry entry);
+        void OnTransitArrival(TransitRegister.Entry entry);
+        void OnTransitDeparture(TransitRegister.Entry entry);
     }
 
     public class TransitRegister : QScript, IMessageListener
@@ -64,6 +64,11 @@ namespace Assets.Void
         }
 
         private readonly Dictionary<string, ITransitLocation> _locations = new Dictionary<string, ITransitLocation>();
+        public List<ITransitLocation> GetTransitLocations()
+        {
+            return _locations.Values.ToList();
+        }
+
         private readonly List<Entry> _entries = new List<Entry>();
         private int _lastId;
 
@@ -75,8 +80,8 @@ namespace Assets.Void
         void Start()
         {
             KeyValueDisplay.Instance.Add("Transit", () => GenerateDisplayText);
-            MessageHub.Instance.AddListener(this, TransitMessages.TransitRequested);
             MessageHub.Instance.AddListener(this, TransitMessages.RegisterLocation);
+            MessageHub.Instance.AddListener(this, TransitMessages.TransitRequested);
         }
 
         private object GenerateDisplayText
@@ -85,10 +90,12 @@ namespace Assets.Void
             {
                 return _entries.Any()
                     ? _entries.Aggregate(string.Format("{0}, ", _entries.Count), (name, entry)
-                        => entry.TimeRemainingAsZeroToOne.ToString() + " ") : "";
+                        => string.Format("{0:G3} ", entry.TimeRemainingAsZeroToOne)) : "";
             }
         }
 
+        // move ships towards their destinations, inform the location when a ship arrives
+        // it is on the locations to direct the ships from there
         private void UpdateEntries(float delta)
         {
             if (!_entries.Any()) return;
@@ -101,19 +108,18 @@ namespace Assets.Void
             var completed = _entries.Where(i => i.ElapsedTravelTime >= i.TotalTravelTime);
             foreach (var entry in completed)
             {
-                entry.TravelingFrom.OnTransitComplete(entry);
-                entry.TravelingTo.OnTransitComplete(entry);
+                entry.TravelingTo.OnTransitArrival(entry);
             }
             _entries.RemoveAll(i => completed.Contains(i));
         }
 
         public void HandleMessage(string type, MessageArgs args)
         {
-            if (type == TransitMessages.TransitRequested && args != null)
-                HandleTransitRequested(args as TransitRequestedMessageArgs);
-
-            else if (type == TransitMessages.RegisterLocation && args != null)
+            if (type == TransitMessages.RegisterLocation && args != null)
                 HandleRegisterLocation(args as TransitLocationMessageArgs);
+
+            else if (type == TransitMessages.TransitRequested && args != null)
+                HandleTransitRequested(args as TransitRequestedMessageArgs);
         }
 
         // handle bad data, add location
@@ -126,29 +132,35 @@ namespace Assets.Void
                 throw new UnityException("Transit location registered more than once");
 
             _locations.Add(args.TransitLocation.ClientName, args.TransitLocation);
+            Debug.Log(string.Format("Location registered: {0}", args.TransitLocation.ClientName));
         }
 
         // handle bad data, discover travel time and begin tracking
         private void HandleTransitRequested(TransitRequestedMessageArgs args)
         {
-            if (args == null 
-                || args.TravelingFrom == null
+            if (args == null
                 || string.IsNullOrEmpty(args.TravelingTo)
+                || string.IsNullOrEmpty(args.TravelingFrom)
                 || args.Ship == null
-                || !_locations.ContainsKey(args.TravelingTo))
+                || !_locations.ContainsKey(args.TravelingTo)
+                || !_locations.ContainsKey(args.TravelingFrom))
                 throw new UnityException("TransitRegister given bad transit request message data");
 
             _lastId++;
+            var source = _locations[args.TravelingFrom];
             var destination = _locations[args.TravelingTo];
-            var travelTime = CalculateTravelTime(args.TravelingFrom, destination);
-            _entries.Add(new Entry
+            var travelTime = CalculateTravelTime(source, destination);
+            var entry = new Entry
             {
                 Id = _lastId,
                 TotalTravelTime = travelTime,
-                TravelingFrom = args.TravelingFrom,
+                TravelingFrom = source,
                 TravelingTo = destination,
                 Ship = args.Ship
-            });
+            };
+            _entries.Add(entry);
+            source.OnTransitDeparture(entry);
+            Debug.Log(string.Format("Transit requested: {0} to {1}", args.TravelingFrom, args.TravelingTo));
         }
 
         private float CalculateTravelTime(ITransitLocation from, ITransitLocation to)
@@ -156,6 +168,6 @@ namespace Assets.Void
             return 10;
         }
 
-        public string Name { get; private set; }
+        public string Name { get { return name; } }
     }
 }

@@ -1,4 +1,6 @@
 ﻿    using System;
+    using System.Collections.Generic;
+    using Assets.Logistics;
     using Assets.Void;
     using Assets.WorldMaterials;
 using Assets.WorldMaterials.Products;
@@ -68,42 +70,26 @@ namespace Assets.Station
 
         private void HandleProvideMatch(TradeInfo info)
         {
-            _inventory.TryRemoveProduct(info.ProductId, info.Amount);
-            var currencyTraded = GetCreditsValue(info.ProductId, info.Amount);
-            _inventory.TryAddProduct(_creditsProductId, currencyTraded);
-            MessageHub.Instance.QueueMessage(
-                TradeStatusChangedMessageArgs.MessageName, new TradeStatusChangedMessageArgs
+            // need to add logic to place a hold on the traded items in the reserve
+
+            // request cargo for trade
+            MessageHub.Instance.QueueMessage(TransitMessages.CargoRequested, new CargoRequestedMessageArgs
+            {
+                Manifest = new TradeManifest
                 {
-                    Provider = _trader,
-                    Consumer = info.Consumer,
-                    ProductId = info.ProductId,
-                    Amount = info.Amount,
-                    Credits = currencyTraded,
-                    Status = TradeStatus.Accepted
-                });
+                    Seller = ClientName,
+                    Buyer = info.Consumer.ClientName,
+                    Currency = _valueLookup.GetValueOfProductAmount(info.ProductId, info.Amount),
+                    Products = new List<ProductAmount> { new ProductAmount { ProductId = info.ProductId, Amount = info.Amount } }
+                }
+            });
+
+            //Debug.Log(string.Format("Station provide match: {0} {1}", info.ProductId, info.Amount));
         }
 
         private void HandleConsumeMatch(TradeInfo info)
         {
-            _inventory.TryAddProduct(info.ProductId, info.Amount);
-            var currencyTraded = GetCreditsValue(info.ProductId, info.Amount);
-            _inventory.TryRemoveProduct(_creditsProductId, currencyTraded);
-
-            MessageHub.Instance.QueueMessage(
-                TradeStatusChangedMessageArgs.MessageName, new TradeStatusChangedMessageArgs
-                {
-                    Provider = info.Provider,
-                    Consumer = _trader,
-                    ProductId = info.ProductId,
-                    Amount = info.Amount,
-                    Credits = currencyTraded,
-                    Status = TradeStatus.Accepted
-                });
-        }
-
-        private int GetCreditsValue(int productId, int amount)
-        {
-            return amount * _valueLookup.GetValueOfProduct(productId);
+            // still need this? Provider does the work
         }
 
         private void CheckForTrade(object sender, EventArgs e)
@@ -118,15 +104,38 @@ namespace Assets.Station
         public string ClientName { get; set; }
 
         // add items to inventory for now, add to traffic eventually
-        public void OnTransitComplete(TransitRegister.Entry entry)
+        public void OnTransitArrival(TransitRegister.Entry entry)
         {
-            if (entry.TravelingTo.ClientName == ClientName)
+            if (entry.TravelingTo.ClientName != ClientName) return;
+
+            var buying = entry.Ship.GetBuyerManifests(ClientName);
+            foreach (var tradeManifest in buying)
             {
-                foreach (var productAmount in entry.Ship.ProductCargo)
+                foreach (var product in tradeManifest.Products)
                 {
-                    _inventory.TryAddProduct(productAmount.ProductId, productAmount.Amount);
+                    _inventory.TryAddProduct(product.ProductId, product.Amount);
                 }
+                _inventory.TryRemoveProduct(_creditsProductId, tradeManifest.Currency);
+                entry.Ship.CloseManifest(tradeManifest.Id);
             }
+
+            var selling = entry.Ship.GetSellerManifests(ClientName);
+            foreach (var tradeManifest in selling)
+            {
+                foreach (var product in tradeManifest.Products)
+                {
+                    _inventory.TryRemoveProduct(product.ProductId, product.Amount);
+                }
+                _inventory.TryAddProduct(_creditsProductId, tradeManifest.Currency);
+                entry.Ship.CloseManifest(tradeManifest.Id);
+            }
+
+            entry.Ship.CompleteVisit();
+        }
+
+        public void OnTransitDeparture(TransitRegister.Entry entry)
+        {
+            
         }
     }
 }

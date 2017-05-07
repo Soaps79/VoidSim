@@ -46,5 +46,15 @@ namespace Assets.WorldMaterials.Products
         {
             return _productValueTable.ContainsKey(productId) ? _productValueTable[productId] : 0;
         }
+
+        public int GetValueOfProductAmount(int productId, int amount)
+        {
+            return amount * GetValueOfProduct(productId);
+        }
+
+        public int GetValueOfProductAmount(ProductAmount productAmount)
+        {
+            return GetValueOfProductAmount(productAmount.ProductId, productAmount.Amount);
+        }
     }
 }
