@@ -1,8 +1,4 @@
 # VoidSim
-## Synopsis
-
-This is a personal game development project written in C# using the Unity engine. 
-
 ## High Concept
 
 You are in command of a spaceport newly commissioned on the frontier of the explored galaxy. Traffic moving through the area has needs, and fulfilling them keeps your coffers flush. Use this income to build factories, commercial structures and attractions to bring commerce, but also to house and feed your population that work in them. Over time, your port and its people will grow alongside and be a lynchpin for the colonies and commerce in the new frontier.
