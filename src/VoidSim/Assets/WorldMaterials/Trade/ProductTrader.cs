@@ -12,6 +12,7 @@ namespace Assets.WorldMaterials.Trade
     public class ProductTrader : QScript
     {
         public const string MessageName = "TraderInstance";
+        public string ClientName;
 
         public readonly List<ProductAmount> Providing = new List<ProductAmount>();
         public readonly List<ProductAmount> Consuming = new List<ProductAmount>();

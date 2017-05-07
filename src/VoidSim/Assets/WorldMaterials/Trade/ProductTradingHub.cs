@@ -51,7 +51,7 @@ namespace Assets.WorldMaterials.Trade
             if(args == null || args.Trader == null)
                 throw new UnityException("TradeHub given bad message data");
 
-            if(_traders.All(i => i.name != args.Trader.name))
+            if(_traders.All(i => i.ClientName != args.Trader.ClientName))
                 _traders.Add(args.Trader);
         }
 
@@ -74,7 +74,7 @@ namespace Assets.WorldMaterials.Trade
                     foreach (var consumer in consumers)
                     {
                         // only consider consumers who want this product
-                        if (consumer.name == provider.name
+                        if (consumer.ClientName == provider.ClientName
                             || consumer.Consuming.All(i => i.ProductId != provided.ProductId)) continue;
                         
                         var amountConsumed = 0;

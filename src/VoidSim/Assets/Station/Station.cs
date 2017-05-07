@@ -30,6 +30,8 @@ namespace Assets.Station
         [Inject]
         private ProductLookup _productLookup;
 
+        public string ClientName;
+
         [SerializeField] private InventoryScriptable _inventoryScriptable;
         [SerializeField] private PlaceablesLookup _placeablesLookup;
         [SerializeField] private TraderRequestsSO _voidTradeRequests;
@@ -48,7 +50,6 @@ namespace Assets.Station
             MapLayers();
             InstantiateInventory();
             InstantiateTrader();
-            InstantiateVoidTrader();
             BindInventoryToUI();
             InstantiateCraftingContainer();
             BindCraftingToShop();
@@ -213,21 +214,9 @@ namespace Assets.Station
         {
             var go = new GameObject();
             go.transform.SetParent(_layers[LayerType.Core].transform);
-            go.name = "station_trader";
             var trader = go.AddComponent<StationTrader>();
+            trader.ClientName = ClientName;
             trader.Initialize(_inventory, _inventoryReserve);
-        }
-
-        private void InstantiateVoidTrader()
-        {
-            var go = new GameObject();
-            go.transform.SetParent(_layers[LayerType.Core].transform);
-            go.name = "void_trader";
-            var trader = go.AddComponent<ProductTrader>();
-            MessageHub.Instance.QueueMessage(ProductTrader.MessageName, new TraderInstanceMessageArgs { Trader = trader});
-
-            var automater = go.AddComponent<ProductTradeAutomater>();
-            automater.Initialize(_voidTradeRequests, trader, _worldClock);
         }
 
         // convert editor-friendly objects to more usable dictionary

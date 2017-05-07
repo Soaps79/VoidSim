@@ -1,5 +1,6 @@
-﻿using System;
-using Assets.WorldMaterials;
+﻿    using System;
+    using Assets.Void;
+    using Assets.WorldMaterials;
 using Assets.WorldMaterials.Products;
 using Assets.WorldMaterials.Trade;
 using Messaging;
@@ -32,7 +33,7 @@ namespace Assets.Station
     ///     As Void develops, trades between other actors will not be broadcast. Not sure if will be relevant.
     ///     This seems like a job that should be handled by TradingHub, but then it has to know about currency, so ???
     /// </summary>
-    public class StationTrader : QScript
+    public class StationTrader : QScript, ITransitLocation
     {
         private InventoryReserve _reserve;
 
@@ -53,6 +54,7 @@ namespace Assets.Station
             _valueLookup = ProductValueLookup.Instance;
 
             MessageHub.Instance.QueueMessage(ProductTrader.MessageName, new TraderInstanceMessageArgs { Trader = _trader });
+            MessageHub.Instance.QueueMessage(TransitMessages.RegisterLocation, new TransitLocationMessageArgs { TransitLocation = this });
 
             _creditsProductId = ProductLookup.Instance.GetProduct("Credits").ID;
         }
@@ -97,7 +99,6 @@ namespace Assets.Station
                     Credits = currencyTraded,
                     Status = TradeStatus.Accepted
                 });
-
         }
 
         private int GetCreditsValue(int productId, int amount)
@@ -112,6 +113,20 @@ namespace Assets.Station
 
             list = _reserve.GetConsumeProducts();
             list.ForEach(i => _trader.SetConsume(i));
+        }
+
+        public string ClientName { get; set; }
+
+        // add items to inventory for now, add to traffic eventually
+        public void OnTransitComplete(TransitRegister.Entry entry)
+        {
+            if (entry.TravelingTo.ClientName == ClientName)
+            {
+                foreach (var productAmount in entry.Ship.ProductCargo)
+                {
+                    _inventory.TryAddProduct(productAmount.ProductId, productAmount.Amount);
+                }
+            }
         }
     }
 }

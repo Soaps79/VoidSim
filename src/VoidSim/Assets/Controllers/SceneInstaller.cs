@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.WorldMaterials;
+using Assets.Void;
 using Assets.WorldMaterials;
 using Assets.WorldMaterials.Products;
 using Zenject;
@@ -10,6 +11,7 @@ namespace Assets.Controllers
         public WorldClock WorldClock;
         public Station.Station Station;
         public ProductLookup ProductLookup;
+        public VoidActor Void;
 
 
         public override void InstallBindings()
@@ -18,6 +20,7 @@ namespace Assets.Controllers
             Container.Bind<WorldClock>().FromInstance(WorldClock).AsSingle();
             Container.Bind<ProductLookup>().FromInstance(ProductLookup).AsSingle();
             Container.Bind<Station.Station>().FromInstance(Station).AsSingle();
+            Container.Bind<VoidActor>().FromInstance(Void).AsSingle();
             Container.BindFactory<Inventory, Inventory.Factory>();
         }
     }
