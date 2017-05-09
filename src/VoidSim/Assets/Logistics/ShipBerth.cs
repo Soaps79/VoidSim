@@ -1,4 +1,5 @@
-﻿using QGame;
+﻿using System;
+using QGame;
 using UnityEngine;
 
 namespace Assets.Logistics
@@ -13,6 +14,9 @@ namespace Assets.Logistics
         public ShipSize ShipSize;
         private TrafficShip _ship;
         public bool IsInUse { get; private set; }
+
+        public Action<TrafficShip> OnShipDock;
+        public Action<TrafficShip> OnShipUndock;
 
         // might not be needed
         public bool TryAcceptShip(Ship ship)
@@ -37,12 +41,18 @@ namespace Assets.Logistics
             Debug.Log("Ship landing confirmed, begin servicing");
             var node = StopWatch.AddNode("ShipService", 5, true);
             node.OnTick += CompleteServicing;
+
+            if (OnShipDock != null)
+                OnShipDock(_ship);
         }
 
         private void CompleteServicing()
         {
             Debug.Log("Service complete");
             _ship.BeginDeparture();
+
+            if (OnShipUndock != null)
+                OnShipUndock(_ship);
         }
     }
 }
