@@ -35,9 +35,10 @@ namespace Assets.Station
     ///     As Void develops, trades between other actors will not be broadcast. Not sure if will be relevant.
     ///     This seems like a job that should be handled by TradingHub, but then it has to know about currency, so ???
     /// </summary>
-    public class StationTrader : QScript, ITransitLocation
+    public class StationTrader : QScript
     {
         private InventoryReserve _reserve;
+        public string ClientName { get; set; }
 
         [SerializeField] private ProductValueLookup _valueLookup;
         [SerializeField] private Inventory _inventory;
@@ -56,7 +57,6 @@ namespace Assets.Station
             _valueLookup = ProductValueLookup.Instance;
 
             MessageHub.Instance.QueueMessage(ProductTrader.MessageName, new TraderInstanceMessageArgs { Trader = _trader });
-            MessageHub.Instance.QueueMessage(TransitMessages.RegisterLocation, new TransitLocationMessageArgs { TransitLocation = this });
 
             _creditsProductId = ProductLookup.Instance.GetProduct("Credits").ID;
         }
@@ -73,7 +73,7 @@ namespace Assets.Station
             // need to add logic to place a hold on the traded items in the reserve
 
             // request cargo for trade
-            MessageHub.Instance.QueueMessage(TransitMessages.CargoRequested, new CargoRequestedMessageArgs
+            MessageHub.Instance.QueueMessage(LogisticsMessages.CargoRequested, new CargoRequestedMessageArgs
             {
                 Manifest = new TradeManifest
                 {
@@ -101,41 +101,35 @@ namespace Assets.Station
             list.ForEach(i => _trader.SetConsume(i));
         }
 
-        public string ClientName { get; set; }
 
         // add items to inventory for now, add to traffic eventually
-        public void OnTransitArrival(TransitRegister.Entry entry)
-        {
-            if (entry.TravelingTo.ClientName != ClientName) return;
+        //public void OnTransitArrival(TransitRegister.Entry entry)
+        //{
+        //    if (entry.TravelingTo.ClientName != ClientName) return;
 
-            var buying = entry.Ship.GetBuyerManifests(ClientName);
-            foreach (var tradeManifest in buying)
-            {
-                foreach (var product in tradeManifest.Products)
-                {
-                    _inventory.TryAddProduct(product.ProductId, product.Amount);
-                }
-                _inventory.TryRemoveProduct(_creditsProductId, tradeManifest.Currency);
-                entry.Ship.CloseManifest(tradeManifest.Id);
-            }
+        //    var buying = entry.Ship.GetBuyerManifests(ClientName);
+        //    foreach (var tradeManifest in buying)
+        //    {
+        //        foreach (var product in tradeManifest.Products)
+        //        {
+        //            _inventory.TryAddProduct(product.ProductId, product.Amount);
+        //        }
+        //        _inventory.TryRemoveProduct(_creditsProductId, tradeManifest.Currency);
+        //        entry.Ship.CloseManifest(tradeManifest.Id);
+        //    }
 
-            var selling = entry.Ship.GetSellerManifests(ClientName);
-            foreach (var tradeManifest in selling)
-            {
-                foreach (var product in tradeManifest.Products)
-                {
-                    _inventory.TryRemoveProduct(product.ProductId, product.Amount);
-                }
-                _inventory.TryAddProduct(_creditsProductId, tradeManifest.Currency);
-                entry.Ship.CloseManifest(tradeManifest.Id);
-            }
+        //    var selling = entry.Ship.GetSellerManifests(ClientName);
+        //    foreach (var tradeManifest in selling)
+        //    {
+        //        foreach (var product in tradeManifest.Products)
+        //        {
+        //            _inventory.TryRemoveProduct(product.ProductId, product.Amount);
+        //        }
+        //        _inventory.TryAddProduct(_creditsProductId, tradeManifest.Currency);
+        //        entry.Ship.CloseManifest(tradeManifest.Id);
+        //    }
 
-            entry.Ship.CompleteVisit();
-        }
-
-        public void OnTransitDeparture(TransitRegister.Entry entry)
-        {
-            
-        }
+        //    entry.Ship.CompleteVisit();
+        //}
     }
 }

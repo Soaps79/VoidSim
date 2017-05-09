@@ -25,12 +25,10 @@ namespace Assets.Station
     /// </summary>
     public class Station : QScript
     {
-        [Inject]
-        private WorldClock _worldClock;
-        [Inject]
-        private ProductLookup _productLookup;
+        public const string ClientName = "Station";
 
-        public string ClientName;
+        [Inject] private WorldClock _worldClock;
+        [Inject] private ProductLookup _productLookup;
 
         [SerializeField] private InventoryScriptable _inventoryScriptable;
         [SerializeField] private PlaceablesLookup _placeablesLookup;

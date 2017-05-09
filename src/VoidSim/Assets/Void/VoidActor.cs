@@ -20,7 +20,7 @@ namespace Assets.Void
 
         [SerializeField] private ProductValueLookup _valueLookup;
         [SerializeField] private TraderRequestsSO _tradeRequests;
-        [SerializeField] private string _clientName;
+        private const string _clientName = "Void";
         private ProductTradeAutomater _automater;
         private ProductTrader _trader;
 
@@ -29,7 +29,7 @@ namespace Assets.Void
             _valueLookup = ProductValueLookup.Instance;
             InstantiateVoidTrader();
             MessageHub.Instance.QueueMessage(ProductTrader.MessageName, new TraderInstanceMessageArgs { Trader = _trader });
-            MessageHub.Instance.QueueMessage(TransitMessages.RegisterLocation, new TransitLocationMessageArgs{ TransitLocation = this });
+            MessageHub.Instance.QueueMessage(LogisticsMessages.RegisterLocation, new TransitLocationMessageArgs{ TransitLocation = this });
         }
 
         private void InstantiateTransitRegister()
@@ -57,7 +57,7 @@ namespace Assets.Void
         private void HandleProvideMatch(TradeInfo info)
         {
             // request cargo for trade
-            MessageHub.Instance.QueueMessage(TransitMessages.CargoRequested, new CargoRequestedMessageArgs
+            MessageHub.Instance.QueueMessage(LogisticsMessages.CargoRequested, new CargoRequestedMessageArgs
             {
                 Manifest = new TradeManifest
                 {

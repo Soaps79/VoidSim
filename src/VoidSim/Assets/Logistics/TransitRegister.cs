@@ -6,36 +6,9 @@ using UnityEngine;
 
 namespace Assets.Logistics
 {
-    public static class TransitMessages
-    {
-        public const string RegisterLocation = "RegisterTransitLocation";
-        public const string TransitRequested = "TransitRequested";
-        public const string CargoRequested = "CargoRequested";
-    }
-
-    public class CargoRequestedMessageArgs : MessageArgs
-    {
-        public string TravelingTo;
-        public string TravelingFrom;
-        public TradeManifest Manifest;
-    }
-
-    public class TransitRequestedMessageArgs : MessageArgs
-    {
-        public string TravelingTo;
-        public string TravelingFrom;
-        public Ship Ship;
-    }
-
-    public class TransitLocationMessageArgs : MessageArgs
-    {
-        public ITransitLocation TransitLocation;
-    }
-
     public interface ITransitLocation
     {
         string ClientName { get; }
-
         void OnTransitArrival(TransitRegister.Entry entry);
         void OnTransitDeparture(TransitRegister.Entry entry);
     }
@@ -80,8 +53,8 @@ namespace Assets.Logistics
         void Start()
         {
             KeyValueDisplay.Instance.Add("Transit", () => GenerateDisplayText);
-            MessageHub.Instance.AddListener(this, TransitMessages.RegisterLocation);
-            MessageHub.Instance.AddListener(this, TransitMessages.TransitRequested);
+            MessageHub.Instance.AddListener(this, LogisticsMessages.RegisterLocation);
+            MessageHub.Instance.AddListener(this, LogisticsMessages.TransitRequested);
         }
 
         private object GenerateDisplayText
@@ -115,10 +88,10 @@ namespace Assets.Logistics
 
         public void HandleMessage(string type, MessageArgs args)
         {
-            if (type == TransitMessages.RegisterLocation && args != null)
+            if (type == LogisticsMessages.RegisterLocation && args != null)
                 HandleRegisterLocation(args as TransitLocationMessageArgs);
 
-            else if (type == TransitMessages.TransitRequested && args != null)
+            else if (type == LogisticsMessages.TransitRequested && args != null)
                 HandleTransitRequested(args as TransitRequestedMessageArgs);
         }
 

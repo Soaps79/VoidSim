@@ -19,7 +19,7 @@ namespace Assets.Logistics
 
         public void BeginTrip()
         {
-            MessageHub.Instance.QueueMessage(TransitMessages.TransitRequested, new TransitRequestedMessageArgs
+            MessageHub.Instance.QueueMessage(LogisticsMessages.TransitRequested, new TransitRequestedMessageArgs
             {
                 Ship = ParentShip,
                 TravelingFrom = LastDeparted.ClientName,
@@ -30,10 +30,15 @@ namespace Assets.Logistics
         public void CompleteDestination()
         {
             // will currently cycle through all known destination
+            CycleLocations();
+            BeginTrip();
+        }
+
+        private void CycleLocations()
+        {
             LastDeparted = _locations.Dequeue();
             _locations.Enqueue(LastDeparted);
             CurrentDestination = _locations.Peek();
-            BeginTrip();
         }
 
         public void AddLocation(ITransitLocation location)
@@ -56,7 +61,7 @@ namespace Assets.Logistics
 
     public class Ship
     {
-        public ShipType Type;
+        public ShipSize Size;
         public string CurrentDestination;
 
         // deal with capacity later
@@ -66,6 +71,7 @@ namespace Assets.Logistics
 
         private readonly List<TradeManifest> _activeManifests = new List<TradeManifest>();
         private ShipNavigation _navigation;
+        private ShipBerth _berth;
 
         public void Initialize(ShipNavigation navigation)
         {
@@ -99,6 +105,27 @@ namespace Assets.Logistics
         public void CompleteVisit()
         {
             _navigation.CompleteDestination();
+        }
+
+        public bool AcknowledgeBerth(ShipBerth shipBerth)
+        {
+            CreateTrafficShip(shipBerth);
+            return true;
+        }
+
+        private void CreateTrafficShip(ShipBerth berth)
+        {
+            // will be replaced with a prefab
+            var go = new GameObject();
+            var tship = go.AddComponent<TrafficShip>();
+            tship.Initialize(this, berth);
+            tship.BeginApproach();
+        }
+
+        public void OnTrafficComplete()
+        {
+            // adjust manifests
+            CompleteVisit();
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Assets.Logistics
 
         void Start()
         {
-            MessageHub.Instance.AddListener(this, TransitMessages.CargoRequested);
+            MessageHub.Instance.AddListener(this, LogisticsMessages.CargoRequested);
             _transitRegister = gameObject.GetComponent<TransitRegister>();
             
             // give locations some time to register
@@ -42,7 +42,7 @@ namespace Assets.Logistics
 
         public void HandleMessage(string type, MessageArgs args)
         {
-            if (type == TransitMessages.CargoRequested && args != null)
+            if (type == LogisticsMessages.CargoRequested && args != null)
                 HandleTransitRequest(args as CargoRequestedMessageArgs);
         }
 

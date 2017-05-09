@@ -1,27 +1,27 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Assets.Logistics;
 using Messaging;
 using UnityEngine;
 
 namespace Assets.Placeables.Nodes
 {
-    public class ShipBayMessageArgs : MessageArgs
-    {
-        public ShipBay ShipBay;
-    }
-
     [RequireComponent(typeof(Placeable))]
     public class ShipBay : PlaceableNode
     {
-        public const string MessageName = "ShipBayPlaced";
-
         public int BerthCount;
         private List<ShipBerth> _berths;
+        protected static int LastBerthId;
 
         public override void BroadcastPlacement()
         {
-            MessageHub.Instance.QueueMessage(MessageName, new ShipBayMessageArgs { ShipBay = this });
             _berths = gameObject.GetComponentsInChildren<ShipBerth>().ToList();
+            foreach (var shipBerth in _berths)
+            {
+                LastBerthId++;
+                shipBerth.name = "ship_berth_" + LastBerthId;
+            }
+            MessageHub.Instance.QueueMessage(LogisticsMessages.ShipBerthsUpdated, new ShipBerthsMessageArgs { Berths = _berths });
             BerthCount = _berths.Count;
         }
     }
