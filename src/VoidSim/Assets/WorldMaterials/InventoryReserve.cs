@@ -21,6 +21,7 @@ namespace Assets.WorldMaterials
         }
 
         [SerializeField] private Inventory _inventory;
+        private Dictionary<int, int> _holdProducts = new Dictionary<int, int>();
         private readonly List<InventoryReserveEntry> _reserveEntries = new List<InventoryReserveEntry>();
         private readonly List<ProductAmount> _toConsume = new List<ProductAmount>();
         private readonly List<ProductAmount> _toProvide = new List<ProductAmount>();
@@ -49,9 +50,12 @@ namespace Assets.WorldMaterials
             foreach (var productAmount in _reserveEntries.Where(i => i.ShouldConsume))
             {
                 var current = _inventory.GetProductCurrentAmount(productAmount.ProductId);
-                if (current >= productAmount.Amount) continue;
+                var amount = productAmount.Amount;
+                if (_holdProducts.ContainsKey(productAmount.ProductId))
+                    amount -= _holdProducts[productAmount.ProductId];
+                if (current >= amount) continue;
 
-                var difference = productAmount.Amount - current;
+                var difference = amount - current;
                 _toConsume.Add(new ProductAmount { ProductId = productAmount.ProductId, Amount = difference });
             }
         }
@@ -63,9 +67,12 @@ namespace Assets.WorldMaterials
             foreach (var productAmount in _reserveEntries.Where(i => i.ShouldProvide))
             {
                 var current = _inventory.GetProductCurrentAmount(productAmount.ProductId);
-                if (current <= productAmount.Amount) continue;
+                var amount = productAmount.Amount;
+                if (_holdProducts.ContainsKey(productAmount.ProductId))
+                    amount += _holdProducts[productAmount.ProductId];
+                if (current <= amount) continue;
 
-                var difference = current - productAmount.Amount;
+                var difference = current - amount;
                 _toProvide.Add(new ProductAmount { ProductId = productAmount.ProductId, Amount = difference });
             }
         }
@@ -121,6 +128,15 @@ namespace Assets.WorldMaterials
             if (release == null || release.Amount == amount) return;
 
             release.Amount = amount;
+            UpdateReserve();
+        }
+
+        public void AdjustHold(int productId, int amount)
+        {
+            if (!_holdProducts.ContainsKey(productId))
+                _holdProducts.Add(productId, 0);
+
+            _holdProducts[productId] += amount;
             UpdateReserve();
         }
     }

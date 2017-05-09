@@ -28,9 +28,10 @@ namespace Assets.Editor
         {
             _index++;
             var go = new GameObject();
-            go.name = "Test" + _index;
             var trader = go.AddComponent<ProductTrader>();
-            if(isProviding)
+            trader.ClientName = "Test" + _index;
+
+            if (isProviding)
                 trader.Providing.Add(new ProductAmount { ProductId = productId, Amount = amount });
             else
                 trader.Consuming.Add(new ProductAmount { ProductId = productId, Amount = amount });

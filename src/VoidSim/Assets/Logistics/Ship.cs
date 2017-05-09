@@ -72,6 +72,7 @@ namespace Assets.Logistics
         private readonly List<TradeManifest> _activeManifests = new List<TradeManifest>();
         private ShipNavigation _navigation;
         private ShipBerth _berth;
+        private TrafficShip _trafficShip;
 
         public void Initialize(ShipNavigation navigation)
         {
@@ -117,14 +118,16 @@ namespace Assets.Logistics
         {
             // will be replaced with a prefab
             var go = new GameObject();
-            var tship = go.AddComponent<TrafficShip>();
-            tship.Initialize(this, berth);
-            tship.BeginApproach();
+            _trafficShip = go.AddComponent<TrafficShip>();
+            _trafficShip.Initialize(this, berth);
+            _trafficShip.BeginApproach();
         }
 
         public void OnTrafficComplete()
         {
             // adjust manifests
+            GameObject.Destroy(_trafficShip);
+            _trafficShip = null;
             CompleteVisit();
         }
     }
