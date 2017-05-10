@@ -10,7 +10,7 @@ namespace Assets.WorldMaterials
     public class Inventory : QScript
     {
         /// <summary>
-        /// The idea here is that Products are one type of object that Inventory maintains.
+        /// The idea here is that ProductAmount are one type of object that Inventory maintains.
         /// Another type will probably be some sort of Placeable.
         /// </summary>
         public class InventoryProductEntry
@@ -33,7 +33,7 @@ namespace Assets.WorldMaterials
         public Action<int, int> OnProductMaxAmountChanged;
         public Action<string, bool> OnPlaceablesChanged;
 
-        private IProductLookup _productLookup;
+        public IProductLookup ProductLookup { get; private set; }
         public string Name;
         
         private readonly Dictionary<int, InventoryProductEntry> _productTable 
@@ -51,7 +51,7 @@ namespace Assets.WorldMaterials
         }
 
         /// <summary>
-        /// TryAdd Products to inventory, returns amount that could not be added because max
+        /// TryAdd ProductAmount to inventory, returns amount that could not be added because max
         /// </summary>
         public int TryAddProduct(int productId, int amount)
         {
@@ -88,7 +88,7 @@ namespace Assets.WorldMaterials
             {
                 _productTable.Add(productId, new InventoryProductEntry()
                 {
-                    Product = _productLookup.GetProduct(productId),
+                    Product = ProductLookup.GetProduct(productId),
                     Amount = 0,
                     MaxAmount = _defaultProductMaxAmount
                 });
@@ -174,7 +174,7 @@ namespace Assets.WorldMaterials
         public void BindToScriptable(InventoryScriptable inventoryScriptable, IProductLookup productLookup, bool addAllEntries = false)
         {
             _scriptable = inventoryScriptable;
-            _productLookup = productLookup;
+            ProductLookup = productLookup;
             _productTable.Clear();
             _defaultProductMaxAmount = inventoryScriptable.ProductMaxAmount;
 
@@ -182,7 +182,7 @@ namespace Assets.WorldMaterials
             // tighten this up sometime, too many loops
             if (addAllEntries)
             {
-                foreach (var product in _productLookup.GetProducts())
+                foreach (var product in ProductLookup.GetProducts())
                 {
                     AddProductEntry(product);
                 }
@@ -191,7 +191,7 @@ namespace Assets.WorldMaterials
             // populate amounts for any from scriptable
             foreach (var info in _scriptable.Products)
             {
-                TryAddProduct(_productLookup.GetProduct(info.ProductName).ID, info.Amount);
+                TryAddProduct(ProductLookup.GetProduct(info.ProductName).ID, info.Amount);
             }
 
             foreach (var placeable in _scriptable.Placeables)

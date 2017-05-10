@@ -25,6 +25,14 @@ namespace Assets.Logistics
         public void OnTransitArrival(TransitRegister.Entry entry)
         {
             Debug.Log("Ship arrived to airspace");
+
+            if (!_berths.Any())
+            {
+                // this is temp, shouldn't be a thing eventually
+                Debug.Log("Ship arrived before berths placed");
+                entry.Ship.CompleteVisit();
+            }
+
             var berth = _berths.FirstOrDefault(i => i.ShipSize == entry.Ship.Size);
             if (berth == null)
             {

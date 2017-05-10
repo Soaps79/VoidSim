@@ -188,14 +188,35 @@ namespace Assets.Editor
             _reserve.SetAmount(ProductId, 0);
 
             var before = _reserve.GetProvideProducts().FirstOrDefault(i => i.ProductId == ProductId);
+            _reserve.AdjustHold(ProductId, -holdAmount);
+            var during = _reserve.GetProvideProducts().FirstOrDefault(i => i.ProductId == ProductId);
             _reserve.AdjustHold(ProductId, holdAmount);
+            var after = _reserve.GetProvideProducts().FirstOrDefault(i => i.ProductId == ProductId);
+
+            Assert.AreEqual(invAmount, before.Amount);
+            Assert.AreEqual(invAmount - holdAmount, during.Amount);
+            Assert.AreEqual(invAmount, after.Amount);
+        }
+
+        [Test]
+        public void Hold_AffectProvideMultiple()
+        {
+            const int invAmount = 50;
+            const int holdAmount = 20;
+
+            _reserve.SetProvide(ProductId, true);
+            _inventory.TryAddProduct(ProductId, invAmount);
+            _reserve.SetAmount(ProductId, 0);
+
+            var before = _reserve.GetProvideProducts().FirstOrDefault(i => i.ProductId == ProductId);
+            _reserve.AdjustHold(ProductId, -holdAmount);
             var during = _reserve.GetProvideProducts().FirstOrDefault(i => i.ProductId == ProductId);
             _reserve.AdjustHold(ProductId, -holdAmount);
             var after = _reserve.GetProvideProducts().FirstOrDefault(i => i.ProductId == ProductId);
 
             Assert.AreEqual(invAmount, before.Amount);
             Assert.AreEqual(invAmount - holdAmount, during.Amount);
-            Assert.AreEqual(invAmount, after.Amount);
+            Assert.AreEqual(invAmount - holdAmount - holdAmount, after.Amount);
         }
     }
 }

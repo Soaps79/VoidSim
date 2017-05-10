@@ -138,7 +138,7 @@ namespace Assets.Logistics
 
         private float CalculateTravelTime(ITransitLocation from, ITransitLocation to)
         {
-            return 10;
+            return 5;
         }
 
         public string Name { get { return name; } }

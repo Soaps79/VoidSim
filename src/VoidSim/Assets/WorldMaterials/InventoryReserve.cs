@@ -69,7 +69,7 @@ namespace Assets.WorldMaterials
                 var current = _inventory.GetProductCurrentAmount(productAmount.ProductId);
                 var amount = productAmount.Amount;
                 if (_holdProducts.ContainsKey(productAmount.ProductId))
-                    amount += _holdProducts[productAmount.ProductId];
+                    amount -= _holdProducts[productAmount.ProductId];
                 if (current <= amount) continue;
 
                 var difference = current - amount;

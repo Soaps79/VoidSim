@@ -21,7 +21,7 @@ namespace Assets.WorldMaterials.Trade
     }
 
     /// <summary>
-    /// Manages the supply and demand of Products between game actors. 
+    /// Manages the supply and demand of ProductAmount between game actors. 
     /// Traders are added through messaging, can expose requests to provide or consume
     /// 
     /// Will need work to handle currency

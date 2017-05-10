@@ -38,21 +38,21 @@ namespace Assets.Logistics
         public void ConfirmLanding(TrafficShip ship)
         {
             _ship = ship;
-            Debug.Log("Ship landing confirmed, begin servicing");
-            var node = StopWatch.AddNode("ShipService", 5, true);
-            node.OnTick += CompleteServicing;
-
             if (OnShipDock != null)
                 OnShipDock(_ship);
+
+            Debug.Log("Ship landing confirmed, begin servicing");
         }
 
-        private void CompleteServicing()
+        public void CompleteServicing()
         {
-            Debug.Log("Service complete");
             _ship.BeginDeparture();
+            IsInUse = false;
 
             if (OnShipUndock != null)
                 OnShipUndock(_ship);
+
+            Debug.Log("Service complete");
         }
     }
 }

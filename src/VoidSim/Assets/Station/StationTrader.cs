@@ -49,8 +49,7 @@ namespace Assets.Station
         public void Initialize(Inventory inventory, InventoryReserve reserve)
         {
             _inventory = inventory;
-            _worldClock = WorldClock.Instance;
-            _worldClock.OnDayUp += CheckForTrade;
+            _inventory.OnInventoryChanged += CheckForTrade;
             _reserve = reserve;
 
             BindToTrader();
@@ -71,6 +70,7 @@ namespace Assets.Station
         private void HandleProvideMatch(TradeInfo info)
         {
             // need to add logic to place a hold on the traded items in the reserve
+            _reserve.AdjustHold(info.ProductId, -info.Amount);
 
             // request cargo for trade
             MessageHub.Instance.QueueMessage(LogisticsMessages.CargoRequested, new CargoRequestedMessageArgs
@@ -80,9 +80,11 @@ namespace Assets.Station
                     Seller = ClientName,
                     Buyer = info.Consumer.ClientName,
                     Currency = _valueLookup.GetValueOfProductAmount(info.ProductId, info.Amount),
-                    Products = new List<ProductAmount> { new ProductAmount { ProductId = info.ProductId, Amount = info.Amount } }
+                    ProductAmount = new ProductAmount { ProductId = info.ProductId, Amount = info.Amount }
                 }
             });
+
+            CheckForTrade();
 
             //Debug.Log(string.Format("Station provide match: {0} {1}", info.ProductId, info.Amount));
         }
@@ -90,9 +92,11 @@ namespace Assets.Station
         private void HandleConsumeMatch(TradeInfo info)
         {
             // still need this? Provider does the work
+            // reserve the money?
+            CheckForTrade();
         }
 
-        private void CheckForTrade(object sender, EventArgs e)
+        private void CheckForTrade()
         {
             var list = _reserve.GetProvideProducts();
             list.ForEach(i => _trader.SetProvide(i));
@@ -110,7 +114,7 @@ namespace Assets.Station
         //    var buying = entry.Ship.GetBuyerManifests(ClientName);
         //    foreach (var tradeManifest in buying)
         //    {
-        //        foreach (var product in tradeManifest.Products)
+        //        foreach (var product in tradeManifest.ProductAmount)
         //        {
         //            _inventory.TryAddProduct(product.ProductId, product.Amount);
         //        }
@@ -121,7 +125,7 @@ namespace Assets.Station
         //    var selling = entry.Ship.GetSellerManifests(ClientName);
         //    foreach (var tradeManifest in selling)
         //    {
-        //        foreach (var product in tradeManifest.Products)
+        //        foreach (var product in tradeManifest.ProductAmount)
         //        {
         //            _inventory.TryRemoveProduct(product.ProductId, product.Amount);
         //        }

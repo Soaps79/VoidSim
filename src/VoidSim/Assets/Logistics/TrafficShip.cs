@@ -16,6 +16,7 @@ namespace Assets.Logistics
     {
         private ShipBerth _berth;
         private Ship _parent;
+        public TradeManifestBook ManifestBook { get; private set; }
 
         // replace with state machine
         public TrafficPhase Phase { get; private set; }
@@ -24,6 +25,7 @@ namespace Assets.Logistics
         {
             _parent = parent;
             _berth = berth;
+            ManifestBook = _parent.ManifestBook;
             Phase = TrafficPhase.None;
         }
 

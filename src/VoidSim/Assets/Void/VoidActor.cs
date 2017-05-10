@@ -64,7 +64,7 @@ namespace Assets.Void
                     Seller = ClientName,
                     Buyer = info.Consumer.ClientName,
                     Currency = _valueLookup.GetValueOfProductAmount(info.ProductId, info.Amount),
-                    Products = new List<ProductAmount> { new ProductAmount { ProductId = info.ProductId, Amount = info.Amount } }
+                    ProductAmount = new ProductAmount { ProductId = info.ProductId, Amount = info.Amount }
                 }
             });
         }

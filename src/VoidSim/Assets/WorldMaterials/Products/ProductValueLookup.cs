@@ -15,6 +15,8 @@ namespace Assets.WorldMaterials.Products
         public ProductValueScriptable Scriptable;
         private Dictionary<int, int> _productValueTable;
 
+        public static int CreditsProductId { get; private set; }
+
         void Awake()
         {
             PopulateFromScriptable();
@@ -26,6 +28,7 @@ namespace Assets.WorldMaterials.Products
                 throw new UnityException("ProductValueLookup has no scriptable");
 
             _productValueTable = new Dictionary<int, int>();
+            CreditsProductId = ProductLookup.Instance.GetProduct("Credits").ID;
             var products = ProductLookup.Instance.GetProducts();
             products.ForEach(i => _productValueTable.Add(i.ID, 0));
 

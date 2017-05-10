@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Assets.Logistics;
 using Assets.Placeables;
 using Assets.Scripts;
 using Assets.Scripts.WorldMaterials;
@@ -52,6 +53,8 @@ namespace Assets.Station
             InstantiateCraftingContainer();
             BindCraftingToShop();
             BindCraftingArray();
+
+            InstantiateTrafficControl();
 
             TestPowerGrid();
             TestPopulationControl();
@@ -185,6 +188,15 @@ namespace Assets.Station
             var go = (GameObject)Instantiate(Resources.Load("Views/player_crafting_array_viewmodel"));
             go.transform.SetParent(_layers[LayerType.Core].transform);
             go.name = "player_crafting_array_viewmodel";
+        }
+
+        private void InstantiateTrafficControl()
+        {
+            var go = new GameObject();
+            go.transform.SetParent(_layers[LayerType.Core].transform);
+            go.name = "traffic_control";
+            var cargo = go.GetOrAddComponent<CargoControl>();
+            cargo.Initialize(_inventory, _inventoryReserve, ClientName);
         }
 
         // centralized inventory for the station

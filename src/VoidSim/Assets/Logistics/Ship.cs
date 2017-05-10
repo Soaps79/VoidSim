@@ -55,8 +55,39 @@ namespace Assets.Logistics
         public int Id;
         public string Buyer;
         public string Seller;
-        public List<ProductAmount> Products;
+        public ProductAmount ProductAmount;
         public int Currency;
+    }
+
+    public class TradeManifestBook
+    {
+        public List<TradeManifest> ActiveManifests { get; private set; }
+
+        public List<TradeManifest> GetBuyerManifests(string clientName)
+        {
+            return ActiveManifests.Where(i => i.Buyer == clientName).ToList();
+        }
+
+        public List<TradeManifest> GetSellerManifests(string clientName)
+        {
+            return ActiveManifests.Where(i => i.Seller == clientName).ToList();
+        }
+
+        public TradeManifestBook()
+        {
+            ActiveManifests = new List<TradeManifest>();
+        }
+
+        public void Add(TradeManifest manifest)
+        {
+            if (manifest != null)
+                ActiveManifests.Add(manifest);
+        }
+
+        public void Close(int id)
+        {
+            ActiveManifests.RemoveAll(i => i.Id == id);
+        }
     }
 
     public class Ship
@@ -69,7 +100,7 @@ namespace Assets.Logistics
         public int CurrentSpaceUsed { get; private set; }
         public List<ProductAmount> ProductCargo = new List<ProductAmount>();
 
-        private readonly List<TradeManifest> _activeManifests = new List<TradeManifest>();
+        public TradeManifestBook ManifestBook = new TradeManifestBook();
         private ShipNavigation _navigation;
         private ShipBerth _berth;
         public TrafficShip TrafficShip { get; private set; }
@@ -82,25 +113,10 @@ namespace Assets.Logistics
         public void AddManifest(TradeManifest manifest)
         {
             if(manifest != null)
-                _activeManifests.Add(manifest);
+                ManifestBook.Add(manifest);
 
             Debug.Log(string.Format("Ship given manifest: {0} to {1}, {2} x{3}", 
-                manifest.Seller, manifest.Buyer, manifest.Products.First().ProductId, manifest.Products.First().Amount));
-        }
-
-        public List<TradeManifest> GetBuyerManifests(string clientName)
-        {
-            return _activeManifests.Where(i => i.Buyer == clientName).ToList();
-        }
-
-        public List<TradeManifest> GetSellerManifests(string clientName)
-        {
-            return _activeManifests.Where(i => i.Seller == clientName).ToList();
-        }
-
-        public void CloseManifest(int id)
-        {
-            _activeManifests.RemoveAll(i => i.Id == id);
+                manifest.Seller, manifest.Buyer, manifest.ProductAmount.ProductId, manifest.ProductAmount.Amount));
         }
 
         public void CompleteVisit()
