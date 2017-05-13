@@ -10,6 +10,10 @@ namespace Assets.Logistics
     {
         public string ClientName { get { return "Station"; } }
 
+        public Transform EntryLeft;
+        public Transform EntryRight;
+        public float VarianceY;
+
         private List<ShipBerth> _berths = new List<ShipBerth>();
         // do something with this
         private readonly Queue<Ship> _queuedShips = new Queue<Ship>();
@@ -40,8 +44,36 @@ namespace Assets.Logistics
                 return;
             }
 
-            entry.Ship.AcknowledgeBerth(berth);
+            List<Vector3> waypoints = GenerateWayPoints(berth);
+            entry.Ship.AcknowledgeBerth(berth, waypoints);
             _shipsInTraffic.Add(entry.Ship);
+        }
+
+        private List<Vector3> GenerateWayPoints(ShipBerth berth)
+        {
+            var list = new List<Vector3>();
+            var rand = Random.value;
+            list.Add(rand > .5
+                ? GenerateEntryPosition(EntryLeft.position)
+                : GenerateEntryPosition(EntryRight.position));
+
+            list.Add(berth.transform.position);
+
+            list.Add(rand < .5
+                ? GenerateEntryPosition(EntryLeft.position)
+                : GenerateEntryPosition(EntryRight.position));
+
+            return list;
+        }
+
+        private Vector3 GenerateEntryPosition(Vector3 origin)
+        {
+            var start = origin;
+            var variance = Random.Range(0, VarianceY);
+            start = new Vector3(
+                start.x,
+                Random.value > .5 ? start.y + variance : start.y - variance, 0);
+            return start;
         }
 
         public void OnTransitDeparture(TransitRegister.Entry entry)

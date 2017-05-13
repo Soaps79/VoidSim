@@ -1,4 +1,6 @@
-﻿using DG.Tweening;
+﻿using System.Collections.Generic;
+using System.Linq;
+using DG.Tweening;
 using UnityEngine;
 using QGame;
 
@@ -20,16 +22,23 @@ namespace Assets.Logistics
         private float _startingDistance;
         [SerializeField] private float _minScale;
         [SerializeField] private float _maxScale;
+        private List<Vector3> _waypoints;
 
         public TradeManifestBook ManifestBook { get; private set; }
 
         // replace with state machine
         public TrafficPhase Phase { get; private set; }
 
-        public void Initialize(Ship parent, ShipBerth berth)
+        public void Initialize(Ship parent, ShipBerth berth, List<Vector3> waypoints)
         {
             _parent = parent;
             _berth = berth;
+            _waypoints = waypoints;
+
+            transform.position = _waypoints.First();
+            if (_waypoints.First().x > 0)
+                GetComponent<SpriteRenderer>().flipX = true;
+
             InitializeScaling();
             OnEveryUpdate += ScaleWithProximity;
             ManifestBook = _parent.ManifestBook;
@@ -57,11 +66,8 @@ namespace Assets.Logistics
             //node.OnTick += ApproachComplete;
             Debug.Log("Ship begin approach");
 
-            var tween = transform.DOMove(_berth.transform.position, 5);
-
-            tween.OnComplete(ApproachComplete);
-
-            
+            transform.DOMove(_waypoints[1], 6)
+                .OnComplete(ApproachComplete);
 
             Phase = TrafficPhase.Approaching;
         }
@@ -78,7 +84,8 @@ namespace Assets.Logistics
             //node.OnTick += DepartComplete;
             Debug.Log("Ship begin departure");
 
-            transform.DOMove(new Vector3(60, -5, 0), 10)
+            transform.DOMove(_waypoints[2], 6)
+                .SetEase(Ease.InSine)
                 .OnComplete(DepartComplete);
             
             Phase = TrafficPhase.Departing;

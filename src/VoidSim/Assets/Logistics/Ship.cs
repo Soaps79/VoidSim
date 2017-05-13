@@ -128,18 +128,18 @@ namespace Assets.Logistics
             _navigation.CompleteDestination();
         }
 
-        public bool AcknowledgeBerth(ShipBerth shipBerth)
+        public bool AcknowledgeBerth(ShipBerth shipBerth, List<Vector3> waypoints)
         {
-            CreateTrafficShip(shipBerth);
+            CreateTrafficShip(shipBerth, waypoints);
             return true;
         }
 
-        private void CreateTrafficShip(ShipBerth berth)
+        private void CreateTrafficShip(ShipBerth berth, List<Vector3> waypoints)
         {
             // will be replaced with a prefab
             var go = Object.Instantiate(TrafficShipPrefab);
             TrafficShip = go.GetComponent<TrafficShip>();
-            TrafficShip.Initialize(this, berth);
+            TrafficShip.Initialize(this, berth, waypoints);
             TrafficShip.BeginApproach();
         }
 

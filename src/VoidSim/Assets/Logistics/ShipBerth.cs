@@ -18,22 +18,6 @@ namespace Assets.Logistics
         public Action<TrafficShip> OnShipDock;
         public Action<TrafficShip> OnShipUndock;
 
-        // might not be needed
-        public bool TryAcceptShip(Ship ship)
-        {
-            if (IsInUse || ship.Size != ShipSize)
-                return false;
-
-            if (!ship.AcknowledgeBerth(this))
-            {
-                Debug.Log("Ship refused to acknowledge Berth");
-                return false;
-            }
-
-            IsInUse = true;
-            return true;
-        }
-
         // ship has docked and is ready to be serviced
         public void ConfirmLanding(TrafficShip ship)
         {
