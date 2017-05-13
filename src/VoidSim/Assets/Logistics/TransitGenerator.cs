@@ -15,6 +15,7 @@ namespace Assets.Logistics
         private Ship _ship;
         private int _lastId;
         private TransitRegister _transitRegister;
+        [SerializeField] private GameObject _cargoShip;
 
         void Start()
         {
@@ -23,7 +24,7 @@ namespace Assets.Logistics
             
             // give locations some time to register
             //  will eventually have an array of ships launching at different times
-            var node = StopWatch.AddNode("first_ship", 5, true);
+            var node = StopWatch.AddNode("first_ship", 1, true);
             node.OnTick += InitializeShips;
         }
 
@@ -35,7 +36,7 @@ namespace Assets.Logistics
 
             var navigation = new ShipNavigation { ParentShip = _ship };
             locations.ForEach(i => navigation.AddLocation(i));
-            _ship.Initialize(navigation);
+            _ship.Initialize(navigation, _cargoShip);
 
             navigation.CompleteDestination();
         }

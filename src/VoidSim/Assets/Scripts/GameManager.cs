@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.WorldMaterials;
 using Assets.WorldMaterials.Products;
+using DG.Tweening;
 using QGame;
 using Messaging;
 
@@ -40,6 +41,7 @@ public class GameManager : QScript, IMessageListener
 
     void Start()
     {
+        DOTween.Init(false, true, LogBehaviour.ErrorsOnly);
         InititalizeKeyValueDisplay();
         BindMouseMovementToKvd();
         InitializeScreenBounds();
@@ -111,7 +113,10 @@ public class GameManager : QScript, IMessageListener
     {
         if (args == null) return;
         if (args.PreviousSpeedTimeScale != args.NewSpeedTimeScale)
+        {
+            DOTween.timeScale = args.NewSpeedTimeScale;
             QScript.TimeModifier = args.NewSpeedTimeScale;
+        }
     }
 
     public string Name { get { return "GameManager"; } }

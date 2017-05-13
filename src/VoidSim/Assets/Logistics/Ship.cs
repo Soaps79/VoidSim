@@ -103,11 +103,15 @@ namespace Assets.Logistics
         public TradeManifestBook ManifestBook = new TradeManifestBook();
         private ShipNavigation _navigation;
         private ShipBerth _berth;
+        public GameObject TrafficShipPrefab;
         public TrafficShip TrafficShip { get; private set; }
 
-        public void Initialize(ShipNavigation navigation)
+        public void Initialize(ShipNavigation navigation, GameObject prefab)
         {
             _navigation = navigation;
+            TrafficShipPrefab = prefab;
+            if(TrafficShipPrefab == null)
+                throw new UnityException("Ship got bad trafficship prefab");
         }
 
         public void AddManifest(TradeManifest manifest)
@@ -133,8 +137,8 @@ namespace Assets.Logistics
         private void CreateTrafficShip(ShipBerth berth)
         {
             // will be replaced with a prefab
-            var go = new GameObject();
-            TrafficShip = go.AddComponent<TrafficShip>();
+            var go = Object.Instantiate(TrafficShipPrefab);
+            TrafficShip = go.GetComponent<TrafficShip>();
             TrafficShip.Initialize(this, berth);
             TrafficShip.BeginApproach();
         }
