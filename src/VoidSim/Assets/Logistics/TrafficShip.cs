@@ -18,7 +18,8 @@ namespace Assets.Logistics
         private ShipBerth _berth;
         private Ship _parent;
         private float _startingDistance;
-        private const float _minScale = .2f;
+        [SerializeField] private float _minScale;
+        [SerializeField] private float _maxScale;
 
         public TradeManifestBook ManifestBook { get; private set; }
 
@@ -37,6 +38,7 @@ namespace Assets.Logistics
 
         private void InitializeScaling()
         {
+            transform.localScale = new Vector2(_maxScale, _maxScale);
             _startingDistance = Vector2.Distance(transform.position, _berth.transform.position);
         }
 
@@ -44,8 +46,8 @@ namespace Assets.Logistics
         {
             var proximity = Vector2.Distance(transform.position, _berth.transform.position);
             var progress = 1 - proximity / _startingDistance;
-            var scale = progress * .7f;
-            transform.localScale = new Vector2(1 - scale, 1 - scale);
+            var scale = progress * _maxScale - _minScale;
+            transform.localScale = new Vector2(_maxScale - scale, _maxScale - scale);
         }
 
         public void BeginApproach()
