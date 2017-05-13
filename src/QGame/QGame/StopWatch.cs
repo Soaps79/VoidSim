@@ -134,12 +134,14 @@ namespace QGame
     public class StopWatch
     {
         List<StopWatchNode> _nodes = new List<StopWatchNode>();
-
+        private readonly List<StopWatchNode> _addAfterUpdate = new List<StopWatchNode>();
+        private bool _isUpdating;
         /// <summary>
         /// Updates all StopWatchNodes
         /// </summary>
         public void UpdateNodes(float delta)
         {
+            _isUpdating = true;
             var needToRemove = false;
             foreach (var node in _nodes)
             {
@@ -152,6 +154,13 @@ namespace QGame
 
             if (needToRemove)
                 _nodes.RemoveAll(i => i.IsComplete);
+            _isUpdating = false;
+
+            if (_addAfterUpdate.Any())
+            {
+                _nodes.AddRange(_addAfterUpdate);
+                _addAfterUpdate.Clear();
+            }
         }
 
         /// <summary>
@@ -187,8 +196,13 @@ namespace QGame
             else
             {
                 node = new StopWatchNode(name, lifetime, onlyTickOnce);
-                _nodes.Add(node);
             }
+
+            if(!_isUpdating)
+                _nodes.Add(node);
+            else
+                _addAfterUpdate.Add(node);
+
             return node;
         }
     }

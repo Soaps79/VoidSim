@@ -13,7 +13,7 @@ namespace Assets.Logistics
     {
         public ShipSize ShipSize;
         private TrafficShip _ship;
-        public bool IsInUse { get; private set; }
+        public bool IsInUse;
 
         public Action<TrafficShip> OnShipDock;
         public Action<TrafficShip> OnShipUndock;

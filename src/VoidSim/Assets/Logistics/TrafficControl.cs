@@ -37,15 +37,17 @@ namespace Assets.Logistics
                 entry.Ship.CompleteVisit();
             }
 
-            var berth = _berths.FirstOrDefault(i => i.ShipSize == entry.Ship.Size);
+            var berth = _berths.FirstOrDefault(i => i.ShipSize == entry.Ship.Size && !i.IsInUse);
             if (berth == null)
             {
                 _queuedShips.Enqueue(entry.Ship);
                 return;
             }
 
+            berth.IsInUse = true;
             List<Vector3> waypoints = GenerateWayPoints(berth);
             entry.Ship.AcknowledgeBerth(berth, waypoints);
+            entry.Ship.TrafficShip.transform.SetParent(transform, true);
             _shipsInTraffic.Add(entry.Ship);
         }
 

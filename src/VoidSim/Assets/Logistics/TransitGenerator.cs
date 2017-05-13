@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Remoting.Channels;
 using Messaging;
 using QGame;
 using UnityEngine;
@@ -12,10 +14,12 @@ namespace Assets.Logistics
     [RequireComponent(typeof(TransitRegister))]
     public class TransitGenerator : QScript, IMessageListener
     {
-        private Ship _ship;
-        private int _lastId;
+        private readonly List<Ship> _ships = new List<Ship>();
+        private int _lastManifestId;
+        private int _lastShipId;
         private TransitRegister _transitRegister;
         [SerializeField] private GameObject _cargoShip;
+        [SerializeField] private ShipSchedule _schedule;
 
         void Start()
         {
@@ -30,15 +34,25 @@ namespace Assets.Logistics
 
         private void InitializeShips()
         {
-            _ship = new Ship();
             var locations = _transitRegister.GetTransitLocations();
             if(locations.Count < 2) throw new UnityException("TransitGenerator found less than 2 locations");
 
-            var navigation = new ShipNavigation { ParentShip = _ship };
-            locations.ForEach(i => navigation.AddLocation(i));
-            _ship.Initialize(navigation, _cargoShip);
+            if (_schedule == null)
+            {
+                Debug.Log("TransitGenerator has no ship schedule");
+                return;
+            }
 
-            navigation.CompleteDestination();
+            foreach (var entry in _schedule.Entries)
+            {
+                _lastShipId++;
+                var ship = new Ship{ Name = "ship_" + _lastShipId };
+                var navigation = new ShipNavigation { ParentShip = ship };
+                locations.ForEach(i => navigation.AddLocation(i));
+                ship.Initialize(navigation, _cargoShip);
+                var node = StopWatch.AddNode(ship.Name, entry.InitialDelay, true);
+                node.OnTick += () => navigation.CompleteDestination();
+            }
         }
 
         public void HandleMessage(string type, MessageArgs args)
@@ -49,10 +63,11 @@ namespace Assets.Logistics
 
         private void HandleTransitRequest(CargoRequestedMessageArgs args)
         {
-            if(args == null) throw new UnityException("TransitGenerator recieved bad transit request args");
-            _lastId++;
-            args.Manifest.Id = _lastId;
-            _ship.AddManifest(args.Manifest);
+            if(args == null) throw new UnityException("TransitGenerator recieved bad cargo request args");
+            _lastManifestId++;
+            args.Manifest.Id = _lastManifestId;
+            var ship = _ships.FirstOrDefault(i => i.Navigation.CurrentDestination.ClientName == "Void") ?? _ships.First();
+            ship.AddManifest(args.Manifest);
         }
 
         public string Name { get { return name; } }

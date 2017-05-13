@@ -101,14 +101,15 @@ namespace Assets.Logistics
         public List<ProductAmount> ProductCargo = new List<ProductAmount>();
 
         public TradeManifestBook ManifestBook = new TradeManifestBook();
-        private ShipNavigation _navigation;
+        public ShipNavigation Navigation { get; private set; }
         private ShipBerth _berth;
         public GameObject TrafficShipPrefab;
         public TrafficShip TrafficShip { get; private set; }
+        public string Name { get; set; }
 
         public void Initialize(ShipNavigation navigation, GameObject prefab)
         {
-            _navigation = navigation;
+            Navigation = navigation;
             TrafficShipPrefab = prefab;
             if(TrafficShipPrefab == null)
                 throw new UnityException("Ship got bad trafficship prefab");
@@ -125,7 +126,7 @@ namespace Assets.Logistics
 
         public void CompleteVisit()
         {
-            _navigation.CompleteDestination();
+            Navigation.CompleteDestination();
         }
 
         public bool AcknowledgeBerth(ShipBerth shipBerth, List<Vector3> waypoints)
@@ -146,7 +147,7 @@ namespace Assets.Logistics
         public void OnTrafficComplete()
         {
             // adjust manifests
-            GameObject.Destroy(TrafficShip);
+            GameObject.Destroy(TrafficShip.gameObject);
             TrafficShip = null;
             CompleteVisit();
         }

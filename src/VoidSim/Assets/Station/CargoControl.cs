@@ -49,6 +49,7 @@ namespace Assets.Station
         {
             var go = new GameObject();
             var cargoBay = go.AddComponent<CargoBay>();
+            cargoBay.transform.SetParent(transform);
             cargoBay.Initialize(berth, _inventory, _reserve, _clientName);
             _cargoBays.Add(cargoBay);
         }
