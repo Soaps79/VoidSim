@@ -52,6 +52,7 @@ namespace Assets.Logistics
                 ship.Initialize(navigation, _cargoShip);
                 var node = StopWatch.AddNode(ship.Name, entry.InitialDelay, true);
                 node.OnTick += () => navigation.CompleteDestination();
+                _ships.Add(ship);
             }
         }
 

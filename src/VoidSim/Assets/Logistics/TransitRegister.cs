@@ -133,7 +133,7 @@ namespace Assets.Logistics
             };
             _entries.Add(entry);
             source.OnTransitDeparture(entry);
-            Debug.Log(string.Format("Transit requested: {0} to {1}", args.TravelingFrom, args.TravelingTo));
+            Debug.Log(string.Format("Transit requested: {0} {1} to {2}", args.Ship.Name, args.TravelingFrom, args.TravelingTo));
         }
 
         private float CalculateTravelTime(ITransitLocation from, ITransitLocation to)

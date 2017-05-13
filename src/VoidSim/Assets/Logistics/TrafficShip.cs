@@ -22,9 +22,14 @@ namespace Assets.Logistics
         private float _startingDistance;
         [SerializeField] private float _minScale;
         [SerializeField] private float _maxScale;
-        private List<Vector3> _waypoints;
 
+        [SerializeField] private float _minTravelTime;
+        [SerializeField] private float _maxTravelTime;
+        private float _travelTime;
+
+        private List<Vector3> _waypoints;
         public TradeManifestBook ManifestBook { get; private set; }
+        private bool _approachFromLeft;
 
         // replace with state machine
         public TrafficPhase Phase { get; private set; }
@@ -38,6 +43,8 @@ namespace Assets.Logistics
             transform.position = _waypoints.First();
             if (_waypoints.First().x > 0)
                 GetComponent<SpriteRenderer>().flipX = true;
+
+            _travelTime = Random.Range(_minTravelTime, _maxTravelTime);
 
             InitializeScaling();
             OnEveryUpdate += ScaleWithProximity;
@@ -53,6 +60,8 @@ namespace Assets.Logistics
 
         private void ScaleWithProximity(float obj)
         {
+            // currently scales proximity according to starting position
+            // should be made independent
             var proximity = Vector2.Distance(transform.position, _berth.transform.position);
             var progress = 1 - proximity / _startingDistance;
             var scale = progress * _maxScale - _minScale;
@@ -61,13 +70,21 @@ namespace Assets.Logistics
 
         public void BeginApproach()
         {
-            // placeholder for ship moving across the screen
-            //var node = StopWatch.AddNode("Approach", 5, true);
-            //node.OnTick += ApproachComplete;
             Debug.Log("Ship begin approach");
 
-            transform.DOMove(_waypoints[1], 6)
+            if (transform.position.x < 0)
+                _approachFromLeft = true;
+
+            var dir = _waypoints[1] - transform.position;
+            var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.AngleAxis(_approachFromLeft ? angle : 180 + angle, Vector3.forward);
+            
+
+            transform.DOMove(_waypoints[1], _travelTime)
+                .SetEase(Ease.OutSine)
                 .OnComplete(ApproachComplete);
+
+            transform.DORotate(_approachFromLeft ? new Vector3(1, 0) : new Vector3(-1, 0), _travelTime);
 
             Phase = TrafficPhase.Approaching;
         }
@@ -79,21 +96,20 @@ namespace Assets.Logistics
 
         public void BeginDeparture()
         {
-            // placeholder for ship moving across the screen
-            //var node = StopWatch.AddNode("Depart", 5, true);
-            //node.OnTick += DepartComplete;
             Debug.Log("Ship begin departure");
 
-            transform.DOMove(_waypoints[2], 6)
+            transform.DOMove(_waypoints[2], _travelTime)
                 .SetEase(Ease.InSine)
                 .OnComplete(DepartComplete);
+
+            var dir = _waypoints[2] - transform.position;
+            var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            var rotation = Quaternion.AngleAxis(_approachFromLeft ? angle : 180 + angle, Vector3.forward);
+
+            transform.DORotate(rotation.eulerAngles, _travelTime)
+                .SetEase(Ease.OutSine);
             
             Phase = TrafficPhase.Departing;
-        }
-
-        private void OnMovement()
-        {
-            throw new System.NotImplementedException();
         }
 
         private void DepartComplete()

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Placeables.Nodes;
+using Assets.Scripts;
 using Assets.WorldMaterials.Products;
 using Messaging;
 using QGame;
@@ -139,6 +140,7 @@ namespace Assets.Logistics
         {
             // will be replaced with a prefab
             var go = Object.Instantiate(TrafficShipPrefab);
+            go.TrimCloneFromName();
             TrafficShip = go.GetComponent<TrafficShip>();
             TrafficShip.Initialize(this, berth, waypoints);
             TrafficShip.BeginApproach();
