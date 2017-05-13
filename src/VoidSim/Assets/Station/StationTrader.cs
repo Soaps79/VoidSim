@@ -63,6 +63,7 @@ namespace Assets.Station
         private void BindToTrader()
         {
             _trader = gameObject.AddComponent<ProductTrader>();
+            _trader.ClientName = ClientName;
             _trader.OnProvideMatch += HandleProvideMatch;
             _trader.OnConsumeMatch += HandleConsumeMatch;
         }

@@ -76,9 +76,8 @@ namespace Assets.Logistics
             //node.OnTick += DepartComplete;
             Debug.Log("Ship begin departure");
 
-            var tween = transform.DOMove(new Vector3(60, -5, 0), 10);
-            //tween.OnUpdate(OnMovement);
-            tween.OnComplete(DepartComplete);
+            transform.DOMove(new Vector3(60, -5, 0), 10)
+                .OnComplete(DepartComplete);
             
             Phase = TrafficPhase.Departing;
         }
