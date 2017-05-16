@@ -18,6 +18,13 @@ namespace Assets.Logistics
 
         private readonly Queue<ITransitLocation> _locations = new Queue<ITransitLocation>();
 
+        // initializes with empty location objects
+        public ShipNavigation()
+        {
+            LastDeparted = new EmptyTransitLocation();
+            CurrentDestination = new EmptyTransitLocation();
+        }
+
         public void BeginTrip()
         {
             MessageHub.Instance.QueueMessage(LogisticsMessages.TransitRequested, new TransitRequestedMessageArgs

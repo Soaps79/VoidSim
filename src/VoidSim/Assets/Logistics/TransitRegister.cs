@@ -13,6 +13,13 @@ namespace Assets.Logistics
         void OnTransitDeparture(TransitRegister.Entry entry);
     }
 
+    public class EmptyTransitLocation : ITransitLocation
+    {
+        public string ClientName { get { return "EmptyTransitLocation"; } }
+        public void OnTransitArrival(TransitRegister.Entry entry) { }
+        public void OnTransitDeparture(TransitRegister.Entry entry) { }
+    }
+
     public class TransitRegister : QScript, IMessageListener
     {
         /// <summary>
@@ -133,7 +140,7 @@ namespace Assets.Logistics
             };
             _entries.Add(entry);
             source.OnTransitDeparture(entry);
-            Debug.Log(string.Format("Transit requested: {0} {1} to {2}", args.Ship.Name, args.TravelingFrom, args.TravelingTo));
+            //Debug.Log(string.Format("Transit requested: {0} {1} to {2}", args.Ship.Name, args.TravelingFrom, args.TravelingTo));
         }
 
         private float CalculateTravelTime(ITransitLocation from, ITransitLocation to)

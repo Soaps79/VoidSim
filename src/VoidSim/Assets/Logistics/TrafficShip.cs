@@ -61,7 +61,7 @@ namespace Assets.Logistics
         private void ScaleWithProximity(float obj)
         {
             // currently scales proximity according to starting position
-            // should be made independent
+            // should be made independent of that
             var proximity = Vector2.Distance(transform.position, _berth.transform.position);
             var progress = 1 - proximity / _startingDistance;
             var scale = progress * _maxScale - _minScale;
@@ -70,8 +70,6 @@ namespace Assets.Logistics
 
         public void BeginApproach()
         {
-            Debug.Log("Ship begin approach");
-
             if (transform.position.x < 0)
                 _approachFromLeft = true;
 
@@ -79,7 +77,6 @@ namespace Assets.Logistics
             var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.AngleAxis(_approachFromLeft ? angle : 180 + angle, Vector3.forward);
             
-
             transform.DOMove(_waypoints[1], _travelTime)
                 .SetEase(Ease.OutSine)
                 .OnComplete(ApproachComplete);
@@ -96,8 +93,6 @@ namespace Assets.Logistics
 
         public void BeginDeparture()
         {
-            Debug.Log("Ship begin departure");
-
             transform.DOMove(_waypoints[2], _travelTime)
                 .SetEase(Ease.InSine)
                 .OnComplete(DepartComplete);

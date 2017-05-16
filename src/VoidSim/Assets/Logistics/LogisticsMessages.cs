@@ -6,16 +6,20 @@ namespace Assets.Logistics
     public static class LogisticsMessages
     {
         public const string RegisterLocation = "RegisterTransitLocation";
+        public const string ShipCreated = "ShipCreated";
         public const string TransitRequested = "TransitRequested";
         public const string CargoRequested = "CargoRequested";
-        public const string ShipBerthsUpdated = "ShipBerthsPlaced";
+        public const string ShipBerthsUpdated = "ShipBerthsUpdated";
     }
 
-    public class CargoRequestedMessageArgs : MessageArgs
+    public class TransitLocationMessageArgs : MessageArgs
     {
-        public string TravelingTo;
-        public string TravelingFrom;
-        public TradeManifest Manifest;
+        public ITransitLocation TransitLocation;
+    }
+
+    public class ShipCreatedMessageArgs : MessageArgs
+    {
+        public Ship Ship;
     }
 
     public class TransitRequestedMessageArgs : MessageArgs
@@ -25,9 +29,11 @@ namespace Assets.Logistics
         public Ship Ship;
     }
 
-    public class TransitLocationMessageArgs : MessageArgs
+    public class CargoRequestedMessageArgs : MessageArgs
     {
-        public ITransitLocation TransitLocation;
+        public string TravelingTo;
+        public string TravelingFrom;
+        public TradeManifest Manifest;
     }
 
     public class ShipBerthsMessageArgs : MessageArgs
