@@ -13,10 +13,10 @@ namespace Assets.Controllers.GUI
     public class ToggleButtonPressBinder : QScript
     {
         private string _axisName;
-        private Toggle _toggle;
+        public Toggle Toggle { get; private set; }
 
         public Action<bool> OnToggle;
-        public bool IsOn {  get { return _toggle.isOn; } }
+        public bool IsOn {  get { return Toggle.isOn; } }
         
         // Hooks into the ui control and keypress
         public void Bind(Toggle toggle, string axisName)
@@ -24,9 +24,9 @@ namespace Assets.Controllers.GUI
             if(toggle == null || string.IsNullOrEmpty(axisName))
                 throw new UnityException("ToggleButtonPressBinder given bad init data");
 
-            _toggle = toggle;
+            Toggle = toggle;
             _axisName = axisName;
-            _toggle.onValueChanged.AddListener(BroadcastToggle);
+            Toggle.onValueChanged.AddListener(BroadcastToggle);
 
             OnEveryUpdate += CheckForVisibilityToggleKeypress;
         }
@@ -36,14 +36,14 @@ namespace Assets.Controllers.GUI
         {
             if (Input.GetButtonDown(_axisName))
             {
-                _toggle.isOn = !_toggle.isOn;
+                Toggle.isOn = !Toggle.isOn;
             }
         }
 
         private void BroadcastToggle(bool isOn)
         {
             if (OnToggle != null)
-                OnToggle(_toggle.isOn);
+                OnToggle(Toggle.isOn);
         }
     }
 }

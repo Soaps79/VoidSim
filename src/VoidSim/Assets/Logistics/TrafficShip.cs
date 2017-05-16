@@ -81,7 +81,8 @@ namespace Assets.Logistics
                 .SetEase(Ease.OutSine)
                 .OnComplete(ApproachComplete);
 
-            transform.DORotate(_approachFromLeft ? new Vector3(1, 0) : new Vector3(-1, 0), _travelTime);
+            transform.DORotate(_approachFromLeft ? new Vector3(1, 0) : new Vector3(-1, 0), _travelTime)
+                .SetEase(Ease.InSine);
 
             Phase = TrafficPhase.Approaching;
         }

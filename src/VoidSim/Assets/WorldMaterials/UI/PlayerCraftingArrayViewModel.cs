@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Assets.Controllers.GUI;
 using Assets.Placeables.Nodes;
 using Assets.Scripts;
 using Messaging;
@@ -18,6 +19,7 @@ namespace Assets.WorldMaterials.UI
         [SerializeField] private Image _factoryPrefab;
         private Image _arrayPanel;
         private Image _arrayContent;
+        private bool _hasAFactory;
 
         void Start()
         {
@@ -47,6 +49,13 @@ namespace Assets.WorldMaterials.UI
             var go = Instantiate(_factoryPrefab, _arrayContent.transform, false);
             var viewmodel = go.gameObject.GetOrAddComponent<ProductFactoryViewModel>();
             viewmodel.Bind(args.ProductFactory);
+
+            if (!_hasAFactory)
+            {
+                var binder = GameObject.Find("binder_player_crafting_array_viewmodel").GetComponent<ToggleButtonPressBinder>();
+                binder.Toggle.isOn = true;
+                _hasAFactory = true;
+            }
         }
 
         public string Name { get; private set; }

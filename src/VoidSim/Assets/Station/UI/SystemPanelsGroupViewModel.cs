@@ -56,6 +56,7 @@ namespace Assets.Station.UI
 
             // bind the UI Toggle with the keypress, set it to trigger panel visiblity
             var binder = new GameObject().AddComponent<ToggleButtonPressBinder>();
+            binder.name = "binder_" + args.SystemPanel.name;
             binder.Bind(toggle, args.SystemPanel.InputAxis);
             binder.transform.SetParent(transform);
             binder.OnToggle += (isOn) => SetVisibility(isOn, args.SystemPanel.Panel.gameObject);

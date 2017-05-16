@@ -15,6 +15,8 @@ namespace Assets.Void
 
         [SerializeField] private ProductValueLookup _valueLookup;
         [SerializeField] private TraderRequestsSO _tradeRequests;
+        [SerializeField] private TimeLength _shipDelayTime;
+        private float _shipDelaySeconds;
         private const string _clientName = "Void";
         private ProductTradeAutomater _automater;
         private ProductTrader _trader;
@@ -22,17 +24,10 @@ namespace Assets.Void
         void Start()
         {
             _valueLookup = ProductValueLookup.Instance;
+            _shipDelaySeconds = WorldClock.Instance.GetSeconds(_shipDelayTime);
             InstantiateVoidTrader();
             MessageHub.Instance.QueueMessage(ProductTrader.MessageName, new TraderInstanceMessageArgs { Trader = _trader });
             MessageHub.Instance.QueueMessage(LogisticsMessages.RegisterLocation, new TransitLocationMessageArgs{ TransitLocation = this });
-        }
-
-        private void InstantiateTransitRegister()
-        {
-            var go = new GameObject();
-            go.transform.SetParent(transform);
-            go.name = "transit_register";
-            var register = go.AddComponent<TransitRegister>();
         }
 
         private void InstantiateVoidTrader()
@@ -67,7 +62,8 @@ namespace Assets.Void
         public string ClientName { get { return _clientName; } }
         public void OnTransitArrival(TransitRegister.Entry entry)
         {
-            entry.Ship.CompleteVisit();
+            var node = StopWatch.AddNode(entry.Ship.Name, _shipDelaySeconds, true);
+            node.OnTick += () => entry.Ship.CompleteVisit();
         }
 
         public void OnTransitDeparture(TransitRegister.Entry entry)
