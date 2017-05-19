@@ -1,0 +1,190 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Assets.Scripts;
+using Assets.WorldMaterials.Products;
+using Messaging;
+using UnityEngine;
+using Object = UnityEngine.Object;
+
+namespace Assets.Logistics.Ships
+{
+	public class ShipNavigation
+	{
+		public ITransitLocation LastDeparted { get; private set; }
+		public ITransitLocation CurrentDestination { get; private set; }
+
+		public Ship ParentShip;
+
+		private readonly Queue<ITransitLocation> _locations = new Queue<ITransitLocation>();
+
+		// initializes with empty location objects
+		public ShipNavigation()
+		{
+			LastDeparted = new EmptyTransitLocation();
+			CurrentDestination = new EmptyTransitLocation();
+		}
+
+		public void BeginTrip()
+		{
+			MessageHub.Instance.QueueMessage(LogisticsMessages.TransitRequested, new TransitRequestedMessageArgs
+			{
+				Ship = ParentShip,
+				TravelingFrom = LastDeparted.ClientName,
+				TravelingTo = CurrentDestination.ClientName
+			});
+		}
+
+		public void CompleteDestination()
+		{
+			// will currently cycle through all known destination
+			CycleLocations();
+			BeginTrip();
+		}
+
+		private void CycleLocations()
+		{
+			LastDeparted = _locations.Dequeue();
+			_locations.Enqueue(LastDeparted);
+			CurrentDestination = _locations.Peek();
+		}
+
+		public void AddLocation(ITransitLocation location)
+		{
+			if(location == null)
+				throw new UnityException("Ship navigation given bad location data");
+
+			_locations.Enqueue(location);
+		}
+	}
+
+	public class TradeManifest
+	{
+		public int Id;
+		public string Buyer;
+		public string Seller;
+		public ProductAmount ProductAmount;
+		public int Currency;
+	}
+
+	public class TradeManifestBook
+	{
+		public List<TradeManifest> ActiveManifests { get; private set; }
+
+		public List<TradeManifest> GetBuyerManifests(string clientName)
+		{
+			return ActiveManifests.Where(i => i.Buyer == clientName).ToList();
+		}
+
+		public List<TradeManifest> GetSellerManifests(string clientName)
+		{
+			return ActiveManifests.Where(i => i.Seller == clientName).ToList();
+		}
+
+		public TradeManifestBook()
+		{
+			ActiveManifests = new List<TradeManifest>();
+		}
+
+		public void Add(TradeManifest manifest)
+		{
+			if (manifest != null)
+				ActiveManifests.Add(manifest);
+		}
+
+		public void Close(int id)
+		{
+			ActiveManifests.RemoveAll(i => i.Id == id);
+		}
+	}
+
+	public class Ticker
+	{
+		public float TotalTicks;
+		public float ElapsedTicks;
+
+		public float TimeRemainingAsZeroToOne
+		{
+			get { return TotalTicks > 0 ? ElapsedTicks / TotalTicks : 0; }
+		}
+
+		public void Reset(float newTotal = 0)
+		{
+			ElapsedTicks = 0;
+			if (newTotal != 0)
+				TotalTicks = newTotal;
+		}
+	}
+
+	public class Ship
+	{
+		public ShipSize Size;
+		public string CurrentDestination;
+
+		// deal with capacity later
+		public int MaxCapacity { get; private set; }
+		public int CurrentSpaceUsed { get; private set; }
+		public List<ProductAmount> ProductCargo = new List<ProductAmount>();
+
+		public TradeManifestBook ManifestBook = new TradeManifestBook();
+		public ShipNavigation Navigation { get; private set; }
+		private ShipBerth _berth;
+		public GameObject TrafficShipPrefab;
+		public TrafficShip TrafficShip { get; private set; }
+		public string Name { get; set; }
+
+		public Action OnTrafficBegin;
+		public Action OnTransitBegin;
+		public Ticker TransitTime = new Ticker();
+
+		public void Initialize(ShipNavigation navigation, GameObject prefab)
+		{
+			Navigation = navigation;
+			TrafficShipPrefab = prefab;
+			if(TrafficShipPrefab == null)
+				throw new UnityException("Ship got bad trafficship prefab");
+		}
+
+		public void AddManifest(TradeManifest manifest)
+		{
+			if(manifest != null)
+				ManifestBook.Add(manifest);
+
+			Debug.Log(string.Format("Ship given manifest: {0} to {1}, {2} x{3}", 
+				manifest.Seller, manifest.Buyer, manifest.ProductAmount.ProductId, manifest.ProductAmount.Amount));
+		}
+
+		public void CompleteVisit()
+		{
+			Navigation.CompleteDestination();
+			// needs to be here for initial use
+			if (OnTransitBegin != null)
+				OnTransitBegin();
+		}
+
+		public bool BeginTraffic(ShipBerth shipBerth, List<Vector3> waypoints)
+		{
+			CreateTrafficShip(shipBerth, waypoints);
+			if (OnTrafficBegin != null)
+				OnTrafficBegin();
+			return true;
+		}
+
+		private void CreateTrafficShip(ShipBerth berth, List<Vector3> waypoints)
+		{
+			var go = Object.Instantiate(TrafficShipPrefab);
+			go.TrimCloneFromName();
+			TrafficShip = go.GetComponent<TrafficShip>();
+			TrafficShip.Initialize(this, berth, waypoints);
+			TrafficShip.BeginApproach();
+		}
+
+		public void CompleteTraffic()
+		{
+			// adjust manifests
+			GameObject.Destroy(TrafficShip.gameObject);
+			TrafficShip = null;
+			CompleteVisit();
+		}
+	}
+}

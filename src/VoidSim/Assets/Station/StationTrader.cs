@@ -1,6 +1,7 @@
 ﻿    using System;
     using System.Collections.Generic;
     using Assets.Logistics;
+    using Assets.Logistics.Ships;
     using Assets.Void;
     using Assets.WorldMaterials;
 using Assets.WorldMaterials.Products;

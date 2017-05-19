@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Logistics;
+using Assets.Logistics.Ships;
 using Assets.WorldMaterials;
 using Assets.WorldMaterials.Products;
 using QGame;

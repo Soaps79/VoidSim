@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Assets.Logistics.Ships;
 using Messaging;
 using QGame;
 using UnityEngine;
@@ -46,7 +47,7 @@ namespace Assets.Logistics
 
             berth.IsInUse = true;
             List<Vector3> waypoints = GenerateWayPoints(berth);
-            entry.Ship.AcknowledgeBerth(berth, waypoints);
+            entry.Ship.BeginTraffic(berth, waypoints);
             entry.Ship.TrafficShip.transform.SetParent(transform, true);
             _shipsInTraffic.Add(entry.Ship);
         }

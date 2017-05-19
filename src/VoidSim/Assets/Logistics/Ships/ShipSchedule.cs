@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Assets.WorldMaterials.Products;
-using Assets.WorldMaterials.Trade;
 using UnityEditor;
 using UnityEngine;
 
-namespace Assets.Logistics
+namespace Assets.Logistics.Ships
 {
     [Serializable]
     public class TrafficScheduleEntry

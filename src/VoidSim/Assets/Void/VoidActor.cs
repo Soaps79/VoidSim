@@ -1,4 +1,5 @@
 ﻿using Assets.Logistics;
+using Assets.Logistics.Ships;
 using Assets.WorldMaterials.Products;
 using Assets.WorldMaterials.Trade;
 using Messaging;

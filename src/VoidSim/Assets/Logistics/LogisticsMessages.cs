@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Assets.Logistics.Ships;
 using Messaging;
 
 namespace Assets.Logistics
