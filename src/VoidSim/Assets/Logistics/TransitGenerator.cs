@@ -19,6 +19,7 @@ namespace Assets.Logistics
 
 		void Start()
 		{
+			MessageHub.Instance.AddListener(this, LogisticsMessages.ShipCreated);
 			_transitRegister = gameObject.GetComponent<TransitRegister>();
 			
 			// give locations some time to register
@@ -48,14 +49,21 @@ namespace Assets.Logistics
 				node.OnTick += () =>
 				{
 					MessageHub.Instance.QueueMessage(LogisticsMessages.ShipCreated, new ShipCreatedMessageArgs { Ship = ship });
-					OnNextUpdate += delta => ship.CompleteVisit();
 				};
 			}
 		}
 
 		public void HandleMessage(string type, MessageArgs args)
 		{
-			
+			if (type == LogisticsMessages.ShipCreated && args != null)
+			{
+				OnNextUpdate += f => KickShip(args as ShipCreatedMessageArgs);
+			}
+		}
+
+		private void KickShip(ShipCreatedMessageArgs args)
+		{
+			args.Ship.CompleteVisit();
 		}
 
 		public string Name { get { return name; } }
