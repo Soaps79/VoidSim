@@ -5,15 +5,17 @@ You are in command of a spaceport newly commissioned on the frontier of the expl
 
 ## Core Gameplay
 
-1. Work to increase traffic to and from the station to generate income, which is used to:  
-  * Buy and upgrade facilities within the station
-  * Purchase goods from other factions to refine to more profitable products
-  * Most income is a steady flow, so chains can be set up then provide passively
-2. Place facilities to shape the type of traffic
+Core gameplay will take place on an outside view of the station, which will eventually be some sort of cutaway view. The player attaches buildings and modules to the station which tie into larger game systems. These systems are monitored and driven by the UI, making it a fairly heavy menu-driven experience.
+
+1. Place facilities to shape the type of traffic
   * Make or refine goods for sale
   * Attract businesses to set up shop
   * Become a hotspot of interplanetary tourism
-3. Interact with the Factions through trade
+2. Increase traffic and generate income, which is used to:  
+  * Buy and upgrade facilities within the station
+  * Purchase goods from other factions to refine to more profitable products
+  * Most income is a steady flow, so chains can be set up then provide passively
+3. Interact with other Factions through trade
   * Buy and sell goods on the general market
   * Individual trade deals can be proposed. They will provide higher income than the general market, but harsh prices will be paid for non-delivery
   * Special requests can appear, completion of which will improve relationships
