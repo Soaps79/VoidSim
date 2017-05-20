@@ -109,7 +109,7 @@ namespace Assets.Station
 
 
         // add items to inventory for now, add to traffic eventually
-        //public void OnTransitArrival(TransitRegister.Entry entry)
+        //public void OnTransitArrival(TransitControl.Entry entry)
         //{
         //    if (entry.TravelingTo.ClientName != ClientName) return;
 

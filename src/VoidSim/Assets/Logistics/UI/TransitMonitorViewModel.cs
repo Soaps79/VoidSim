@@ -16,6 +16,9 @@ namespace Assets.Logistics.UI
 		private Image _panel;
 		private Image _panelContent;
 
+		public Color TransitColor;
+		public Color HoldColor;
+
 		public void Initialize(TransitMonitor monitor)
 		{
 			if(monitor == null)
@@ -38,6 +41,8 @@ namespace Assets.Logistics.UI
 			var go = Instantiate(_entryPrefab);
 			go.transform.SetParent(_panelContent.transform, false);
 			var entry = go.GetComponent<TransitEntryViewModel>();
+			entry.HoldColor = HoldColor;
+			entry.TransitColor = TransitColor;
 			entry.Bind(ship);
 			_entries.Add(ship.Name, entry);
 		}

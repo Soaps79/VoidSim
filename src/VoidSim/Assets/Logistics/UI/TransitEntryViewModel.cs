@@ -11,38 +11,65 @@ namespace Assets.Logistics.UI
 	{
 		public TMP_Text ShipName;
 
-		public GameObject TransitPanel;
-		public Slider TransitSlider;
-		public TMP_Text TransitText;
+		// this class manages 2 views of the ship,
+		// one for a slider and static text
+		public GameObject TickerPanel;
+		public Slider TickerSlider;
+		public TMP_Text TickerText;
+		public Image TickerFill;
 
+		// used for transit and simple holds
+		public Color TransitColor;
+		public Color HoldColor;
+
+		// and one with a single color and traffic phase text
 		public GameObject TrafficPanel;
 		public TMP_Text TrafficText;
 
 		private Ship _ship;
 		private SliderBinding _sliderBinding;
 
+		// Ship is designed to expose anything needed for its UI rep
 		public void Bind(Ship ship)
 		{
+			// hook into ship
 			_ship = ship;
-			_ship.OnTrafficBegin += BeginTraffic;
+			_ship.OnHoldBegin += BeginTraffic;
 			_ship.OnTransitBegin += BeginTransit;
 			ShipName.text = _ship.Name;
 
-			_sliderBinding = TransitSlider.gameObject.AddComponent<SliderBinding>();
-			_sliderBinding.Initialize(() => _ship.TransitTime.TimeRemainingAsZeroToOne);
+			// hook into UI slider
+			_sliderBinding = TickerSlider.gameObject.AddComponent<SliderBinding>();
+			_sliderBinding.Initialize(() => _ship.Ticker.TimeRemainingAsZeroToOne);
 
+			// start with both displays off, wait for a callback to turn one on
 			TrafficPanel.SetActive(false);
-			TransitPanel.SetActive(false);
+			TickerPanel.SetActive(false);
 		}
 
 		private void BeginTraffic()
 		{
-			TransitPanel.SetActive(false);
+			TickerPanel.SetActive(false);
 
+			if (_ship.Navigation.CurrentDestination.IsSimpleHold)
+			{
+				BeginHold();
+				return;
+			}
+
+			// hook into traffic ship for its short life
 			TrafficPanel.SetActive(true);
 			var traffic = _ship.TrafficShip;
 			TrafficText.text = traffic.Phase.ToString();
 			traffic.OnPhaseChanged += HandlePhaseChange;
+		}
+
+		private void BeginHold()
+		{
+			TrafficPanel.SetActive(false);
+			TickerPanel.SetActive(true);
+			TickerFill.color = HoldColor;
+			TickerText.text = "Hold at " + _ship.Navigation.CurrentDestination.ClientName;
 		}
 
 		private void HandlePhaseChange(TrafficPhase phase)
@@ -53,8 +80,9 @@ namespace Assets.Logistics.UI
 		private void BeginTransit()
 		{
 			TrafficPanel.SetActive(false);
-			TransitPanel.SetActive(true);
-			TransitText.text = "To " + _ship.Navigation.CurrentDestination.ClientName;
+			TickerPanel.SetActive(true);
+			TickerFill.color = TransitColor;
+			TickerText.text = "To " + _ship.Navigation.CurrentDestination.ClientName;
 		}
 	}
 }

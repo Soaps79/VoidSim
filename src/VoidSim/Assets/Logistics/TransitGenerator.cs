@@ -8,19 +8,19 @@ namespace Assets.Logistics
 	/// <summary>
 	/// Handles creation of ships, initializing their navigation
 	/// </summary>
-	[RequireComponent(typeof(TransitRegister))]
+	[RequireComponent(typeof(TransitControl))]
 	public class TransitGenerator : QScript, IMessageListener
 	{
 		private int _lastManifestId;
 		private int _lastShipId;
-		private TransitRegister _transitRegister;
+		private TransitControl _transitControl;
 		[SerializeField] private GameObject _cargoShip;
 		[SerializeField] private ShipSchedule _schedule;
 
 		void Start()
 		{
 			MessageHub.Instance.AddListener(this, LogisticsMessages.ShipCreated);
-			_transitRegister = gameObject.GetComponent<TransitRegister>();
+			_transitControl = gameObject.GetComponent<TransitControl>();
 			
 			// give locations some time to register
 			var node = StopWatch.AddNode("begin", 1, true);
@@ -29,7 +29,7 @@ namespace Assets.Logistics
 
 		private void InitializeShips()
 		{
-			var locations = _transitRegister.GetTransitLocations();
+			var locations = _transitControl.GetTransitLocations();
 			if(locations.Count < 2) throw new UnityException("TransitGenerator found less than 2 locations");
 
 			if (_schedule == null)
@@ -44,6 +44,7 @@ namespace Assets.Logistics
 				var ship = new Ship{ Name = "ship_" + _lastShipId };
 				var navigation = new ShipNavigation { ParentShip = ship };
 				locations.ForEach(i => navigation.AddLocation(i));
+				navigation.CycleLocations();
 				ship.Initialize(navigation, _cargoShip);
 				var node = StopWatch.AddNode(ship.Name, entry.InitialDelay, true);
 				node.OnTick += () =>

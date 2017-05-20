@@ -20,7 +20,7 @@ namespace Assets.Logistics
 	{
 		private int _lastManifestId;
 		private readonly List<Ship> _ships = new List<Ship>();
-		private TransitRegister _register;
+		private TransitControl _control;
 
 		public Action<Ship> OnShipAdded;
 

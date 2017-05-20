@@ -42,7 +42,7 @@ namespace Assets.Logistics.Ships
 			BeginTrip();
 		}
 
-		private void CycleLocations()
+		public void CycleLocations()
 		{
 			LastDeparted = _locations.Dequeue();
 			_locations.Enqueue(LastDeparted);
@@ -105,8 +105,10 @@ namespace Assets.Logistics.Ships
 
 		public float TimeRemainingAsZeroToOne
 		{
-			get { return TotalTicks > 0 ? ElapsedTicks / TotalTicks : 0; }
+			get { return TotalTicks > 0 ? ElapsedTicks / TotalTicks : 1; }
 		}
+
+		public bool IsComplete { get { return ElapsedTicks >= TotalTicks; } }
 
 		public void Reset(float newTotal = 0)
 		{
@@ -133,9 +135,9 @@ namespace Assets.Logistics.Ships
 		public TrafficShip TrafficShip { get; private set; }
 		public string Name { get; set; }
 
-		public Action OnTrafficBegin;
+		public Action OnHoldBegin;
 		public Action OnTransitBegin;
-		public Ticker TransitTime = new Ticker();
+		public Ticker Ticker = new Ticker();
 
 		public void Initialize(ShipNavigation navigation, GameObject prefab)
 		{
@@ -162,11 +164,13 @@ namespace Assets.Logistics.Ships
 				OnTransitBegin();
 		}
 
-		public bool BeginTraffic(ShipBerth shipBerth, List<Vector3> waypoints)
+		public bool BeginHold(ShipBerth shipBerth, List<Vector3> waypoints)
 		{
-			CreateTrafficShip(shipBerth, waypoints);
-			if (OnTrafficBegin != null)
-				OnTrafficBegin();
+			if(shipBerth != null)
+				CreateTrafficShip(shipBerth, waypoints);
+
+			if (OnHoldBegin != null)
+				OnHoldBegin();
 			return true;
 		}
 
@@ -182,8 +186,12 @@ namespace Assets.Logistics.Ships
 		public void CompleteTraffic()
 		{
 			// adjust manifests
-			GameObject.Destroy(TrafficShip.gameObject);
-			TrafficShip = null;
+			if (TrafficShip != null)
+			{
+				GameObject.Destroy(TrafficShip.gameObject);
+				TrafficShip = null;
+			}
+			
 			CompleteVisit();
 		}
 	}

@@ -11,18 +11,20 @@ namespace Assets.Logistics
 	public interface ITransitLocation
 	{
 		string ClientName { get; }
-		void OnTransitArrival(TransitRegister.Entry entry);
-		void OnTransitDeparture(TransitRegister.Entry entry);
+		void OnTransitArrival(TransitControl.Entry entry);
+		void OnTransitDeparture(TransitControl.Entry entry);
+		bool IsSimpleHold { get; }
 	}
 
 	public class EmptyTransitLocation : ITransitLocation
 	{
 		public string ClientName { get { return "EmptyTransitLocation"; } }
-		public void OnTransitArrival(TransitRegister.Entry entry) { }
-		public void OnTransitDeparture(TransitRegister.Entry entry) { }
+		public void OnTransitArrival(TransitControl.Entry entry) { }
+		public void OnTransitDeparture(TransitControl.Entry entry) { }
+		public bool IsSimpleHold { get { return true; } }
 	}
 
-	public class TransitRegister : QScript, IMessageListener
+	public class TransitControl : QScript, IMessageListener
 	{
 		/// <summary>
 		/// Trying a new pattern:
@@ -39,6 +41,9 @@ namespace Assets.Logistics
 		}
 
 		private readonly Dictionary<string, ITransitLocation> _locations = new Dictionary<string, ITransitLocation>();
+		[SerializeField] private TimeLength _journeyTime;
+		private float _journeySeconds;
+
 		public List<ITransitLocation> GetTransitLocations()
 		{
 			return _locations.Values.ToList();
@@ -47,26 +52,16 @@ namespace Assets.Logistics
 		private readonly List<Entry> _entries = new List<Entry>();
 		private int _lastId;
 
-		public TransitRegister()
+		public TransitControl()
 		{
 			OnEveryUpdate += UpdateEntries;
 		}
 
 		void Start()
 		{
-			KeyValueDisplay.Instance.Add("Transit", () => GenerateDisplayText);
+			_journeySeconds = WorldClock.Instance.GetSeconds(_journeyTime);
 			MessageHub.Instance.AddListener(this, LogisticsMessages.RegisterLocation);
 			MessageHub.Instance.AddListener(this, LogisticsMessages.TransitRequested);
-		}
-
-		private object GenerateDisplayText
-		{
-			get
-			{
-				return _entries.Any()
-					? _entries.Aggregate(string.Format("{0}, ", _entries.Count), (name, entry)
-						=> string.Format("{0:G3} ", entry.Ship.TransitTime.TimeRemainingAsZeroToOne)) : "";
-			}
 		}
 
 		// move ships towards their destinations, inform the location when a ship arrives
@@ -77,11 +72,14 @@ namespace Assets.Logistics
 
 			foreach (var entry in _entries)
 			{
-				entry.Ship.TransitTime.ElapsedTicks += delta;
+				entry.Ship.Ticker.ElapsedTicks += delta;
 			}
 
 			var completed = _entries.Where(i => 
-				i.Ship.TransitTime.ElapsedTicks >= i.Ship.TransitTime.TotalTicks);
+				i.Ship.Ticker.ElapsedTicks >= i.Ship.Ticker.TotalTicks).ToList();
+
+			if (!completed.Any())
+				return;
 
 			foreach (var entry in completed)
 			{
@@ -103,7 +101,7 @@ namespace Assets.Logistics
 		private void HandleRegisterLocation(TransitLocationMessageArgs args)
 		{
 			if(args == null || args.TransitLocation == null)
-				throw new UnityException("TransitRegister given bad location register message data");
+				throw new UnityException("TransitControl given bad location register message data");
 
 			if(_locations.ContainsKey(args.TransitLocation.ClientName))
 				throw new UnityException("Transit location registered more than once");
@@ -121,12 +119,12 @@ namespace Assets.Logistics
 				|| args.Ship == null
 				|| !_locations.ContainsKey(args.TravelingTo)
 				|| !_locations.ContainsKey(args.TravelingFrom))
-				throw new UnityException("TransitRegister given bad transit request message data");
+				throw new UnityException("TransitControl given bad transit request message data");
 
 			_lastId++;
 			var source = _locations[args.TravelingFrom];
 			var destination = _locations[args.TravelingTo];
-			args.Ship.TransitTime.Reset(CalculateTravelTime(source, destination));
+			args.Ship.Ticker.Reset(CalculateTravelTime(source, destination));
 
 			var entry = new Entry
 			{
@@ -142,7 +140,7 @@ namespace Assets.Logistics
 
 		private float CalculateTravelTime(ITransitLocation from, ITransitLocation to)
 		{
-			return 5;
+			return _journeySeconds;
 		}
 
 		public string Name { get { return name; } }
