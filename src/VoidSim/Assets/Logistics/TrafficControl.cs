@@ -29,8 +29,6 @@ namespace Assets.Logistics
 
 		public void OnTransitArrival(TransitControl.Entry entry)
 		{
-			Debug.Log("Ship arrived to airspace");
-
 			if (!_berths.Any())
 			{
 				// this is temp, shouldn't be a thing eventually

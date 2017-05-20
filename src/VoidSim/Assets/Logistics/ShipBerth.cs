@@ -24,8 +24,6 @@ namespace Assets.Logistics
             _ship = ship;
             if (OnShipDock != null)
                 OnShipDock(_ship);
-
-            Debug.Log("Ship landing confirmed, begin servicing");
         }
 
         public void CompleteServicing()
@@ -35,8 +33,6 @@ namespace Assets.Logistics
 
             if (OnShipUndock != null)
                 OnShipUndock(_ship);
-
-            Debug.Log("Service complete");
         }
     }
 }

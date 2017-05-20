@@ -10,158 +10,179 @@ using UnityEngine;
 // some Station owned object(Station) holds a reference to this
 namespace Assets.Placeables.Nodes
 {
-    public class ProductFactoryMessageArgs : MessageArgs
-    {
-        public ProductFactory ProductFactory;
-    }
+	public class ProductFactoryMessageArgs : MessageArgs
+	{
+		public ProductFactory ProductFactory;
+	}
 
-    /// <summary>
-    /// Gives placeable an automated crafting container
-    /// </summary>
-    [RequireComponent(typeof(Placeable))]
-    public class ProductFactory : PlaceableNode
-    {
-        public const string MessageName = "ProductFactoryPlaced";
+	/// <summary>
+	/// Gives placeable an automated crafting container
+	/// </summary>
+	[RequireComponent(typeof(Placeable))]
+	public class ProductFactory : PlaceableNode
+	{
+		public const string MessageName = "ProductFactoryPlaced";
 
-        // This code was refactored to use ID's instead of strings
-        // Should probably get a cleanup pass
-        
-        // currently builds its initial item on repeat, needs work to switch between recipes
-        public override void BroadcastPlacement()
-        {
-            MessageHub.Instance.QueueMessage(MessageName, new ProductFactoryMessageArgs { ProductFactory = this } );
-        }
+		// This code was refactored to use ID's instead of strings
+		// Should probably get a cleanup pass
+		
+		// currently builds its initial item on repeat, needs work to switch between recipes
+		public override void BroadcastPlacement()
+		{
+			MessageHub.Instance.QueueMessage(MessageName, new ProductFactoryMessageArgs { ProductFactory = this } );
+		}
 
-        [SerializeField] private string _containerType;
-        private readonly List<Recipe> _recipes = new List<Recipe>();
-        private int _currentCraftQueueId;
-        private Inventory _inventory;
+		[SerializeField] private string _containerType;
+		private readonly List<Recipe> _recipes = new List<Recipe>();
+		private int _currentCraftQueueId;
+		private Inventory _inventory;
 
-        public Recipe CurrentlyCrafting { get; private set; }
+		public Recipe CurrentlyCrafting { get; private set; }
 
-        public float CurrentCraftRemainingAsZeroToOne
-        {
-            get { return _container.CurrentCraftRemainingAsZeroToOne; }
-        }
+		public float CurrentCraftRemainingAsZeroToOne
+		{
+			get { return _container.CurrentCraftRemainingAsZeroToOne; }
+		}
 
-        // set in prefab
-        public bool IsInPlayerArray;
-        public string InitialRecipe;
+		// set in prefab
+		public bool IsInPlayerArray;
+		public string InitialRecipe;
 
-        private ProductLookup _productLookup;
-        
-        public List<Recipe> Recipes { get { return _recipes; } }
+		private ProductLookup _productLookup;
+		
+		public List<Recipe> Recipes { get { return _recipes; } }
 
-        public bool IsCrafting { get; private set; }
+		public bool IsCrafting { get; private set; }
 
-        private CraftingContainer _container;
+		private CraftingContainer _container;
+		private bool _isOutOfProduct;
 
-        // Factory binds to Inventory and initializes its container. Will begin crafting if InitialRecipe not null
-        public void Initialize(Inventory inventory, ProductLookup productLookup)
-        {
-            _inventory = inventory;
-            _productLookup = productLookup;
-            if (_container == null)
-            {
-                _container = gameObject.GetOrAddComponent<CraftingContainer>();
-                _container.Info = ProductLookup.Instance.GetContainer(_containerType);
-                _container.OnCraftingComplete += StoreProductAndRestartCrafting;
-            }
+		// Factory binds to Inventory and initializes its container. Will begin crafting if InitialRecipe not null
+		public void Initialize(Inventory inventory, ProductLookup productLookup)
+		{
+			_inventory = inventory;
+			_inventory.OnProductsChanged += CheckForRestart;
 
-            LoadRecipes();
-            if (!string.IsNullOrEmpty(InitialRecipe))
-            {
-                var recipe = _recipes.FirstOrDefault(i => i.ResultProductName == InitialRecipe);
-                if (recipe == null)
-                    throw new UnityException(string.Format("ProductFactory initialized with recipe it doesnt have: {0}", InitialRecipe));
-                StartCrafting(recipe);
-            }
-        }
+			_productLookup = productLookup;
+			if (_container == null)
+			{
+				_container = gameObject.GetOrAddComponent<CraftingContainer>();
+				_container.Info = ProductLookup.Instance.GetContainer(_containerType);
+				_container.OnCraftingComplete += StoreProductAndRestartCrafting;
+			}
 
-        // loads recipes for specified container type from product lookup
-        private void LoadRecipes()
-        {
-            var recipes = _productLookup.GetRecipesForContainer(_containerType);
-            if (!recipes.Any())
-                throw new UnityException(string.Format("No recipes found for container {0}", _containerType));
+			LoadRecipes();
+			if (!string.IsNullOrEmpty(InitialRecipe))
+			{
+				var recipe = _recipes.FirstOrDefault(i => i.ResultProductName == InitialRecipe);
+				if (recipe == null)
+					throw new UnityException(string.Format("ProductFactory initialized with recipe it doesnt have: {0}", InitialRecipe));
+				StartCrafting(recipe);
+			}
+		}
 
-            _recipes.Clear();
-            _recipes.AddRange(recipes);
-        }
+		// called when inventory changes, will restart a container if it stopped
+		// because product ran out and that has been remedied
+		private void CheckForRestart(int productId, int amount)
+		{
+			if (!_isOutOfProduct || 
+				CurrentlyCrafting.Ingredients.Any(i => !_inventory.HasProduct(i.ProductId, productId)))
+				return;
 
-        // public version, will switch recipes if it is already crafting one
-        public void StartCrafting(int productId)
-        {
-            if(IsCrafting)
-                StopCrafting();
+			_isOutOfProduct = false;
+			StartCrafting(CurrentlyCrafting);
+		}
 
-            var recipe = _recipes.FirstOrDefault(i => i.ResultProductID == productId);
-            if(recipe == null)
-                throw new UnityException(string.Format("ProductFactory asked to make product that it has no recipe for, ID: ", productId));
+		// loads recipes for specified container type from product lookup
+		private void LoadRecipes()
+		{
+			var recipes = _productLookup.GetRecipesForContainer(_containerType);
+			if (!recipes.Any())
+				throw new UnityException(string.Format("No recipes found for container {0}", _containerType));
 
-            if(_currentCraftQueueId > 0)
-                _container.CancelCrafting(_currentCraftQueueId);
-            StartCrafting(recipe);
-        }
+			_recipes.Clear();
+			_recipes.AddRange(recipes);
+		}
 
-        // stops crafting recipe and refunds ingredients
-        public void StopCrafting()
-        {
-            if (!IsCrafting)
-                return;
+		// public version, will switch recipes if it is already crafting one
+		public void StartCrafting(int productId)
+		{
+			if(IsCrafting)
+				StopCrafting();
 
-            RefundProducts();
-            _container.CancelCrafting(_currentCraftQueueId);
-            IsCrafting = false;
-        }
+			var recipe = _recipes.FirstOrDefault(i => i.ResultProductID == productId);
+			if(recipe == null)
+				throw new UnityException(string.Format("ProductFactory asked to make product that it has no recipe for, ID: {0}", productId));
 
-        private void RefundProducts()
-        {
-            foreach (var ingredient in CurrentlyCrafting.Ingredients)
-            {
-                _inventory.TryAddProduct(ingredient.ProductId, ingredient.Quantity);
-            }
-        }
+			if(_currentCraftQueueId > 0)
+				_container.CancelCrafting(_currentCraftQueueId);
+			StartCrafting(recipe);
+		}
 
-        // enables basic loop for continuous crafting
-        private void StoreProductAndRestartCrafting(Recipe recipe)
-        {
-            StoreResult(recipe);
-            StartCrafting(recipe);
-        }
+		// stops crafting recipe and refunds ingredients
+		public void StopCrafting()
+		{
+			if (!IsCrafting)
+				return;
 
-        // handles updating private data
-        private void StartCrafting(Recipe recipe)
-        {
-            if (!TryWithdrawProducts(recipe)) return;
-            _currentCraftQueueId = _container.QueueCrafting(recipe);
-            CurrentlyCrafting = recipe;
-            IsCrafting = true;
-        }
+			RefundProducts();
+			_container.CancelCrafting(_currentCraftQueueId);
+			IsCrafting = false;
+		}
 
-        // if inventory has enough product for ingredients, remove them
-        private bool TryWithdrawProducts(Recipe recipe)
-        {
-            foreach (var ingredient in recipe.Ingredients)
-            {
-                if (_inventory.HasProduct(ingredient.ProductId, ingredient.Quantity))
-                    continue;
+		private void RefundProducts()
+		{
+			foreach (var ingredient in CurrentlyCrafting.Ingredients)
+			{
+				_inventory.TryAddProduct(ingredient.ProductId, ingredient.Quantity);
+			}
+		}
 
-                Debug.Log(string.Format("Automated container ran out of Product {0}", ingredient.ProductId));
-                return false;
-            }
+		// enables basic loop for continuous crafting
+		private void StoreProductAndRestartCrafting(Recipe recipe)
+		{
+			StoreResult(recipe);
+			StartCrafting(recipe);
+		}
 
-            foreach (var ingredient in recipe.Ingredients)
-            {
-                _inventory.TryRemoveProduct(ingredient.ProductId, ingredient.Quantity);
-            }
-            return true;
-        }
+		// handles updating private data
+		private void StartCrafting(Recipe recipe)
+		{
+			if (!TryWithdrawProducts(recipe))
+			{
+				_isOutOfProduct = true;
+				return;
+			}
 
-        // add successful craft result to inventory
-        private void StoreResult(Recipe recipe)
-        {
-            _inventory.TryAddProduct(recipe.ResultProductID, recipe.ResultAmount);
-        }
-    }
+			_isOutOfProduct = false;
+			_currentCraftQueueId = _container.QueueCrafting(recipe);
+			CurrentlyCrafting = recipe;
+			IsCrafting = true;
+		}
+
+		// if inventory has enough product for ingredients, remove them
+		private bool TryWithdrawProducts(Recipe recipe)
+		{
+			foreach (var ingredient in recipe.Ingredients)
+			{
+				if (_inventory.HasProduct(ingredient.ProductId, ingredient.Quantity))
+					continue;
+
+				Debug.Log(string.Format("Automated container ran out of Product {0}", ingredient.ProductId));
+				return false;
+			}
+
+			foreach (var ingredient in recipe.Ingredients)
+			{
+				_inventory.TryRemoveProduct(ingredient.ProductId, ingredient.Quantity);
+			}
+			return true;
+		}
+
+		// add successful craft result to inventory
+		private void StoreResult(Recipe recipe)
+		{
+			_inventory.TryAddProduct(recipe.ResultProductID, recipe.ResultAmount);
+		}
+	}
 }

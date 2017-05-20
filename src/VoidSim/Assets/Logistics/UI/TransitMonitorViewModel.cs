@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Assets.Logistics.Ships;
+using Assets.Scripts;
 using QGame;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,6 +28,7 @@ namespace Assets.Logistics.UI
 
 			_monitor.OnShipAdded += AddEntry;
 			CreatePanel();
+			gameObject.RegisterSystemPanel(_panel.gameObject);
 		}
 
 		private void CreatePanel()
