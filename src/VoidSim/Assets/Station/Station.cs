@@ -34,6 +34,7 @@ namespace Assets.Station
         [SerializeField] private InventoryScriptable _inventoryScriptable;
         [SerializeField] private PlaceablesLookup _placeablesLookup;
         [SerializeField] private TraderRequestsSO _voidTradeRequests;
+	    [SerializeField] private CargoControl _cargoControlPrefab;
 
         private CraftingContainer _crafter;
         private Inventory _inventory;
@@ -54,7 +55,7 @@ namespace Assets.Station
             BindCraftingToShop();
             BindCraftingArray();
 
-            InstantiateTrafficControl();
+            InstantiateCargoControl();
 
             TestPowerGrid();
             TestPopulationControl();
@@ -190,12 +191,11 @@ namespace Assets.Station
             go.name = "player_crafting_array_viewmodel";
         }
 
-        private void InstantiateTrafficControl()
+        private void InstantiateCargoControl()
         {
-            var go = new GameObject();
-            go.transform.SetParent(_layers[LayerType.Core].transform);
-            go.name = "traffic_control";
-            var cargo = go.GetOrAddComponent<CargoControl>();
+	        var cargo = Instantiate(_cargoControlPrefab);
+            cargo.transform.SetParent(_layers[LayerType.Core].transform);
+            cargo.name = "cargo_control";
             cargo.Initialize(_inventory, _inventoryReserve, ClientName);
         }
 

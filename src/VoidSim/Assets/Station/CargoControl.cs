@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Assets.Logistics;
+using Assets.Station.UI;
 using Assets.WorldMaterials;
 using Messaging;
 using QGame;
+using TMPro;
 using UnityEngine;
 
 namespace Assets.Station
@@ -15,7 +18,10 @@ namespace Assets.Station
         private string _clientName;
 
         private readonly List<CargoBay> _cargoBays = new List<CargoBay>();
-        
+
+	    public Action<CargoBay> OnBayAdded;
+	    [SerializeField] private TransactionText _textPrefab;
+
         void Start()
         {
             MessageHub.Instance.AddListener(this, LogisticsMessages.ShipBerthsUpdated);
@@ -49,9 +55,12 @@ namespace Assets.Station
         {
             var go = new GameObject();
             var cargoBay = go.AddComponent<CargoBay>();
-            cargoBay.transform.SetParent(transform);
-            cargoBay.Initialize(berth, _inventory, _reserve, _clientName);
+			cargoBay.transform.SetParent(transform, true);
+            cargoBay.Initialize(berth, _inventory, _reserve, _clientName, _textPrefab);
             _cargoBays.Add(cargoBay);
+
+	        if (OnBayAdded != null)
+		        OnBayAdded(cargoBay);
         }
 
         public string Name { get { return "CargoControl"; } }

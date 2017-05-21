@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Logistics;
 using Assets.Logistics.Ships;
+using Assets.Station.UI;
 using Assets.WorldMaterials;
 using Assets.WorldMaterials.Products;
 using QGame;
+using TMPro;
 using UnityEngine;
 
 namespace Assets.Station
@@ -36,13 +38,17 @@ namespace Assets.Station
 
 		private ProductAmount _productIn;
 		private ProductAmount _productOut;
+		private TransactionText _textPrefab;
 
-		public void Initialize(ShipBerth berth, Inventory inventory, InventoryReserve reserve, string clientName)
+		public void Initialize(ShipBerth berth, Inventory inventory, InventoryReserve reserve, string clientName, TransactionText textPrefab)
 		{
 			_berth = berth;
 			_inventory = inventory;
 			_reserve = reserve;
 			_clientName = clientName;
+			_textPrefab = textPrefab;
+
+			transform.position = berth.transform.position;
 
 			AmountPerTick = 5;
 			SecondsPerTick = 1;
@@ -106,6 +112,7 @@ namespace Assets.Station
 					var manifest = _manifestsIn.Dequeue();
 					_inventory.TryRemoveProduct(_creditsProductID, manifest.Currency);
 					_manifestBook.Close(manifest.Id);
+					CreateCompletionText(manifest.Currency, true);
 					CheckNextIncoming();
 				}
 			}
@@ -130,12 +137,22 @@ namespace Assets.Station
 					var manifest = _manifestsOut.Dequeue();
 					_inventory.TryAddProduct(_creditsProductID, manifest.Currency);
 					_manifestBook.Close(manifest.Id);
+					CreateCompletionText(manifest.Currency, false);
 					CheckNextOutgoing();
 				}
 			}
 
 			if (!_isUnloadingIn && !_isUnloadingOut)
 				CompleteUnload();
+		}
+
+		private void CreateCompletionText(int amount, bool wasBought)
+		{
+            var canvas = GameObject.Find("GameUICanvas");
+			var text = Instantiate(_textPrefab);
+			text.transform.SetParent(canvas.transform, false);
+			//text.transform.position = Camera.main.WorldToScreenPoint(transform.position);
+			text.Initialize(amount, wasBought);
 		}
 
 		// manifests are complete, tell the berth
