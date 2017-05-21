@@ -1,5 +1,6 @@
 ﻿using System;
 using Assets.Scripts;
+using DG.Tweening;
 using QGame;
 using UnityEngine;
 
@@ -43,17 +44,24 @@ namespace Assets.Logistics
 			switch (State)
 			{
 				case BerthState.Empty:
-					_indicator.color = _colors.Go;
+					ResetIndicator(_colors.Go);
 					break;
 				case BerthState.Reserved:
-					_indicator.color = _colors.Stop;
+					ResetIndicator(_colors.Stop);
 					break;
 				case BerthState.Transfer:
-					_indicator.color = _colors.Caution;
+					ResetIndicator(_colors.Caution);
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
+		}
+
+		private void ResetIndicator(Color color)
+		{
+			_indicator.DOKill();
+			_indicator.color = Color.clear;
+			_indicator.DOColor(color, .5f);
 		}
 
 		[SerializeField] private IndicatorColors _colors;
