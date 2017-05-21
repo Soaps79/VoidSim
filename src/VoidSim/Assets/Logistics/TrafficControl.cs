@@ -15,7 +15,7 @@ namespace Assets.Logistics
 		public Transform EntryRight;
 		public float VarianceY;
 
-		private List<ShipBerth> _berths = new List<ShipBerth>();
+		private readonly List<ShipBerth> _berths = new List<ShipBerth>();
 		// do something with this
 		private readonly Queue<Ship> _queuedShips = new Queue<Ship>();
 		private readonly List<Ship> _shipsInTraffic = new List<Ship>();
@@ -43,7 +43,7 @@ namespace Assets.Logistics
 				return;
 			}
 
-			berth.IsInUse = true;
+			berth.State = BerthState.Reserved;
 			List<Vector3> waypoints = GenerateWayPoints(berth);
 			entry.Ship.BeginHold(berth, waypoints);
 			entry.Ship.TrafficShip.transform.SetParent(transform, true);
@@ -95,8 +95,10 @@ namespace Assets.Logistics
 			if(args == null || !args.Berths.Any())
 				throw new UnityException("TrafficControl given bad berths message");
 
-			if(!args.WereRemoved)
+			if (!args.WereRemoved)
+			{
 				_berths.AddRange(args.Berths);
+			}
 		}
 
 		public string Name { get { return "TrafficControl"; } }

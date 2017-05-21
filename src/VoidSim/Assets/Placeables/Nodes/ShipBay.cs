@@ -20,7 +20,9 @@ namespace Assets.Placeables.Nodes
             {
                 LastBerthId++;
                 shipBerth.name = "ship_berth_" + LastBerthId;
+				shipBerth.Initialize();
             }
+
             MessageHub.Instance.QueueMessage(LogisticsMessages.ShipBerthsUpdated, new ShipBerthsMessageArgs { Berths = _berths });
             BerthCount = _berths.Count;
         }
