@@ -58,7 +58,25 @@ namespace Assets.WorldMaterials.Trade
             }
         }
 
-        public void AddProvide(ProductAmount productAmount)
+	    public void AddConsume(ProductAmount productAmount)
+	    {
+		    AddConsume(productAmount.ProductId, productAmount.Amount);
+	    }
+
+		public void AddConsume(int productId, int amount)
+	    {
+		    var product = Consuming.FirstOrDefault(i => i.ProductId == productId);
+		    if (product == null)
+		    {
+			    Consuming.Add(new ProductAmount(productId, amount));
+		    }
+		    else
+		    {
+			    product.Amount += amount;
+		    }
+	    }
+
+		public void AddProvide(ProductAmount productAmount)
         {
             AddProvide(productAmount.ProductId, productAmount.Amount);
         }

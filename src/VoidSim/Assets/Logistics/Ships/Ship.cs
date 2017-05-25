@@ -70,6 +70,7 @@ namespace Assets.Logistics.Ships
 	public class TradeManifestBook
 	{
 		public List<TradeManifest> ActiveManifests { get; private set; }
+		public Action OnContentsUpdated;
 
 		public List<TradeManifest> GetBuyerManifests(string clientName)
 		{
@@ -90,12 +91,21 @@ namespace Assets.Logistics.Ships
 		{
 			if (manifest != null)
 				ActiveManifests.Add(manifest);
+			CheckCallback();
 		}
 
 		public void Close(int id)
 		{
-			ActiveManifests.RemoveAll(i => i.Id == id);
+			if(ActiveManifests.RemoveAll(i => i.Id == id) > 0)
+				CheckCallback();
 		}
+
+		private void CheckCallback()
+		{
+			if (OnContentsUpdated != null)
+				OnContentsUpdated();
+		}
+
 	}
 
 	public class Ticker

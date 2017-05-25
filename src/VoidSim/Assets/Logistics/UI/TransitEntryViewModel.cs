@@ -10,6 +10,7 @@ namespace Assets.Logistics.UI
 	public class TransitEntryViewModel : QScript
 	{
 		public TMP_Text ShipName;
+		public TMP_Text TradeCountText;
 
 		// this class manages 2 views of the ship,
 		// one for a slider and static text
@@ -37,6 +38,8 @@ namespace Assets.Logistics.UI
 			_ship.OnHoldBegin += BeginTraffic;
 			_ship.OnTransitBegin += BeginTransit;
 			ShipName.text = _ship.Name;
+			_ship.ManifestBook.OnContentsUpdated += UpdateTradeCount;
+			UpdateTradeCount();
 
 			// hook into UI slider
 			_sliderBinding = TickerSlider.gameObject.AddComponent<SliderBinding>();
@@ -45,6 +48,11 @@ namespace Assets.Logistics.UI
 			// start with both displays off, wait for a callback to turn one on
 			TrafficPanel.SetActive(false);
 			TickerPanel.SetActive(false);
+		}
+
+		private void UpdateTradeCount()
+		{
+			TradeCountText.text = _ship.ManifestBook.ActiveManifests.Count.ToString();
 		}
 
 		private void BeginTraffic()

@@ -56,6 +56,7 @@ namespace Assets.Placeables.Nodes
 
 		private CraftingContainer _container;
 		private bool _isOutOfProduct;
+		private List<ProductAmount> _forecastList = new List<ProductAmount>();
 
 		// Factory binds to Inventory and initializes its container. Will begin crafting if InitialRecipe not null
 		public void Initialize(Inventory inventory, ProductLookup productLookup)

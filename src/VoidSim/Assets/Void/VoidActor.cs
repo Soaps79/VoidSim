@@ -69,7 +69,7 @@ namespace Assets.Void
 			MessageHub.Instance.QueueMessage(ProductTrader.MessageName, new TraderInstanceMessageArgs { Trader = _trader });
 
 			_automater = go.AddComponent<ProductTradeAutomater>();
-			_automater.Initialize(_tradeRequests, _trader, _worldClock);
+			_automater.Initialize(_trader, _worldClock, _tradeRequests);
 		}
 
 		private void HandleProvideMatch(TradeInfo info)

@@ -17,6 +17,7 @@ namespace Assets.WorldMaterials.Trade
         {
             public ProductAmount ProductAmount;
             public bool IsProviding;
+	        public bool IsOneTimeOnly;
         }
 
         private readonly Dictionary<TimeUnit, List<ProductTradeRequest>> _requests 
@@ -24,7 +25,7 @@ namespace Assets.WorldMaterials.Trade
 
         private ProductTrader _trader;
 
-        public void Initialize(TraderRequestsSO requests, ProductTrader trader, WorldClock worldClock)
+        public void Initialize(ProductTrader trader, WorldClock worldClock, TraderRequestsSO requests = null)
         {
             _trader = trader;
             InitializeRequestsTable();
@@ -74,7 +75,14 @@ namespace Assets.WorldMaterials.Trade
                 else
                     _trader.SetConsume(request.ProductAmount);
             }
+
+	        requests.RemoveAll(i => i.IsOneTimeOnly);
         }
+
+	    public void AddRequest(ProductAmount productAmount, bool isProviding, bool isOneTimeOnly)
+	    {
+		    
+	    }
 
         private void HandleHourUp(object sender, EventArgs e)
         {
