@@ -17,8 +17,9 @@ namespace Assets.WorldMaterials.UI
     {
         private ProductFactory _factory;
         [SerializeField] private TMP_Dropdown _dropdown;
-        [SerializeField] private Toggle _toggle;
-        [SerializeField] private SliderBinding _slider;
+        [SerializeField] private Toggle _onOffToggle;
+	    [SerializeField] private Toggle _isBuyingToggle;
+		[SerializeField] private SliderBinding _slider;
 
         private readonly List<string> _recipeNames = new List<string>();
         private readonly List<Recipe> _recipes = new List<Recipe>();
@@ -28,7 +29,7 @@ namespace Assets.WorldMaterials.UI
             _factory = productFactory;
             // responsible for populating the dropdown and the on/off toggle
             BindRecipes();
-            BindToggle();
+            BindToggles();
             BindSlider();
             _dropdown.onValueChanged.AddListener(HandleCurrentCraftingChanged);
         }
@@ -38,13 +39,21 @@ namespace Assets.WorldMaterials.UI
             _slider.Initialize(() => _factory.CurrentCraftRemainingAsZeroToOne);
         }
 
-        private void BindToggle()
+        private void BindToggles()
         {
-            _toggle.isOn = _factory.IsCrafting;
-            _toggle.onValueChanged.AddListener(HandleToggle);
-        }
+            _onOffToggle.isOn = _factory.IsCrafting;
+            _onOffToggle.onValueChanged.AddListener(HandleOnOffToggle);
 
-        private void HandleToggle(bool isOn)
+	        _isBuyingToggle.isOn = _factory.IsBuying;
+	        _isBuyingToggle.onValueChanged.AddListener(HandleBuyingToggle);
+		}
+
+	    private void HandleBuyingToggle(bool isOn)
+	    {
+		    _factory.SetIsBuying(isOn);
+	    }
+
+	    private void HandleOnOffToggle(bool isOn)
         {
             if(isOn)
                 _factory.StartCrafting(_recipes[_dropdown.value].ResultProductID);
@@ -80,7 +89,7 @@ namespace Assets.WorldMaterials.UI
         {
             if (_recipeNames.Count < index + 1) return;
             var recipe = _recipes[index];
-            if(_toggle.isOn)
+            if(_onOffToggle.isOn)
                 _factory.StartCrafting(recipe.ResultProductID);
         }
     }

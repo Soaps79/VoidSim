@@ -88,9 +88,10 @@ namespace Assets.Station
 
         private void HandleConsumeMatch(TradeInfo info)
         {
-            // still need this? Provider does the work
-            // reserve the money?
-            CheckForTrade();
+			// still need this? Provider does the work
+			// reserve the money?
+			_reserve.AdjustHold(info.ProductId, info.Amount);
+			CheckForTrade();
         }
 
         private void CheckForTrade()

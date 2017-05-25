@@ -190,7 +190,7 @@ namespace Assets.Station
 	        go.transform.SetParent(_layers[LayerType.Core].transform);
             go.name = "factory_control";
 	        var control = go.AddComponent<FactoryControl>();
-			control.Initialize(_inventory, _productLookup);
+			control.Initialize(_inventory, _productLookup, _inventoryReserve);
 		}
 
 		private void InstantiateCargoControl()

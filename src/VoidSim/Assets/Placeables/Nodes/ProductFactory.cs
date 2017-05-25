@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts;
 using Assets.Scripts.WorldMaterials;
@@ -56,7 +57,8 @@ namespace Assets.Placeables.Nodes
 
 		private CraftingContainer _container;
 		private bool _isOutOfProduct;
-		private List<ProductAmount> _forecastList = new List<ProductAmount>();
+		public bool IsBuying { get; private set; }
+		public Action OnIsBuyingchanged;
 
 		// Factory binds to Inventory and initializes its container. Will begin crafting if InitialRecipe not null
 		public void Initialize(Inventory inventory, ProductLookup productLookup)
@@ -80,6 +82,37 @@ namespace Assets.Placeables.Nodes
 					throw new UnityException(string.Format("ProductFactory initialized with recipe it doesnt have: {0}", InitialRecipe));
 				StartCrafting(recipe);
 			}
+		}
+
+		public List<ProductAmount> GetDayForecast()
+		{
+			var list = new List<ProductAmount>();
+			if (CurrentlyCrafting.TimeLength.TimeUnit == TimeUnit.Hour)
+			{
+				var multiplier = WorldClock.Instance.HoursPerDay / CurrentlyCrafting.TimeLength.Length;
+				foreach (var ingredient in CurrentlyCrafting.Ingredients)
+				{
+					list.Add(new ProductAmount{ ProductId = ingredient.ProductId, Amount = ingredient.Quantity * multiplier });
+				}
+			}
+			else if (CurrentlyCrafting.TimeLength.TimeUnit == TimeUnit.Day)
+			{
+				foreach (var ingredient in CurrentlyCrafting.Ingredients)
+				{
+					list.Add(new ProductAmount { ProductId = ingredient.ProductId, Amount = ingredient.Quantity });
+				}
+			}
+			return list;
+		}
+
+		public void SetIsBuying(bool value)
+		{
+			if (IsBuying == value)
+				return;
+
+			IsBuying = value;
+			if (OnIsBuyingchanged != null)
+				OnIsBuyingchanged();
 		}
 
 		// called when inventory changes, will restart a container if it stopped
