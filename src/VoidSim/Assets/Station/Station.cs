@@ -53,7 +53,7 @@ namespace Assets.Station
             BindInventoryToUI();
             InstantiateCraftingContainer();
             BindCraftingToShop();
-            BindCraftingArray();
+            BindFactoryControl();
 
             InstantiateCargoControl();
 
@@ -184,14 +184,16 @@ namespace Assets.Station
             viewmodel.Bind(_productLookup.GetRecipes(), _crafter, _inventory);
         }
 
-        private void BindCraftingArray()
+        private void BindFactoryControl()
         {
-            var go = (GameObject)Instantiate(Resources.Load("Views/player_crafting_array_viewmodel"));
-            go.transform.SetParent(_layers[LayerType.Core].transform);
-            go.name = "player_crafting_array_viewmodel";
-        }
+            var go = new GameObject();
+	        go.transform.SetParent(_layers[LayerType.Core].transform);
+            go.name = "factory_control";
+	        var control = go.AddComponent<FactoryControl>();
+			control.Initialize(_inventory, _productLookup);
+		}
 
-        private void InstantiateCargoControl()
+		private void InstantiateCargoControl()
         {
 	        var cargo = Instantiate(_cargoControlPrefab);
             cargo.transform.SetParent(_layers[LayerType.Core].transform);

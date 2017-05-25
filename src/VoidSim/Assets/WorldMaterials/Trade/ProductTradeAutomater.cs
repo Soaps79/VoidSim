@@ -17,7 +17,7 @@ namespace Assets.WorldMaterials.Trade
         {
             public ProductAmount ProductAmount;
             public bool IsProviding;
-	        public bool IsOneTimeOnly;
+	        public bool IsAdditive;
         }
 
         private readonly Dictionary<TimeUnit, List<ProductTradeRequest>> _requests 
@@ -70,18 +70,33 @@ namespace Assets.WorldMaterials.Trade
         {
             foreach (var request in requests)
             {
-                if(request.IsProviding)
-                    _trader.SetProvide(request.ProductAmount);
-                else
-                    _trader.SetConsume(request.ProductAmount);
+	            if (request.IsProviding)
+	            {
+		            if (request.IsAdditive)
+			            _trader.AddProvide(request.ProductAmount);
+		            else
+			            _trader.SetProvide(request.ProductAmount);
+	            }
+	            else
+	            {
+					if (request.IsAdditive)
+						_trader.AddConsume(request.ProductAmount);
+					else
+						_trader.SetConsume(request.ProductAmount);
+				}
             }
 
-	        requests.RemoveAll(i => i.IsOneTimeOnly);
+	        requests.RemoveAll(i => i.IsAdditive);
         }
 
-	    public void AddRequest(ProductAmount productAmount, bool isProviding, bool isOneTimeOnly)
+	    public void AddRequest(ProductAmount productAmount, TimeUnit time, bool isProviding, bool isAdditive)
 	    {
-		    
+		    _requests[time].Add(new ProductTradeRequest
+		    {
+			    IsAdditive =  isAdditive,
+				IsProviding = isProviding,
+				ProductAmount = productAmount
+		    });
 	    }
 
         private void HandleHourUp(object sender, EventArgs e)

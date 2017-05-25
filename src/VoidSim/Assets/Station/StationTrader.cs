@@ -45,7 +45,6 @@ namespace Assets.Station
         [SerializeField] private Inventory _inventory;
         private ProductTrader _trader;
         private WorldClock _worldClock;
-        private int _creditsProductId;
 
         public void Initialize(Inventory inventory, InventoryReserve reserve)
         {
@@ -57,8 +56,6 @@ namespace Assets.Station
             _valueLookup = ProductValueLookup.Instance;
 
             MessageHub.Instance.QueueMessage(ProductTrader.MessageName, new TraderInstanceMessageArgs { Trader = _trader });
-
-            _creditsProductId = ProductLookup.Instance.GetProduct("Credits").ID;
         }
 
         private void BindToTrader()
@@ -87,8 +84,6 @@ namespace Assets.Station
             });
 
             CheckForTrade();
-
-            //Debug.Log(string.Format("Station provide match: {0} {1}", info.ProductId, info.Amount));
         }
 
         private void HandleConsumeMatch(TradeInfo info)
@@ -106,36 +101,5 @@ namespace Assets.Station
             list = _reserve.GetConsumeProducts();
             list.ForEach(i => _trader.SetConsume(i));
         }
-
-
-        // add items to inventory for now, add to traffic eventually
-        //public void OnTransitArrival(TransitControl.Entry entry)
-        //{
-        //    if (entry.TravelingTo.ClientName != ClientName) return;
-
-        //    var buying = entry.Ship.GetBuyerManifests(ClientName);
-        //    foreach (var tradeManifest in buying)
-        //    {
-        //        foreach (var product in tradeManifest.ProductAmount)
-        //        {
-        //            _inventory.TryAddProduct(product.ProductId, product.Amount);
-        //        }
-        //        _inventory.TryRemoveProduct(_creditsProductId, tradeManifest.Currency);
-        //        entry.Ship.CloseManifest(tradeManifest.Id);
-        //    }
-
-        //    var selling = entry.Ship.GetSellerManifests(ClientName);
-        //    foreach (var tradeManifest in selling)
-        //    {
-        //        foreach (var product in tradeManifest.ProductAmount)
-        //        {
-        //            _inventory.TryRemoveProduct(product.ProductId, product.Amount);
-        //        }
-        //        _inventory.TryAddProduct(_creditsProductId, tradeManifest.Currency);
-        //        entry.Ship.CloseManifest(tradeManifest.Id);
-        //    }
-
-        //    entry.Ship.CompleteVisit();
-        //}
     }
 }

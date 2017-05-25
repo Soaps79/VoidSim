@@ -105,6 +105,11 @@ namespace Assets.Placeables.Nodes
 			_recipes.AddRange(recipes);
 		}
 
+		public void StartRequestingGoods()
+		{
+			
+		}
+
 		// public version, will switch recipes if it is already crafting one
 		public void StartCrafting(int productId)
 		{
