@@ -24,6 +24,8 @@ namespace Assets.Station.UI
 
 			transform.DOMove(new Vector3(transform.position.x, transform.position.y + _offsetY, 0), _travelTime)
 				.OnComplete(() => Destroy(gameObject));
+			text.DOFade(0, _travelTime)
+				.SetEase(Ease.InSine);
 		}
 	}
 }

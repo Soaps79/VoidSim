@@ -23,12 +23,31 @@ namespace Assets.Logistics
 		private TransitControl _control;
 
 		public Action<Ship> OnShipAdded;
+		private readonly List<TradeManifest> _manifestsBacklog = new List<TradeManifest>();
 
 		void Start()
 		{
 			MessageHub.Instance.AddListener(this, LogisticsMessages.ShipCreated);
 			MessageHub.Instance.AddListener(this, LogisticsMessages.CargoRequested);
 			BindToUI();
+			var node = StopWatch.AddNode("check_backlog", 5);
+			node.OnTick += HandleManifestsBacklog;
+		}
+
+		private void HandleManifestsBacklog()
+		{
+			if (!_manifestsBacklog.Any())
+				return;
+
+			var manifests = _manifestsBacklog.ToList();
+			foreach (var manifest in manifests)
+			{
+				var ship = CargoCarrierFinder.FindCarrier(_ships, manifest);
+				if (ship == null)
+					continue;
+				ship.AddManifest(manifest);
+				_manifestsBacklog.Remove(manifest);
+			}
 		}
 
 		public void HandleMessage(string type, MessageArgs args)
@@ -62,9 +81,12 @@ namespace Assets.Logistics
 
 			_lastManifestId++;
 			args.Manifest.Id = _lastManifestId;
-			var ship = _ships.FirstOrDefault(i => i.Navigation.CurrentDestination.ClientName == "Void") ?? _ships[0];
-			ship.AddManifest(args.Manifest);
-			Debug.Log(string.Format("{0} given manifest {1}", ship.Name, args.Manifest.Id));
+
+			var ship = CargoCarrierFinder.FindCarrier(_ships, args.Manifest);
+			if(ship == null)
+				_manifestsBacklog.Add(args.Manifest);
+			else
+				ship.AddManifest(args.Manifest);
 		}
 
 		private void BindToUI()
@@ -74,6 +96,8 @@ namespace Assets.Logistics
 			go.name = "transit_monitor_viewmodel";
 			var viewmodel = go.GetOrAddComponent<TransitMonitorViewModel>();
 			viewmodel.Initialize(this);
+
+			KeyValueDisplay.Instance.Add("Manifest Backlog", () => _manifestsBacklog.Count);
 		}
 
 		public string Name { get { return "TransitMonitor"; } }
