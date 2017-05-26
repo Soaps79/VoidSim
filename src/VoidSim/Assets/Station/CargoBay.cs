@@ -22,7 +22,7 @@ namespace Assets.Station
 
 		private ShipBerth _berth;
 		private TrafficShip _ship;
-		private TradeManifestBook _manifestBook;
+		private CargoManifestBook _manifestBook;
 		private Inventory _inventory;
 		private InventoryReserve _reserve;
 		private int _creditsProductID;
@@ -33,8 +33,8 @@ namespace Assets.Station
 		private const string _stopwatchName = "tick_unload";
 
 
-		private readonly Queue<TradeManifest> _manifestsIn = new Queue<TradeManifest>();
-		private readonly Queue<TradeManifest> _manifestsOut = new Queue<TradeManifest>();
+		private readonly Queue<CargoManifest> _manifestsIn = new Queue<CargoManifest>();
+		private readonly Queue<CargoManifest> _manifestsOut = new Queue<CargoManifest>();
 
 		private ProductAmount _productIn;
 		private ProductAmount _productOut;

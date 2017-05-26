@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Messaging;
 using QGame;
@@ -6,20 +7,6 @@ using UnityEngine;
 
 namespace Assets.WorldMaterials.Trade
 {
-    public class TraderInstanceMessageArgs : MessageArgs
-    {
-        public ProductTrader Trader;
-    }
-
-    public class TradeInfo
-    {
-        public int Id;
-        public ProductTrader Provider;
-        public ProductTrader Consumer;
-        public int ProductId;
-        public int Amount;
-    }
-
     /// <summary>
     /// Manages the supply and demand of ProductAmount between game actors. 
     /// Traders are added through messaging, can expose requests to provide or consume
@@ -106,12 +93,14 @@ namespace Assets.WorldMaterials.Trade
                                 Id = _lastId,
                                 Consumer = consumer,
                                 Provider = provider,
-                                Amount = amountConsumed,
-                                ProductId = provided.ProductId
+                                AmountTotal = amountConsumed,
+                                ProductId = provided.ProductId,
+								Status = TradeStatus.Accepted
                             };
 
                             provider.HandleProvideSuccess(info);
                             consumer.HandleConsumeSuccess(info);
+							MessageHub.Instance.QueueMessage(TradeInfo.MessageName, new TradeCreatedMessageArgs { TradeInfo = info });
                         }
 
                         // move on to the next consumer, break if provider has emptied its stock

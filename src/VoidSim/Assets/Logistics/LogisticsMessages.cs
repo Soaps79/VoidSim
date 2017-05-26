@@ -34,7 +34,7 @@ namespace Assets.Logistics
     {
         public string TravelingTo;
         public string TravelingFrom;
-        public TradeManifest Manifest;
+        public CargoManifest Manifest;
     }
 
     public class ShipBerthsMessageArgs : MessageArgs

@@ -12,22 +12,6 @@ using UnityEngine;
 
 namespace Assets.Station
 {
-    public enum TradeStatus
-    {
-        Accepted, Rejected, Complete
-    }
-
-    public class TradeStatusChangedMessageArgs : MessageArgs
-    {
-        public const string MessageName = "TradeSuccess";
-        public ProductTrader Provider;
-        public ProductTrader Consumer;
-        public int ProductId;
-        public int Amount;
-        public int Credits;
-        public TradeStatus Status;
-    }
-
     /// <summary>
     /// This is currently doing multiple small jobs that will most likely become their own behaviors or systems.
     /// Acts as a driver for ProductTrader, telling it what to buy and sell on the market. 
@@ -69,17 +53,17 @@ namespace Assets.Station
         private void HandleProvideMatch(TradeInfo info)
         {
             // need to add logic to place a hold on the traded items in the reserve
-            _reserve.AdjustHold(info.ProductId, -info.Amount);
+            _reserve.AdjustHold(info.ProductId, -info.AmountTotal);
 
             // request cargo for trade
             MessageHub.Instance.QueueMessage(LogisticsMessages.CargoRequested, new CargoRequestedMessageArgs
             {
-                Manifest = new TradeManifest
+                Manifest = new CargoManifest(info)
                 {
                     Seller = ClientName,
                     Buyer = info.Consumer.ClientName,
-                    Currency = _valueLookup.GetValueOfProductAmount(info.ProductId, info.Amount),
-                    ProductAmount = new ProductAmount { ProductId = info.ProductId, Amount = info.Amount }
+                    Currency = _valueLookup.GetValueOfProductAmount(info.ProductId, info.AmountTotal),
+                    ProductAmount = new ProductAmount { ProductId = info.ProductId, Amount = info.AmountTotal }
                 }
             });
 
@@ -90,7 +74,7 @@ namespace Assets.Station
         {
 			// still need this? Provider does the work
 			// reserve the money?
-			_reserve.AdjustHold(info.ProductId, info.Amount);
+			_reserve.AdjustHold(info.ProductId, info.AmountTotal);
 			CheckForTrade();
         }
 

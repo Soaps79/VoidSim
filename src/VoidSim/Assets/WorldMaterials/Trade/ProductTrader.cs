@@ -2,14 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.WorldMaterials.Products;
+using Messaging;
 using QGame;
 
 namespace Assets.WorldMaterials.Trade
 {
-    /// <summary>
-    /// Actors will use one of these objects to manage their participation in the galaxy's trading system
-    /// </summary>
-    public class ProductTrader : QScript
+	public class TraderInstanceMessageArgs : MessageArgs
+	{
+		public ProductTrader Trader;
+	}
+
+	/// <summary>
+	/// Actors will use one of these objects to manage their participation in the galaxy's trading system
+	/// </summary>
+	public class ProductTrader : QScript
     {
         public const string MessageName = "TraderInstance";
         public string ClientName;

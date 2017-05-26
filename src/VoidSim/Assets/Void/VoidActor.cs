@@ -77,12 +77,12 @@ namespace Assets.Void
 			// request cargo for trade
 			MessageHub.Instance.QueueMessage(LogisticsMessages.CargoRequested, new CargoRequestedMessageArgs
 			{
-				Manifest = new TradeManifest
+				Manifest = new CargoManifest(info)
 				{
 					Seller = ClientName,
 					Buyer = info.Consumer.ClientName,
-					Currency = _valueLookup.GetValueOfProductAmount(info.ProductId, info.Amount),
-					ProductAmount = new ProductAmount { ProductId = info.ProductId, Amount = info.Amount }
+					Currency = _valueLookup.GetValueOfProductAmount(info.ProductId, info.AmountTotal),
+					ProductAmount = new ProductAmount { ProductId = info.ProductId, Amount = info.AmountTotal }
 				}
 			});
 		}

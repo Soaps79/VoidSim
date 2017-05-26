@@ -7,7 +7,7 @@ namespace Assets.Logistics
 {
 	public static class CargoCarrierFinder
 	{
-		public static Ship FindCarrier(List<Ship> ships, TradeManifest manifest)
+		public static Ship FindCarrier(List<Ship> ships, CargoManifest manifest)
 		{
 			var ship = FindShipHeadingTo(ships, manifest);
 			//if (ship == null)
@@ -22,7 +22,7 @@ namespace Assets.Logistics
 			return ships[rand];
 		}
 
-		private static Ship FindShipHeadingTo(List<Ship> ships, TradeManifest manifest)
+		private static Ship FindShipHeadingTo(List<Ship> ships, CargoManifest manifest)
 		{
 			var valid = ships.Where(i => i.Navigation.CurrentDestination.ClientName == manifest.Seller).ToList();
 			return valid.Any() ? valid[Random.Range(0, valid.Count - 1)] : null;

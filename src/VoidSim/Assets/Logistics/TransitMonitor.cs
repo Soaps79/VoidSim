@@ -23,7 +23,7 @@ namespace Assets.Logistics
 		private TransitControl _control;
 
 		public Action<Ship> OnShipAdded;
-		private readonly List<TradeManifest> _manifestsBacklog = new List<TradeManifest>();
+		private readonly List<CargoManifest> _manifestsBacklog = new List<CargoManifest>();
 
 		void Start()
 		{

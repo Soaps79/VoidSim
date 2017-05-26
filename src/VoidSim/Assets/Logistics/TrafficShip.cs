@@ -32,7 +32,7 @@ namespace Assets.Logistics
 
 
 		private List<Vector3> _waypoints;
-		public TradeManifestBook ManifestBook { get; private set; }
+		public CargoManifestBook ManifestBook { get; private set; }
 		private bool _approachFromLeft;
 
 		// replace with state machine

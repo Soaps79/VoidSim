@@ -58,56 +58,7 @@ namespace Assets.Logistics.Ships
 		}
 	}
 
-	public class TradeManifest
-	{
-		public int Id;
-		public string Buyer;
-		public string Seller;
-		public ProductAmount ProductAmount;
-		public int Currency;
-	}
-
-	public class TradeManifestBook
-	{
-		public List<TradeManifest> ActiveManifests { get; private set; }
-		public Action OnContentsUpdated;
-
-		public List<TradeManifest> GetBuyerManifests(string clientName)
-		{
-			return ActiveManifests.Where(i => i.Buyer == clientName).ToList();
-		}
-
-		public List<TradeManifest> GetSellerManifests(string clientName)
-		{
-			return ActiveManifests.Where(i => i.Seller == clientName).ToList();
-		}
-
-		public TradeManifestBook()
-		{
-			ActiveManifests = new List<TradeManifest>();
-		}
-
-		public void Add(TradeManifest manifest)
-		{
-			if (manifest != null)
-				ActiveManifests.Add(manifest);
-			CheckCallback();
-		}
-
-		public void Close(int id)
-		{
-			if(ActiveManifests.RemoveAll(i => i.Id == id) > 0)
-				CheckCallback();
-		}
-
-		private void CheckCallback()
-		{
-			if (OnContentsUpdated != null)
-				OnContentsUpdated();
-		}
-
-	}
-
+	
 	public class Ticker
 	{
 		public float TotalTicks;
@@ -138,7 +89,7 @@ namespace Assets.Logistics.Ships
 		public int CurrentSpaceUsed { get; private set; }
 		public List<ProductAmount> ProductCargo = new List<ProductAmount>();
 
-		public TradeManifestBook ManifestBook = new TradeManifestBook();
+		public CargoManifestBook ManifestBook = new CargoManifestBook();
 		public ShipNavigation Navigation { get; private set; }
 		private ShipBerth _berth;
 		public GameObject TrafficShipPrefab;
@@ -157,7 +108,7 @@ namespace Assets.Logistics.Ships
 				throw new UnityException("Ship got bad trafficship prefab");
 		}
 
-		public void AddManifest(TradeManifest manifest)
+		public void AddManifest(CargoManifest manifest)
 		{
 			if(manifest != null)
 				ManifestBook.Add(manifest);
