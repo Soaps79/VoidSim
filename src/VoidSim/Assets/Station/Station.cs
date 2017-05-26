@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Assets.Logistics;
 using Assets.Placeables;
 using Assets.Scripts;
 using Assets.Scripts.WorldMaterials;
@@ -225,6 +224,7 @@ namespace Assets.Station
         private void InstantiateTrader()
         {
             var go = new GameObject();
+	        go.name = "station_trader";
             go.transform.SetParent(_layers[LayerType.Core].transform);
             var trader = go.AddComponent<StationTrader>();
             trader.ClientName = ClientName;

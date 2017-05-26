@@ -19,6 +19,7 @@ namespace Assets.Logistics
 		// do something with this
 		private readonly Queue<Ship> _queuedShips = new Queue<Ship>();
 		private readonly List<Ship> _shipsInTraffic = new List<Ship>();
+		[SerializeField] private ShipHolder _holder;
 
 		void Start()
 		{
@@ -32,8 +33,8 @@ namespace Assets.Logistics
 			if (!_berths.Any())
 			{
 				// this is temp, shouldn't be a thing eventually
+				_holder.BeginHold(entry.Ship);
 				Debug.Log("Ship arrived before berths placed");
-				entry.Ship.CompleteVisit();
 			}
 
 			var berth = _berths.FirstOrDefault(i => i.ShipSize == entry.Ship.Size && !i.IsInUse);
@@ -82,7 +83,7 @@ namespace Assets.Logistics
 			_shipsInTraffic.Remove(entry.Ship);
 		}
 
-		public bool IsSimpleHold { get { return false; } }
+		public bool IsSimpleHold { get { return !_berths.Any(); } }
 
 		public void HandleMessage(string type, MessageArgs args)
 		{
