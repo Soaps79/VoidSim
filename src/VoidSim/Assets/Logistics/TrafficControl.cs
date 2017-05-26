@@ -19,6 +19,9 @@ namespace Assets.Logistics
 		// do something with this
 		private readonly Queue<Ship> _queuedShips = new Queue<Ship>();
 		private readonly List<Ship> _shipsInTraffic = new List<Ship>();
+
+		// hold was originally used to handle arrivals before berths were placed
+		// should also be used for when all berths are full
 		[SerializeField] private ShipHolder _holder;
 
 		void Start()
@@ -37,18 +40,23 @@ namespace Assets.Logistics
 				Debug.Log("Ship arrived before berths placed");
 			}
 
-			var berth = _berths.FirstOrDefault(i => i.ShipSize == entry.Ship.Size && !i.IsInUse);
+			FindBerthAndAssignToShip(entry.Ship);
+		}
+
+		private void FindBerthAndAssignToShip(Ship ship)
+		{
+			var berth = _berths.FirstOrDefault(i => i.ShipSize == ship.Size && !i.IsInUse);
 			if (berth == null)
 			{
-				_queuedShips.Enqueue(entry.Ship);
+				_queuedShips.Enqueue(ship);
 				return;
 			}
 
 			berth.State = BerthState.Reserved;
 			List<Vector3> waypoints = GenerateWayPoints(berth);
-			entry.Ship.BeginHold(berth, waypoints);
-			entry.Ship.TrafficShip.transform.SetParent(transform, true);
-			_shipsInTraffic.Add(entry.Ship);
+			ship.BeginHold(berth, waypoints);
+			ship.TrafficShip.transform.SetParent(transform, true);
+			_shipsInTraffic.Add(ship);
 		}
 
 		private List<Vector3> GenerateWayPoints(ShipBerth berth)
@@ -98,7 +106,26 @@ namespace Assets.Logistics
 
 			if (!args.WereRemoved)
 			{
-				_berths.AddRange(args.Berths);
+				AddBerths(args.Berths);
+			}
+		}
+
+		private void AddBerths(List<ShipBerth> berths)
+		{
+			var isFirst = !_berths.Any();
+			_berths.AddRange(berths);
+			if (isFirst && _holder.Count > 0)
+			{
+				RemoveShipsFromHold();
+			}
+		}
+
+		private void RemoveShipsFromHold()
+		{
+			var ships = _holder.ReleaseShips();
+			foreach (var ship in ships)
+			{
+				FindBerthAndAssignToShip(ship);
 			}
 		}
 

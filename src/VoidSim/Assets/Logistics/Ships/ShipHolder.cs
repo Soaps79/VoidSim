@@ -13,6 +13,8 @@ namespace Assets.Logistics.Ships
 		private readonly List<Ship> _shipsOnHold = new List<Ship>();
 		private readonly List<Ship> _shipstoRemove = new List<Ship>();
 
+		public int Count {  get { return _shipsOnHold.Count; } }
+
 		void Start()
 		{
 			_shipDelaySeconds = WorldClock.Instance.GetSeconds(_shipDelayTime);
@@ -44,6 +46,13 @@ namespace Assets.Logistics.Ships
 			ship.Ticker.Reset(_shipDelaySeconds);
 			ship.BeginHold(null, null);
 			_shipsOnHold.Add(ship);
+		}
+
+		public List<Ship> ReleaseShips()
+		{
+			var list = _shipsOnHold.ToList();
+			_shipsOnHold.Clear();
+			return list;
 		}
 	}
 }
