@@ -19,43 +19,18 @@ namespace Assets.Void
 
 		[SerializeField] private ProductValueLookup _valueLookup;
 		[SerializeField] private TraderRequestsSO _tradeRequests;
-		[SerializeField] private TimeLength _shipDelayTime;
-		private float _shipDelaySeconds;
+		[SerializeField] private ShipHolder _holder;
+		
 		private const string _clientName = "Void";
 		private ProductTradeAutomater _automater;
 		private ProductTrader _trader;
 
-		private readonly List<Ship> _shipsOnHold = new List<Ship>();
-		private readonly List<Ship> _shipstoRemove = new List<Ship>();
-
 		void Start()
 		{
 			_valueLookup = ProductValueLookup.Instance;
-			_shipDelaySeconds = WorldClock.Instance.GetSeconds(_shipDelayTime);
 			InstantiateVoidTrader();
 			MessageHub.Instance.QueueMessage(ProductTrader.MessageName, new TraderInstanceMessageArgs { Trader = _trader });
 			MessageHub.Instance.QueueMessage(LogisticsMessages.RegisterLocation, new TransitLocationMessageArgs{ TransitLocation = this });
-			OnEveryUpdate += UpdateShips;
-		}
-
-		private void UpdateShips(float delta)
-		{
-			if (!_shipsOnHold.Any())
-				return;
-
-			foreach (var ship in _shipsOnHold)
-			{
-				ship.Ticker.ElapsedTicks += delta;
-				if(ship.Ticker.IsComplete)
-					_shipstoRemove.Add(ship);
-			}
-
-			if (!_shipstoRemove.Any())
-				return;
-
-			_shipsOnHold.RemoveAll(i => _shipstoRemove.Contains(i));
-			_shipstoRemove.ForEach(i => i.CompleteTraffic());
-			_shipstoRemove.Clear();
 		}
 
 		private void InstantiateVoidTrader()
@@ -90,13 +65,7 @@ namespace Assets.Void
 		public string ClientName { get { return _clientName; } }
 		public void OnTransitArrival(TransitControl.Entry entry)
 		{
-			// called twice
-			// something to do with actor
-
-
-			entry.Ship.Ticker.Reset(_shipDelaySeconds);
-			entry.Ship.BeginHold(null, null);
-			_shipsOnHold.Add(entry.Ship);
+			_holder.BeginHold(entry.Ship);
 		}
 
 		public void OnTransitDeparture(TransitControl.Entry entry)
