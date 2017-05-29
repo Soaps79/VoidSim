@@ -87,8 +87,6 @@ namespace Assets.Logistics
 			else
 			{
 				ship.AddManifest(args.Manifest);
-				var s = string.Format("{0} given manifest {1}", ship.Name, args.Manifest.Id);
-				UberDebug.LogChannel(this, "Trade", s);
 			}
 		}
 

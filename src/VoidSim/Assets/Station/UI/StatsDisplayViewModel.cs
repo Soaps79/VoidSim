@@ -6,6 +6,7 @@ using QGame;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using WorldClock = Assets.Scripts.WorldClock;
 
 namespace Assets.Station.UI
 {

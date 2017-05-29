@@ -5,6 +5,8 @@ using Assets.Logistics.Ships;
 using Messaging;
 using QGame;
 using UnityEngine;
+using TimeLength = Assets.Scripts.TimeLength;
+using WorldClock = Assets.Scripts.WorldClock;
 
 namespace Assets.Logistics
 {

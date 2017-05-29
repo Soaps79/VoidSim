@@ -5,7 +5,6 @@ using Assets.Scripts;
 using Assets.WorldMaterials.Products;
 using Messaging;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Assets.Logistics.Ships
 {
@@ -110,11 +109,14 @@ namespace Assets.Logistics.Ships
 
 		public void AddManifest(CargoManifest manifest)
 		{
-			if(manifest != null)
-				ManifestBook.Add(manifest);
+			if (manifest == null)
+				return;
 
-			Debug.Log(string.Format("Ship given manifest: {0} to {1}, {2} x{3}", 
-				manifest.Seller, manifest.Buyer, manifest.ProductAmount.ProductId, manifest.ProductAmount.Amount));
+			ManifestBook.Add(manifest);
+
+			var s = string.Format("{0} given manifest {1}:\t {2} to {3}\t {4} x{5}", Name, manifest.Id,
+				manifest.Seller, manifest.Buyer, manifest.ProductAmount.ProductId, manifest.ProductAmount.Amount);
+			UberDebug.LogChannel(LogChannels.Trade, s);
 		}
 
 		public void CompleteVisit()
@@ -137,7 +139,7 @@ namespace Assets.Logistics.Ships
 
 		private void CreateTrafficShip(ShipBerth berth, List<Vector3> waypoints)
 		{
-			var go = Object.Instantiate(TrafficShipPrefab);
+			var go = GameObject.Instantiate(TrafficShipPrefab);
 			go.TrimCloneFromName();
 			TrafficShip = go.GetComponent<TrafficShip>();
 			TrafficShip.Initialize(this, berth, waypoints);

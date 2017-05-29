@@ -9,6 +9,7 @@ using Assets.WorldMaterials.Trade;
 using Messaging;
 using QGame;
 using UnityEngine;
+    using WorldClock = Assets.Scripts.WorldClock;
 
 namespace Assets.Station
 {
