@@ -4,7 +4,6 @@ using System.Linq;
 using Assets.Logistics.Ships;
 using Assets.Logistics.UI;
 using Assets.Scripts;
-using Assets.WorldMaterials.UI;
 using Messaging;
 using QGame;
 using UnityEngine;
@@ -83,10 +82,14 @@ namespace Assets.Logistics
 			args.Manifest.Id = _lastManifestId;
 
 			var ship = CargoCarrierFinder.FindCarrier(_ships, args.Manifest);
-			if(ship == null)
+			if (ship == null)
 				_manifestsBacklog.Add(args.Manifest);
 			else
+			{
 				ship.AddManifest(args.Manifest);
+				var s = string.Format("{0} given manifest {1}", ship.Name, args.Manifest.Id);
+				UberDebug.LogChannel(this, "Trade", s);
+			}
 		}
 
 		private void BindToUI()
