@@ -32,4 +32,12 @@ namespace Assets.Scripts
             systemPanel.Register(panel);
         }
     }
+
+	public static class Vector3Extensions
+	{
+		public static Vector2 ToVector2(this Vector3 u)
+		{
+			return new Vector2(u.x, u.y);
+		}
+	}
 }
