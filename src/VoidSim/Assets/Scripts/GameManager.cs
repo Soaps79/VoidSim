@@ -34,6 +34,7 @@ namespace Assets.Scripts
 		// add to locator once it is generic
 		private ProductLookup _lkp;
 		private static ProductLookup _lkpActual;
+		// This has since been made into a singleton, assess if this ref is still needed
 		public static IProductLookup ProductLookup { get { return _lkpActual; } }
 
 		public static string KeyValueTextName = "KeyValueText";
