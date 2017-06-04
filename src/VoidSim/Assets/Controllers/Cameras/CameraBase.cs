@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Assets.Controllers.Cameras
 {
-    [RequireComponent(typeof(Camera))]
+	[RequireComponent(typeof(Camera))]
     public class CameraBase : MonoBehaviour, ICamera
     {
         public Camera CameraComponent { get; private set; }
