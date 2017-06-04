@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using Assets.WorldMaterials.Products;
 using QGame;
+using TimeUnit = Assets.Scripts.TimeUnit;
+using WorldClock = Assets.Scripts.WorldClock;
 
 namespace Assets.WorldMaterials.Trade
 {

@@ -9,6 +9,7 @@ using UnityEngine;
 using Messaging;
 using QGame;
 using Zenject;
+using WorldClock = Assets.Scripts.WorldClock;
 
 namespace Assets.Station
 {

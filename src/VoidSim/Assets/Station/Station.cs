@@ -11,6 +11,8 @@ using Messaging;
 using QGame;
 using UnityEngine;
 using Zenject;
+using TimeUnit = Assets.Scripts.TimeUnit;
+using WorldClock = Assets.Scripts.WorldClock;
 
 namespace Assets.Station
 {

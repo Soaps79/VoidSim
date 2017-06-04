@@ -1,123 +1,129 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using Assets.Scripts.WorldMaterials;
-using Assets.WorldMaterials.Products;
+﻿using Assets.WorldMaterials.Products;
 using DG.Tweening;
-using QGame;
 using Messaging;
+using QGame;
+using UnityEngine;
 
-public class GameMessages
+namespace Assets.Scripts
 {
-    public const string GameSpeedChange = "GameSpeedChange";
-    public const string ItemPlaced = "ItemPlaced";
-}
+	public static class LogChannels
+	{
+		public const string Trade = "Trade";
+	}
 
-public class GameManager : QScript, IMessageListener
-{
-    [SerializeField]
-    private GameObject KVDUIGameObject;
-    private UnityEngine.UI.Text _textGameObject;
+	public class GameMessages
+	{
+		public const string GameSpeedChange = "GameSpeedChange";
+		public const string ItemPlaced = "ItemPlaced";
+	}
 
-    public static Bounds ScreenBounds;
-    public Camera MainCamera;
+	public class GameManager : QScript, IMessageListener
+	{
+		[SerializeField]
+		private GameObject KVDUIGameObject;
+		private UnityEngine.UI.Text _textGameObject;
 
-    private MessageHub _messageHub;
-    private KeyValueDisplay _keyValueDisplay;
+		public static Bounds ScreenBounds;
+		public Camera MainCamera;
 
-    [SerializeField]
-    // Enabling setting in editor and exposing a static interface. there may be a better solution
-    // add to locator once it is generic
-    private ProductLookup _lkp;
-    private static ProductLookup _lkpActual;
-    public static IProductLookup ProductLookup { get { return _lkpActual; } }
+		private MessageHub _messageHub;
+		private KeyValueDisplay _keyValueDisplay;
 
-    public static string KeyValueTextName = "KeyValueText";
+		[SerializeField]
+		// Enabling setting in editor and exposing a static interface. there may be a better solution
+		// add to locator once it is generic
+		private ProductLookup _lkp;
+		private static ProductLookup _lkpActual;
+		// This has since been made into a singleton, assess if this ref is still needed
+		public static IProductLookup ProductLookup { get { return _lkpActual; } }
 
-    public GameManager()
-    {
-        OnEveryUpdate += (delta) => MessageHub.Instance.Update();
-    }
+		public static string KeyValueTextName = "KeyValueText";
 
-    void Start()
-    {
-        DOTween.Init(false, true, LogBehaviour.ErrorsOnly);
-        InititalizeKeyValueDisplay();
-        BindMouseMovementToKvd();
-        InitializeScreenBounds();
-        InitializeProductLookup();
-        MessageHub.Instance.AddListener(this, GameMessages.GameSpeedChange);
-    }
+		public GameManager()
+		{
+			OnEveryUpdate += (delta) => MessageHub.Instance.Update();
+		}
 
-    private void InitializeProductLookup()
-    {
-        if(_lkp == null)
-            throw new UnityException("ProductLookup not found");
+		void Start()
+		{
+			DOTween.Init(false, true, LogBehaviour.ErrorsOnly);
+			InititalizeKeyValueDisplay();
+			BindMouseMovementToKvd();
+			InitializeScreenBounds();
+			InitializeProductLookup();
+			MessageHub.Instance.AddListener(this, GameMessages.GameSpeedChange);
+		}
 
-        _lkpActual = _lkp;
-    }
+		private void InitializeProductLookup()
+		{
+			if(_lkp == null)
+				throw new UnityException("ProductLookup not found");
 
-    private void BindMouseMovementToKvd()
-    {
-        KeyValueDisplay.Instance.Add("MousePos", () => Input.mousePosition.ToString());
-    }
+			_lkpActual = _lkp;
+		}
 
-    private void InititalizeKeyValueDisplay()
-    {
-        if (KVDUIGameObject == null)
-        {
-            Debug.Log("GameManager's KVD UI object is null");
-        }
-        else
-        {
-            _textGameObject = KVDUIGameObject.GetComponent<UnityEngine.UI.Text>() as UnityEngine.UI.Text;
-            if (_textGameObject == null)
-            {
-                Debug.Log("GameManager's KVD UI object is null");
-            }
-            else
-            {
-                Debug.Log("KVD Initialized");
-                OnEveryUpdate += UpdateKeyValueDisplayText;
-            }
-        }
-    }
+		private void BindMouseMovementToKvd()
+		{
+			KeyValueDisplay.Instance.Add("MousePos", () => Input.mousePosition.ToString());
+		}
 
-    private void InitializeScreenBounds()
-    {
-        if (MainCamera == null)
-        {
-            throw new UnityException("GameManager does not have Main Camera");
-        }
+		private void InititalizeKeyValueDisplay()
+		{
+			if (KVDUIGameObject == null)
+			{
+				Debug.Log("GameManager's KVD UI object is null");
+			}
+			else
+			{
+				_textGameObject = KVDUIGameObject.GetComponent<UnityEngine.UI.Text>() as UnityEngine.UI.Text;
+				if (_textGameObject == null)
+				{
+					Debug.Log("GameManager's KVD UI object is null");
+				}
+				else
+				{
+					Debug.Log("KVD Initialized");
+					OnEveryUpdate += UpdateKeyValueDisplayText;
+				}
+			}
+		}
 
-        float screenAspect = (float)Screen.width / (float)Screen.height;
-        float cameraHeight = MainCamera.orthographicSize * 2;
-        ScreenBounds = new Bounds(
-            MainCamera.transform.position,
-            new Vector3(cameraHeight * screenAspect, cameraHeight, 0));
-    }
+		private void InitializeScreenBounds()
+		{
+			if (MainCamera == null)
+			{
+				throw new UnityException("GameManager does not have Main Camera");
+			}
 
-    // Update is called once per frame
-    private void UpdateKeyValueDisplayText(float delta)
-    {
-        _textGameObject.text = KeyValueDisplay.Instance.CurrentDisplayString();
-    }
+			float screenAspect = (float)Screen.width / (float)Screen.height;
+			float cameraHeight = MainCamera.orthographicSize * 2;
+			ScreenBounds = new Bounds(
+				MainCamera.transform.position,
+				new Vector3(cameraHeight * screenAspect, cameraHeight, 0));
+		}
 
-    public void HandleMessage(string type, MessageArgs args)
-    {
-        if (type == GameMessages.GameSpeedChange && args != null)
-            HandleTimeChange(args as GameSpeedMessageArgs);
-    }
+		// Update is called once per frame
+		private void UpdateKeyValueDisplayText(float delta)
+		{
+			_textGameObject.text = KeyValueDisplay.Instance.CurrentDisplayString();
+		}
 
-    private void HandleTimeChange(GameSpeedMessageArgs args)
-    {
-        if (args == null) return;
-        if (args.PreviousSpeedTimeScale != args.NewSpeedTimeScale)
-        {
-            DOTween.timeScale = args.NewSpeedTimeScale;
-            QScript.TimeModifier = args.NewSpeedTimeScale;
-        }
-    }
+		public void HandleMessage(string type, MessageArgs args)
+		{
+			if (type == GameMessages.GameSpeedChange && args != null)
+				HandleTimeChange(args as GameSpeedMessageArgs);
+		}
 
-    public string Name { get { return "GameManager"; } }
+		private void HandleTimeChange(GameSpeedMessageArgs args)
+		{
+			if (args == null) return;
+			if (args.PreviousSpeedTimeScale != args.NewSpeedTimeScale)
+			{
+				DOTween.timeScale = args.NewSpeedTimeScale;
+				QScript.TimeModifier = args.NewSpeedTimeScale;
+			}
+		}
+
+		public string Name { get { return "GameManager"; } }
+	}
 }

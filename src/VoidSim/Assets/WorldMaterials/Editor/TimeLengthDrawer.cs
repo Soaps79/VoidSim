@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.WorldMaterials;
+﻿using Assets.Scripts;
+using Assets.Scripts.WorldMaterials;
 using UnityEditor;
 using UnityEngine;
 
