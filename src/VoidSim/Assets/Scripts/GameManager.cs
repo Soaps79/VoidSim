@@ -9,12 +9,13 @@ namespace Assets.Scripts
 	public static class LogChannels
 	{
 		public const string Trade = "Trade";
+		public const string Serialization = "Serial";
 	}
 
 	public class GameMessages
 	{
 		public const string GameSpeedChange = "GameSpeedChange";
-		public const string ItemPlaced = "ItemPlaced";
+		public const string PreSave = "PreSave";
 	}
 
 	public class GameManager : QScript, IMessageListener

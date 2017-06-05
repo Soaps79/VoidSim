@@ -9,17 +9,19 @@ namespace Assets.WorldMaterials
 {
     public class Inventory : QScript
     {
-        /// <summary>
-        /// The idea here is that ProductAmount are one type of object that Inventory maintains.
-        /// Another type will probably be some sort of Placeable.
-        /// </summary>
-        public class InventoryProductEntry
+		/// <summary>
+		/// The idea here is that ProductAmount are one type of object that Inventory maintains.
+		/// Another type will probably be some sort of Placeable.
+		/// </summary>
+		[Serializable]
+		public class InventoryProductEntry
         {
             public Product Product;
             public int Amount;
             public int MaxAmount;
         }
 
+		[Serializable]
         public class InventoryPlaceableEntry
         {
             public string Name;
@@ -40,9 +42,8 @@ namespace Assets.WorldMaterials
             = new Dictionary<int, InventoryProductEntry>();
 
         public List<InventoryPlaceableEntry> Placeables = new List<InventoryPlaceableEntry>();
-        private InventoryScriptable _scriptable;
         private int _lastPlaceableId;
-        private int _defaultProductMaxAmount;
+        public int DefaultProductCapacity { get; private set; }
 
         // only use for UI
         public List<InventoryProductEntry> GetProductEntries()
@@ -90,7 +91,7 @@ namespace Assets.WorldMaterials
                 {
                     Product = ProductLookup.GetProduct(productId),
                     Amount = 0,
-                    MaxAmount = _defaultProductMaxAmount
+                    MaxAmount = DefaultProductCapacity
                 });
                 return true;
             }
@@ -105,7 +106,7 @@ namespace Assets.WorldMaterials
                 {
                     Product = product,
                     Amount = 0,
-                    MaxAmount = _defaultProductMaxAmount
+                    MaxAmount = DefaultProductCapacity
                 });
             }
         }
@@ -171,37 +172,71 @@ namespace Assets.WorldMaterials
             return _productTable.ContainsKey(id) ? _productTable[id].Amount : 0;
         }
 
-        public void BindToScriptable(InventoryScriptable inventoryScriptable, IProductLookup productLookup, bool addAllEntries = false)
+        public void Initialize(InventoryScriptable inventoryScriptable, IProductLookup productLookup, bool addAllEntries = false)
         {
-            _scriptable = inventoryScriptable;
-            ProductLookup = productLookup;
-            _productTable.Clear();
-            _defaultProductMaxAmount = inventoryScriptable.ProductMaxAmount;
-
-            // if addAllEntries, create entries for all known products
-            // tighten this up sometime, too many loops
-            if (addAllEntries)
-            {
-                foreach (var product in ProductLookup.GetProducts())
-                {
-                    AddProductEntry(product);
-                }
-            }
-
-            // populate amounts for any from scriptable
-            foreach (var info in _scriptable.Products)
-            {
-                TryAddProduct(ProductLookup.GetProduct(info.ProductName).ID, info.Amount);
-            }
-
-            foreach (var placeable in _scriptable.Placeables)
-            {
-                _lastPlaceableId++;
-                Placeables.Add(new InventoryPlaceableEntry { Name = placeable, Id = _lastPlaceableId });
-            }
+	        DefaultProductCapacity = inventoryScriptable.ProductMaxAmount;
+			// if addAllEntries, create entries for all known products
+			Initialize(productLookup, addAllEntries);
+			BindToSerializable(inventoryScriptable);
         }
 
-        public bool TryRemovePlaceable(int id)
+		public void Initialize(InventoryData data, IProductLookup productLookup, bool addAllEntries)
+		{
+			Initialize(productLookup, addAllEntries);
+			LoadFromData(data);
+		}
+
+	    private void Initialize(IProductLookup lookup, bool addAllEntries)
+	    {
+		    _productTable.Clear();
+			ProductLookup = lookup;
+
+			if (addAllEntries)
+		    {
+			    foreach (var product in ProductLookup.GetProducts())
+			    {
+				    AddProductEntry(product);
+			    }
+		    }
+	    }
+
+	    private void LoadFromData(InventoryData data)
+	    {
+		    DefaultProductCapacity = data.DefaultProductCapacity;
+			foreach (var entry in data.Products)
+		    {
+			    var product = ProductLookup.GetProduct(entry.ProductName);
+				if(!_productTable.ContainsKey(product.ID))
+					_productTable.Add(product.ID, new InventoryProductEntry { Product = product });
+
+			    _productTable[product.ID].Amount = entry.Amount;
+			    _productTable[product.ID].MaxAmount = entry.MaxAmount;
+		    }
+
+			data.Placeables.ForEach(i => AddPlaceable(i.PlaceableName));
+	    }
+
+		private void BindToSerializable(InventoryScriptable inventoryScriptable)
+	    {
+		    // populate amounts for any from scriptable
+			foreach (var info in inventoryScriptable.Products)
+		    {
+			    TryAddProduct(ProductLookup.GetProduct(info.ProductName).ID, info.Amount);
+		    }
+
+		    foreach (var placeable in inventoryScriptable.Placeables)
+		    {
+			    AddPlaceable(placeable);
+		    }
+	    }
+
+	    private void AddPlaceable(string placeableName)
+	    {
+			_lastPlaceableId++;
+		    Placeables.Add(new InventoryPlaceableEntry { Name = placeableName, Id = _lastPlaceableId });
+		}
+
+	    public bool TryRemovePlaceable(int id)
         {
             var placeable = Placeables.FirstOrDefault(i => i.Id == id);
             if (placeable == null)

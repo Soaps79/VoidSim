@@ -9,7 +9,7 @@ namespace Messaging
 	public interface IMessageHub
 	{
 		void QueueMessage(string type, MessageArgs args);
-		void AddListener(IMessageListener listener, string type);
+		void AddListener(IMessageListener listener, string type, bool ignoresClear = false);
 		void RemoveListener(IMessageListener listener);
 		void FireMessage(string type, MessageArgs args);
 	}
@@ -21,7 +21,7 @@ namespace Messaging
 			Debug.Log("NullMessageHub Accessed");
 		}
 
-		public void AddListener(IMessageListener listener, string type)
+		public void AddListener(IMessageListener listener, string type, bool ignoresClear = false)
 		{
 			Debug.Log("NullMessageHub Accessed");
 		}
@@ -41,6 +41,12 @@ namespace Messaging
 	{
 		public const string AllMessages = "AllMessages";
 
+		private class Entry
+		{
+			public IMessageListener Listener;
+			public bool IgnoresClear;
+		}
+
 		private struct QueuedMessage
 		{
 			public string type;
@@ -57,8 +63,8 @@ namespace Messaging
 			get { return _messageQueue[_activeQueue].Count; }
 		}
 
-		private Dictionary<string, List<IMessageListener>> _listenerList;
-		private Queue<KeyValuePair<string, IMessageListener>> _addListenerQueue;
+		private Dictionary<string, List<Entry>> _listenerList;
+		private Queue<KeyValuePair<string, Entry>> _addListenerQueue;
 		private List<List<QueuedMessage>> _messageQueue;
 
 		private int _activeQueue;
@@ -67,14 +73,14 @@ namespace Messaging
 
 		public MessageHub()
 		{
-			_listenerList = new Dictionary<string, List<IMessageListener>>();
-			_listenerList.Add(AllMessages, new List<IMessageListener>());
+			_listenerList = new Dictionary<string, List<Entry>>();
+			_listenerList.Add(AllMessages, new List<Entry>());
 
 			_messageQueue = new List<List<QueuedMessage>> {new List<QueuedMessage>(), new List<QueuedMessage>()};
 
 			_toRemove = new List<IMessageListener>();
 
-			_addListenerQueue = new Queue<KeyValuePair<string, IMessageListener>>();
+			_addListenerQueue = new Queue<KeyValuePair<string, Entry>>();
 
 			_activeQueue = 0;
 		}
@@ -85,27 +91,40 @@ namespace Messaging
 			_messageQueue[_activeQueue].Add(evt);
 		}
 
-		public void AddListener(IMessageListener listener, string type)
+		public void AddListener(IMessageListener listener, string type, bool ignoresClear = false)
 		{
 			if (_isFiring)
 			{
-				_addListenerQueue.Enqueue(new KeyValuePair<string, IMessageListener>(type, listener));
+				_addListenerQueue.Enqueue(new KeyValuePair<string, Entry>(type, new Entry{ Listener = listener, IgnoresClear = ignoresClear} ));
 				return;
 			}
 
-			List<IMessageListener> list;
+			List<Entry> list;
 			_listenerList.TryGetValue(type, out list);
 
 			if (list == null)
 			{
-				list = new List<IMessageListener>();
+				list = new List<Entry>();
 				_listenerList.Add(type, list);
 			}
 
-			if (!list.Contains(listener))
+			if (list.All(i => i.Listener != listener))
 			{
-				list.Add(listener);
+				list.Add(new Entry{ Listener = listener, IgnoresClear = ignoresClear });
 			}
+		}
+
+		public void ClearListeners()
+		{
+			var toRemove = new List<string>();
+			foreach (var valuePair in _listenerList)
+			{
+				if(valuePair.Value.RemoveAll(i => !i.IgnoresClear) > 0
+					&& !valuePair.Value.Any())
+					toRemove.Add(valuePair.Key);
+			}
+
+			toRemove.ForEach(i => _listenerList.Remove(i));
 		}
 
 		public void RemoveListener(IMessageListener listener)
@@ -115,7 +134,7 @@ namespace Messaging
 
 		private void RemoveListenerActual()
 		{
-			var list = new List<string>();
+			var listsToRemove = new List<string>();
 
 			// for each unsubscribing entity
 			foreach (IMessageListener listener in _toRemove)
@@ -123,27 +142,26 @@ namespace Messaging
 				// check each list to see if it is subscribed
 				foreach (var pair in _listenerList)
 				{
-					if (pair.Value.Remove(listener))
+					if (pair.Value.RemoveAll(i => i.Listener == listener) > 0)
 					{
 						// if it was removed, and list is now empty, flag list for removal
 						if (pair.Value.Any())
 						{
-							list.Add(pair.Key);
+							listsToRemove.Add(pair.Key);
 						}
 					}
 				}
 
 				// remove all empty lists
-				if (list.Any())
+				if (listsToRemove.Any())
 				{
-					foreach (var type in list)
+					foreach (var type in listsToRemove)
 					{
 						_listenerList.Remove(type);
 					}
 				}
 			}
 		}
-
 
 		public void Update()
 		{
@@ -174,22 +192,22 @@ namespace Messaging
 		{
 			_isFiring = true;
 
-			List<IMessageListener> list;
+			List<Entry> list;
 			_listenerList.TryGetValue(type, out list);
 
 			if (list != null)
 			{
-				foreach (IMessageListener l in list)
+				foreach (Entry entry in list)
 				{
-                    l.HandleMessage(type, args);
+                    entry.Listener.HandleMessage(type, args);
 				}
 			}
 
 			if (_listenerList[AllMessages].Count > 0)
 			{
-				foreach (IMessageListener l in _listenerList[AllMessages])
+				foreach (Entry entry in _listenerList[AllMessages])
 				{
-					l.HandleMessage(type, args);
+					entry.Listener.HandleMessage(type, args);
 				}
 			}
 
@@ -199,8 +217,8 @@ namespace Messaging
 			{
 				while (_addListenerQueue.Count > 0)
 				{
-					KeyValuePair<string, IMessageListener> pair = _addListenerQueue.Dequeue();
-					AddListener(pair.Value, pair.Key);
+					var pair = _addListenerQueue.Dequeue();
+					AddListener(pair.Value.Listener, pair.Key, pair.Value.IgnoresClear);
 				}
 			}
 		}

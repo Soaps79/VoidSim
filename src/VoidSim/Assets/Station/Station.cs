@@ -2,6 +2,7 @@
 using System.Linq;
 using Assets.Placeables;
 using Assets.Scripts;
+using Assets.Scripts.Serialization;
 using Assets.Scripts.WorldMaterials;
 using Assets.WorldMaterials;
 using Assets.WorldMaterials.Products;
@@ -25,7 +26,7 @@ namespace Assets.Station
     /// Serving as an anchor for all the other game parts as they come together.
     /// Currently instantiates player's crafting parts and binds UI interactions
     /// </summary>
-    public class Station : QScript
+    public class Station : QScript, IMessageListener
     {
         public const string ClientName = "Station";
 
@@ -39,7 +40,9 @@ namespace Assets.Station
 
         private CraftingContainer _crafter;
         private Inventory _inventory;
-        private InventoryReserve _inventoryReserve;
+	    private InventorySerializer _invSerializer = new InventorySerializer();
+	    private const string _invCollectionName = "StationInventory";
+		private InventoryReserve _inventoryReserve;
 
         // _initialLayers for editor, converted to _layers
         [SerializeField]
@@ -48,6 +51,8 @@ namespace Assets.Station
         
         void Start()
         {
+			MessageHub.Instance.AddListener(this, GameMessages.PreSave);
+
             MapLayers();
             InstantiateInventory();
             InstantiateTrader();
@@ -211,9 +216,20 @@ namespace Assets.Station
             _inventory = go.GetOrAddComponent<Inventory>();
             if (_inventory == null || _inventoryScriptable == null)
                 throw new UnityException("Station inventory missing a dependency");
-            _inventory.BindToScriptable(_inventoryScriptable, _productLookup, true);
 
-            var product = _productLookup.GetProduct("Credits");
+			// check to see if game is loading, if not, use presets from scripable object
+	        
+	        if (SerializationHub.Instance.IsLoading)
+	        {
+		        var serialized = SerializationHub.Instance.GetCollection(_invCollectionName);
+		        var data = _invSerializer.ConvertFromSerialized(serialized);
+		        UberDebug.LogChannel(LogChannels.Serialization, "Station inventory loaded");
+				_inventory.Initialize(data, _productLookup, true);
+	        }
+	        else
+		        _inventory.Initialize(_inventoryScriptable, _productLookup, true);
+
+	        var product = _productLookup.GetProduct("Credits");
             _inventory.SetProductMaxAmount(product.ID, 1000000);
 
             product = _productLookup.GetProduct("Energy");
@@ -242,5 +258,17 @@ namespace Assets.Station
             var viewmodel = go.GetOrAddComponent<InventoryViewModel>();
             viewmodel.BindToInventory(_inventory, _inventoryScriptable, _placeablesLookup, _inventoryReserve);
         }
+
+	    public void HandleMessage(string type, MessageArgs args)
+	    {
+		    if (type == GameMessages.PreSave)
+		    {
+			    var data = _invSerializer.ConvertToSerializable(_inventory);
+				SerializationHub.Instance.AddCollection(_invCollectionName, data);
+			    UberDebug.LogChannel(LogChannels.Serialization, "Station inventory collection added");
+			}
+	    }
+
+	    public string Name { get { return "Station"; } }
     }
 }

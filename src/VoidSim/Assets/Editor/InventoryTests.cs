@@ -44,7 +44,7 @@ namespace Assets.Editor
         {
             const int amount = 10;
 
-            _inventory.BindToScriptable(_scriptable, _lookup);
+            _inventory.Initialize(_scriptable, _lookup);
 
             var initial = _inventory.GetProductCurrentAmount(ProductId);
             _inventory.SetProductMaxAmount(1, 1000);
@@ -62,7 +62,7 @@ namespace Assets.Editor
         {
             const int difference = 100;
 
-            _inventory.BindToScriptable(_scriptable, _lookup);
+            _inventory.Initialize(_scriptable, _lookup);
 
             var remainder = _inventory.TryAddProduct(ProductId, MaxAmount + difference);
             var current = _inventory.GetProductCurrentAmount(ProductId);
@@ -77,7 +77,7 @@ namespace Assets.Editor
             const int max = 40;
             const int amount = 100;
 
-            _inventory.BindToScriptable(_scriptable, _lookup);
+            _inventory.Initialize(_scriptable, _lookup);
             _inventory.SetProductMaxAmount(1, max);
 
             var remainder = _inventory.TryAddProduct(ProductId, amount);
@@ -95,7 +95,7 @@ namespace Assets.Editor
             const int amount = 100;
 
             _scriptable.Products.Add(new ProductEntryInfo { ProductName = ProductName, Amount = amount });
-            _inventory.BindToScriptable(_scriptable, _lookup);
+            _inventory.Initialize(_scriptable, _lookup);
 
             var removed = _inventory.TryRemoveProduct(ProductId, amount);
             var current = _inventory.GetProductCurrentAmount(ProductId);
@@ -111,7 +111,7 @@ namespace Assets.Editor
             const int amount = 1000;
 
             _scriptable.Products.Add(new ProductEntryInfo { ProductName = ProductName, Amount = available });
-            _inventory.BindToScriptable(_scriptable, _lookup);
+            _inventory.Initialize(_scriptable, _lookup);
 
             var removed = _inventory.TryRemoveProduct(ProductId, amount);
             var current = _inventory.GetProductCurrentAmount(ProductId);
@@ -129,7 +129,7 @@ namespace Assets.Editor
             var callbackAmount = 0;
             var callbackBaseHappened = false;
 
-            _inventory.BindToScriptable(_scriptable, _lookup);
+            _inventory.Initialize(_scriptable, _lookup);
             _inventory.OnInventoryChanged += () => callbackBaseHappened = true;
             _inventory.OnProductsChanged += (i, a) =>
             {
@@ -154,7 +154,7 @@ namespace Assets.Editor
             var callbackBaseHappened = false;
 
             _scriptable.Products.Add(new ProductEntryInfo { ProductName = ProductName, Amount = amount });
-            _inventory.BindToScriptable(_scriptable, _lookup);
+            _inventory.Initialize(_scriptable, _lookup);
             _inventory.OnInventoryChanged += () => callbackBaseHappened = true;
             _inventory.OnProductsChanged += (i, a) =>
             {

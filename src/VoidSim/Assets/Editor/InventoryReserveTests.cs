@@ -33,7 +33,7 @@ namespace Assets.Editor
             _scriptable.Products = new List<ProductEntryInfo>();
             _scriptable.Placeables = new List<string>();
             _scriptable.ProductMaxAmount = MaxAmount;
-            _inventory.BindToScriptable(_scriptable, _lookup);
+            _inventory.Initialize(_scriptable, _lookup);
 
             _reserve = new InventoryReserve();
             _reserve.Initialize(_inventory);
