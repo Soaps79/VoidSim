@@ -26,6 +26,11 @@ namespace Assets.Logistics
 		}
 	}
 
+	public class CargoManifestData
+	{
+		
+	}
+
 	public class CargoManifestBook
 	{
 		public List<CargoManifest> ActiveManifests { get; private set; }

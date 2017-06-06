@@ -14,6 +14,21 @@ namespace Assets.Logistics
 		None, Approaching, Docked, Departing
 	}
 
+	public class TrafficShipData
+	{
+		public TrafficPhase Phase;
+		public Vector2 Position;
+		public Quaternion Rotation;
+		public Vector3 TargetRotation;
+		public float StartingDistance;
+		public float TravelTime;
+		public bool ApproachFromLeft;
+		public string BerthName;
+		public List<Vector3> Waypoints;
+		public Vector3 LocalScale;
+		public float ElapsedMovement;
+	}
+
 	/// <summary>
 	/// This behavior will manage the on-screen representation of a Ship, as well
 	/// as communicate with the berth along its course
@@ -34,6 +49,8 @@ namespace Assets.Logistics
 		private List<Vector3> _waypoints;
 		public CargoManifestBook ManifestBook { get; private set; }
 		private bool _approachFromLeft;
+		private float _lastMovementBeginTime;
+		private Vector3 _targetRotation;
 
 		// replace with state machine
 		public TrafficPhase Phase { get; private set; }
@@ -85,19 +102,32 @@ namespace Assets.Logistics
 			if (transform.position.x < 0)
 				_approachFromLeft = true;
 
+			_lastMovementBeginTime = Time.time;
+
 			var dir = _waypoints[1] - transform.position;
 			var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 			transform.rotation = Quaternion.AngleAxis(_approachFromLeft ? angle : 180 + angle, Vector3.forward);
-			
-			transform.DOMove(_waypoints[1], _travelTime)
-				.SetEase(Ease.OutSine)
-				.OnComplete(ApproachComplete);
 
-			transform.DORotate(_approachFromLeft ? new Vector3(1, 0) : new Vector3(-1, 0), _travelTime)
-				.SetEase(Ease.InSine);
+			TweenApproach(RotationWhenDocked, _travelTime);
 
 			Phase = TrafficPhase.Approaching;
 			CheckPhaseChangeCallback();
+		}
+
+		private Vector3 RotationWhenDocked
+		{
+			get { return _approachFromLeft ? new Vector3(1, 0) : new Vector3(-1, 0); }
+		}
+
+		// move and rotate from edge of traffic to berth
+		private void TweenApproach(Vector3 rotateTo, float time)
+		{
+			transform.DOMove(_waypoints[1], time)
+				.SetEase(Ease.OutSine)
+				.OnComplete(ApproachComplete);
+
+			transform.DORotate(rotateTo, time)
+				.SetEase(Ease.InSine);
 		}
 
 		private void ApproachComplete()
@@ -109,19 +139,26 @@ namespace Assets.Logistics
 
 		public void BeginDeparture()
 		{
-			transform.DOMove(_waypoints[2], _travelTime)
-				.SetEase(Ease.InSine)
-				.OnComplete(DepartComplete);
-
 			var dir = _waypoints[2] - transform.position;
 			var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 			var rotation = Quaternion.AngleAxis(_approachFromLeft ? angle : 180 + angle, Vector3.forward);
+			_targetRotation = rotation.eulerAngles;
 
-			transform.DORotate(rotation.eulerAngles, _travelTime)
-				.SetEase(Ease.OutSine);
-			
+			TweenDeparture(_targetRotation, _travelTime);
+
 			Phase = TrafficPhase.Departing;
 			CheckPhaseChangeCallback();
+		}
+
+		// move and rotate from berth to edge of traffic
+		private void TweenDeparture(Vector3 rotateTo, float time)
+		{
+			transform.DOMove(_waypoints[1], time)
+				.SetEase(Ease.InSine)
+				.OnComplete(DepartComplete);
+
+			transform.DORotate(rotateTo, time)
+				.SetEase(Ease.OutSine);
 		}
 
 		private void DepartComplete()
@@ -130,5 +167,61 @@ namespace Assets.Logistics
 			Phase = TrafficPhase.None;
 			CheckPhaseChangeCallback();
 		}
+
+		#region Serialization
+		// this overload is called when a ship that was serialized in traffic has been loaded
+		public void Initialize(Ship parent, TrafficShipData data)
+		{
+			_parent = parent;
+			_waypoints = data.Waypoints;
+			_travelTime = data.TravelTime;
+
+			ManifestBook = _parent.ManifestBook;
+			OnEveryUpdate += ScaleWithProximity;
+
+			transform.localScale = data.LocalScale;
+			transform.position = data.Position;
+			transform.rotation = data.Rotation;
+
+			Phase = data.Phase;
+
+			switch (Phase)
+			{
+				case TrafficPhase.Approaching:
+					ResumeApproach(data.ElapsedMovement);
+					break;
+				case TrafficPhase.Departing:
+					ResumeDeparture(data.ElapsedMovement);
+					break;
+			}
+		}
+
+		private void ResumeDeparture(float elapsed)
+		{
+			TweenDeparture(_targetRotation, _travelTime - elapsed);
+		}
+
+		private void ResumeApproach(float elapsed)
+		{
+			TweenApproach(RotationWhenDocked, _travelTime - elapsed);
+		}
+
+		public TrafficShipData GetData()
+		{
+			return new TrafficShipData
+			{
+				Phase = Phase,
+				Position = transform.position,
+				Rotation = transform.rotation,
+				TargetRotation = _targetRotation,
+				StartingDistance = _startingDistance,
+				TravelTime = _travelTime,
+				ApproachFromLeft = _approachFromLeft,
+				Waypoints = _waypoints,
+				LocalScale = transform.localScale,
+				ElapsedMovement = Time.time - _lastMovementBeginTime
+			};
+		}
+		#endregion
 	}
 }
