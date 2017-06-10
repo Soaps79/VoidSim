@@ -153,7 +153,7 @@ namespace Assets.Logistics
 		// move and rotate from berth to edge of traffic
 		private void TweenDeparture(Vector3 rotateTo, float time)
 		{
-			transform.DOMove(_waypoints[1], time)
+			transform.DOMove(_waypoints[2], time)
 				.SetEase(Ease.InSine)
 				.OnComplete(DepartComplete);
 

@@ -24,7 +24,7 @@ namespace Assets.Logistics
 
 		private static Ship FindShipHeadingTo(List<Ship> ships, CargoManifest manifest)
 		{
-			var valid = ships.Where(i => i.Navigation.CurrentDestination.ClientName == manifest.Seller).ToList();
+			var valid = ships.Where(i => i.Navigation.CurrentDestination == manifest.Seller).ToList();
 			return valid.Any() ? valid[Random.Range(0, valid.Count - 1)] : null;
 		}
 	}

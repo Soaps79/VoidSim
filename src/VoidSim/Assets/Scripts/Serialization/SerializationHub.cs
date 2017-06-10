@@ -29,6 +29,7 @@ namespace Assets.Scripts.Serialization
 				_toSerialize.Remove(collectionName);
 
 			_toSerialize.Add(collectionName, obj);
+			UberDebug.LogChannel(LogChannels.Serialization, string.Format("{0} collection added to serialization", collectionName));
 		}
 
 		// all collections are written to the specified file path
@@ -79,6 +80,7 @@ namespace Assets.Scripts.Serialization
 				});
 			}
 
+			UberDebug.LogChannel(LogChannels.Serialization, string.Format("Data loaded from file {0}", filename));
 			IsLoading = true;
 		}
 
@@ -91,6 +93,7 @@ namespace Assets.Scripts.Serialization
 				if (_deserialized.All(i => i.Value.IsHandled))
 					IsLoading = false;
 
+				UberDebug.LogChannel(LogChannels.Serialization, string.Format("{0} collection fetched from hub", collectionName));
 				return _deserialized[collectionName].Json;
 			}
 			return null;

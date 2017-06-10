@@ -1,23 +1,36 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Messaging;
 using UnityEngine;
 
 namespace Assets.Logistics.Ships
 {
+	public class ShipNavigationData
+	{
+		public List<string> Locations;
+		public string LastDeparted;
+		public string CurrentDestination;
+	}
+
 	public class ShipNavigation
 	{
-		public ITransitLocation LastDeparted { get; private set; }
-		public ITransitLocation CurrentDestination { get; private set; }
+		public string LastDeparted { get; private set; }
+		public string CurrentDestination { get; private set; }
 
 		public Ship ParentShip;
 
-		private readonly Queue<ITransitLocation> _locations = new Queue<ITransitLocation>();
+		private readonly Queue<string> _locations = new Queue<string>();
 
 		// initializes with empty location objects
 		public ShipNavigation()
 		{
-			LastDeparted = new EmptyTransitLocation();
-			CurrentDestination = new EmptyTransitLocation();
+			LastDeparted = "";
+			CurrentDestination = "";
+		}
+
+		public ShipNavigation(ShipNavigationData data)
+		{
+			LoadFromData(data);
 		}
 
 		public void BeginTrip()
@@ -25,8 +38,8 @@ namespace Assets.Logistics.Ships
 			MessageHub.Instance.QueueMessage(LogisticsMessages.TransitRequested, new TransitRequestedMessageArgs
 			{
 				Ship = ParentShip,
-				TravelingFrom = LastDeparted.ClientName,
-				TravelingTo = CurrentDestination.ClientName
+				TravelingFrom = LastDeparted,
+				TravelingTo = CurrentDestination
 			});
 		}
 
@@ -44,12 +57,32 @@ namespace Assets.Logistics.Ships
 			CurrentDestination = _locations.Peek();
 		}
 
-		public void AddLocation(ITransitLocation location)
+		public void AddLocation(string location)
 		{
 			if (location == null)
 				throw new UnityException("Ship navigation given bad location data");
 
 			_locations.Enqueue(location);
+		}
+
+		private void LoadFromData(ShipNavigationData data)
+		{
+			foreach (var location in data.Locations)
+			{
+				_locations.Enqueue(location);
+			}
+			CurrentDestination = data.CurrentDestination;
+			LastDeparted = data.LastDeparted;
+		}
+
+		public ShipNavigationData GetData()
+		{
+			return new ShipNavigationData
+			{
+				CurrentDestination = CurrentDestination,
+				LastDeparted = LastDeparted,
+				Locations = _locations.ToList()
+			};
 		}
 	}
 }

@@ -223,7 +223,6 @@ namespace Assets.Station
 	        {
 		        var serialized = SerializationHub.Instance.GetCollection(_invCollectionName);
 		        var data = _invSerializer.ConvertFromSerialized(serialized);
-		        UberDebug.LogChannel(LogChannels.Serialization, "Station inventory loaded");
 				_inventory.Initialize(data, _productLookup, true);
 	        }
 	        else
@@ -265,7 +264,6 @@ namespace Assets.Station
 		    {
 			    var data = _invSerializer.ConvertToSerializable(_inventory);
 				SerializationHub.Instance.AddCollection(_invCollectionName, data);
-			    UberDebug.LogChannel(LogChannels.Serialization, "Station inventory collection added");
 			}
 	    }
 

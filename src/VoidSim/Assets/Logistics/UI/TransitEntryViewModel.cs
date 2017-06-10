@@ -1,4 +1,6 @@
-﻿using Assets.Controllers.GUI;
+﻿using System;
+using System.Collections.Generic;
+using Assets.Controllers.GUI;
 using Assets.Logistics.Ships;
 using QGame;
 using TMPro;
@@ -29,10 +31,14 @@ namespace Assets.Logistics.UI
 
 		private Ship _ship;
 		private SliderBinding _sliderBinding;
+		private TransitControl _control;
+
 
 		// Ship is designed to expose anything needed for its UI rep
-		public void Bind(Ship ship)
+		public void Bind(Ship ship, TransitControl control)
 		{
+			_control = control;
+
 			// hook into ship
 			_ship = ship;
 			_ship.OnHoldBegin += BeginTraffic;
@@ -59,7 +65,9 @@ namespace Assets.Logistics.UI
 		{
 			TickerPanel.SetActive(false);
 
-			if (_ship.Navigation.CurrentDestination.IsSimpleHold)
+			var loc = _control.GetTransitLocation(_ship.Navigation.CurrentDestination);
+
+			if (loc.IsSimpleHold)
 			{
 				BeginHold();
 				return;
@@ -77,7 +85,7 @@ namespace Assets.Logistics.UI
 			TrafficPanel.SetActive(false);
 			TickerPanel.SetActive(true);
 			TickerFill.color = HoldColor;
-			TickerText.text = "Hold at " + _ship.Navigation.CurrentDestination.ClientName;
+			TickerText.text = "Hold at " + _ship.Navigation.CurrentDestination;
 		}
 
 		private void HandlePhaseChange(TrafficPhase phase)
@@ -90,7 +98,7 @@ namespace Assets.Logistics.UI
 			TrafficPanel.SetActive(false);
 			TickerPanel.SetActive(true);
 			TickerFill.color = TransitColor;
-			TickerText.text = "To " + _ship.Navigation.CurrentDestination.ClientName;
+			TickerText.text = "To " + _ship.Navigation.CurrentDestination;
 		}
 	}
 }

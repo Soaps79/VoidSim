@@ -15,6 +15,7 @@ namespace Assets.Logistics.Ships
 
 	public class ShipData
 	{
+		public string Name;
 		public ShipStatus Status;
 		public TrafficShipData TrafficShipData;
 	}
@@ -130,9 +131,11 @@ namespace Assets.Logistics.Ships
 		{
 			return new ShipData
 			{
+				Name = Name,
 				Status = Status,
 				TrafficShipData = Status == ShipStatus.Traffic ? TrafficShip.GetData() : null
-				// need to serialize manifests
+				// need to serialize cargo manifests
+				// need to serialize ticker
 			};
 		}
 		#endregion

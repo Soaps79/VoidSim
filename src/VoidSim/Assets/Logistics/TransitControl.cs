@@ -51,6 +51,11 @@ namespace Assets.Logistics
 			return _locations.Values.ToList();
 		}
 
+		public ITransitLocation GetTransitLocation(string locationName)
+		{
+			return _locations.ContainsKey(locationName) ? _locations[locationName] : null;
+		}
+
 		private readonly List<Entry> _entries = new List<Entry>();
 		private int _lastId;
 

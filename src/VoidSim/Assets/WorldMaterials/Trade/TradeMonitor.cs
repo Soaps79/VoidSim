@@ -3,6 +3,7 @@ using System.Linq;
 using Assets.Scripts;
 using Assets.Scripts.Serialization;
 using Messaging;
+using Newtonsoft.Json;
 using QGame;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ namespace Assets.WorldMaterials.Trade
 	public class TradeMonitor : SingletonBehavior<TradeMonitor>, IMessageListener
 	{
 		private readonly List<TradeManifest> _activeManifests = new List<TradeManifest>();
+		private const string _collectionName = "TradeMonitor";
 
 		void Start()
 		{
@@ -28,11 +30,20 @@ namespace Assets.WorldMaterials.Trade
 
 		private void HandleGameLoad()
 		{
-			throw new System.NotImplementedException();
+			_activeManifests.Clear();
+			var raw = SerializationHub.Instance.GetCollection(_collectionName);
+			var data = JsonConvert.DeserializeObject<TradeMonitorData>(raw);
+			foreach (var manifestData in data.Manifests)
+			{
+				_activeManifests.Add(new TradeManifest(manifestData));
+			}
 		}
 
 		private void UpdateTrades(float delta)
 		{
+			if (!_activeManifests.Any())
+				return;
+
 			_activeManifests.RemoveAll(i => i.Status == TradeStatus.Complete);
 		}
 
@@ -57,7 +68,7 @@ namespace Assets.WorldMaterials.Trade
 		private void HandlePreSave()
 		{
 			var serialized = _activeManifests.Select(i => i.GetData()).ToList();
-			SerializationHub.Instance.AddCollection("TradeMonitor", new TradeMonitorData{ Manifests = serialized });
+			SerializationHub.Instance.AddCollection(_collectionName, new TradeMonitorData{ Manifests = serialized });
 		}
 
 		private void HandleTradeAccepted(TradeCreatedMessageArgs args)
