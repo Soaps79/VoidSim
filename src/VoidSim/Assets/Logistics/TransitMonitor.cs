@@ -57,15 +57,13 @@ namespace Assets.Logistics
 
 		private void LoadShipsIntoGame(TransitMonitorData data)
 		{
-			var locations = _control.GetTransitLocations();
 			foreach (var shipData in data.Ships)
 			{
 				var ship = new Ship { Name = shipData.Name };
-				//var navigation = new ShipNavigation { ParentShip = ship };
-				//locations.ForEach(i => navigation.AddLocation(i));
-				//navigation.CycleLocations();
-				ship.Initialize(null, _cargoShip, shipData);
-				MessageHub.Instance.QueueMessage(LogisticsMessages.ShipCreated, new ShipCreatedMessageArgs { Ship = ship });
+				var navigation = new ShipNavigation(shipData.Navigation);
+				ship.Initialize(navigation, _cargoShip, shipData);
+				MessageHub.Instance.QueueMessage(
+					LogisticsMessages.ShipCreated, new ShipCreatedMessageArgs { Ship = ship, IsExisting = true });
 			}
 		}
 

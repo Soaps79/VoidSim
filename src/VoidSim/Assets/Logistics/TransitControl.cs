@@ -131,7 +131,8 @@ namespace Assets.Logistics
 			_lastId++;
 			var source = _locations[args.TravelingFrom];
 			var destination = _locations[args.TravelingTo];
-			args.Ship.Ticker.Reset(CalculateTravelTime(source, destination));
+			if(!args.IsContinuing)
+				args.Ship.Ticker.Reset(CalculateTravelTime(source, destination));
 
 			var entry = new Entry
 			{
@@ -142,7 +143,6 @@ namespace Assets.Logistics
 			};
 			_entries.Add(entry);
 			source.OnTransitDeparture(entry);
-			//Debug.Log(string.Format("Transit requested: {0} {1} to {2}", args.Ship.Name, args.TravelingFrom, args.TravelingTo));
 		}
 
 		private float CalculateTravelTime(ITransitLocation from, ITransitLocation to)

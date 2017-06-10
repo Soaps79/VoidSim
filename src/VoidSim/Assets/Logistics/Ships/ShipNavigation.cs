@@ -33,10 +33,11 @@ namespace Assets.Logistics.Ships
 			LoadFromData(data);
 		}
 
-		public void BeginTrip()
+		public void BeginTrip(bool isContinuing = false)
 		{
 			MessageHub.Instance.QueueMessage(LogisticsMessages.TransitRequested, new TransitRequestedMessageArgs
 			{
+				IsContinuing = isContinuing,
 				Ship = ParentShip,
 				TravelingFrom = LastDeparted,
 				TravelingTo = CurrentDestination

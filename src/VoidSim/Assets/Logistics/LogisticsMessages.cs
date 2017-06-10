@@ -21,10 +21,15 @@ namespace Assets.Logistics
     public class ShipCreatedMessageArgs : MessageArgs
     {
         public Ship Ship;
+		/// <summary>
+		/// Denotes that this item has been deserialized, should continue actions rather than start them
+		/// </summary>
+	    public bool IsExisting;
     }
 
     public class TransitRequestedMessageArgs : MessageArgs
     {
+	    public bool IsContinuing;
         public string TravelingTo;
         public string TravelingFrom;
         public Ship Ship;

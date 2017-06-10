@@ -17,6 +17,8 @@ namespace Assets.Logistics.Ships
 	{
 		public string Name;
 		public ShipStatus Status;
+		public TickerData Ticker;
+		public ShipNavigationData Navigation;
 		public TrafficShipData TrafficShipData;
 	}
 
@@ -45,6 +47,7 @@ namespace Assets.Logistics.Ships
 		public void Initialize(ShipNavigation navigation, GameObject prefab, ShipStatus status = ShipStatus.New)
 		{
 			Navigation = navigation;
+			Navigation.ParentShip = this;
 			TrafficShipPrefab = prefab;
 			if(TrafficShipPrefab == null)
 				throw new UnityException("Ship got bad trafficship prefab");
@@ -114,7 +117,9 @@ namespace Assets.Logistics.Ships
 		public void Initialize(ShipNavigation navigation, GameObject prefab, ShipData data)
 		{
 			Navigation = navigation;
+			Navigation.ParentShip = this;
 			TrafficShipPrefab = prefab;
+			Ticker = new Ticker(data.Ticker);
 			if (TrafficShipPrefab == null)
 				throw new UnityException("Ship got bad trafficship prefab");
 
@@ -123,6 +128,10 @@ namespace Assets.Logistics.Ships
 			{
 				CreateTrafficShip();
 				TrafficShip.Initialize(this, data.TrafficShipData);
+			}
+			else if (Status == ShipStatus.Transit)
+			{
+				Navigation.BeginTrip(true);
 			}
 		}
 
@@ -133,6 +142,8 @@ namespace Assets.Logistics.Ships
 			{
 				Name = Name,
 				Status = Status,
+				Ticker = Ticker.GetData(),
+				Navigation = Navigation.GetData(),
 				TrafficShipData = Status == ShipStatus.Traffic ? TrafficShip.GetData() : null
 				// need to serialize cargo manifests
 				// need to serialize ticker

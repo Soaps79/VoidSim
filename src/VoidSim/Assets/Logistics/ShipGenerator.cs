@@ -1,4 +1,5 @@
 ﻿using Assets.Logistics.Ships;
+using Assets.Scripts.Serialization;
 using Messaging;
 using QGame;
 using UnityEngine;
@@ -21,11 +22,14 @@ namespace Assets.Logistics
 		{
 			MessageHub.Instance.AddListener(this, LogisticsMessages.ShipCreated);
 			_transitControl = gameObject.GetComponent<TransitControl>();
-			
+
 			// give locations some time to register
-			
-			var node = StopWatch.AddNode("begin", 1, true);
-			node.OnTick += InitializeShips;
+
+			if (!SerializationHub.Instance.IsLoading)
+			{
+				var node = StopWatch.AddNode("begin", 1, true);
+				node.OnTick += InitializeShips;
+			}
 		}
 
 		private void InitializeShips()
@@ -43,7 +47,7 @@ namespace Assets.Logistics
 			{
 				_lastShipId++;
 				var ship = new Ship{ Name = "ship_" + _lastShipId };
-				var navigation = new ShipNavigation { ParentShip = ship };
+				var navigation = new ShipNavigation();
 				locations.ForEach(i => navigation.AddLocation(i.ClientName));
 				navigation.CycleLocations();
 				ship.Initialize(navigation, _cargoShip);
@@ -65,7 +69,8 @@ namespace Assets.Logistics
 
 		private void KickShip(ShipCreatedMessageArgs args)
 		{
-			args.Ship.CompleteVisit();
+			if(!args.IsExisting)
+				args.Ship.CompleteVisit();
 		}
 
 		public string Name { get { return name; } }

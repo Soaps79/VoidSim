@@ -54,6 +54,12 @@ namespace Assets.Logistics.UI
 			// start with both displays off, wait for a callback to turn one on
 			TrafficPanel.SetActive(false);
 			TickerPanel.SetActive(false);
+
+			// handle where ship has been loaded and may already be underway
+			if(ship.Status == ShipStatus.Transit)
+				BeginTransit();
+			else if (ship.Status == ShipStatus.Hold)
+				BeginHold();
 		}
 
 		private void UpdateTradeCount()
