@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts;
+using Assets.Scripts.Serialization;
 using Assets.WorldMaterials.Products;
+using Assets.WorldMaterials.Trade;
 using Messaging;
 using UnityEngine;
 
@@ -19,10 +21,11 @@ namespace Assets.Logistics.Ships
 		public ShipStatus Status;
 		public TickerData Ticker;
 		public ShipNavigationData Navigation;
+		public CargoManifestBookData ManifestBook;
 		public TrafficShipData TrafficShipData;
 	}
 
-	public class Ship
+	public class Ship : ISerializeData<ShipData>
 	{
 		public ShipSize Size;
 		public string CurrentDestination;
@@ -122,6 +125,13 @@ namespace Assets.Logistics.Ships
 			Ticker = new Ticker(data.Ticker);
 			if (TrafficShipPrefab == null)
 				throw new UnityException("Ship got bad trafficship prefab");
+			ManifestBook = new CargoManifestBook(data.ManifestBook);
+
+			// possibly a better place to put this
+			foreach (var manifest in ManifestBook.ActiveManifests)
+			{
+				manifest.TradeManifest = TradeMonitor.Instance.GetTradeManifest(manifest.TradeManifestId);
+			}
 
 			Status = data.Status;
 			if (Status == ShipStatus.Traffic)
@@ -144,6 +154,7 @@ namespace Assets.Logistics.Ships
 				Status = Status,
 				Ticker = Ticker.GetData(),
 				Navigation = Navigation.GetData(),
+				ManifestBook = ManifestBook.GetData(),
 				TrafficShipData = Status == ShipStatus.Traffic ? TrafficShip.GetData() : null
 				// need to serialize cargo manifests
 				// need to serialize ticker

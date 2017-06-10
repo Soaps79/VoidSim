@@ -91,6 +91,15 @@ namespace Assets.Logistics
 			_shipsInTraffic.Remove(entry.Ship);
 		}
 
+		public void Resume(Ship ship)
+		{
+			if (ship.Status == ShipStatus.Hold)
+			{
+				_holder.BeginHold(ship, true);
+				return;
+			}
+		}
+
 		public bool IsSimpleHold { get { return !_berths.Any(); } }
 
 		public void HandleMessage(string type, MessageArgs args)

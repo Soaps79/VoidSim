@@ -57,11 +57,19 @@ namespace Assets.Logistics
 
 		private void LoadShipsIntoGame(TransitMonitorData data)
 		{
+			var locations = _control.GetTransitLocations();
 			foreach (var shipData in data.Ships)
 			{
 				var ship = new Ship { Name = shipData.Name };
 				var navigation = new ShipNavigation(shipData.Navigation);
 				ship.Initialize(navigation, _cargoShip, shipData);
+
+				if (ship.Status == ShipStatus.Hold || ship.Status == ShipStatus.Traffic)
+				{
+					var loc = locations.FirstOrDefault(i => i.ClientName == ship.Navigation.CurrentDestination);
+					loc.Resume(ship);
+				}
+
 				MessageHub.Instance.QueueMessage(
 					LogisticsMessages.ShipCreated, new ShipCreatedMessageArgs { Ship = ship, IsExisting = true });
 			}

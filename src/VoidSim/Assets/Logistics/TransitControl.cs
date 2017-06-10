@@ -15,6 +15,7 @@ namespace Assets.Logistics
 		string ClientName { get; }
 		void OnTransitArrival(TransitControl.Entry entry);
 		void OnTransitDeparture(TransitControl.Entry entry);
+		void Resume(Ship ship);
 		bool IsSimpleHold { get; }
 	}
 
@@ -23,6 +24,7 @@ namespace Assets.Logistics
 		public string ClientName { get { return "EmptyTransitLocation"; } }
 		public void OnTransitArrival(TransitControl.Entry entry) { }
 		public void OnTransitDeparture(TransitControl.Entry entry) { }
+		public void Resume(Ship ship) { }
 		public bool IsSimpleHold { get { return true; } }
 	}
 

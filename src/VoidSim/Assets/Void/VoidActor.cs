@@ -74,6 +74,11 @@ namespace Assets.Void
 			
 		}
 
+		public void Resume(Ship ship)
+		{
+			_holder.BeginHold(ship, true);
+		}
+
 		public bool IsSimpleHold { get { return true; } }
 	}
 }

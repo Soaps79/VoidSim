@@ -43,9 +43,10 @@ namespace Assets.Logistics.Ships
 			_shipstoRemove.Clear();
 		}
 
-		public void BeginHold(Ship ship)
+		public void BeginHold(Ship ship, bool isResume = false)
 		{
-			ship.Ticker.Reset(_shipDelaySeconds);
+			if(!isResume)
+				ship.Ticker.Reset(_shipDelaySeconds);
 			ship.BeginHold(null, null);
 			_shipsOnHold.Add(ship);
 		}
