@@ -61,8 +61,10 @@ namespace QGame
         {
             if (OnNextUpdate != null)
             {
-                OnNextUpdate(delta);
-                OnNextUpdate = null;
+				// current actions held in new list so that others can be added in one of these calls
+	            var next = OnNextUpdate;
+	            OnNextUpdate = null;
+                next(delta);
             }
 
             if (OnEveryUpdate != null)

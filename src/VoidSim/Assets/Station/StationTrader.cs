@@ -36,7 +36,7 @@ namespace Assets.Station
             BindToTrader();
             _valueLookup = ProductValueLookup.Instance;
 
-            MessageHub.Instance.QueueMessage(ProductTrader.MessageName, new TraderInstanceMessageArgs { Trader = _trader });
+            MessageHub.Instance.QueueMessage(TradeMessages.TraderCreated, new TraderInstanceMessageArgs { Trader = _trader });
         }
 
         private void BindToTrader()
@@ -47,31 +47,31 @@ namespace Assets.Station
             _trader.OnConsumeMatch += HandleConsumeMatch;
         }
 
-        private void HandleProvideMatch(TradeInfo info)
+        private void HandleProvideMatch(TradeManifest manifest)
         {
             // need to add logic to place a hold on the traded items in the reserve
-            _reserve.AdjustHold(info.ProductId, -info.AmountTotal);
+            _reserve.AdjustHold(manifest.ProductId, -manifest.AmountTotal);
 
             // request cargo for trade
             MessageHub.Instance.QueueMessage(LogisticsMessages.CargoRequested, new CargoRequestedMessageArgs
             {
-                Manifest = new CargoManifest(info)
+                Manifest = new CargoManifest(manifest)
                 {
                     Seller = ClientName,
-                    Buyer = info.Consumer.ClientName,
-                    Currency = _valueLookup.GetValueOfProductAmount(info.ProductId, info.AmountTotal),
-                    ProductAmount = new ProductAmount { ProductId = info.ProductId, Amount = info.AmountTotal }
+                    Buyer = manifest.Consumer,
+                    Currency = _valueLookup.GetValueOfProductAmount(manifest.ProductId, manifest.AmountTotal),
+                    ProductAmount = new ProductAmount { ProductId = manifest.ProductId, Amount = manifest.AmountTotal }
                 }
             });
 
             CheckForTrade();
         }
 
-        private void HandleConsumeMatch(TradeInfo info)
+        private void HandleConsumeMatch(TradeManifest manifest)
         {
 			// still need this? Provider does the work
 			// reserve the money?
-			_reserve.AdjustHold(info.ProductId, info.AmountTotal);
+			_reserve.AdjustHold(manifest.ProductId, manifest.AmountTotal);
 			CheckForTrade();
         }
 

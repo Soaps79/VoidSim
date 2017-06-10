@@ -30,7 +30,7 @@ namespace Assets.Void
 		{
 			_valueLookup = ProductValueLookup.Instance;
 			InstantiateVoidTrader();
-			MessageHub.Instance.QueueMessage(ProductTrader.MessageName, new TraderInstanceMessageArgs { Trader = _trader });
+			MessageHub.Instance.QueueMessage(TradeMessages.TraderCreated, new TraderInstanceMessageArgs { Trader = _trader });
 			MessageHub.Instance.QueueMessage(LogisticsMessages.RegisterLocation, new TransitLocationMessageArgs{ TransitLocation = this });
 		}
 
@@ -42,23 +42,23 @@ namespace Assets.Void
 			_trader = go.AddComponent<ProductTrader>();
 			_trader.ClientName = ClientName;
 			_trader.OnProvideMatch += HandleProvideMatch;
-			MessageHub.Instance.QueueMessage(ProductTrader.MessageName, new TraderInstanceMessageArgs { Trader = _trader });
+			MessageHub.Instance.QueueMessage(TradeMessages.TraderCreated, new TraderInstanceMessageArgs { Trader = _trader });
 
 			_automater = go.AddComponent<ProductTradeAutomater>();
 			_automater.Initialize(_trader, _worldClock, _tradeRequests);
 		}
 
-		private void HandleProvideMatch(TradeInfo info)
+		private void HandleProvideMatch(TradeManifest manifest)
 		{
 			// request cargo for trade
 			MessageHub.Instance.QueueMessage(LogisticsMessages.CargoRequested, new CargoRequestedMessageArgs
 			{
-				Manifest = new CargoManifest(info)
+				Manifest = new CargoManifest(manifest)
 				{
 					Seller = ClientName,
-					Buyer = info.Consumer.ClientName,
-					Currency = _valueLookup.GetValueOfProductAmount(info.ProductId, info.AmountTotal),
-					ProductAmount = new ProductAmount { ProductId = info.ProductId, Amount = info.AmountTotal }
+					Buyer = manifest.Consumer,
+					Currency = _valueLookup.GetValueOfProductAmount(manifest.ProductId, manifest.AmountTotal),
+					ProductAmount = new ProductAmount { ProductId = manifest.ProductId, Amount = manifest.AmountTotal }
 				}
 			});
 		}

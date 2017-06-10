@@ -1,5 +1,8 @@
 ﻿using System;
+using System.ComponentModel.Design;
 using Messaging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Assets.WorldMaterials.Trade
 {
@@ -10,16 +13,34 @@ namespace Assets.WorldMaterials.Trade
 
 	public class TradeCreatedMessageArgs : MessageArgs
 	{
-		public TradeInfo TradeInfo;
+		public TradeManifest TradeManifest;
 	}
 
-	public class TradeInfo
+	[Serializable]
+	public class TradeManifestData
 	{
-		public const string MessageName = "TradeInfo updated";
-
 		public int Id;
-		public ProductTrader Provider;
-		public ProductTrader Consumer;
+		public string Provider;
+		public string Consumer;
+		public int ProductId;
+		public int CreditsTotal;
+		public int CreditsComplete;
+		public int AmountTotal;
+		public int AmountComplete;
+		[JsonConverter(typeof(StringEnumConverter))]
+		public TradeStatus Status;
+	}
+
+	/// <summary>
+	/// Holds data pertaining to a trade matched up in ProductTradingHub between two traders.
+	/// Serves as a monitor for actual fulfillment, in that the traded goods are distributed to CargoManifests, 
+	/// which report back to this object when they are completed, eventually completing the TradeManifest itself
+	/// </summary>
+	public class TradeManifest
+	{
+		public int Id;
+		public string Provider;
+		public string Consumer;
 		public int ProductId;
 
 		public int CreditsTotal;
@@ -28,8 +49,8 @@ namespace Assets.WorldMaterials.Trade
 		public int AmountTotal;
 		public int AmountComplete { get; private set; }
 
-		public Action<TradeInfo> OnStatusChanged;
-		public Action<TradeInfo> OnAmountCompleted;
+		public Action<TradeManifest> OnStatusChanged;
+		public Action<TradeManifest> OnAmountCompleted;
 
 		private TradeStatus _status;
 		/// <summary>
@@ -49,6 +70,21 @@ namespace Assets.WorldMaterials.Trade
 			}
 		}
 
+		public TradeManifest() { }
+
+		public TradeManifest(TradeManifestData data)
+		{
+			Id = data.Id;
+			Provider = data.Provider;
+			Consumer = data.Consumer;
+			ProductId = data.ProductId;
+			CreditsTotal = data.CreditsTotal;
+			CreditsComplete = data.CreditsComplete;
+			AmountTotal = data.AmountTotal;
+			AmountComplete = data.AmountComplete;
+			_status = data.Status;
+		}
+
 		public void CompleteAmount(int productAmount, int currencyAmount)
 		{
 			if (productAmount == 0)
@@ -61,6 +97,22 @@ namespace Assets.WorldMaterials.Trade
 
 			if (AmountComplete >= AmountTotal)
 				Status = TradeStatus.Complete;
+		}
+
+		public TradeManifestData GetData()
+		{
+			return new TradeManifestData
+			{
+				Id = Id,
+				Provider = Provider,
+				Consumer = Consumer,
+				ProductId = ProductId,
+				CreditsTotal = CreditsTotal,
+				CreditsComplete = CreditsComplete,
+				AmountTotal = AmountTotal,
+				AmountComplete = AmountComplete,
+				Status = _status
+			};
 		}
 	}
 }

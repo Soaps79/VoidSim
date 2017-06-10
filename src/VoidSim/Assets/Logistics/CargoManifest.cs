@@ -13,16 +13,16 @@ namespace Assets.Logistics
 		public string Seller;
 		public ProductAmount ProductAmount;
 		public int Currency;
-		private TradeInfo _tradeInfo;
+		private TradeManifest _tradeManifest;
 
-		public CargoManifest(TradeInfo info)
+		public CargoManifest(TradeManifest manifest)
 		{
-			_tradeInfo = info;
+			_tradeManifest = manifest;
 		}
 
 		public void Close()
 		{
-			_tradeInfo.CompleteAmount(ProductAmount.Amount, Currency);
+			_tradeManifest.CompleteAmount(ProductAmount.Amount, Currency);
 		}
 	}
 

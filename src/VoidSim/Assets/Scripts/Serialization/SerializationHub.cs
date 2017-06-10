@@ -34,7 +34,11 @@ namespace Assets.Scripts.Serialization
 		// all collections are written to the specified file path
 		public void WriteToFile(string filename)
 		{
-			UberDebug.LogChannel(LogChannels.Serialization, string.Format("Writing to file: {0}", filename));
+			UberDebug.LogChannel(LogChannels.Serialization,
+				!_toSerialize.Any()
+					? string.Format("No data present to write to file: {0}", filename)
+					: string.Format("Writing to file: {0}", filename));
+
 			using (FileStream fs = File.Open(filename, FileMode.Create, FileAccess.Write))
 			using (StreamWriter sw = new StreamWriter(fs))
 			using (JsonWriter jw = new JsonTextWriter(sw))

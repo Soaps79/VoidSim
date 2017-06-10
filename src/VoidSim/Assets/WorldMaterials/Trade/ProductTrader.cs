@@ -17,25 +17,25 @@ namespace Assets.WorldMaterials.Trade
 	/// </summary>
 	public class ProductTrader : QScript
     {
-        public const string MessageName = "TraderInstance";
+        
         public string ClientName;
 
         public readonly List<ProductAmount> Providing = new List<ProductAmount>();
         public readonly List<ProductAmount> Consuming = new List<ProductAmount>();
 
-        public Action<TradeInfo> OnProvideMatch;
-        public Action<TradeInfo> OnConsumeMatch;
+        public Action<TradeManifest> OnProvideMatch;
+        public Action<TradeManifest> OnConsumeMatch;
 
-        public void HandleProvideSuccess(TradeInfo info)
+        public void HandleProvideSuccess(TradeManifest manifest)
         {
             if (OnProvideMatch != null)
-                OnProvideMatch(info);
+                OnProvideMatch(manifest);
         }
 
-        public void HandleConsumeSuccess(TradeInfo info)
+        public void HandleConsumeSuccess(TradeManifest manifest)
         {
             if (OnConsumeMatch != null)
-                OnConsumeMatch(info);
+                OnConsumeMatch(manifest);
         }
 
         public void SetProvide(ProductAmount productAmount)

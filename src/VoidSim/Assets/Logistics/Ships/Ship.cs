@@ -132,6 +132,7 @@ namespace Assets.Logistics.Ships
 			{
 				Status = Status,
 				TrafficShipData = Status == ShipStatus.Traffic ? TrafficShip.GetData() : null
+				// need to serialize manifests
 			};
 		}
 		#endregion

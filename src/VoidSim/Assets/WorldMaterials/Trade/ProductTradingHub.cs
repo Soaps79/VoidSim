@@ -4,9 +4,16 @@ using System.Linq;
 using Messaging;
 using QGame;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Assets.WorldMaterials.Trade
 {
+	public static class TradeMessages
+	{
+		public const string TraderCreated = "TraderInstance";
+		public const string TradeAccepted = "TradeManifest updated";
+	}
+
     /// <summary>
     /// Manages the supply and demand of ProductAmount between game actors. 
     /// Traders are added through messaging, can expose requests to provide or consume
@@ -20,16 +27,22 @@ namespace Assets.WorldMaterials.Trade
 
         void Start()
         {
-            MessageHub.Instance.AddListener(this, ProductTrader.MessageName);
+            MessageHub.Instance.AddListener(this, TradeMessages.TraderCreated);
+	        SceneManager.sceneLoaded += ClearLists;
 
             // TODO: re-assess when to tick trades
             var node =  StopWatch.AddNode("CheckForTrades", 5);
             node.OnTick += CheckForTrades;
         }
 
-        public void HandleMessage(string type, MessageArgs args)
+	    private void ClearLists(Scene arg0, LoadSceneMode arg1)
+	    {
+		    ClearLists();
+	    }
+
+	    public void HandleMessage(string type, MessageArgs args)
         {
-            if (type == ProductTrader.MessageName && args != null)
+            if (type == TradeMessages.TraderCreated && args != null)
                 HandleTraderAdd(args as TraderInstanceMessageArgs);
         }
 
@@ -88,11 +101,11 @@ namespace Assets.WorldMaterials.Trade
                         if (amountConsumed >= 0)
                         {
                             _lastId++;
-                            var info = new TradeInfo
+                            var info = new TradeManifest
                             {
                                 Id = _lastId,
-                                Consumer = consumer,
-                                Provider = provider,
+                                Consumer = consumer.ClientName,
+                                Provider = provider.ClientName,
                                 AmountTotal = amountConsumed,
                                 ProductId = provided.ProductId,
 								Status = TradeStatus.Accepted
@@ -100,7 +113,7 @@ namespace Assets.WorldMaterials.Trade
 
                             provider.HandleProvideSuccess(info);
                             consumer.HandleConsumeSuccess(info);
-							MessageHub.Instance.QueueMessage(TradeInfo.MessageName, new TradeCreatedMessageArgs { TradeInfo = info });
+							MessageHub.Instance.QueueMessage(TradeMessages.TradeAccepted, new TradeCreatedMessageArgs { TradeManifest = info });
                         }
 
                         // move on to the next consumer, break if provider has emptied its stock

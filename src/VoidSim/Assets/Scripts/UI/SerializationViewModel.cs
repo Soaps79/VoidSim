@@ -11,8 +11,13 @@ namespace Assets.Scripts.UI
 
 		public void Save()
 		{
+			OnNextUpdate += SaveGame;
+		}
+
+		private void SaveGame(float obj)
+		{
 			MessageHub.Instance.QueueMessage(GameMessages.PreSave, null);
-			StopWatch.AddNode("savetime", .1f, true).OnTick += () => SerializationHub.Instance.WriteToFile(filename);
+			OnNextUpdate += f => SerializationHub.Instance.WriteToFile(filename);
 		}
 
 		public void Load()
