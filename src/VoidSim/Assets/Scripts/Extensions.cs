@@ -1,4 +1,5 @@
-﻿using Assets.Station;
+﻿using System.Runtime.CompilerServices;
+using Assets.Station;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -35,9 +36,9 @@ namespace Assets.Scripts
 
 	public static class Vector3Extensions
 	{
-		public static Vector2 ToVector2(this Vector3 u)
+		public static Vector2 ToVector2(this Vector3 me)
 		{
-			return new Vector2(u.x, u.y);
+			return new Vector2(me.x, me.y);
 		}
 	}
 }

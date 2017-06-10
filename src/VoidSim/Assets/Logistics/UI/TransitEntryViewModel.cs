@@ -60,6 +60,8 @@ namespace Assets.Logistics.UI
 				BeginTransit();
 			else if (ship.Status == ShipStatus.Hold)
 				BeginHold();
+			else if (ship.Status == ShipStatus.Traffic)
+				BeginTraffic();
 		}
 
 		private void UpdateTradeCount()

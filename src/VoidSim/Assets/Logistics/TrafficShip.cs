@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Logistics.Ships;
+using Assets.Scripts;
+using Assets.Scripts.Serialization;
 using DG.Tweening;
 using UnityEngine;
 using QGame;
@@ -17,15 +19,15 @@ namespace Assets.Logistics
 	public class TrafficShipData
 	{
 		public TrafficPhase Phase;
-		public Vector2 Position;
-		public Quaternion Rotation;
-		public Vector3 TargetRotation;
+		public Vector3Data Position;
+		public QuaternionData Rotation;
+		public Vector3Data TargetRotation;
 		public float StartingDistance;
 		public float TravelTime;
 		public bool ApproachFromLeft;
 		public string BerthName;
-		public List<Vector3> Waypoints;
-		public Vector3 LocalScale;
+		public List<Vector3Data> Waypoints;
+		public Vector3Data LocalScale;
 		public float ElapsedMovement;
 	}
 
@@ -89,6 +91,9 @@ namespace Assets.Logistics
 
 		private void ScaleWithProximity(float obj)
 		{
+			if(_berth == null)
+				return;
+
 			// currently scales proximity according to starting position
 			// should be made independent of that
 			var proximity = Vector2.Distance(transform.position, _berth.transform.position);
@@ -173,8 +178,12 @@ namespace Assets.Logistics
 		public void Initialize(Ship parent, TrafficShipData data)
 		{
 			_parent = parent;
-			_waypoints = data.Waypoints;
+			_waypoints = new List<Vector3>();
+			data.Waypoints.ForEach(i => _waypoints.Add(i));
 			_travelTime = data.TravelTime;
+
+			if (_waypoints.First().x > 0)
+				GetComponent<SpriteRenderer>().flipX = true;
 
 			ManifestBook = _parent.ManifestBook;
 			OnEveryUpdate += ScaleWithProximity;
@@ -217,7 +226,7 @@ namespace Assets.Logistics
 				StartingDistance = _startingDistance,
 				TravelTime = _travelTime,
 				ApproachFromLeft = _approachFromLeft,
-				Waypoints = _waypoints,
+				Waypoints = new List<Vector3Data>{ _waypoints[0], _waypoints[1], _waypoints[2] },
 				LocalScale = transform.localScale,
 				ElapsedMovement = Time.time - _lastMovementBeginTime
 			};
