@@ -11,6 +11,7 @@ using Random = UnityEngine.Random;
 
 namespace Assets.Logistics
 {
+	[Serializable]
 	public enum TrafficPhase
 	{
 		None, Approaching, Docked, Departing

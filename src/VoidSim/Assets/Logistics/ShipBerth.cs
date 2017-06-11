@@ -112,8 +112,17 @@ namespace Assets.Logistics
 		public void Resume(TrafficShip ship)
 		{
 			_ship = ship;
-			if (ship.Phase == TrafficPhase.Docked &&  OnShipDock != null)
-				OnShipDock(_ship);
+			switch (_ship.Phase)
+			{
+				case TrafficPhase.Approaching:
+					State = BerthState.Reserved;
+					break;
+				case TrafficPhase.Docked:
+					State = BerthState.Transfer;
+					if (OnShipDock != null)
+						OnShipDock(_ship);
+					break;
+			}
 		}
 
 		public ShipBerthData GetData()
