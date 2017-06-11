@@ -27,7 +27,8 @@ namespace Assets.Logistics
 	{
 		private int _lastManifestId;
 		private readonly List<Ship> _ships = new List<Ship>();
-		[SerializeField] private TransitControl _control;
+		[SerializeField] private TransitControl _transitControl;
+		[SerializeField] private TrafficControl _trafficControl;
 
 		[SerializeField] private GameObject _cargoShip;
 		public Action<Ship> OnShipAdded;
@@ -58,7 +59,7 @@ namespace Assets.Logistics
 
 		private void LoadShipsIntoGame(TransitMonitorData data)
 		{
-			var locations = _control.GetTransitLocations();
+			var locations = _transitControl.GetTransitLocations();
 			foreach (var shipData in data.Ships)
 			{
 				var ship = new Ship { Name = shipData.Name };
@@ -149,7 +150,7 @@ namespace Assets.Logistics
 			go.transform.SetParent(transform);
 			go.name = "transit_monitor_viewmodel";
 			var viewmodel = go.GetOrAddComponent<TransitMonitorViewModel>();
-			viewmodel.Initialize(this, _control);
+			viewmodel.Initialize(this, _transitControl);
 
 			KeyValueDisplay.Instance.Add("Manifest Backlog", () => _manifestsBacklog.Count);
 		}

@@ -1,13 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Logistics.Ships;
+using Assets.Scripts;
+using Assets.Scripts.Serialization;
 using Messaging;
+using Newtonsoft.Json;
 using QGame;
 using UnityEngine;
 
 namespace Assets.Logistics
 {
-	public class TrafficControl : QScript, IMessageListener, ITransitLocation
+	public class TrafficControlData
+	{
+		public List<ShipBerthData> Berths;
+	}
+
+	public class TrafficControl : QScript, IMessageListener, ITransitLocation, ISerializeData<TrafficControlData>
 	{
 		public string ClientName { get { return "Station"; } }
 
@@ -20,15 +28,32 @@ namespace Assets.Logistics
 		private readonly Queue<Ship> _queuedShips = new Queue<Ship>();
 		private readonly List<Ship> _shipsInTraffic = new List<Ship>();
 
+		// this class deals with persistence by holding onto the data,
+		// and feeding it to the berths as they are placed
+		private List<ShipBerthData> _deserialized = new List<ShipBerthData>();
+
 		// hold was originally used to handle arrivals before berths were placed
 		// should also be used for when all berths are full
 		[SerializeField] private ShipHolder _holder;
 
+		private const string _collectionName = "TrafficControl";
+
 		void Start()
 		{
 			MessageHub.Instance.AddListener(this, LogisticsMessages.ShipBerthsUpdated);
+			// MessageHub.Instance.AddListener(this, GameMessages.PreSave);
 			MessageHub.Instance.QueueMessage(LogisticsMessages.RegisterLocation, 
 				new TransitLocationMessageArgs { TransitLocation = this });
+
+			//if(SerializationHub.Instance.IsLoading)
+			//	Load();
+		}
+
+		public void Load()
+		{
+			var raw = SerializationHub.Instance.GetCollection(_collectionName);
+			var data = JsonConvert.DeserializeObject<TrafficControlData>(raw);
+			_deserialized.AddRange(data.Berths);
 		}
 
 		public void OnTransitArrival(TransitControl.Entry entry)
@@ -98,6 +123,16 @@ namespace Assets.Logistics
 				_holder.BeginHold(ship, true);
 				return;
 			}
+
+			if (ship.Status == ShipStatus.Traffic && ship.TrafficShip != null )
+			{
+				var berth = _berths.FirstOrDefault(i => i.name == ship.TrafficShip.BerthName);
+				if (berth != null)
+				{
+					berth.Resume(ship.TrafficShip);
+					ship.TrafficShip.Resume(berth);
+				}
+			}
 		}
 
 		public bool IsSimpleHold { get { return !_berths.Any(); } }
@@ -106,6 +141,14 @@ namespace Assets.Logistics
 		{
 			if (type == LogisticsMessages.ShipBerthsUpdated && args != null)
 				HandleBerthsUpdate(args as ShipBerthsMessageArgs);
+
+			if (type == GameMessages.PreSave)
+				HandlePreSave();
+		}
+
+		private void HandlePreSave()
+		{
+			SerializationHub.Instance.AddCollection(_collectionName, GetData());
 		}
 
 		private void HandleBerthsUpdate(ShipBerthsMessageArgs args)
@@ -122,7 +165,18 @@ namespace Assets.Logistics
 		private void AddBerths(List<ShipBerth> berths)
 		{
 			var isFirst = !_berths.Any();
-			_berths.AddRange(berths);
+			foreach (var berth in berths)
+			{
+				_berths.Add(berth);
+
+				if (_deserialized.Any())
+				{
+					var toFind = _deserialized.FirstOrDefault(i => i.Name == berth.name);
+					if (toFind != null)
+						berth.SetFromData(toFind);
+					_deserialized.Remove(toFind);
+				}
+			}
 			if (isFirst && _holder.Count > 0)
 			{
 				RemoveShipsFromHold();
@@ -139,5 +193,12 @@ namespace Assets.Logistics
 		}
 
 		public string Name { get { return "TrafficControl"; } }
+		public TrafficControlData GetData()
+		{
+			return new TrafficControlData
+			{
+				Berths = _berths.Select(i => i.GetData()).ToList()
+			};
+		}
 	}
 }

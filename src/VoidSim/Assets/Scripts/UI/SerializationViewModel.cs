@@ -1,13 +1,14 @@
 ﻿using Assets.Scripts.Serialization;
 using Messaging;
 using QGame;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.UI
 {
 	public class SerializationViewModel : QScript
 	{
-		private string filename = "gamesave.json";
+		[SerializeField] private string _filename;
 		public bool LoadOnStart;
 
 		void Awake()
@@ -24,7 +25,7 @@ namespace Assets.Scripts.UI
 		private void SaveGame(float obj)
 		{
 			MessageHub.Instance.QueueMessage(GameMessages.PreSave, null);
-			OnNextUpdate += f => SerializationHub.Instance.WriteToFile(filename);
+			OnNextUpdate += f => SerializationHub.Instance.WriteToFile(_filename);
 		}
 
 		public void LoadScene()
@@ -37,7 +38,7 @@ namespace Assets.Scripts.UI
 
 		private void Load()
 		{
-			SerializationHub.Instance.LoadFromFile(filename);
+			SerializationHub.Instance.LoadFromFile(_filename);
 		}
 	}
 }

@@ -53,6 +53,7 @@ namespace Assets.Logistics
 		private bool _approachFromLeft;
 		private float _lastMovementBeginTime;
 		private Vector3 _targetRotation;
+		public string BerthName { get; private set; }
 
 		// replace with state machine
 		public TrafficPhase Phase { get; private set; }
@@ -63,6 +64,7 @@ namespace Assets.Logistics
 			_parent = parent;
 			_berth = berth;
 			_waypoints = waypoints;
+			BerthName = _berth.name;
 
 			transform.position = _waypoints.First();
 			if (_waypoints.First().x > 0)
@@ -177,6 +179,9 @@ namespace Assets.Logistics
 			_parent = parent;
 			_waypoints = new List<Vector3>();
 			_startingDistance = data.StartingDistance;
+			_targetRotation = data.TargetRotation;
+			_approachFromLeft = data.ApproachFromLeft;
+			BerthName = data.BerthName;
 			data.Waypoints.ForEach(i => _waypoints.Add(i));
 			_travelTime = data.TravelTime;
 
@@ -226,9 +231,16 @@ namespace Assets.Logistics
 				ApproachFromLeft = _approachFromLeft,
 				Waypoints = new List<Vector3Data>{ _waypoints[0], _waypoints[1], _waypoints[2] },
 				LocalScale = transform.localScale,
-				ElapsedMovement = Time.time - _lastMovementBeginTime
+				ElapsedMovement = Time.time - _lastMovementBeginTime,
+				BerthName = BerthName
 			};
 		}
+
 		#endregion
+
+		public void Resume(ShipBerth berth)
+		{
+			_berth = berth;
+		}
 	}
 }
