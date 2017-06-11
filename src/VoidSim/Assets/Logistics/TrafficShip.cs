@@ -91,12 +91,9 @@ namespace Assets.Logistics
 
 		private void ScaleWithProximity(float obj)
 		{
-			if(_berth == null)
-				return;
-
 			// currently scales proximity according to starting position
 			// should be made independent of that
-			var proximity = Vector2.Distance(transform.position, _berth.transform.position);
+			var proximity = Vector2.Distance(transform.position, _waypoints[1]);
 			var progress = 1 - proximity / _startingDistance;
 			var scale = progress * _maxScale - _minScale;
 			transform.localScale = new Vector2(_maxScale - scale, _maxScale - scale);
@@ -179,6 +176,7 @@ namespace Assets.Logistics
 		{
 			_parent = parent;
 			_waypoints = new List<Vector3>();
+			_startingDistance = data.StartingDistance;
 			data.Waypoints.ForEach(i => _waypoints.Add(i));
 			_travelTime = data.TravelTime;
 

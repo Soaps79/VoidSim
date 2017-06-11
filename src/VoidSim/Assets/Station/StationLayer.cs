@@ -20,12 +20,12 @@ namespace Assets.Station
         // Use this for initialization
         void Start ()
         {
-            MessageHub.Instance.AddListener(this, PlaceableMessages.PlaceablePlacedMessageName);
+            MessageHub.Instance.AddListener(this, PlaceableMessages.PlaceablePlaced);
         }
 
         public void HandleMessage(string type, MessageArgs args)
         {
-            if (type == PlaceableMessages.PlaceablePlacedMessageName)
+            if (type == PlaceableMessages.PlaceablePlaced)
                 HandlePlaceableAdd(args as PlaceablePlacedArgs);
         }
 

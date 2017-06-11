@@ -8,6 +8,13 @@ namespace Assets.Scripts.UI
 	public class SerializationViewModel : QScript
 	{
 		private string filename = "gamesave.json";
+		public bool LoadOnStart;
+
+		void Awake()
+		{
+			if (LoadOnStart)
+				Load();
+		}
 
 		public void Save()
 		{
@@ -20,12 +27,17 @@ namespace Assets.Scripts.UI
 			OnNextUpdate += f => SerializationHub.Instance.WriteToFile(filename);
 		}
 
-		public void Load()
+		public void LoadScene()
 		{
-			SerializationHub.Instance.LoadFromFile(filename);
+			Load();
 			MessageHub.Instance.ClearListeners();
 			var id = SceneManager.GetActiveScene().buildIndex;
 			SceneManager.LoadScene(id);
+		}
+
+		private void Load()
+		{
+			SerializationHub.Instance.LoadFromFile(filename);
 		}
 	}
 }

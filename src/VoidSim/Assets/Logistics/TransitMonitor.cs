@@ -52,6 +52,7 @@ namespace Assets.Logistics
 			_ships.Clear();
 			var raw = SerializationHub.Instance.GetCollection(_collectionName);
 			var data = JsonConvert.DeserializeObject<TransitMonitorData>(raw);
+			// doing this to give transit locations, etc time to register
 			StopWatch.AddNode("loadgame", .1f, true).OnTick += () => LoadShipsIntoGame(data);
 		}
 

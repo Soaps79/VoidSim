@@ -85,7 +85,10 @@ namespace Assets.WorldMaterials.UI
 		// will open the UI panel if this is the first factory placed
 		private void SignalFirstFactoryPlaced()
 	    {
-		    var binder = GameObject.Find("binder_player_crafting_array_viewmodel").GetComponent<ToggleButtonPressBinder>();
+		    var go = GameObject.Find("binder_player_crafting_array_viewmodel");
+			if(go == null)
+				return;
+			var binder = go.GetComponent<ToggleButtonPressBinder>();
 		    binder.Toggle.isOn = true;
 		    _hasAFactory = true;
 	    }

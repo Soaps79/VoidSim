@@ -9,40 +9,40 @@ using UnityEngine;
 namespace Assets.Placeables
 {
 
-    // These will be moved and evolve alongside the Placeables system
-    public static class PlaceableMessages
-    {
-        public const string PlaceablePlacedMessageName = "PlaceablePlaced";
-    }
+	// These will be moved and evolve alongside the Placeables system
+	public static class PlaceableMessages
+	{
+		public const string PlaceablePlaced = "PlaceablePlaced";
+	}
 
-    public class PlaceablePlacedArgs : MessageArgs
-    {
-        public Placeable ObjectPlaced;
-        public LayerType Layer;
-    }
+	public class PlaceablePlacedArgs : MessageArgs
+	{
+		public Placeable ObjectPlaced;
+		public LayerType Layer;
+	}
 
-    /// <summary>
-    /// Represents any structure or module or any other object placed into the game world.
-    /// </summary>
-    public class Placeable : QScript
-    {
-        [HideInInspector] public LayerType Layer;
+	/// <summary>
+	/// Represents any structure or module or any other object placed into the game world.
+	/// </summary>
+	public class Placeable : QScript
+	{
+		[HideInInspector] public LayerType Layer;
+		public string Name { get { return _scriptable.ProductName; } }
+		private Product _baseProduct;
+		private PlaceableScriptable _scriptable;
 
-        private Product _baseProduct;
-        private PlaceableScriptable _scriptable;
+		public void BindToScriptable(PlaceableScriptable scriptable)
+		{
+			_scriptable = scriptable;
+			Layer = scriptable.Layer;
+			_baseProduct = ProductLookup.Instance.GetProduct(scriptable.ProductName);
 
-        public void BindToScriptable(PlaceableScriptable scriptable)
-        {
-            _scriptable = scriptable;
-            Layer = scriptable.Layer;
-            _baseProduct = ProductLookup.Instance.GetProduct(scriptable.ProductName);
-
-            gameObject.TrimCloneFromName();
-            var rend = gameObject.GetOrAddComponent<SpriteRenderer>();
-            rend.enabled = true;
-            rend.sprite = scriptable.PlacedSprite;
-            rend.sortingLayerName = Layer.ToString();
-            rend.sortingOrder = 1;
-        }
-    }
+			gameObject.TrimCloneFromName();
+			var rend = gameObject.GetOrAddComponent<SpriteRenderer>();
+			rend.enabled = true;
+			rend.sprite = scriptable.PlacedSprite;
+			rend.sortingLayerName = Layer.ToString();
+			rend.sortingOrder = 1;
+		}
+	}
 }

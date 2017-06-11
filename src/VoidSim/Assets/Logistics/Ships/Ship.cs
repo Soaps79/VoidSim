@@ -28,7 +28,6 @@ namespace Assets.Logistics.Ships
 	public class Ship : ISerializeData<ShipData>
 	{
 		public ShipSize Size;
-		public string CurrentDestination;
 		public ShipStatus Status { get; private set; }
 
 		// deal with capacity later
