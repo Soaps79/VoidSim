@@ -59,8 +59,10 @@ namespace Assets.WorldMaterials.Products
             if(_LookupScriptable.Recipes.Any(i => i.Ingredients.Any(j => _LookupScriptable.Products.All(k => k.Name != j.ProductName))))
                 throw new UnityException("ProductLookup: Recipe has unkown ingredient");
 
+			var recipeLastId = 0;
 		    _recipes = _LookupScriptable.Recipes.Select(i => new Recipe
 		    {
+				Id = ++recipeLastId,
 		        Container = _containers.FirstOrDefault(j => j.Name == i.ContainerName),
 		        Ingredients =
 		            i.Ingredients.Select(ing => new Ingredient
@@ -120,6 +122,11 @@ namespace Assets.WorldMaterials.Products
 		public List<Recipe> GetRecipes()
 		{
 			return _recipes;
+		}
+
+		public Recipe GetRecipe(int id)
+		{
+			return _recipes.FirstOrDefault(i => i.Id == id);
 		}
 
 	    public CraftingContainerInfo GetContainer(string containerName)

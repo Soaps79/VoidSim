@@ -114,11 +114,6 @@ namespace Assets.Scripts.WorldMaterials
             CheckForBeginCrafting();
         }
 
-        public void CancelAllCrafting()
-        {
-            
-        }
-
         public void CancelCrafting(int recipeId)
         {
             Recipe recipe = null;
@@ -156,5 +151,19 @@ namespace Assets.Scripts.WorldMaterials
             StopWatch[STOPWATCH_NAME].Reset(0);
             StopWatch[STOPWATCH_NAME].Pause();
         }
+
+	    public int ResumeCrafting(Recipe recipe, float remaining)
+	    {
+		    _lastId++;
+			var seconds = WorldClock.Instance.GetSeconds(recipe.TimeLength);
+		    var node = StopWatch.AddNode(STOPWATCH_NAME, seconds, true);
+			node.OnTick = CompleteCraft;
+			node.UpdateElapsed(remaining * seconds);
+		    _currentlyCrafting = new QueuedRecipe { ID = _lastId, Recipe = recipe };
+		    if (OnCraftingBegin != null)
+			    OnCraftingBegin(_currentlyCrafting.Recipe, _currentlyCrafting.ID);
+
+		    return _lastId;
+	    }
     }
 }

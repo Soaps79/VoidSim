@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Logistics;
 using Assets.Placeables.Nodes;
+using Assets.Scripts;
+using Assets.Scripts.Serialization;
 using Assets.WorldMaterials;
 using Assets.WorldMaterials.Products;
 using Assets.WorldMaterials.UI;
 using Messaging;
 using ModestTree;
+using Newtonsoft.Json;
 using QGame;
 using UnityEngine;
 
@@ -25,11 +29,16 @@ namespace Assets.Station
 
 		public Action OnFactoryListUpdated;
 		private InventoryReserve _reserve;
+		private int _lastFactoryId;
 
 		// this is a list of all items that the factories currently need
 		// the inventory reserve will be set to these values, 
 		// and StationTrader will handle placing the actual trade requests
 		private readonly Dictionary<int, int> _purchasing = new Dictionary<int, int>();
+
+		private List<ProductFactoryData> _deserialized = new List<ProductFactoryData>();
+
+		private const string _collectionName = "FactoryControl";
 
 		public void Initialize(Inventory inventory, ProductLookup lookup, InventoryReserve reserve)
 		{
@@ -37,18 +46,35 @@ namespace Assets.Station
 			_productLookup = lookup;
 			_reserve = reserve;
 			MessageHub.Instance.AddListener(this, ProductFactory.MessageName);
-			
+			MessageHub.Instance.AddListener(this, GameMessages.PreSave);
+
 			var go = (GameObject)Instantiate(Resources.Load("Views/player_crafting_array_viewmodel"));
 			go.transform.SetParent(transform);
 			go.name = "player_crafting_array_viewmodel";
 			var viewModel = go.GetComponent<PlayerCraftingArrayViewModel>();
 			viewModel.Bind(this);
+			if (SerializationHub.Instance.IsLoading)
+				Load();
+		}
+
+		private void Load()
+		{
+			var raw = SerializationHub.Instance.GetCollection(_collectionName);
+			_deserialized = JsonConvert.DeserializeObject<List<ProductFactoryData>>(raw);
 		}
 
 		public void HandleMessage(string type, MessageArgs args)
 		{
 			if (type == ProductFactory.MessageName && args != null)
 				HandleFactoryAdd(args as ProductFactoryMessageArgs);
+
+			else if (type == GameMessages.PreSave)
+				HandlePreSave();
+		}
+
+		private void HandlePreSave()
+		{
+			SerializationHub.Instance.AddCollection(_collectionName, Factories.Select(i => i.GetData()).ToList());
 		}
 
 		private void HandleFactoryAdd(ProductFactoryMessageArgs args)
@@ -56,8 +82,23 @@ namespace Assets.Station
 			if(args.ProductFactory == null)
 				throw new UnityException("Factory control recieved bad message data");
 
-			args.ProductFactory.Initialize(_inventory, _productLookup);
-			args.ProductFactory.OnIsBuyingchanged += RefreshPurchasing;
+			_lastFactoryId++;
+			var factory = args.ProductFactory;
+			factory.name = factory.name + "_" + _lastFactoryId;
+			factory.Initialize(_inventory, _productLookup);
+			factory.OnIsBuyingchanged += RefreshPurchasing;
+
+			if (_deserialized.Any())
+			{
+				var resume = _deserialized.FirstOrDefault(i => i.Name == factory.name);
+				if (resume != null)
+				{
+					factory.Resume(resume);
+					_deserialized.Remove(resume);
+				}
+
+			}
+
 			Factories.Add(args.ProductFactory);
 			CheckCallback();
 		}

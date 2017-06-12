@@ -51,6 +51,7 @@ namespace Assets.WorldMaterials.Products
         public List<Ingredient> Ingredients;
         public TimeLength TimeLength;
         public CraftingContainerInfo Container;
+	    public int Id;
     }
 
     [Serializable]

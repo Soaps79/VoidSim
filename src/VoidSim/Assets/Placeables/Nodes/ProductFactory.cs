@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts;
+using Assets.Scripts.Serialization;
 using Assets.Scripts.WorldMaterials;
 using Assets.WorldMaterials;
 using Assets.WorldMaterials.Products;
@@ -16,11 +17,19 @@ namespace Assets.Placeables.Nodes
 		public ProductFactory ProductFactory;
 	}
 
+	public class ProductFactoryData
+	{
+		public string Name;
+		public int CurrentlyCraftingRecipeId;
+		public float RemainingCraftTime;
+		public bool IsBuying;
+	}
+
 	/// <summary>
 	/// Gives placeable an automated crafting container
 	/// </summary>
 	[RequireComponent(typeof(Placeable))]
-	public class ProductFactory : PlaceableNode
+	public class ProductFactory : PlaceableNode, ISerializeData<ProductFactoryData>
 	{
 		public const string MessageName = "ProductFactoryPlaced";
 
@@ -138,11 +147,6 @@ namespace Assets.Placeables.Nodes
 			_recipes.AddRange(recipes);
 		}
 
-		public void StartRequestingGoods()
-		{
-			
-		}
-
 		// public version, will switch recipes if it is already crafting one
 		public void StartCrafting(int productId)
 		{
@@ -222,6 +226,26 @@ namespace Assets.Placeables.Nodes
 		private void StoreResult(Recipe recipe)
 		{
 			_inventory.TryAddProduct(recipe.ResultProductID, recipe.ResultAmount);
+		}
+
+		public void Resume(ProductFactoryData data)
+		{
+			IsBuying = data.IsBuying;
+			var recipe = _productLookup.GetRecipe(data.CurrentlyCraftingRecipeId);
+			_currentCraftQueueId = _container.ResumeCrafting(recipe, data.RemainingCraftTime);
+			CurrentlyCrafting = recipe;
+			IsCrafting = true;
+		}
+
+		public ProductFactoryData GetData()
+		{
+			return new ProductFactoryData
+			{
+				Name = name,
+				IsBuying = IsBuying,
+				CurrentlyCraftingRecipeId = CurrentlyCrafting.Id,
+				RemainingCraftTime = _container.CurrentCraftRemainingAsZeroToOne
+			};
 		}
 	}
 }
