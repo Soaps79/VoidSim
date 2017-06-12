@@ -96,7 +96,7 @@ namespace Assets.Scripts.Serialization
 				UberDebug.LogChannel(LogChannels.Serialization, string.Format("{0} collection fetched from hub", collectionName));
 				return _deserialized[collectionName].Json;
 			}
-			return null;
+			return string.Empty;
 		}
 	}
 }
