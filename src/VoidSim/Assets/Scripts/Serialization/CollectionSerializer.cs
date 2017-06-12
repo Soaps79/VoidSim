@@ -49,7 +49,7 @@ namespace Assets.Scripts.Serialization
 			}
 
 			_data = SerializationHub.Instance.GetCollection(name);
-			return !string.IsNullOrEmpty(_data);
+			return SerializationHub.Instance.IsLoading && !string.IsNullOrEmpty(_data);
 		}
 
 		/// <summary>

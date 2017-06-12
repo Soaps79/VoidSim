@@ -20,8 +20,8 @@ namespace Assets.Scripts.Serialization
 
 		public bool IsLoading { get; private set; }
 
-		private Dictionary<string, object> _toSerialize = new Dictionary<string, object>();
-		private Dictionary<string, SerializedCollection> _deserialized = new Dictionary<string, SerializedCollection>();
+		private readonly Dictionary<string, object> _toSerialize = new Dictionary<string, object>();
+		private readonly Dictionary<string, SerializedCollection> _deserialized = new Dictionary<string, SerializedCollection>();
 
 		public void AddCollection(string collectionName, object obj)
 		{
