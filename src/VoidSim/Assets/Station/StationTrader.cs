@@ -1,4 +1,5 @@
 ﻿using Assets.Logistics;
+using Assets.Scripts.Serialization;
 using Assets.WorldMaterials;
 using Assets.WorldMaterials.Products;
 using Assets.WorldMaterials.Trade;
@@ -17,7 +18,7 @@ namespace Assets.Station
     ///     As Void develops, trades between other actors will not be broadcast. Not sure if will be relevant.
     ///     This seems like a job that should be handled by TradingHub, but then it has to know about currency, so ???
     /// </summary>
-    public class StationTrader : QScript
+    public class StationTrader : QScript, ISerializeData<InventoryReserveData>
     {
         private InventoryReserve _reserve;
         public string ClientName { get; set; }
@@ -27,7 +28,10 @@ namespace Assets.Station
         private ProductTrader _trader;
         private WorldClock _worldClock;
 
-        public void Initialize(Inventory inventory, InventoryReserve reserve)
+	    private readonly CollectionSerializer<InventoryReserveData> _serializer
+		    = new CollectionSerializer<InventoryReserveData>();
+
+		public void Initialize(Inventory inventory, InventoryReserve reserve)
         {
             _inventory = inventory;
             _inventory.OnInventoryChanged += CheckForTrade;
@@ -36,16 +40,25 @@ namespace Assets.Station
             BindToTrader();
             _valueLookup = ProductValueLookup.Instance;
 
-            MessageHub.Instance.QueueMessage(TradeMessages.TraderCreated, new TraderInstanceMessageArgs { Trader = _trader });
+	        if (_serializer.HasDataFor(this, "StationTrader"))
+		        HandleGameLoad();
+
+			MessageHub.Instance.QueueMessage(TradeMessages.TraderCreated, new TraderInstanceMessageArgs { Trader = _trader });
         }
 
-        private void BindToTrader()
+	    private void BindToTrader()
         {
             _trader = gameObject.AddComponent<ProductTrader>();
             _trader.ClientName = ClientName;
             _trader.OnProvideMatch += HandleProvideMatch;
             _trader.OnConsumeMatch += HandleConsumeMatch;
         }
+
+		private void HandleGameLoad()
+		{
+			var data = _serializer.DeserializeData();
+			_reserve.SetFromData(data);
+		}
 
         private void HandleProvideMatch(TradeManifest manifest)
         {
@@ -83,5 +96,10 @@ namespace Assets.Station
             list = _reserve.GetConsumeProducts();
             list.ForEach(i => _trader.SetConsume(i));
         }
+
+	    public InventoryReserveData GetData()
+	    {
+		    return _reserve.GetData();
+	    }
     }
 }

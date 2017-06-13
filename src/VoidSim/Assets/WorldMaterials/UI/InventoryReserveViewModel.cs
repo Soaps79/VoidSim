@@ -21,10 +21,15 @@ namespace Assets.WorldMaterials.UI
             _productId = productId;
 
             var current = _reserve.GetProductStatus(_productId);
-            if(current == null)
-                _reserve.AddReservation(_productId, 0, false, false);
+	        if (current == null)
+		        _reserve.AddReservation(_productId, 0, false, false);
+	        else
+	        {
+		        BuyToggle.isOn = current.ShouldConsume;
+		        SellToggle.isOn = current.ShouldProvide;
+	        }
 
-            BuyToggle.onValueChanged.AddListener(HandleBuyChanged);
+	        BuyToggle.onValueChanged.AddListener(HandleBuyChanged);
             SellToggle.onValueChanged.AddListener(HandleSellChanged);
 
             Slider.minValue = 0;
