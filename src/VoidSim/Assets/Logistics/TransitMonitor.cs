@@ -23,7 +23,7 @@ namespace Assets.Logistics
 	/// Persisting any objects in transit
 	/// Distributing Cargo requests
 	/// </summary>
-	public class TransitMonitor : QScript, IMessageListener
+	public class TransitMonitor : QScript, IMessageListener, ISerializeData<TransitMonitorData>
 	{
 		private int _lastManifestId;
 		private readonly List<Ship> _ships = new List<Ship>();
@@ -34,7 +34,8 @@ namespace Assets.Logistics
 		public Action<Ship> OnShipAdded;
 		private readonly List<CargoManifest> _manifestsBacklog = new List<CargoManifest>();
 
-		private const string _collectionName = "ShipMonitor";
+		private readonly CollectionSerializer<TransitMonitorData> _serializer
+			= new CollectionSerializer<TransitMonitorData>();
 
 		void Start()
 		{
@@ -44,15 +45,15 @@ namespace Assets.Logistics
 			BindToUI();
 			var node = StopWatch.AddNode("check_backlog", 5);
 			node.OnTick += HandleManifestsBacklog;
-			if (SerializationHub.Instance.IsLoading)
+			if (_serializer.HasDataFor(this, "ShipMonitor"))
 				HandleGameLoad();
 		}
 
 		private void HandleGameLoad()
 		{
 			_ships.Clear();
-			var raw = SerializationHub.Instance.GetCollection(_collectionName);
-			var data = JsonConvert.DeserializeObject<TransitMonitorData>(raw);
+
+			var data = _serializer.DeserializeData();
 			// doing this to give transit locations, etc time to register
 			StopWatch.AddNode("loadgame", .1f, true).OnTick += () => LoadShipsIntoGame(data);
 		}
@@ -100,16 +101,6 @@ namespace Assets.Logistics
 
 			else if (type == LogisticsMessages.CargoRequested && args != null)
 				HandleCargoRequested(args as CargoRequestedMessageArgs);
-
-			else if (type == GameMessages.PreSave)
-				HandlePreSave();
-		}
-
-		private void HandlePreSave()
-		{
-			var data = new TransitMonitorData();
-			data.Ships = _ships.Select(i => i.GetData()).ToList();
-			SerializationHub.Instance.AddCollection(_collectionName, data);
 		}
 
 		private void HandleShipCreated(ShipCreatedMessageArgs args)
@@ -156,5 +147,9 @@ namespace Assets.Logistics
 		}
 
 		public string Name { get { return "TransitMonitor"; } }
+		public TransitMonitorData GetData()
+		{
+			return new TransitMonitorData {Ships = _ships.Select(i => i.GetData()).ToList()};
+		}
 	}
 }

@@ -48,8 +48,11 @@ namespace Assets.Scripts.Serialization
 				_isInitialized = true;
 			}
 
+			if (!SerializationHub.Instance.IsLoading)
+				return false;
+
 			_data = SerializationHub.Instance.GetCollection(name);
-			return SerializationHub.Instance.IsLoading && !string.IsNullOrEmpty(_data);
+			return !string.IsNullOrEmpty(_data);
 		}
 
 		/// <summary>
