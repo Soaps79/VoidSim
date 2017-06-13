@@ -36,6 +36,7 @@ namespace Assets.Station
             _inventory = inventory;
             _inventory.OnInventoryChanged += CheckForTrade;
             _reserve = reserve;
+	        _reserve.OnReserveChanged += CheckForTrade;
 
             BindToTrader();
             _valueLookup = ProductValueLookup.Instance;

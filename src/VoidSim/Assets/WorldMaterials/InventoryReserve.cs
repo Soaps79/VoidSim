@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Serialization;
 using Assets.WorldMaterials.Products;
@@ -32,6 +33,8 @@ namespace Assets.WorldMaterials
         private readonly List<Entry> _reserveEntries = new List<Entry>();
         private readonly List<ProductAmount> _toConsume = new List<ProductAmount>();
         private readonly List<ProductAmount> _toProvide = new List<ProductAmount>();
+
+	    public Action OnReserveChanged;
 
         public void Initialize(Inventory inventory)
         {
@@ -103,18 +106,25 @@ namespace Assets.WorldMaterials
 
             collect.ShouldConsume = shouldConsume;
             UpdateReserve();
+	        CheckCallback();
         }
 
-        public void SetProvide(int productId, bool shouldProvide)
+	    public void SetProvide(int productId, bool shouldProvide)
         {
             var release = _reserveEntries.FirstOrDefault(i => i.ProductId == productId);
             if (release == null) return;
 
             release.ShouldProvide = shouldProvide;
             UpdateReserve();
+	        CheckCallback();
         }
+	    private void CheckCallback()
+	    {
+		    if (OnReserveChanged != null)
+			    OnReserveChanged();
+	    }
 
-        public void AddReservation(int productId, int amount, bool shouldConsume, bool shouldProvide)
+		public void AddReservation(int productId, int amount, bool shouldConsume, bool shouldProvide)
         {
             _reserveEntries.Add(new Entry
             {
