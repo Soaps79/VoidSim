@@ -16,12 +16,17 @@ using UnityEngine;
 
 namespace Assets.Station
 {
+	public class FactoryControlData
+	{
+		public List<ProductFactoryData> Factories;
+	}
+
 	/// <summary>
 	/// The purpose of this object is to act as owner to all of the station's factories.
 	/// This means initializing them when they are placed, handling the trade requests for the
 	/// ones set to auto-buy, and eventually handling their removal
 	/// </summary>
-	public class FactoryControl : QScript, IMessageListener
+	public class FactoryControl : QScript, IMessageListener, ISerializeData<FactoryControlData>
 	{
 		private Inventory _inventory;
 		private ProductLookup _productLookup;
@@ -38,6 +43,9 @@ namespace Assets.Station
 
 		private List<ProductFactoryData> _deserialized = new List<ProductFactoryData>();
 
+		private readonly CollectionSerializer<FactoryControlData> _serializer
+			= new CollectionSerializer<FactoryControlData>();
+
 		private const string _collectionName = "FactoryControl";
 
 		public void Initialize(Inventory inventory, ProductLookup lookup, InventoryReserve reserve)
@@ -46,35 +54,25 @@ namespace Assets.Station
 			_productLookup = lookup;
 			_reserve = reserve;
 			MessageHub.Instance.AddListener(this, ProductFactory.MessageName);
-			MessageHub.Instance.AddListener(this, GameMessages.PreSave);
 
 			var go = (GameObject)Instantiate(Resources.Load("Views/player_crafting_array_viewmodel"));
 			go.transform.SetParent(transform);
 			go.name = "player_crafting_array_viewmodel";
 			var viewModel = go.GetComponent<PlayerCraftingArrayViewModel>();
 			viewModel.Bind(this);
-			if (SerializationHub.Instance.IsLoading)
+			if(_serializer.HasDataFor(this, "FactoryControl"))
 				Load();
 		}
 
 		private void Load()
 		{
-			var raw = SerializationHub.Instance.GetCollection(_collectionName);
-			_deserialized = JsonConvert.DeserializeObject<List<ProductFactoryData>>(raw);
+			_deserialized = _serializer.DeserializeData().Factories;
 		}
 
 		public void HandleMessage(string type, MessageArgs args)
 		{
 			if (type == ProductFactory.MessageName && args != null)
 				HandleFactoryAdd(args as ProductFactoryMessageArgs);
-
-			else if (type == GameMessages.PreSave)
-				HandlePreSave();
-		}
-
-		private void HandlePreSave()
-		{
-			SerializationHub.Instance.AddCollection(_collectionName, Factories.Select(i => i.GetData()).ToList());
 		}
 
 		private void HandleFactoryAdd(ProductFactoryMessageArgs args)
@@ -96,7 +94,6 @@ namespace Assets.Station
 					factory.Resume(resume);
 					_deserialized.Remove(resume);
 				}
-
 			}
 
 			Factories.Add(args.ProductFactory);
@@ -139,5 +136,9 @@ namespace Assets.Station
 		}
 
 		public string Name { get { return "FactoryControl"; } }
+		public FactoryControlData GetData()
+		{
+			return new FactoryControlData { Factories = Factories.Select(i => i.GetData()).ToList() };
+		}
 	}
 }

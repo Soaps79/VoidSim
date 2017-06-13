@@ -36,7 +36,9 @@ namespace Assets.Logistics
 		// should also be used for when all berths are full
 		[SerializeField] private ShipHolder _holder;
 
-		private const string _collectionName = "TrafficControl";
+
+		private readonly CollectionSerializer<TrafficControlData> _serializer
+			= new CollectionSerializer<TrafficControlData>();
 
 		void Start()
 		{
@@ -45,14 +47,13 @@ namespace Assets.Logistics
 			MessageHub.Instance.QueueMessage(LogisticsMessages.RegisterLocation, 
 				new TransitLocationMessageArgs { TransitLocation = this });
 
-			//if(SerializationHub.Instance.IsLoading)
-			//	Load();
+			if (_serializer.HasDataFor(this, "TrafficControl"))
+				Load();
 		}
 
 		public void Load()
 		{
-			var raw = SerializationHub.Instance.GetCollection(_collectionName);
-			var data = JsonConvert.DeserializeObject<TrafficControlData>(raw);
+			var data = _serializer.DeserializeData();
 			_deserialized.AddRange(data.Berths);
 		}
 
@@ -141,14 +142,6 @@ namespace Assets.Logistics
 		{
 			if (type == LogisticsMessages.ShipBerthsUpdated && args != null)
 				HandleBerthsUpdate(args as ShipBerthsMessageArgs);
-
-			if (type == GameMessages.PreSave)
-				HandlePreSave();
-		}
-
-		private void HandlePreSave()
-		{
-			SerializationHub.Instance.AddCollection(_collectionName, GetData());
 		}
 
 		private void HandleBerthsUpdate(ShipBerthsMessageArgs args)

@@ -41,7 +41,6 @@ namespace Assets.Logistics
 		{
 			MessageHub.Instance.AddListener(this, LogisticsMessages.ShipCreated);
 			MessageHub.Instance.AddListener(this, LogisticsMessages.CargoRequested);
-			MessageHub.Instance.AddListener(this, GameMessages.PreSave);
 			BindToUI();
 			var node = StopWatch.AddNode("check_backlog", 5);
 			node.OnTick += HandleManifestsBacklog;

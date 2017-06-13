@@ -14,25 +14,26 @@ namespace Assets.WorldMaterials.Trade
 		public List<TradeManifestData> Manifests;
 	}
 
-	public class TradeMonitor : SingletonBehavior<TradeMonitor>, IMessageListener
+	public class TradeMonitor : SingletonBehavior<TradeMonitor>, IMessageListener, ISerializeData<TradeMonitorData>
 	{
 		private readonly List<TradeManifest> _activeManifests = new List<TradeManifest>();
-		private const string _collectionName = "TradeMonitor";
+
+		private readonly CollectionSerializer<TradeMonitorData> _serializer
+			= new CollectionSerializer<TradeMonitorData>();
 
 		void Start()
 		{
 			OnEveryUpdate += UpdateTrades;
 			MessageHub.Instance.AddListener(this, TradeMessages.TradeAccepted, true);
-			MessageHub.Instance.AddListener(this, GameMessages.PreSave, true);
-			if (SerializationHub.Instance.IsLoading)
+
+			if (_serializer.HasDataFor(this, "TradeMonitor", true))
 				HandleGameLoad();
 		}
 
 		private void HandleGameLoad()
 		{
 			_activeManifests.Clear();
-			var raw = SerializationHub.Instance.GetCollection(_collectionName);
-			var data = JsonConvert.DeserializeObject<TradeMonitorData>(raw);
+			var data = _serializer.DeserializeData();
 			foreach (var manifestData in data.Manifests)
 			{
 				_activeManifests.Add(new TradeManifest(manifestData));
@@ -60,15 +61,6 @@ namespace Assets.WorldMaterials.Trade
 		{
 			if (type == TradeMessages.TradeAccepted && args != null)
 				HandleTradeAccepted(args as TradeCreatedMessageArgs);
-
-			if (type == GameMessages.PreSave)
-				HandlePreSave();
-		}
-
-		private void HandlePreSave()
-		{
-			var serialized = _activeManifests.Select(i => i.GetData()).ToList();
-			SerializationHub.Instance.AddCollection(_collectionName, new TradeMonitorData{ Manifests = serialized });
 		}
 
 		private void HandleTradeAccepted(TradeCreatedMessageArgs args)
@@ -81,5 +73,9 @@ namespace Assets.WorldMaterials.Trade
 		}
 
 		public string Name { get { return "TradeMonitor"; } }
+		public TradeMonitorData GetData()
+		{
+			return new TradeMonitorData { Manifests = _activeManifests.Select(i => i.GetData()).ToList() };
+		}
 	}
 }
