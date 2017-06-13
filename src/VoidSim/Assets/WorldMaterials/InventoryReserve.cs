@@ -1,18 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.Serialization;
 using Assets.WorldMaterials.Products;
 using UnityEngine;
 
 namespace Assets.WorldMaterials
 {
+	public class InventoryReserveData
+	{
+		public List<InventoryReserve.Entry> Entries;
+		public List<ProductAmount> HoldEntries;
+	}
+
     /// <summary>
     /// Attaches to an Inventory and has a list of product minimums to keep.
     /// Can withdraw and return product counts above the minimum.
     /// TODO: tighten up interface once usage is better known
     /// </summary>
-    public class InventoryReserve
+    public class InventoryReserve : ISerializeData<InventoryReserveData>
     {
-        public class InventoryReserveEntry
+        public class Entry
         {
             public int ProductId;
             public int Amount;
@@ -22,16 +29,13 @@ namespace Assets.WorldMaterials
 
         [SerializeField] private Inventory _inventory;
         private Dictionary<int, int> _holdProducts = new Dictionary<int, int>();
-        private readonly List<InventoryReserveEntry> _reserveEntries = new List<InventoryReserveEntry>();
+        private readonly List<Entry> _reserveEntries = new List<Entry>();
         private readonly List<ProductAmount> _toConsume = new List<ProductAmount>();
         private readonly List<ProductAmount> _toProvide = new List<ProductAmount>();
-
 
         public void Initialize(Inventory inventory)
         {
             _inventory = inventory;
-            UpdateReserve();
-
             _inventory.OnInventoryChanged += UpdateReserve;
         }
 
@@ -87,7 +91,7 @@ namespace Assets.WorldMaterials
             return _toConsume;
         }
 
-        public InventoryReserveEntry GetProductStatus(int productId)
+        public Entry GetProductStatus(int productId)
         {
             return _reserveEntries.FirstOrDefault(i => i.ProductId == productId);
         }
@@ -112,7 +116,7 @@ namespace Assets.WorldMaterials
 
         public void AddReservation(int productId, int amount, bool shouldConsume, bool shouldProvide)
         {
-            _reserveEntries.Add(new InventoryReserveEntry
+            _reserveEntries.Add(new Entry
             {
                 ProductId = productId,
                 Amount = amount,
@@ -139,5 +143,27 @@ namespace Assets.WorldMaterials
             _holdProducts[productId] += amount;
             UpdateReserve();
         }
+
+	    public void SetFromData(InventoryReserveData data)
+	    {
+		    _reserveEntries.Clear();
+			_holdProducts.Clear();
+			_reserveEntries.AddRange(data.Entries);
+		    foreach (var hold in data.HoldEntries)
+		    {
+			    _holdProducts.Add(hold.ProductId, hold.Amount);
+		    }
+			UpdateReserve();
+	    }
+
+	    public InventoryReserveData GetData()
+	    {
+		    return new InventoryReserveData
+		    {
+			    Entries = _reserveEntries.ToList(),
+			    HoldEntries = _holdProducts.Select(i => 
+				new ProductAmount { ProductId = i.Key, Amount = i.Value }).ToList()
+			};
+	    }
     }
 }
