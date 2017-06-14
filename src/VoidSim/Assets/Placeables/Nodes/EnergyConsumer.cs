@@ -21,7 +21,8 @@ namespace Assets.Placeables.Nodes
     [RequireComponent(typeof(Placeable))]
     public class EnergyConsumer : PlaceableNode
     {
-        public const string MessageName = "EnergyConsumerCreated";
+	    public override string NodeName { get { return "EnergyConsumer"; } }
+		public const string MessageName = "EnergyConsumerCreated";
 
         [SerializeField]
         private float _initialValue;

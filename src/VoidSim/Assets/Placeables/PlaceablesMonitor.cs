@@ -1,20 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts;
 using Assets.Scripts.Serialization;
 using Messaging;
-using Newtonsoft.Json;
 using QGame;
 using UnityEngine;
 
 namespace Assets.Placeables
 {
-	public class PlaceableData
-	{
-		public string Name;
-		public Vector3Data Position;
-	}
-
 	public class PlaceablesMonitorData
 	{
 		public List<PlaceableData> Placeables;
@@ -25,7 +17,7 @@ namespace Assets.Placeables
 	/// </summary>
 	public class PlaceablesMonitor : QScript, IMessageListener, ISerializeData<PlaceablesMonitorData>
 	{
-		private readonly List<PlaceableData> _placeables = new List<PlaceableData>();
+		private readonly List<Placeable> _placeables = new List<Placeable>();
 
 		private readonly CollectionSerializer<PlaceablesMonitorData> _serializer 
 			= new CollectionSerializer<PlaceablesMonitorData>();
@@ -46,27 +38,31 @@ namespace Assets.Placeables
 
 			foreach (var placeableData in data.Placeables)
 			{
-				var scriptable = placeablesLookup.Placeables.FirstOrDefault(i => i.ProductName == placeableData.Name);
+				var scriptable = placeablesLookup.Placeables.FirstOrDefault(i => i.ProductName == placeableData.PlaceableName);
 				if(scriptable != null)
-					Placer.PlaceObject(scriptable, placeableData.Position);
+					Placer.PlaceObject(scriptable, placeableData.Position, placeableData);
 			}
 		}
 
 		public void HandleMessage(string type, MessageArgs args)
 		{
 			if (type == PlaceableMessages.PlaceablePlaced && args != null)
-				HandlePlaceablePlaced(args as PlaceablePlacedArgs);
+				HandlePlaceablePlaced(args as PlaceableUpdateArgs);
 		}
 
-		private void HandlePlaceablePlaced(PlaceablePlacedArgs args)
+		private void HandlePlaceablePlaced(PlaceableUpdateArgs args)
 		{
-			_placeables.Add(new PlaceableData { Name = args.ObjectPlaced.Name, Position = args.ObjectPlaced.transform.position });
+			if(args != null && args.ObjectPlaced != null)
+				_placeables.Add(args.ObjectPlaced);
 		}
 
-		public string Name { get; private set; }
+		public string Name { get { return "PlaceablesMonitor"; } }
 		public PlaceablesMonitorData GetData()
 		{
-			return new PlaceablesMonitorData{ Placeables = _placeables };
+			return new PlaceablesMonitorData
+			{
+				Placeables = _placeables.Select(i => i.GetData()).ToList()
+			};
 		}
 	}
 }

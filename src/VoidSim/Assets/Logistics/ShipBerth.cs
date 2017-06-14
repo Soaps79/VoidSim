@@ -32,6 +32,7 @@ namespace Assets.Logistics
 		private TrafficShip _ship;
 		public bool IsInUse;
 		private BerthState _state;
+		public int Index;
 
 		[SerializeField] private SpriteRenderer _indicator;
 

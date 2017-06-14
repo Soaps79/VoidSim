@@ -31,6 +31,7 @@ namespace Assets.Placeables.Nodes
 	[RequireComponent(typeof(Placeable))]
 	public class ProductFactory : PlaceableNode, ISerializeData<ProductFactoryData>
 	{
+		public override string NodeName { get { return "ProductFactory"; } }
 		public const string MessageName = "ProductFactoryPlaced";
 
 		// This code was refactored to use ID's instead of strings
@@ -39,6 +40,9 @@ namespace Assets.Placeables.Nodes
 		// currently builds its initial item on repeat, needs work to switch between recipes
 		public override void BroadcastPlacement()
 		{
+			if(name == DefaultName)
+				name = "product_factory_" + LastIdManager.Instance.GetNext(NodeName);
+
 			MessageHub.Instance.QueueMessage(MessageName, new ProductFactoryMessageArgs { ProductFactory = this } );
 		}
 

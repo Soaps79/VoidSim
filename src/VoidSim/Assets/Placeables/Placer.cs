@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Assets.Scripts.Serialization;
 using Messaging;
 using QGame;
 using UnityEngine;
@@ -41,24 +42,19 @@ namespace Assets.Placeables
 			CompletePlacement(true);
 		}
 
-		public static void PlaceObject(PlaceableScriptable scriptable, Vector3 position)
+		public static void PlaceObject(PlaceableScriptable scriptable, Vector3 position, PlaceableData data = null)
 		{
 			var placeable = Instantiate(scriptable.Prefab);
 			placeable.transform.position = position;
 			placeable.BindToScriptable(scriptable);
 			MessageHub.Instance.QueueMessage(
 				PlaceableMessages.PlaceablePlaced,
-				new PlaceablePlacedArgs
+				new PlaceableUpdateArgs
 				{
 					ObjectPlaced = placeable,
 					Layer = scriptable.Layer
 				});
-
-			var nodes = placeable.GetComponents<PlaceableNode>();
-			foreach (var node in nodes)
-			{
-				node.BroadcastPlacement();
-			}
+			placeable.InitializeNodes(data);
 		}
 
 		private void CancelPlacement()

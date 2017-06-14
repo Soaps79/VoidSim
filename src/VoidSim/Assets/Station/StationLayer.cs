@@ -26,10 +26,10 @@ namespace Assets.Station
         public void HandleMessage(string type, MessageArgs args)
         {
             if (type == PlaceableMessages.PlaceablePlaced)
-                HandlePlaceableAdd(args as PlaceablePlacedArgs);
+                HandlePlaceableAdd(args as PlaceableUpdateArgs);
         }
 
-        private void HandlePlaceableAdd(PlaceablePlacedArgs placed)
+        private void HandlePlaceableAdd(PlaceableUpdateArgs placed)
         {
             if (placed == null || placed.Layer != LayerType)
                 return;

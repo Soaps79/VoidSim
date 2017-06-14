@@ -34,7 +34,7 @@ namespace Assets.Station
 
 		public Action OnFactoryListUpdated;
 		private InventoryReserve _reserve;
-		private int _lastFactoryId;
+		//private int _lastFactoryId;
 
 		// this is a list of all items that the factories currently need
 		// the inventory reserve will be set to these values, 
@@ -80,9 +80,9 @@ namespace Assets.Station
 			if(args.ProductFactory == null)
 				throw new UnityException("Factory control recieved bad message data");
 
-			_lastFactoryId++;
+			//_lastFactoryId++;
 			var factory = args.ProductFactory;
-			factory.name = factory.name + "_" + _lastFactoryId;
+			//factory.name = factory.name + "_" + _lastFactoryId;
 			factory.Initialize(_inventory, _productLookup);
 			factory.OnIsBuyingchanged += RefreshPurchasing;
 
