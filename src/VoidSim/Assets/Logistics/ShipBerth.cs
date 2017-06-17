@@ -103,7 +103,7 @@ namespace Assets.Logistics
 			UpdateIndicator();
 			var rend = GetComponent<SpriteRenderer>();
 			_indicator.sortingLayerID = rend.sortingLayerID;
-			_indicator.sortingOrder = rend.sortingOrder;
+			_indicator.sortingOrder = rend.sortingOrder + 1;
 		}
 
 		public void SetFromData(ShipBerthData data)

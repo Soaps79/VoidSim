@@ -147,9 +147,8 @@ namespace Assets.Station
 		{
             var canvas = GameObject.Find("GameUICanvas");
 			var text = Instantiate(_textPrefab);
-			text.transform.SetParent(canvas.transform, false);
 			//text.transform.position = Camera.main.WorldToScreenPoint(transform.position);
-			text.Initialize(amount, wasBought);
+			text.Initialize(canvas, amount, wasBought, transform.position);
 		}
 
 		// manifests are complete, tell the berth

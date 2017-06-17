@@ -12,9 +12,12 @@ namespace Assets.Station.UI
 		[SerializeField] private float _travelTime;
 		[SerializeField] private IndicatorColors _colors;
 
-		public void Initialize(int amount, bool wasBought)
+		public void Initialize(GameObject canvas, int amount, bool wasBought, Vector3 position)
 		{
 			var text = GetComponent<TMP_Text>();
+			transform.SetParent(canvas.transform, false);
+			transform.position = position;
+			
 			text.color = wasBought ? _colors.Stop : _colors.Go;
 			text.text = amount.ToString();
 
@@ -22,6 +25,7 @@ namespace Assets.Station.UI
 				.OnComplete(() => Destroy(gameObject));
 			text.DOFade(0, _travelTime)
 				.SetEase(Ease.InSine);
+
 		}
 	}
 }

@@ -149,6 +149,7 @@ namespace Assets.Logistics.Ships
 			return new ShipData
 			{
 				Name = Name,
+				SOName = _scriptable.name,
 				Status = Status,
 				Ticker = Ticker.GetData(),
 				Navigation = Navigation.GetData(),
