@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Assets.Logistics.Ships;
 using Assets.Scripts.Serialization;
 using DG.Tweening;
@@ -72,6 +73,7 @@ namespace Assets.Logistics
 		public void Initialize(Ship parent, ShipBerth berth, List<Vector3> waypoints)
 		{
 			_parent = parent;
+			name = "traffic_" + parent.Name;
 			_berth = berth;
 			_waypoints = waypoints;
 			BerthName = _berth.name;
@@ -91,6 +93,7 @@ namespace Assets.Logistics
 		{
 			var rend = gameObject.AddComponent<SpriteRenderer>();
 			rend.sprite = _scriptable.Sprite;
+			rend.sortingLayerName = "Ships";
 
 			if (_waypoints != null && _waypoints.Any() && _waypoints.First().x > 0)
 				rend.flipX = true;

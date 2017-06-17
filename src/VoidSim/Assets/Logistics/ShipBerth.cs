@@ -101,6 +101,9 @@ namespace Assets.Logistics
 		{
 			// this wouldn't work when in ctor, why?
 			UpdateIndicator();
+			var rend = GetComponent<SpriteRenderer>();
+			_indicator.sortingLayerID = rend.sortingLayerID;
+			_indicator.sortingOrder = rend.sortingOrder;
 		}
 
 		public void SetFromData(ShipBerthData data)

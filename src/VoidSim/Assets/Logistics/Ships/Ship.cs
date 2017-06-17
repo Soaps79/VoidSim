@@ -39,7 +39,6 @@ namespace Assets.Logistics.Ships
 
 		public CargoManifestBook ManifestBook = new CargoManifestBook();
 		public ShipNavigation Navigation { get; private set; }
-		public GameObject TrafficShipPrefab;
 		public TrafficShip TrafficShip { get; private set; }
 		public string Name { get; set; }
 
@@ -57,9 +56,6 @@ namespace Assets.Logistics.Ships
 		{
 			Navigation = navigation;
 			Navigation.ParentShip = this;
-			TrafficShipPrefab = prefab;
-			if(TrafficShipPrefab == null)
-				throw new UnityException("Ship got bad trafficship prefab");
 		}
 
 		public void AddManifest(CargoManifest manifest)
@@ -127,10 +123,7 @@ namespace Assets.Logistics.Ships
 		{
 			Navigation = navigation;
 			Navigation.ParentShip = this;
-			TrafficShipPrefab = prefab;
 			Ticker = new Ticker(data.Ticker);
-			if (TrafficShipPrefab == null)
-				throw new UnityException("Ship got bad trafficship prefab");
 			ManifestBook = new CargoManifestBook(data.ManifestBook);
 
 			// possibly a better place to put this
