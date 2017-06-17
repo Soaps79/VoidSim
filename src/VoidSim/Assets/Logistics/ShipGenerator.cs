@@ -17,6 +17,7 @@ namespace Assets.Logistics
 	public class QueuedShipData
 	{
 		public string ShipName;
+		public string SOName;
 		public float TimeRemaining;
 	}
 
@@ -31,6 +32,7 @@ namespace Assets.Logistics
 		public class Entry
 		{
 			public string ShipName;
+			public string SOName;
 			public StopWatchNode Node;
 		}
 
@@ -43,6 +45,7 @@ namespace Assets.Logistics
 			= new CollectionSerializer<ShipGeneratorData>();
 
 		private readonly List<Entry> _toLaunch = new List<Entry>();
+		private List<ShipSO> _shipSOs;
 
 		void Start()
 		{
@@ -50,6 +53,7 @@ namespace Assets.Logistics
 			// may not be needed anymore?
 			MessageHub.Instance.AddListener(this, LogisticsMessages.ShipCreated);
 			_transitControl = gameObject.GetComponent<TransitControl>();
+			_shipSOs = ShipSOLookup.Instance.GetShips();
 
 			if (_serializer.HasDataFor(this, "ShipGenerator"))
 				LoadSerializedShips();
@@ -64,7 +68,7 @@ namespace Assets.Logistics
 			_lastShipId = data.LastId;
 			foreach (var shipData in data.Ships)
 			{
-				QueueShip(shipData.ShipName, shipData.TimeRemaining);
+				QueueShip(shipData.ShipName, shipData.SOName, shipData.TimeRemaining);
 			}
 		}
 
@@ -81,17 +85,18 @@ namespace Assets.Logistics
 			{
 				_lastShipId++;
 				var shipName = "ship_" + _lastShipId;
-				QueueShip(shipName, entry.InitialDelay);
+				QueueShip(shipName, entry.SOName, entry.InitialDelay);
 			}
 		}
 
 		// begins a timer that will launch the ship when it is complete
-		private void QueueShip(string shipName, float time)
+		private void QueueShip(string shipName, string soName, float time)
 		{
 			var node = StopWatch.AddNode(shipName, time, true);
 			var e = new Entry
 			{
 				ShipName = shipName,
+				SOName = soName,
 				Node = node
 			};
 			node.OnTick += () => CreateShip(e);
@@ -105,6 +110,11 @@ namespace Assets.Logistics
 			if (locations.Count < 2) throw new UnityException("ShipGenerator found less than 2 locations");
 
 			var ship = new Ship { Name = entry.ShipName };
+			var scriptable = _shipSOs.FirstOrDefault(i => i.name == entry.SOName);
+			if (scriptable == null)
+				throw new UnityException(string.Format("ShipGenerator cannot find SO named {0}", entry.SOName));
+
+			ship.SetScriptable(scriptable);
 			var navigation = new ShipNavigation();
 			locations.ForEach(i => navigation.AddLocation(i.ClientName));
 			navigation.CycleLocations();

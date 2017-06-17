@@ -64,6 +64,12 @@ namespace Assets.Logistics
 			{
 				var ship = new Ship { Name = shipData.Name };
 				var navigation = new ShipNavigation(shipData.Navigation);
+
+				var scriptable = ShipSOLookup.Instance.GetShips().FirstOrDefault(i => i.name == shipData.SOName);
+				if(scriptable == null)
+					throw new UnityException(string.Format("ShipGenerator cannot find SO named {0}", shipData.SOName));
+
+				ship.SetScriptable(scriptable);
 				ship.Initialize(navigation, _cargoShip, shipData);
 
 				if (ship.Status == ShipStatus.Hold || ship.Status == ShipStatus.Traffic)

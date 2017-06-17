@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Logistics.Ships;
-using Assets.Scripts;
 using Assets.Scripts.Serialization;
 using DG.Tweening;
 using UnityEngine;
@@ -41,13 +40,12 @@ namespace Assets.Logistics
 		private ShipBerth _berth;
 		private Ship _parent;
 		private float _startingDistance;
-		[SerializeField] private float _minScale;
-		[SerializeField] private float _maxScale;
+		private float _minScale;
+		private float _maxScale;
 
-		[SerializeField] private float _minTravelTime;
-		[SerializeField] private float _maxTravelTime;
+		private float _minTravelTime;
+		private float _maxTravelTime;
 		private float _travelTime;
-
 
 		private List<Vector3> _waypoints;
 		public CargoManifestBook ManifestBook { get; private set; }
@@ -59,6 +57,17 @@ namespace Assets.Logistics
 		// replace with state machine
 		public TrafficPhase Phase { get; private set; }
 		public Action<TrafficPhase> OnPhaseChanged;
+		private ShipSO _scriptable;
+
+		internal void SetScriptable(ShipSO scriptable)
+		{
+			_scriptable = scriptable;
+			_minScale = _scriptable.MinScale;
+			_maxScale = _scriptable.MaxScale;
+			_minTravelTime = _scriptable.MinTravelTime;
+			_maxTravelTime = _scriptable.MaxTravelTime;
+			_travelTime = _scriptable.RandomizedTravelTime;
+		}
 
 		public void Initialize(Ship parent, ShipBerth berth, List<Vector3> waypoints)
 		{
@@ -68,10 +77,8 @@ namespace Assets.Logistics
 			BerthName = _berth.name;
 
 			transform.position = _waypoints.First();
-			if (_waypoints.First().x > 0)
-				GetComponent<SpriteRenderer>().flipX = true;
-
-			_travelTime = Random.Range(_minTravelTime, _maxTravelTime);
+			GenerateSprite();
+			
 
 			InitializeScaling();
 			OnEveryUpdate += ScaleWithProximity;
@@ -79,6 +86,16 @@ namespace Assets.Logistics
 			Phase = TrafficPhase.None;
 			CheckPhaseChangeCallback();
 		}
+
+		private void GenerateSprite()
+		{
+			var rend = gameObject.AddComponent<SpriteRenderer>();
+			rend.sprite = _scriptable.Sprite;
+
+			if (_waypoints != null && _waypoints.Any() && _waypoints.First().x > 0)
+				rend.flipX = true;
+		}
+
 
 		private void CheckPhaseChangeCallback()
 		{
@@ -186,9 +203,8 @@ namespace Assets.Logistics
 			data.Waypoints.ForEach(i => _waypoints.Add(i));
 			_travelTime = data.TravelTime;
 
-			if (_waypoints.First().x > 0)
-				GetComponent<SpriteRenderer>().flipX = true;
-
+			GenerateSprite();
+			
 			ManifestBook = _parent.ManifestBook;
 			OnEveryUpdate += ScaleWithProximity;
 

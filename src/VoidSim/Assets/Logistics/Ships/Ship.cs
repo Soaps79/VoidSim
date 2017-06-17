@@ -18,6 +18,7 @@ namespace Assets.Logistics.Ships
 	public class ShipData
 	{
 		public string Name;
+		public string SOName;
 		public ShipStatus Status;
 		public TickerData Ticker;
 		public ShipNavigationData Navigation;
@@ -45,8 +46,14 @@ namespace Assets.Logistics.Ships
 		public Action OnHoldBegin;
 		public Action OnTransitBegin;
 		public Ticker Ticker = new Ticker();
+		private ShipSO _scriptable;
 
-		public void Initialize(ShipNavigation navigation, GameObject prefab, ShipStatus status = ShipStatus.New)
+		public void SetScriptable(ShipSO scriptable)
+		{
+			_scriptable = scriptable;
+		}
+
+		public void Initialize(ShipNavigation navigation, GameObject prefab)
 		{
 			Navigation = navigation;
 			Navigation.ParentShip = this;
@@ -98,9 +105,9 @@ namespace Assets.Logistics.Ships
 
 		private void CreateTrafficShip()
 		{
-			var go = GameObject.Instantiate(TrafficShipPrefab);
-			go.TrimCloneFromName();
-			TrafficShip = go.GetComponent<TrafficShip>();
+			var go = new GameObject();
+			TrafficShip = go.AddComponent<TrafficShip>();
+			TrafficShip.SetScriptable(_scriptable);
 		}
 
 		public void CompleteTraffic()
@@ -143,7 +150,6 @@ namespace Assets.Logistics.Ships
 				Navigation.BeginTrip(true);
 			}
 		}
-
 
 		public ShipData GetData()
 		{
