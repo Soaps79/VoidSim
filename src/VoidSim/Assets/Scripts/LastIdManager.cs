@@ -33,10 +33,16 @@ namespace Assets.Scripts
 		{
 			// I *believe* sceneLoaded is being called before anything else is initialized
 			// if the truth is otherwise, will need fixing
+			Deserialize();
 			SceneManager.sceneLoaded += HandleSceneLoad;
 		}
 
 		private void HandleSceneLoad(Scene scene, LoadSceneMode mode)
+		{
+			Deserialize();
+		}
+
+		private void Deserialize()
 		{
 			if (_serializer.HasDataFor(this, "LastIds", true))
 			{
