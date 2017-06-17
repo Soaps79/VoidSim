@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts;
 using Messaging;
 using QGame;
 using UnityEngine;
@@ -23,8 +24,7 @@ namespace Assets.WorldMaterials.Trade
     public class ProductTradingHub : QScript, IMessageListener
     {
         private readonly List<ProductTrader> _traders = new List<ProductTrader>();
-        private int _lastId;
-
+        
         void Start()
         {
             MessageHub.Instance.AddListener(this, TradeMessages.TraderCreated);
@@ -100,10 +100,9 @@ namespace Assets.WorldMaterials.Trade
                         // tell the consumer it got its goods
                         if (amountConsumed >= 0)
                         {
-                            _lastId++;
                             var info = new TradeManifest
                             {
-                                Id = _lastId,
+                                Id = LastIdManager.Instance.GetNext("trade_manifest"),
                                 Consumer = consumer.ClientName,
                                 Provider = provider.ClientName,
                                 AmountTotal = amountConsumed,

@@ -25,7 +25,6 @@ namespace Assets.Station.UI
 				.OnComplete(() => Destroy(gameObject));
 			text.DOFade(0, _travelTime)
 				.SetEase(Ease.InSine);
-
 		}
 	}
 }

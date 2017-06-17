@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Logistics.Ships;
+using Assets.Scripts;
 using Messaging;
 using QGame;
 using UnityEngine;
@@ -59,8 +60,7 @@ namespace Assets.Logistics
 		}
 
 		private readonly List<Entry> _entries = new List<Entry>();
-		private int _lastId;
-
+		
 		public TransitControl()
 		{
 			OnEveryUpdate += UpdateEntries;
@@ -130,7 +130,6 @@ namespace Assets.Logistics
 				|| !_locations.ContainsKey(args.TravelingFrom))
 				throw new UnityException("TransitControl given bad transit request message data");
 
-			_lastId++;
 			var source = _locations[args.TravelingFrom];
 			var destination = _locations[args.TravelingTo];
 			if(!args.IsContinuing)
@@ -138,7 +137,7 @@ namespace Assets.Logistics
 
 			var entry = new Entry
 			{
-				Id = _lastId,
+				Id = LastIdManager.Instance.GetNext("transit_entry"),
 				TravelingFrom = source,
 				TravelingTo = destination,
 				Ship = args.Ship

@@ -25,7 +25,6 @@ namespace Assets.Logistics
 	/// </summary>
 	public class TransitMonitor : QScript, IMessageListener, ISerializeData<TransitMonitorData>
 	{
-		private int _lastManifestId;
 		private readonly List<Ship> _ships = new List<Ship>();
 		[SerializeField] private TransitControl _transitControl;
 		[SerializeField] private TrafficControl _trafficControl;
@@ -128,8 +127,7 @@ namespace Assets.Logistics
 			if (args == null)
 				throw new UnityException("TransitMonitor recieved bad cargo request args");
 
-			_lastManifestId++;
-			args.Manifest.Id = _lastManifestId;
+			args.Manifest.Id = LastIdManager.Instance.GetNext("manifest");
 
 			var ship = CargoCarrierFinder.FindCarrier(_ships, args.Manifest);
 			if (ship == null)

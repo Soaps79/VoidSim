@@ -36,8 +36,7 @@ namespace Assets.Scripts.WorldMaterials
         private readonly List<QueuedRecipe> _recipeQueue = new List<QueuedRecipe>();
         private QueuedRecipe _currentlyCrafting;
         private const string STOPWATCH_NAME = "Crafting";
-        private int _lastId;
-
+        
         // best external usage
         public Action<Recipe> OnCraftingComplete;
         public Action<Recipe> OnCraftingCancelled;
@@ -47,6 +46,7 @@ namespace Assets.Scripts.WorldMaterials
         public Action<Recipe, int> OnCraftingBegin;
         public Action<Recipe, int> OnCraftingQueued;
         public Action<Recipe, int> OnCraftingCompleteUI;
+	    private string _lastIdName;
 
         public float CurrentQueueCount { get { return _recipeQueue.Count; } }
         public float CurrentCraftRemainingAsZeroToOne
@@ -58,11 +58,15 @@ namespace Assets.Scripts.WorldMaterials
             }
         }
 
+	    void Awake()
+	    {
+		    _lastIdName = "crafting_container_" + name;
+	    }
+
         // This, CancelCrafting() and the Recipe callbacks are the typical in-game usage
         public int QueueCrafting(Recipe recipe)
         {
-            _lastId++;
-            var queued = new QueuedRecipe {ID = _lastId, Recipe = recipe};
+            var queued = new QueuedRecipe {ID = LastIdManager.Instance.GetNext(_lastIdName), Recipe = recipe};
             _recipeQueue.Add(queued);
 
             if (OnCraftingQueued != null)
@@ -154,16 +158,15 @@ namespace Assets.Scripts.WorldMaterials
 
 	    public int ResumeCrafting(Recipe recipe, float remaining)
 	    {
-		    _lastId++;
-			var seconds = WorldClock.Instance.GetSeconds(recipe.TimeLength);
+		    var seconds = WorldClock.Instance.GetSeconds(recipe.TimeLength);
 		    var node = StopWatch.AddNode(STOPWATCH_NAME, seconds, true);
 			node.OnTick = CompleteCraft;
 			node.UpdateElapsed(remaining * seconds);
-		    _currentlyCrafting = new QueuedRecipe { ID = _lastId, Recipe = recipe };
+		    _currentlyCrafting = new QueuedRecipe { ID = LastIdManager.Instance.GetNext(_lastIdName), Recipe = recipe };
 		    if (OnCraftingBegin != null)
 			    OnCraftingBegin(_currentlyCrafting.Recipe, _currentlyCrafting.ID);
 
-		    return _lastId;
+		    return _currentlyCrafting.ID;
 	    }
     }
 }

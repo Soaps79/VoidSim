@@ -18,7 +18,7 @@ namespace Assets.Scripts
 	}
 
 	/// <summary>
-	/// Used by objects that need to generate ID's for their managed objects.
+	/// Used by consumers that need to generate ID's for the objects they manage.
 	/// There is no initialization needed, calling GetNext() will add the new type
 	/// if it is not yet known. Values are serialized so loading the game continues the increments.
 	/// </summary>
@@ -31,6 +31,8 @@ namespace Assets.Scripts
 
 		void Awake()
 		{
+			// I *believe* sceneLoaded is being called before anything else is initialized
+			// if the truth is otherwise, will need fixing
 			SceneManager.sceneLoaded += HandleSceneLoad;
 		}
 
