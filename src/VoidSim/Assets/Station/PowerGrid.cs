@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Placeables.Nodes;
+using Assets.Scripts;
 using Assets.Scripts.WorldMaterials;
 using Assets.WorldMaterials;
 using Assets.WorldMaterials.Products;
@@ -54,6 +55,9 @@ namespace Assets.Station
             {
                 _energyProduct = ProductLookup.Instance.GetProduct(ENERGY_PRODUCT_NAME);
             }
+
+			// remove this when energy serialization is in place 
+	        LastIdManager.Instance.Reset("power_plant");
         }
 
         // this was written quickly, might need to be made more robust later
@@ -125,9 +129,18 @@ namespace Assets.Station
 
         private void HandleProviderMessage(ProductFactoryMessageArgs args)
         {
-            if (args == null || args.ProductFactory == null)
-                Debug.Log("PowerGrid given bad provider message args.");
+	        if (args == null || args.ProductFactory == null)
+	        {
+		        Debug.Log("PowerGrid given bad provider message args.");
+		        return;
+	        }
 
+	        var factory = args.ProductFactory;
+
+	        if (factory.InitialRecipe != ENERGY_PRODUCT_NAME)
+		        return;
+
+	        factory.name = "power_plant_" + LastIdManager.Instance.GetNext("power_plant");
             AddProvider(args.ProductFactory);
         }
 

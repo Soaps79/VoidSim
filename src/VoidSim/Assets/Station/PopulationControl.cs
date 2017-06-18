@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Placeables.Nodes;
+using Assets.Scripts;
 using Assets.WorldMaterials;
 using Assets.WorldMaterials.Products;
 using Messaging;
@@ -31,10 +32,13 @@ namespace Assets.Station
             if (_initialCapacity > 0)
                 _inventory.SetProductMaxAmount(_populationProductId, _initialCapacity);
 
-            MessageHub.Instance.AddListener(this, PopHousing.MessageName);
+			MessageHub.Instance.AddListener(this, PopHousing.MessageName);
+
+			// remove when housing serialization is in place
+			LastIdManager.Instance.Reset("pop_housing");
         }
 
-        public int TotalCapacity
+		public int TotalCapacity
         {
             get { return _totalCapacity; }
         }
@@ -52,6 +56,8 @@ namespace Assets.Station
                 Debug.Log("PopulationControl given bad consumer message args.");
                 return;
             }
+
+	        args.PopHousing.name = "pop_housing_" + LastIdManager.Instance.GetNext("pop_housing");
 
             _housing.Add(args.PopHousing);
             UpdateCapacity();

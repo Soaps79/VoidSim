@@ -7,6 +7,10 @@ using QGame;
 
 namespace Assets.Scripts.Serialization
 {
+	/// <summary>
+	/// Manages the actual writing and reading of game data. Game code should not interact with this, 
+	/// objects should instead instantiate a CollectionSerializer of their data type
+	/// </summary>
 	public class SerializationHub : SingletonBehavior<SerializationHub>
 	{
 		private class SerializedCollection
@@ -17,7 +21,9 @@ namespace Assets.Scripts.Serialization
 			public bool IsHandled;
 		}
 
+		// returns true as long as any collections that have been loaded from file have not yet been retrieved in-game
 		public bool IsLoading { get; private set; }
+		private string _fileExtension = ".json";
 
 		private readonly Dictionary<string, object> _toSerialize = new Dictionary<string, object>();
 		private readonly Dictionary<string, SerializedCollection> _deserialized = new Dictionary<string, SerializedCollection>();
@@ -31,16 +37,16 @@ namespace Assets.Scripts.Serialization
 			UberDebug.LogChannel(LogChannels.Serialization, string.Format("{0} collection added to serialization", collectionName));
 		}
 
-		// all collections are written to the specified file path
-		// due to Unity being limited to an old version of json.net, we can't have 
-		// a single file that's actually readable, so we write two
-		// VoidSim.Console has a json.net version of this function that does both
-		// if more flexibility is needed: 
+		// all collections are written to the specified file path.
+		// Unity is limited to an old version of json.net (modified 9.0), and I can't figure out
+		// a way to write a single file that's legible and deserializable using it, so we write two.
+		// VoidSim.Console has a json.net v10 of this function that achieves both.
+		// if more flexibility is needed with v10: 
 		// https://stackoverflow.com/questions/19811301/merge-two-objects-during-serialization-using-json-net
-		public void WriteToFile(string filename)
+		public void WriteToFile(string savename)
 		{
-			WriteToFileUsable(filename);
-			WriteToFileReadable(filename + "_readable");
+			WriteToFileUsable(savename + _fileExtension);
+			WriteToFileReadable(savename + "_readable" + _fileExtension);
 		}
 
 		private void WriteToFileUsable(string filename)
@@ -65,7 +71,7 @@ namespace Assets.Scripts.Serialization
 			}
 		}
 
-		public void WriteToFileReadable(string filename)
+		private void WriteToFileReadable(string filename)
 		{
 			UberDebug.LogChannel(LogChannels.Serialization,
 				!_toSerialize.Any()
@@ -93,13 +99,13 @@ namespace Assets.Scripts.Serialization
 		}
 
 		// loads the file's contents into _deserialized
-		public void LoadFromFile(string filename)
+		public void LoadFromFile(string savename)
 		{
 			// load pairs of collection names and json documents
-			var text = File.ReadAllText(filename);
+			var text = File.ReadAllText(savename  + _fileExtension);
 			var table = JsonConvert.DeserializeObject<Dictionary<string, object>>(text);
 			if (table == null || !table.Any())
-				throw new Exception(string.Format("Unable to load data from file: {0}", filename));
+				throw new Exception(string.Format("Unable to load data from file: {0}", savename));
 
 			// hold them in indexed table
 			_deserialized.Clear();
@@ -112,7 +118,7 @@ namespace Assets.Scripts.Serialization
 				});
 			}
 
-			UberDebug.LogChannel(LogChannels.Serialization, string.Format("Data loaded from file {0}", filename));
+			UberDebug.LogChannel(LogChannels.Serialization, string.Format("Data loaded from file {0}", savename));
 			IsLoading = true;
 		}
 
@@ -122,10 +128,14 @@ namespace Assets.Scripts.Serialization
 			if (_deserialized.ContainsKey(collectionName))
 			{
 				_deserialized[collectionName].IsHandled = true;
-				if (_deserialized.All(i => i.Value.IsHandled))
+				var completed = _deserialized.Where(i => i.Value.IsHandled);
+				var countRemaining = _deserialized.Count - completed.Count();
+
+				if(countRemaining <= 0)
 					IsLoading = false;
 
-				UberDebug.LogChannel(LogChannels.Serialization, string.Format("{0} collection fetched from hub", collectionName));
+				UberDebug.LogChannel(LogChannels.Serialization, 
+					string.Format("{0} collection fetched from hub\t {1} remaining", collectionName, countRemaining));
 				return _deserialized[collectionName].Json;
 			}
 			return string.Empty;

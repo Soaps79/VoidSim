@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Logistics;
+using Assets.Placeables;
 using Assets.Placeables.Nodes;
 using Assets.Scripts;
 using Assets.Scripts.Serialization;
@@ -75,17 +76,37 @@ namespace Assets.Station
 				HandleFactoryAdd(args as ProductFactoryMessageArgs);
 		}
 
+		// initializes the factory and gives it data from deserailization
 		private void HandleFactoryAdd(ProductFactoryMessageArgs args)
 		{
 			if(args.ProductFactory == null)
 				throw new UnityException("Factory control recieved bad message data");
 
-			//_lastFactoryId++;
 			var factory = args.ProductFactory;
-			//factory.name = factory.name + "_" + _lastFactoryId;
 			factory.Initialize(_inventory, _productLookup);
 			factory.OnIsBuyingchanged += RefreshPurchasing;
 
+			if (factory.IsCore && _deserialized.Any())
+			{
+				// this is weird because deserialization depends on the factory having a name,
+				// which it isn't guaranteed to have until this message handling cycle is complete
+				OnNextUpdate += f => CheckForDeserialized(factory);
+			}
+			else
+			{
+				// factories that are core, ie: energy, will get named by their own managers
+				if (factory.name == PlaceableNode.DefaultName)
+					factory.name = "product_factory_" + LastIdManager.Instance.GetNext("product_factory");
+
+				CheckForDeserialized(factory);
+			}
+
+			Factories.Add(args.ProductFactory);
+			CheckCallback();
+		}
+
+		private void CheckForDeserialized(ProductFactory factory)
+		{
 			if (_deserialized.Any())
 			{
 				var resume = _deserialized.FirstOrDefault(i => i.Name == factory.name);
@@ -95,9 +116,6 @@ namespace Assets.Station
 					_deserialized.Remove(resume);
 				}
 			}
-
-			Factories.Add(args.ProductFactory);
-			CheckCallback();
 		}
 
 		// first pass at forecasting, currently buying enough to keep factories going for a week

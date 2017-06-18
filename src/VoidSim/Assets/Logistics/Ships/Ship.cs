@@ -6,6 +6,8 @@ using Assets.Scripts.Serialization;
 using Assets.WorldMaterials.Products;
 using Assets.WorldMaterials.Trade;
 using Messaging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using UnityEngine;
 
 namespace Assets.Logistics.Ships
@@ -19,6 +21,7 @@ namespace Assets.Logistics.Ships
 	{
 		public string Name;
 		public string SOName;
+		[JsonConverter(typeof(StringEnumConverter))]
 		public ShipStatus Status;
 		public TickerData Ticker;
 		public ShipNavigationData Navigation;

@@ -5,6 +5,8 @@ using System.Runtime.InteropServices;
 using Assets.Logistics.Ships;
 using Assets.Scripts.Serialization;
 using DG.Tweening;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using UnityEngine;
 using QGame;
 using Random = UnityEngine.Random;
@@ -19,6 +21,7 @@ namespace Assets.Logistics
 
 	public class TrafficShipData
 	{
+		[JsonConverter(typeof(StringEnumConverter))]
 		public TrafficPhase Phase;
 		public Vector3Data Position;
 		public QuaternionData Rotation;

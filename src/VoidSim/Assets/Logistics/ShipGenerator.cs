@@ -150,6 +150,7 @@ namespace Assets.Logistics
 				Ships = _toLaunch.Select(i => new QueuedShipData
 				{
 					ShipName = i.ShipName,
+					SOName = i.SOName,
 					TimeRemaining = i.Node.RemainingLifetime
 				}).ToList()
 			};

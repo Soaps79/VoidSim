@@ -74,5 +74,13 @@ namespace Assets.Scripts
 				LastIds = _lastIds.Select(i => new LastIdData { Name = i.Key, LastId = i.Value }).ToList()
 			};
 		}
+
+		public void Reset(string idName)
+		{
+			if (!_lastIds.ContainsKey(idName))
+				_lastIds.Add(idName, 0);
+			else
+				_lastIds[idName] = 0;
+		}
 	}
 }

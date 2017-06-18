@@ -40,8 +40,8 @@ namespace Assets.Placeables.Nodes
 		// currently builds its initial item on repeat, needs work to switch between recipes
 		public override void BroadcastPlacement()
 		{
-			if(name == DefaultName)
-				name = "product_factory_" + LastIdManager.Instance.GetNext(NodeName);
+			//if(name == DefaultName && !_isCore)
+			//	name = "product_factory_" + LastIdManager.Instance.GetNext(NodeName);
 
 			MessageHub.Instance.QueueMessage(MessageName, new ProductFactoryMessageArgs { ProductFactory = this } );
 		}
@@ -50,6 +50,8 @@ namespace Assets.Placeables.Nodes
 		private readonly List<Recipe> _recipes = new List<Recipe>();
 		private int _currentCraftQueueId;
 		private Inventory _inventory;
+		[SerializeField] private bool _isCore;
+		public bool IsCore { get { return _isCore; } }
 
 		public Recipe CurrentlyCrafting { get; private set; }
 

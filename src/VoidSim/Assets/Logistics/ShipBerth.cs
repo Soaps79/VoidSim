@@ -3,6 +3,8 @@ using Assets.Logistics.Ships;
 using Assets.Scripts;
 using Assets.Scripts.Serialization;
 using DG.Tweening;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using QGame;
 using UnityEngine;
 
@@ -20,9 +22,11 @@ namespace Assets.Logistics
 
 	public class ShipBerthData
 	{
+		[JsonConverter(typeof(StringEnumConverter))]
 		public ShipSize ShipSize;
-		public bool IsInUse;
+		[JsonConverter(typeof(StringEnumConverter))]
 		public BerthState State;
+		public bool IsInUse;
 		public string Name;
 	}
 
