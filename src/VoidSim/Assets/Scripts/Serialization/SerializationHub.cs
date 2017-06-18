@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using QGame;
-using UnityEngine;
 
 namespace Assets.Scripts.Serialization
 {
@@ -33,7 +32,40 @@ namespace Assets.Scripts.Serialization
 		}
 
 		// all collections are written to the specified file path
+		// due to Unity being limited to an old version of json.net, we can't have 
+		// a single file that's actually readable, so we write two
+		// VoidSim.Console has a json.net version of this function that does both
+		// if more flexibility is needed: 
+		// https://stackoverflow.com/questions/19811301/merge-two-objects-during-serialization-using-json-net
 		public void WriteToFile(string filename)
+		{
+			WriteToFileUsable(filename);
+			WriteToFileReadable(filename + "_readable");
+		}
+
+		private void WriteToFileUsable(string filename)
+		{
+			UberDebug.LogChannel(LogChannels.Serialization,
+				!_toSerialize.Any()
+					? string.Format("No data present to write to file: {0}", filename)
+					: string.Format("Writing to file: {0}", filename));
+
+			using (FileStream fs = File.Open(filename, FileMode.Create, FileAccess.Write))
+			using (StreamWriter sw = new StreamWriter(fs))
+			using (JsonWriter jw = new JsonTextWriter(sw))
+			{
+				jw.Formatting = Formatting.Indented;
+				jw.WriteStartObject();
+				foreach (var collection in _toSerialize)
+				{
+					jw.WritePropertyName(collection.Key);
+					jw.WriteValue(JsonConvert.SerializeObject(collection.Value, Formatting.Indented));
+				}
+				jw.WriteEndObject();
+			}
+		}
+
+		public void WriteToFileReadable(string filename)
 		{
 			UberDebug.LogChannel(LogChannels.Serialization,
 				!_toSerialize.Any()
@@ -53,7 +85,7 @@ namespace Assets.Scripts.Serialization
 				foreach (var collection in _toSerialize)
 				{
 					jw.WritePropertyName(collection.Key);
-					jw.WriteValue(JsonConvert.SerializeObject(collection.Value, Formatting.Indented));
+					jw.WriteRawValue(JsonConvert.SerializeObject(collection.Value, Formatting.Indented));
 				}
 				jw.WriteEndObject();
 
