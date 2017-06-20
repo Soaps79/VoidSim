@@ -58,6 +58,12 @@ namespace Assets.Scripts.WorldMaterials
             }
         }
 
+	    public float CurrentEfficiency
+	    {
+		    get { return StopWatch.TimeModifier; }
+		    set { StopWatch.TimeModifier = value; }
+	    }
+
 	    void Awake()
 	    {
 		    _lastIdName = "crafting_container_" + name;

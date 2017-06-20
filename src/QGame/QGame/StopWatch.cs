@@ -133,20 +133,23 @@ namespace QGame
 
     public class StopWatch
     {
-        List<StopWatchNode> _nodes = new List<StopWatchNode>();
+	    private readonly List<StopWatchNode> _nodes = new List<StopWatchNode>();
         private readonly List<StopWatchNode> _addAfterUpdate = new List<StopWatchNode>();
         private bool _isUpdating;
-        /// <summary>
-        /// Updates all StopWatchNodes
-        /// </summary>
-        public void UpdateNodes(float delta)
+
+	    public float TimeModifier { get; set; } = 1.0f;
+		
+		/// <summary>
+		/// Updates all StopWatchNodes
+		/// </summary>
+		public void UpdateNodes(float delta)
         {
             _isUpdating = true;
             var needToRemove = false;
             foreach (var node in _nodes)
             {
                 if (!node.IsPaused)
-                    node.UpdateElapsed(delta);
+                    node.UpdateElapsed(delta * TimeModifier);
 
                 if (node.IsComplete)
                     needToRemove = true;

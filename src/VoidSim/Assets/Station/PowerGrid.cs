@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Placeables.Nodes;
 using Assets.Scripts;
-using Assets.Scripts.WorldMaterials;
 using Assets.WorldMaterials;
 using Assets.WorldMaterials.Products;
 using UnityEngine;
 using Messaging;
 using QGame;
-using Zenject;
 using WorldClock = Assets.Scripts.WorldClock;
 
 namespace Assets.Station
@@ -63,6 +61,12 @@ namespace Assets.Station
         // this was written quickly, might need to be made more robust later
         private void TickEnergyCosts(object sender, EventArgs e)
         {
+			// TODO: new flow:
+			// get current total
+			// find percentage that can currently be filled
+			// tick all amounts from inventory
+			// set consumer current efficiency if it has changed
+
             if (HasShortage)
             {
                 if (_inventory.HasProduct(_energyProduct.ID, (int) _currentTotalDemand))
@@ -71,7 +75,7 @@ namespace Assets.Station
                 }
             }
 
-            foreach (var consumer in _consumers)
+			foreach (var consumer in _consumers)
             {
                 if (_inventory.TryRemoveProduct(_energyProduct.ID, (int) consumer.TotalAmountConsumed) < consumer.TotalAmountConsumed)
                     HasShortage = true;
@@ -85,7 +89,7 @@ namespace Assets.Station
             _consumers.Add(consumer);
             Debug.Log("PowerGrid consumer added");
             UpdateDemand();
-        }
+		}
 
         private void UpdateDemand()
         {

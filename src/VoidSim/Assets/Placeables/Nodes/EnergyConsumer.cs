@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Station.Efficiency;
 using Messaging;
 using UnityEngine;
 
@@ -19,14 +20,17 @@ namespace Assets.Placeables.Nodes
     /// energy draw should represent the whole. If there is low energy, the whole factory should be cut off.
     /// </summary>
     [RequireComponent(typeof(Placeable))]
-    public class EnergyConsumer : PlaceableNode
+    [RequireComponent(typeof(EfficiencyNode))]
+	public class EnergyConsumer : PlaceableNode
     {
 	    public override string NodeName { get { return "EnergyConsumer"; } }
 		public const string MessageName = "EnergyConsumerCreated";
 
-        [SerializeField]
-        private float _initialValue;
-
+        [SerializeField] private float _initialValue;
+		private readonly EfficiencyAffector _affector = new EfficiencyAffector();
+		
+		// this amount / total amount should be re-implemented once sub-modules come into play
+		// at a glance, it won't work correctly, but it suits the current needs
         // represents the needs of this object and its children
         public float TotalAmountConsumed { get { return _totalAmountConsumed; } }
 
@@ -35,6 +39,11 @@ namespace Assets.Placeables.Nodes
 
         protected override void OnStart()
         {
+			// hook into efficiency system
+	        var efficiency = GetComponent<EfficiencyNode>();
+			efficiency.Module.RegisterAffector(_affector);
+
+			// init values
             _personalAmountConsumed = _initialValue;
             UpdateTotalAmount();
         }
@@ -54,6 +63,8 @@ namespace Assets.Placeables.Nodes
             }
         }
 
+		// will be useful if consumption from sub-modules is passed on through this object
+		// if not, remove this
         private float _totalAmountConsumed;
         private float _personalAmountConsumed;
         private readonly List<EnergyConsumer> _children = new List<EnergyConsumer>();
@@ -65,13 +76,18 @@ namespace Assets.Placeables.Nodes
             var total = _children.Sum(i => i.TotalAmountConsumed);
             total += _personalAmountConsumed;
 
-            if (total != _totalAmountConsumed)
-            {
-                _totalAmountConsumed = total;
-                if (OnAmountConsumedChanged != null)
-                    OnAmountConsumedChanged(this, null);
-            }
+	        if (!(Math.Abs(total - _totalAmountConsumed) > .01))
+				return;
+
+	        _totalAmountConsumed = total;
+	        if (OnAmountConsumedChanged != null)
+		        OnAmountConsumedChanged(this, null);
         }
+
+	    public void SetCurrentEfficiency(float efficiency)
+	    {
+		    _affector.Value = efficiency;
+	    }
 
         // children will be added to the total, which will be kept up to date wit their changes
         public void AddChild(EnergyConsumer child)
