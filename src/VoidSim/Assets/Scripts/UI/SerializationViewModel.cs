@@ -40,5 +40,10 @@ namespace Assets.Scripts.UI
 		{
 			SerializationHub.Instance.LoadFromFile(_filename);
 		}
+
+		public void ExitGame()
+		{
+			Application.Quit();
+		}
 	}
 }
