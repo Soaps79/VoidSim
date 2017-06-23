@@ -27,7 +27,8 @@ namespace Assets.Placeables.Nodes
 		public const string MessageName = "EnergyConsumerCreated";
 
         [SerializeField] private float _initialValue;
-		private readonly EfficiencyAffector _affector = new EfficiencyAffector();
+	    [SerializeField] private float _weight = 1.0f;
+		private EfficiencyAffector _affector;
 		
 		// this amount / total amount should be re-implemented once sub-modules come into play
 		// at a glance, it won't work correctly, but it suits the current needs
@@ -37,10 +38,11 @@ namespace Assets.Placeables.Nodes
         // called any time the total consumption changes
         public event EventHandler OnAmountConsumedChanged;
 
-        protected override void OnStart()
+		protected override void OnStart()
         {
 			// hook into efficiency system
-	        var efficiency = GetComponent<EfficiencyNode>();
+	        _affector = new EfficiencyAffector{ Weight = _weight };
+			var efficiency = GetComponent<EfficiencyNode>();
 			efficiency.Module.RegisterAffector(_affector);
 
 			// init values
@@ -86,7 +88,7 @@ namespace Assets.Placeables.Nodes
 
 	    public void SetCurrentEfficiency(float efficiency)
 	    {
-		    _affector.Value = efficiency;
+		    _affector.Efficiency = efficiency;
 	    }
 
         // children will be added to the total, which will be kept up to date wit their changes

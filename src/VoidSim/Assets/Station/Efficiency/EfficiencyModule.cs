@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Assets.Station.Efficiency
 {
@@ -20,19 +21,40 @@ namespace Assets.Station.Efficiency
 		{
 			_affectors.Add(affector);
 			affector.OnValueChanged += OnAffectorChanged;
+			UpdateValue();
 		}
 
 		private void OnAffectorChanged(EfficiencyAffector efficiencyAffector)
 		{
-			var overall = 1.0f;
-			_affectors.ForEach(i => overall *= i.Value);
+			UpdateValue();
+		}
 
-			if(Math.Abs(CurrentAmount - overall) < .01)
+		private void UpdateValue()
+		{
+			var overall = 0.0f;
+			var weightSum = _affectors.Sum(i => i.Weight);
+			var baseValue = weightSum / 1;
+
+			var weightedValueSum = _affectors.Sum(i => i.Efficiency * i.Weight * baseValue);
+			
+			if (weightSum != 0)
+				overall = weightedValueSum / weightSum;
+			else
+				throw new DivideByZeroException("Your message here");
+
+			if (Math.Abs(CurrentAmount - overall) < .01)
 				return;
 
 			CurrentAmount = overall;
 			if (OnValueChanged != null)
 				OnValueChanged(this);
+		}
+
+		public void Clear()
+		{
+			_affectors.Clear();
+			CurrentAmount = 1.0f;
+			OnValueChanged = null;
 		}
 	}
 }

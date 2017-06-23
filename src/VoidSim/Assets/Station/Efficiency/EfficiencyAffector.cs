@@ -7,11 +7,20 @@ namespace Assets.Station.Efficiency
 	/// </summary>
 	public class EfficiencyAffector
 	{
-		private float _currentEfficiency;
+		private float _currentEfficiency = 1.0f;
 
 		public Action<EfficiencyAffector> OnValueChanged;
+		private float _weight = 1.0f;
 
-		public float Value
+		public EfficiencyAffector() { }
+
+		public EfficiencyAffector(float value, float weight = 1.0f)
+		{
+			_currentEfficiency = value;
+			_weight = weight;
+		}
+
+		public float Efficiency
 		{
 			get { return _currentEfficiency; }
 			set
@@ -20,9 +29,27 @@ namespace Assets.Station.Efficiency
 					return;
 
 				_currentEfficiency = value;
-				if (OnValueChanged != null)
-					OnValueChanged(this);
+				CheckValueChanged();
 			}
+		}
+
+		public float Weight
+		{
+			get { return _weight; }
+			set
+			{
+				if (Math.Abs(value - _weight) < .01f)
+					return;
+
+				_weight = value;
+				CheckValueChanged();
+			}
+		}
+
+		private void CheckValueChanged()
+		{
+			if (OnValueChanged != null)
+				OnValueChanged(this);
 		}
 	}
 }
