@@ -1,4 +1,8 @@
 # VoidSim
+## Development
+
+Concepts and tasks can be found in the public [Google Doc](https://docs.google.com/document/d/1bT2nHyHK3gr07vE92bUfm1ZlPeioPMD3LhMdtIkSH8o/edit?usp=sharing) and [Trello](https://trello.com/b/UQ94zc9O/spaceport)
+
 ## High Concept
 
 You are in command of a spaceport newly commissioned on the frontier of the explored galaxy. Traffic moving through the area has needs, and fulfilling them keeps your coffers flush. Use this income to build factories, commercial structures and attractions to bring commerce, but also to house and feed your population that work in them. Over time, your port and its people will grow alongside and be a lynchpin for the colonies and commerce in the new frontier.
