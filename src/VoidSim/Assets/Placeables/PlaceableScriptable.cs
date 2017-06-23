@@ -1,6 +1,5 @@
 ﻿using Assets.Station;
 using Assets.WorldMaterials.Products;
-using UnityEditor;
 using UnityEngine;
 
 namespace Assets.Placeables
@@ -19,19 +18,6 @@ namespace Assets.Placeables
         {
             ProductLookup = ScriptableObject.Instantiate(
                 Resources.Load("Scriptables/product_lookup")) as ProductLookupScriptable;
-        }
-
-        [MenuItem("Assets/WorldMaterials/Placeable")]
-        public static void CreateMyAsset()
-        {
-            var asset = CreateInstance<PlaceableScriptable>();
-
-            AssetDatabase.CreateAsset(asset, "Assets/Placeables/Resources/NewPlaceable.asset");
-            AssetDatabase.SaveAssets();
-
-            EditorUtility.FocusProjectWindow();
-
-            Selection.activeObject = asset;
         }
     }
 }

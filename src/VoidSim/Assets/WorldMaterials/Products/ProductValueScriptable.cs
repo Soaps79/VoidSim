@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 namespace Assets.WorldMaterials.Products
@@ -21,17 +20,6 @@ namespace Assets.WorldMaterials.Products
         {
             ProductLookup = ScriptableObject.Instantiate(
                 Resources.Load("Scriptables/product_lookup")) as ProductLookupScriptable;
-        }
-
-        [MenuItem("Assets/WorldMaterials/ProductValue")]
-        public static void CreateMyAsset()
-        {
-            var asset = ScriptableObject.CreateInstance<ProductValueScriptable>();
-            AssetDatabase.CreateAsset(asset, "Assets/Resources/Scriptables/NewProductValue.asset");
-            AssetDatabase.SaveAssets();
-
-            EditorUtility.FocusProjectWindow();
-            Selection.activeObject = asset;
         }
     }
 }

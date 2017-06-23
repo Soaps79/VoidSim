@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Assets.Placeables;
-using Assets.Scripts.WorldMaterials;
 using Assets.WorldMaterials.Products;
-using UnityEditor;
 using UnityEngine;
 
 namespace Assets.WorldMaterials
@@ -34,18 +32,5 @@ namespace Assets.WorldMaterials
             PlaceablesLookup = ScriptableObject.Instantiate(
                 Resources.Load("placeables_lookup")) as PlaceablesLookup;
         }
-
-        [MenuItem("Assets/WorldMaterials/Inventory")]
-        public static void CreateMyAsset()
-        {
-            var asset = ScriptableObject.CreateInstance<InventoryScriptable>();
-
-            AssetDatabase.CreateAsset(asset, "Assets/Resources/Scriptables/NewScripableObject.asset");
-            AssetDatabase.SaveAssets();
-
-            EditorUtility.FocusProjectWindow();
-            Selection.activeObject = asset;
-        }
-
     }
 }

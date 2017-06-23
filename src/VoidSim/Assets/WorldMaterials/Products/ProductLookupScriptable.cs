@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -44,17 +43,6 @@ namespace Assets.WorldMaterials.Products
         public List<CraftingContainerInfo> Containers;
         public List<RecipeInfo> Recipes;
         public Sprite DefaultSmallIcon;
-
-        [MenuItem("Assets/WorldMaterials/ProductLookup")]
-        public static void CreateMyAsset()
-        {
-            var asset = ScriptableObject.CreateInstance<ProductLookupScriptable>();
-            AssetDatabase.CreateAsset(asset, "Assets/Resources/Scriptables/NewScripableObject.asset");
-            AssetDatabase.SaveAssets();
-
-            EditorUtility.FocusProjectWindow();
-            Selection.activeObject = asset;
-        }
 
         public string[] GenerateProductNames()
         {

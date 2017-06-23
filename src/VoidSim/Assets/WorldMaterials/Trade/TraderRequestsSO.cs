@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Assets.Scripts;
 using Assets.WorldMaterials.Products;
-using UnityEditor;
 using UnityEngine;
 
 namespace Assets.WorldMaterials.Trade
@@ -30,18 +29,6 @@ namespace Assets.WorldMaterials.Trade
         {
             ProductLookup = ScriptableObject.Instantiate(
                 Resources.Load("Scriptables/product_lookup")) as ProductLookupScriptable;
-        }
-
-        [MenuItem("Assets/WorldMaterials/TraderRequests")]
-        public static void CreateMyAsset()
-        {
-            var asset = ScriptableObject.CreateInstance<TraderRequestsSO>();
-
-            AssetDatabase.CreateAsset(asset, "Assets/Resources/Scriptables/NewTradeRequestSO.asset");
-            AssetDatabase.SaveAssets();
-
-            EditorUtility.FocusProjectWindow();
-            Selection.activeObject = asset;
         }
     }
 }

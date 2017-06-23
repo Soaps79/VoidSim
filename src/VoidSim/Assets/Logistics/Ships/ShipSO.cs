@@ -1,5 +1,4 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Logistics.Ships
 {
@@ -14,19 +13,6 @@ namespace Assets.Logistics.Ships
 		public float RandomizedTravelTime
 		{
 			get { return Random.Range(MinTravelTime, MaxTravelTime); }
-		}
-
-		[MenuItem("Assets/WorldMaterials/Ship")]
-		public static void CreateMyAsset()
-		{
-			var asset = CreateInstance<ShipSO>();
-
-			AssetDatabase.CreateAsset(asset, "Assets/Resources/Ships/NewShip.asset");
-			AssetDatabase.SaveAssets();
-
-			EditorUtility.FocusProjectWindow();
-
-			Selection.activeObject = asset;
 		}
 	}
 }
