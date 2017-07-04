@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Assets.Logistics.Ships;
+using Assets.Logistics.UI;
 using Assets.Scripts.Serialization;
 using DG.Tweening;
 using Newtonsoft.Json;
@@ -63,6 +64,9 @@ namespace Assets.Logistics
 		public Action<TrafficPhase> OnPhaseChanged;
 		private ShipSO _scriptable;
 
+		[SerializeField] private TrafficShipViewModel _viewModelPrefab;
+		private TrafficShipViewModel _viewModel;
+
 		internal void SetScriptable(ShipSO scriptable)
 		{
 			_scriptable = scriptable;
@@ -82,7 +86,7 @@ namespace Assets.Logistics
 			BerthName = _berth.name;
 
 			transform.position = _waypoints.First();
-			GenerateSprite();
+			InitializeGraphics();
 			
 
 			InitializeScaling();
@@ -90,6 +94,17 @@ namespace Assets.Logistics
 			ManifestBook = _parent.ManifestBook;
 			Phase = TrafficPhase.None;
 			CheckPhaseChangeCallback();
+		}
+
+		private void InitializeGraphics()
+		{
+			GenerateSprite();
+
+			// create view model
+			var canvas = GameObject.Find("InfoCanvas");
+			_viewModel = Instantiate(_viewModelPrefab, canvas.transform, false);
+			// attach click binder
+			_viewModel.Bind(this);
 		}
 
 		private void GenerateSprite()
@@ -209,7 +224,7 @@ namespace Assets.Logistics
 			data.Waypoints.ForEach(i => _waypoints.Add(i));
 			_travelTime = data.TravelTime;
 
-			GenerateSprite();
+			InitializeGraphics();
 			
 			ManifestBook = _parent.ManifestBook;
 			OnEveryUpdate += ScaleWithProximity;

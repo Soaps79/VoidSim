@@ -38,7 +38,6 @@ namespace Assets.Logistics
 
 		private int _lastShipId;
 		private TransitControl _transitControl;
-		[SerializeField] private GameObject _cargoShip;
 		[SerializeField] private ShipSchedule _schedule;
 
 		private readonly CollectionSerializer<ShipGeneratorData> _serializer
@@ -53,7 +52,9 @@ namespace Assets.Logistics
 			// may not be needed anymore?
 			MessageHub.Instance.AddListener(this, LogisticsMessages.ShipCreated);
 			_transitControl = gameObject.GetComponent<TransitControl>();
-			_shipSOs = ShipSOLookup.Instance.GetShips();
+			var lookup = ScriptableObject.Instantiate(
+				Resources.Load("Ships/ship_lookup")) as ShipSOLookup;
+			_shipSOs = lookup.GetShips();
 
 			if (_serializer.HasDataFor(this, "ShipGenerator"))
 				LoadSerializedShips();
@@ -118,7 +119,7 @@ namespace Assets.Logistics
 			var navigation = new ShipNavigation();
 			locations.ForEach(i => navigation.AddLocation(i.ClientName));
 			navigation.CycleLocations();
-			ship.Initialize(navigation, _cargoShip);
+			ship.Initialize(navigation);
 
 			_toLaunch.Remove(entry);
 

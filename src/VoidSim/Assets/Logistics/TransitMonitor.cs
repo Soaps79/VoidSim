@@ -64,8 +64,12 @@ namespace Assets.Logistics
 				var ship = new Ship { Name = shipData.Name };
 				var navigation = new ShipNavigation(shipData.Navigation);
 
-				var scriptable = ShipSOLookup.Instance.GetShips().FirstOrDefault(i => i.name == shipData.SOName);
-				if(scriptable == null)
+				var lookup = ScriptableObject.Instantiate(Resources.Load("Ships/ship_lookup")) as ShipSOLookup;
+				if (lookup == null)
+					throw new UnityException("TransitMonitor could not find ship lookup");
+
+				var scriptable = lookup.GetShips().FirstOrDefault(i => i.name == shipData.SOName);
+				if (scriptable == null)
 					throw new UnityException(string.Format("ShipGenerator cannot find SO named {0}", shipData.SOName));
 
 				ship.SetScriptable(scriptable);

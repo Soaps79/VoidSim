@@ -55,7 +55,7 @@ namespace Assets.Logistics.Ships
 			_scriptable = scriptable;
 		}
 
-		public void Initialize(ShipNavigation navigation, GameObject prefab)
+		public void Initialize(ShipNavigation navigation)
 		{
 			Navigation = navigation;
 			Navigation.ParentShip = this;
@@ -104,8 +104,7 @@ namespace Assets.Logistics.Ships
 
 		private void CreateTrafficShip()
 		{
-			var go = new GameObject();
-			TrafficShip = go.AddComponent<TrafficShip>();
+			TrafficShip = GameObject.Instantiate(_scriptable.TrafficShipPrefab);
 			TrafficShip.SetScriptable(_scriptable);
 		}
 

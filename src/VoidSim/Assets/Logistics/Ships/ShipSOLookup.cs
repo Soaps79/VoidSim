@@ -5,27 +5,15 @@ using UnityEngine;
 
 namespace Assets.Logistics.Ships
 {
-	public class ShipSOLookup
+	public class ShipSOLookup : ScriptableObject
 	{
-		// singleton, but no need to be a MonoBehavior, so not using the QGame one
-		private static ShipSOLookup _instance = new ShipSOLookup();
-
 		private static List<ShipSO> _ships;
-		public static ShipSOLookup Instance { get { return _instance; } }
-
-		private ShipSOLookup()
-		{
-			Enable();
-		}
-
-		static ShipSOLookup()
-		{
-			Enable();
-		}
-
-		private static void Enable()
+		public TrafficShip TrafficShipPrefab;
+		
+		void OnEnable()
 		{
 			_ships = Resources.LoadAll<ShipSO>("Ships").ToList();
+			_ships.ForEach(i => i.TrafficShipPrefab = TrafficShipPrefab);
 		}
 		
 		public List<ShipSO> GetShips()
