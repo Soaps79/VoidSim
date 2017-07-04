@@ -81,7 +81,7 @@ namespace Assets.Logistics
 		public void Initialize(Ship parent, ShipBerth berth, List<Vector3> waypoints)
 		{
 			_parent = parent;
-			name = "traffic_" + parent.Name;
+			SetName();
 			_berth = berth;
 			_waypoints = waypoints;
 			BerthName = _berth.name;
@@ -95,6 +95,11 @@ namespace Assets.Logistics
 			ManifestBook = _parent.ManifestBook;
 			Phase = TrafficPhase.None;
 			CheckPhaseChangeCallback();
+		}
+
+		private void SetName()
+		{
+			name = "traffic_" + _parent.Name;
 		}
 
 		private void InitializeGraphics()
@@ -217,6 +222,7 @@ namespace Assets.Logistics
 		public void Initialize(Ship parent, TrafficShipData data)
 		{
 			_parent = parent;
+			SetName();
 			_waypoints = new List<Vector3>();
 			_startingDistance = data.StartingDistance;
 			_targetRotation = data.TargetRotation;

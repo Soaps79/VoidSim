@@ -121,7 +121,7 @@ namespace Assets.Logistics.Ships
 		}
 
 		#region Serialization
-		public void Initialize(ShipNavigation navigation, GameObject prefab, ShipData data)
+		public void Initialize(ShipNavigation navigation, ShipData data)
 		{
 			Navigation = navigation;
 			Navigation.ParentShip = this;

@@ -127,6 +127,7 @@ namespace Assets.Logistics
 
 			if (ship.Status == ShipStatus.Traffic && ship.TrafficShip != null )
 			{
+				ship.TrafficShip.transform.SetParent(transform, true);
 				var berth = _berths.FirstOrDefault(i => i.name == ship.TrafficShip.BerthName);
 				if (berth != null)
 				{

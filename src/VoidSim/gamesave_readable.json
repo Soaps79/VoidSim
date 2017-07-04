@@ -1,20 +1,36 @@
 {
   "ShipGenerator": {
-  "Ships": [],
+  "Ships": [
+    {
+      "ShipName": "ship_6",
+      "SOName": "sm_cargo_1",
+      "TimeRemaining": 2.61074066
+    },
+    {
+      "ShipName": "ship_7",
+      "SOName": "sm_cargo_2",
+      "TimeRemaining": 10.6107407
+    },
+    {
+      "ShipName": "ship_8",
+      "SOName": "sm_cargo_1",
+      "TimeRemaining": 22.61074
+    }
+  ],
   "LastId": 8
 },
   "TrafficControl": {
   "Berths": [
     {
       "ShipSize": "Corvette",
-      "State": "Empty",
-      "IsInUse": false,
+      "State": "Reserved",
+      "IsInUse": true,
       "Name": "ship_bay_1_1"
     },
     {
       "ShipSize": "Corvette",
-      "State": "Reserved",
-      "IsInUse": true,
+      "State": "Empty",
+      "IsInUse": false,
       "Name": "ship_bay_1_2"
     },
     {
@@ -60,10 +76,10 @@
     {
       "Name": "ship_1",
       "SOName": "sm_cargo_1",
-      "Status": "Hold",
+      "Status": "Transit",
       "Ticker": {
         "TotalTicks": 14.4000006,
-        "ElapsedTicks": 13.3072023
+        "ElapsedTicks": 3.54667377
       },
       "Navigation": {
         "Locations": [
@@ -81,94 +97,10 @@
     {
       "Name": "ship_2",
       "SOName": "sm_cargo_2",
-      "Status": "Hold",
-      "Ticker": {
-        "TotalTicks": 14.4000006,
-        "ElapsedTicks": 7.716514
-      },
-      "Navigation": {
-        "Locations": [
-          "Void",
-          "Station"
-        ],
-        "LastDeparted": "Station",
-        "CurrentDestination": "Void"
-      },
-      "ManifestBook": {
-        "Manifests": []
-      },
-      "TrafficShipData": null
-    },
-    {
-      "Name": "ship_3",
-      "SOName": "sm_cargo_1",
-      "Status": "Hold",
-      "Ticker": {
-        "TotalTicks": 14.4000006,
-        "ElapsedTicks": 2.15671587
-      },
-      "Navigation": {
-        "Locations": [
-          "Void",
-          "Station"
-        ],
-        "LastDeparted": "Station",
-        "CurrentDestination": "Void"
-      },
-      "ManifestBook": {
-        "Manifests": []
-      },
-      "TrafficShipData": null
-    },
-    {
-      "Name": "ship_4",
-      "SOName": "sm_cargo_1",
-      "Status": "Transit",
-      "Ticker": {
-        "TotalTicks": 14.4000006,
-        "ElapsedTicks": 8.896371
-      },
-      "Navigation": {
-        "Locations": [
-          "Void",
-          "Station"
-        ],
-        "LastDeparted": "Station",
-        "CurrentDestination": "Void"
-      },
-      "ManifestBook": {
-        "Manifests": []
-      },
-      "TrafficShipData": null
-    },
-    {
-      "Name": "ship_5",
-      "SOName": "sm_cargo_3",
-      "Status": "Transit",
-      "Ticker": {
-        "TotalTicks": 14.4000006,
-        "ElapsedTicks": 6.874465
-      },
-      "Navigation": {
-        "Locations": [
-          "Void",
-          "Station"
-        ],
-        "LastDeparted": "Station",
-        "CurrentDestination": "Void"
-      },
-      "ManifestBook": {
-        "Manifests": []
-      },
-      "TrafficShipData": null
-    },
-    {
-      "Name": "ship_6",
-      "SOName": "sm_cargo_1",
       "Status": "Traffic",
       "Ticker": {
         "TotalTicks": 14.4000006,
-        "ElapsedTicks": 14.5437136
+        "ElapsedTicks": 14.5684929
       },
       "Navigation": {
         "Locations": [
@@ -184,57 +116,57 @@
       "TrafficShipData": {
         "Phase": "Departing",
         "Position": {
-          "X": 5.28163528,
-          "Y": -1.96365428,
+          "X": 1.39678228,
+          "Y": -3.02143764,
           "Z": 0.0
         },
         "Rotation": {
-          "X": 0.006960106,
-          "Y": 7.369781E-05,
-          "Z": -0.0105877556,
-          "W": 0.9999198
+          "X": 0.005761309,
+          "Y": -0.000102448656,
+          "Z": -0.0177790783,
+          "W": -0.999825358
         },
         "TargetRotation": {
           "X": 0.0,
           "Y": 0.0,
-          "Z": 354.00473
+          "Z": 5.99794054
         },
-        "StartingDistance": 64.38093,
-        "TravelTime": 10.1912,
-        "ApproachFromLeft": true,
-        "BerthName": "ship_bay_1_1",
+        "StartingDistance": 55.074688,
+        "TravelTime": 11.156373,
+        "ApproachFromLeft": false,
+        "BerthName": "ship_bay_1_2",
         "Waypoints": [
           {
-            "X": -59.64989,
-            "Y": -10.6746073,
-            "Z": 0.0
-          },
-          {
-            "X": 4.122262,
-            "Y": -1.84189582,
-            "Z": 0.0
-          },
-          {
             "X": 60.1501122,
-            "Y": -7.725979,
+            "Y": 1.84526253,
+            "Z": 0.0
+          },
+          {
+            "X": 5.25640345,
+            "Y": -2.615915,
+            "Z": 0.0
+          },
+          {
+            "X": -59.64989,
+            "Y": -9.43548,
             "Z": 0.0
           }
         ],
         "LocalScale": {
-          "X": 0.09810704,
-          "Y": 0.09810704,
+          "X": 0.130465508,
+          "Y": 0.130465508,
           "Z": 0.0
         },
-        "ElapsedMovement": 2.27763844
+        "ElapsedMovement": 5.82591534
       }
     },
     {
-      "Name": "ship_7",
-      "SOName": "sm_cargo_2",
+      "Name": "ship_3",
+      "SOName": "sm_cargo_1",
       "Status": "Traffic",
       "Ticker": {
         "TotalTicks": 14.4000006,
-        "ElapsedTicks": 14.53679
+        "ElapsedTicks": 14.4061985
       },
       "Navigation": {
         "Locations": [
@@ -250,57 +182,78 @@
       "TrafficShipData": {
         "Phase": "Approaching",
         "Position": {
-          "X": 28.60733,
-          "Y": -1.423815,
+          "X": -18.2165279,
+          "Y": -6.10101032,
           "Z": 0.0
         },
         "Rotation": {
-          "X": -0.00158123521,
-          "Y": 1.17576565E-05,
-          "Z": 0.0074355267,
-          "W": 0.9999711
+          "X": 0.00208530319,
+          "Y": -0.000122846061,
+          "Z": 0.05880832,
+          "W": 0.9982671
         },
         "TargetRotation": {
           "X": 0.0,
           "Y": 0.0,
           "Z": 0.0
         },
-        "StartingDistance": 54.9539146,
-        "TravelTime": 10.7452116,
-        "ApproachFromLeft": false,
-        "BerthName": "ship_bay_1_2",
+        "StartingDistance": 64.59491,
+        "TravelTime": 10.5765667,
+        "ApproachFromLeft": true,
+        "BerthName": "ship_bay_1_1",
         "Waypoints": [
           {
-            "X": 60.1501122,
-            "Y": -0.8508644,
-            "Z": 0.0
-          },
-          {
-            "X": 5.205262,
-            "Y": -1.84889579,
-            "Z": 0.0
-          },
-          {
             "X": -59.64989,
-            "Y": 1.27464819,
+            "Y": -12.5632553,
+            "Z": 0.0
+          },
+          {
+            "X": 4.17340326,
+            "Y": -2.608915,
+            "Z": 0.0
+          },
+          {
+            "X": 60.1501122,
+            "Y": -10.3630886,
             "Z": 0.0
           }
         ],
         "LocalScale": {
-          "X": 0.485919237,
-          "Y": 0.485919237,
+          "X": 0.430811226,
+          "Y": 0.430811226,
           "Z": 0.0
         },
-        "ElapsedMovement": 1.44902611
+        "ElapsedMovement": 4.76441669
       }
     },
     {
-      "Name": "ship_8",
+      "Name": "ship_4",
       "SOName": "sm_cargo_1",
       "Status": "Transit",
       "Ticker": {
         "TotalTicks": 14.4000006,
-        "ElapsedTicks": 6.70315
+        "ElapsedTicks": 11.081645
+      },
+      "Navigation": {
+        "Locations": [
+          "Station",
+          "Void"
+        ],
+        "LastDeparted": "Void",
+        "CurrentDestination": "Station"
+      },
+      "ManifestBook": {
+        "Manifests": []
+      },
+      "TrafficShipData": null
+    },
+    {
+      "Name": "ship_5",
+      "SOName": "sm_cargo_3",
+      "Status": "Transit",
+      "Ticker": {
+        "TotalTicks": 14.4000006,
+        "ElapsedTicks": 9.05841
       },
       "Navigation": {
         "Locations": [
@@ -444,7 +397,7 @@
     },
     {
       "Name": "transit_entry",
-      "LastId": 13
+      "LastId": 6
     },
     {
       "Name": "ship_bay",
@@ -458,8 +411,8 @@
       "PlaceableName": "Small Bays",
       "InstanceName": "ship_bay_1",
       "Position": {
-        "X": 4.679262,
-        "Y": -2.42889571,
+        "X": 4.73040342,
+        "Y": -3.195915,
         "Z": 0.0
       },
       "Nodes": [

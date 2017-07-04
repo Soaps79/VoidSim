@@ -73,7 +73,7 @@ namespace Assets.Logistics
 					throw new UnityException(string.Format("ShipGenerator cannot find SO named {0}", shipData.SOName));
 
 				ship.SetScriptable(scriptable);
-				ship.Initialize(navigation, _cargoShip, shipData);
+				ship.Initialize(navigation, shipData);
 
 				if (ship.Status == ShipStatus.Hold || ship.Status == ShipStatus.Traffic)
 				{
