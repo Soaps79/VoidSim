@@ -9,13 +9,21 @@ namespace Assets.Controllers.GUI
 	{
 		public Action OnSelected;
 		private GameObject _view;
-		private bool _isClicked;
+		[SerializeField] private bool _isClicked;
 		private GameObject _selectable;
 
 		public void Bind(GameObject view, GameObject selectable = null)
 		{
 			_selectable = selectable ?? view;
 			_view = view;
+			var closeButton = _view.GetComponent<ClosePanelButton>();
+			if (closeButton != null)
+				closeButton.OnClose += HandleCloseByButton;
+		}
+
+		private void HandleCloseByButton()
+		{
+			_isClicked = false;
 		}
 
 		public void OnPointerEnter(PointerEventData eventData)

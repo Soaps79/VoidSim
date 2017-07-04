@@ -1,14 +1,17 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Assets.Controllers.GUI
 {
-    public class ClosePanelButton : MonoBehaviour
-    {
-        public void ClosePanel(GameObject panel)
-        {
-            panel.SetActive(false);
-        }
+	public class ClosePanelButton : MonoBehaviour
+	{
+		public Action OnClose;
 
-
-    }
+		public void ClosePanel()
+		{
+			gameObject.SetActive(false);
+			if (OnClose != null)
+				OnClose();
+		}
+	}
 }
