@@ -1,4 +1,5 @@
-﻿using QGame;
+﻿using Assets.Controllers.GUI;
+using QGame;
 using TMPro;
 using UnityEngine;
 
@@ -13,6 +14,9 @@ namespace Assets.Logistics.UI
 		{
 			_trafficShip = trafficShip;
 			_nameText.text = trafficShip.name;
+
+			var helper = _trafficShip.gameObject.AddComponent<SelectionHelper>();
+			helper.Bind(gameObject, _trafficShip.gameObject);
 		}
 	}
 }

@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using UnityEngine;
 using QGame;
+using UnityEngine.EventSystems;
 using Random = UnityEngine.Random;
 
 namespace Assets.Logistics
@@ -105,12 +106,12 @@ namespace Assets.Logistics
 			_viewModel = Instantiate(_viewModelPrefab, canvas.transform, false);
 			// attach click binder
 			_viewModel.Bind(this);
+			_viewModel.gameObject.SetActive(false);
 		}
 
 		private void GenerateSprite()
 		{
-			var rend = gameObject.AddComponent<SpriteRenderer>();
-			rend.sprite = _scriptable.Sprite;
+			var rend = gameObject.GetComponent<SpriteRenderer>();
 			rend.sortingLayerName = "Ships";
 
 			if (_waypoints != null && _waypoints.Any() && _waypoints.First().x > 0)
