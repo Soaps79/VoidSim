@@ -105,11 +105,16 @@ namespace Assets.Logistics
 		private void InitializeGraphics()
 		{
 			GenerateSprite();
+			GenerateUI();
+		}
 
+		// creates view model and ui panel
+		// should probably be refactored to only make ui portion on load
+		private void GenerateUI()
+		{
 			// create view model
 			var canvas = GameObject.Find("InfoCanvas");
 			_viewModel = Instantiate(_viewModelPrefab, canvas.transform, false);
-			// attach click binder
 			_viewModel.Bind(this);
 			_viewModel.gameObject.SetActive(false);
 		}

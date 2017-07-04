@@ -7,7 +7,6 @@ namespace Assets.Controllers.GUI
 {
 	public class SelectionHelper : QScript, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 	{
-		public Action OnSelected;
 		private GameObject _view;
 		[SerializeField] private bool _isClicked;
 		private GameObject _selectable;

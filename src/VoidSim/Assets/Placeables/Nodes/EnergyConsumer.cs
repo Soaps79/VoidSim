@@ -35,7 +35,12 @@ namespace Assets.Placeables.Nodes
         // represents the needs of this object and its children
         public float TotalAmountConsumed { get { return _totalAmountConsumed; } }
 
-        // called any time the total consumption changes
+	    public float CurrentFulfillment
+	    {
+		    get { return _affector.Efficiency; }
+	    }
+
+	    // called any time the total consumption changes
         public event EventHandler OnAmountConsumedChanged;
 
 		protected override void OnStart()
