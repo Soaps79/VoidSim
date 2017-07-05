@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Assets.Controllers.GUI;
 using Assets.Scripts;
 using Assets.Scripts.Serialization;
 using Assets.Station;
@@ -47,6 +48,7 @@ namespace Assets.Placeables
 		public string PlaceableName { get { return _scriptable.ProductName; } }
 		private PlaceableScriptable _scriptable;
 		private List<PlaceableNode> _nodes;
+		private PlaceableViewModel _viewModelInstance;
 
 		public void BindToScriptable(PlaceableScriptable scriptable)
 		{
@@ -94,10 +96,32 @@ namespace Assets.Placeables
 
 		public void OnPointerClick(PointerEventData eventData)
 		{
-			// create view model
-			var canvas = GameObject.Find("InfoCanvas");
-			var viewmodel = Instantiate(_scriptable.ViewModel, canvas.transform, false);
-			viewmodel.Bind(this);
+			if (_viewModelInstance == null)
+			{
+				// create view model
+				var canvas = GameObject.Find("InfoCanvas");
+				_viewModelInstance = Instantiate(_scriptable.ViewModel, canvas.transform, false);
+				_viewModelInstance.Bind(this);
+				var close = _viewModelInstance.GetComponent<ClosePanelButton>();
+				if (close != null)
+					close.OnClose += HandlePanelClose;
+			}
+			else
+				DestroyViewModel();
+		}
+
+		private void DestroyViewModel()
+		{
+			Destroy(_viewModelInstance.gameObject);
+			_viewModelInstance = null;
+		}
+
+		private void HandlePanelClose()
+		{
+			if (_viewModelInstance == null)
+				return;
+
+			DestroyViewModel();
 		}
 	}
 }
