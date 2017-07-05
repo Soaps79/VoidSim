@@ -4,20 +4,21 @@ using UnityEngine;
 
 namespace Assets.Placeables
 {
-    public class PlaceableScriptable : ScriptableObject
-    {
-        public string ProductName;
-        public Sprite IconSprite;
-        public Sprite PlacedSprite;
-        public LayerType Layer;
-        public Placeable Prefab;
+	public class PlaceableScriptable : ScriptableObject
+	{
+		public string ProductName;
+		public Sprite IconSprite;
+		public Sprite PlacedSprite;
+		public LayerType Layer;
+		public Placeable Prefab;
 
-        public static ProductLookupScriptable ProductLookup;
+		public static ProductLookupScriptable ProductLookup;
+		[HideInInspector] public PlaceableViewModel ViewModel { get; set; }
 
-        void OnEnable()
-        {
-            ProductLookup = ScriptableObject.Instantiate(
-                Resources.Load("Scriptables/product_lookup")) as ProductLookupScriptable;
-        }
-    }
+		void OnEnable()
+		{
+			ProductLookup = ScriptableObject.Instantiate(
+				Resources.Load("Scriptables/product_lookup")) as ProductLookupScriptable;
+		}
+	}
 }

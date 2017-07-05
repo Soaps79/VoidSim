@@ -6,6 +6,7 @@ using Assets.Station;
 using Messaging;
 using QGame;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Assets.Placeables
 {
@@ -40,7 +41,7 @@ namespace Assets.Placeables
 	/// <summary>
 	/// Represents any structure or module or any other object placed into the game world.
 	/// </summary>
-	public class Placeable : QScript, ISerializeData<PlaceableData>
+	public class Placeable : QScript, ISerializeData<PlaceableData>, IPointerClickHandler
 	{
 		[HideInInspector] public LayerType Layer;
 		public string PlaceableName { get { return _scriptable.ProductName; } }
@@ -53,9 +54,9 @@ namespace Assets.Placeables
 			Layer = scriptable.Layer;
 
 			gameObject.TrimCloneFromName();
-			var rend = gameObject.GetOrAddComponent<SpriteRenderer>();
-			rend.enabled = true;
-			rend.sprite = scriptable.PlacedSprite;
+			var rend = gameObject.GetComponent<SpriteRenderer>();
+			//rend.enabled = true;
+			//rend.sprite = scriptable.PlacedSprite;
 			rend.sortingLayerName = Layer.ToString();
 			rend.sortingOrder = 1;
 		}
@@ -89,6 +90,14 @@ namespace Assets.Placeables
 					NodeName = i.NodeName, InstanceName = i.name
 				}).ToList()
 			};
+		}
+
+		public void OnPointerClick(PointerEventData eventData)
+		{
+			// create view model
+			var canvas = GameObject.Find("InfoCanvas");
+			var viewmodel = Instantiate(_scriptable.ViewModel, canvas.transform, false);
+			viewmodel.Bind(this);
 		}
 	}
 }
