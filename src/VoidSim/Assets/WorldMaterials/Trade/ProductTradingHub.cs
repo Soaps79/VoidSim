@@ -102,7 +102,7 @@ namespace Assets.WorldMaterials.Trade
                         {
                             var info = new TradeManifest
                             {
-                                Id = LastIdManager.Instance.GetNext("trade_manifest"),
+                                Id = Locator.LastId.GetNext("trade_manifest"),
                                 Consumer = consumer.ClientName,
                                 Provider = provider.ClientName,
                                 AmountTotal = amountConsumed,

@@ -72,7 +72,7 @@ namespace Assets.Scripts.WorldMaterials
         // This, CancelCrafting() and the Recipe callbacks are the typical in-game usage
         public int QueueCrafting(Recipe recipe)
         {
-            var queued = new QueuedRecipe {ID = LastIdManager.Instance.GetNext(_lastIdName), Recipe = recipe};
+            var queued = new QueuedRecipe {ID = Locator.LastId.GetNext(_lastIdName), Recipe = recipe};
             _recipeQueue.Add(queued);
 
             if (OnCraftingQueued != null)
@@ -168,7 +168,7 @@ namespace Assets.Scripts.WorldMaterials
 		    var node = StopWatch.AddNode(STOPWATCH_NAME, seconds, true);
 			node.OnTick = CompleteCraft;
 			node.UpdateElapsed(remaining * seconds);
-		    _currentlyCrafting = new QueuedRecipe { ID = LastIdManager.Instance.GetNext(_lastIdName), Recipe = recipe };
+		    _currentlyCrafting = new QueuedRecipe { ID = Locator.LastId.GetNext(_lastIdName), Recipe = recipe };
 		    if (OnCraftingBegin != null)
 			    OnCraftingBegin(_currentlyCrafting.Recipe, _currentlyCrafting.ID);
 

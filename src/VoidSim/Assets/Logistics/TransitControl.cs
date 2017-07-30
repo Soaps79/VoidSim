@@ -137,7 +137,7 @@ namespace Assets.Logistics
 
 			var entry = new Entry
 			{
-				Id = LastIdManager.Instance.GetNext("transit_entry"),
+				Id = Locator.LastId.GetNext("transit_entry"),
 				TravelingFrom = source,
 				TravelingTo = destination,
 				Ship = args.Ship

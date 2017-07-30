@@ -55,7 +55,7 @@ namespace Assets.Station
             }
 
 			// remove this when energy serialization is in place 
-	        LastIdManager.Instance.Reset("power_plant");
+	        Locator.LastId.Reset("power_plant");
         }
 
         // this was written quickly, might need to be made more robust later
@@ -144,7 +144,7 @@ namespace Assets.Station
 	        if (factory.InitialRecipe != ENERGY_PRODUCT_NAME)
 		        return;
 
-	        factory.name = "power_plant_" + LastIdManager.Instance.GetNext("power_plant");
+	        factory.name = "power_plant_" + Locator.LastId.GetNext("power_plant");
             AddProvider(args.ProductFactory);
         }
 

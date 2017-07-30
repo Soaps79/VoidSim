@@ -17,19 +17,32 @@ namespace Assets.Scripts
 		public List<LastIdData> LastIds;
 	}
 
+	public interface ILastIdManager
+	{
+		/// <summary>
+		/// Returns the next value for the given name
+		/// </summary>
+		int GetNext(string idName);
+		/// <summary>
+		/// Resets the given Id to zero, adds an entry if not yet known
+		/// </summary>
+		/// <param name="idName"></param>
+		void Reset(string idName);
+	}
+
 	/// <summary>
 	/// Used by consumers that need to generate ID's for the objects they manage.
 	/// There is no initialization needed, calling GetNext() will add the new type
 	/// if it is not yet known. Values are serialized so loading the game continues the increments.
 	/// </summary>
-	public class LastIdManager : SingletonBehavior<LastIdManager>, ISerializeData<LastIdManagerData>
+	public class LastIdManager : ILastIdManager, ISerializeData<LastIdManagerData>
 	{
 		private readonly Dictionary<string, int> _lastIds = new Dictionary<string, int>();
 
 		private readonly CollectionSerializer<LastIdManagerData> _serializer
 			= new CollectionSerializer<LastIdManagerData>();
 
-		void Awake()
+		public LastIdManager()
 		{
 			// I *believe* sceneLoaded is being called before anything else is initialized
 			// if the truth is otherwise, will need fixing

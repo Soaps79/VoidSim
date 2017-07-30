@@ -35,7 +35,7 @@ namespace Assets.Station
 			MessageHub.Instance.AddListener(this, PopHousing.MessageName);
 
 			// remove when housing serialization is in place
-			LastIdManager.Instance.Reset("pop_housing");
+			Locator.LastId.Reset("pop_housing");
         }
 
 		public int TotalCapacity
@@ -57,7 +57,7 @@ namespace Assets.Station
                 return;
             }
 
-	        args.PopHousing.name = "pop_housing_" + LastIdManager.Instance.GetNext("pop_housing");
+	        args.PopHousing.name = "pop_housing_" + Locator.LastId.GetNext("pop_housing");
 
             _housing.Add(args.PopHousing);
             UpdateCapacity();

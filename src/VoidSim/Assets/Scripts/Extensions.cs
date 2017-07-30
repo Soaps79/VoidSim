@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using Assets.Station;
+using QGame;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -39,6 +40,14 @@ namespace Assets.Scripts
 		public static Vector2 ToVector2(this Vector3 me)
 		{
 			return new Vector2(me.x, me.y);
+		}
+	}
+
+	public static class Locator
+	{
+		public static ILastIdManager LastId
+		{
+			get { return ServiceLocator.Get<ILastIdManager>(); }
 		}
 	}
 }

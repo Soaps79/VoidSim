@@ -1,4 +1,5 @@
-﻿using Assets.WorldMaterials.Products;
+﻿using Assets.Scripts.Initialization;
+using Assets.WorldMaterials.Products;
 using DG.Tweening;
 using Messaging;
 using QGame;
@@ -43,6 +44,11 @@ namespace Assets.Scripts
 		public GameManager()
 		{
 			OnEveryUpdate += (delta) => MessageHub.Instance.Update();
+		}
+
+		void Awake()
+		{
+			ServiceInitializer.Initialize();
 		}
 
 		void Start()

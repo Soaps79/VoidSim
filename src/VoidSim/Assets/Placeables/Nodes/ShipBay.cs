@@ -18,7 +18,7 @@ namespace Assets.Placeables.Nodes
 		{
 			if (name == DefaultName)
 			{
-				var lastId = LastIdManager.Instance.GetNext("ship_bay");
+				var lastId = Locator.LastId.GetNext("ship_bay");
 				name = "ship_bay_" + lastId;
 			}
 

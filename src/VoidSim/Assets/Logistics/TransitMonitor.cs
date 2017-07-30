@@ -131,7 +131,7 @@ namespace Assets.Logistics
 			if (args == null)
 				throw new UnityException("TransitMonitor recieved bad cargo request args");
 
-			args.Manifest.Id = LastIdManager.Instance.GetNext("manifest");
+			args.Manifest.Id = Locator.LastId.GetNext("manifest");
 
 			var ship = CargoCarrierFinder.FindCarrier(_ships, args.Manifest);
 			if (ship == null)
