@@ -374,13 +374,13 @@ namespace Behaviors
 
 	//	private void CheckForSparkChange(GameTime gameTime)
 	//	{
-	//		if (!isSparking && startSparkingAt > Locator.ActivePlayer.Combat().RemainingLifeAsZeroToOneValue)
+	//		if (!isSparking && startSparkingAt > ServiceLocator.ActivePlayer.Combat().RemainingLifeAsZeroToOneValue)
 	//		{
 	//			isSparking = true;
 	//			ResetSparkTimer();
 	//			OnEveryUpdate += UpdateActiveSparking;
 	//		}
-	//		else if (isSparking && startSparkingAt < Locator.ActivePlayer.Combat().RemainingLifeAsZeroToOneValue)
+	//		else if (isSparking && startSparkingAt < ServiceLocator.ActivePlayer.Combat().RemainingLifeAsZeroToOneValue)
 	//		{
 	//			isSparking = false;
 	//			OnEveryUpdate -= UpdateActiveSparking;
@@ -404,7 +404,7 @@ namespace Behaviors
 	//						if (!action.IsAlive)
 	//						{
 	//							ParticleComponent comp = ParticleFactory.Instance.RequestParticleSystem(
-	//									ParticleFactory.NameSmallSpark, Locator.ActivePlayer);
+	//									ParticleFactory.NameSmallSpark, ServiceLocator.ActivePlayer);
 
 	//							comp.ParticleSystem.Emitter.PositionData.Position = GetSparkPosition();
 	//						}
@@ -422,7 +422,7 @@ namespace Behaviors
 
 	//	private Vector3 GetSparkPosition()
 	//	{
-	//		Vector3 position = Locator.ActivePlayer.Transform.Position;
+	//		Vector3 position = ServiceLocator.ActivePlayer.Transform.Position;
 	//		float x = Game1.RandomFloat(15, 25);
 	//		float y = Game1.RandomFloat(15, 25);
 	//		float z = Game1.RandomFloat(15, 25);
@@ -443,7 +443,7 @@ namespace Behaviors
 	//	private void ResetSparkTimer()
 	//	{
 	//		int frequencyOffset = (int)MathHelper.Lerp(endFrequencyOffset, startFrequencyOffset,
-	//				Locator.ActivePlayer.Combat().RemainingLifeAsZeroToOneValue / startSparkingAt);
+	//				ServiceLocator.ActivePlayer.Combat().RemainingLifeAsZeroToOneValue / startSparkingAt);
 	//		stopWatch["Spark"].ChangeLifetime( minFrequency + frequencyOffset);
 	//		stopWatch["Spark"].Reset();
 	//	}

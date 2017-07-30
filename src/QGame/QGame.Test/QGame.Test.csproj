@@ -60,6 +60,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Behaviors\BehaviorTests.cs" />
+    <Compile Include="LocatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

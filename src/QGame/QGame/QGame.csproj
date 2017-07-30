@@ -68,7 +68,7 @@
     <Compile Include="SingletonBehavior.cs" />
     <Compile Include="ILiving.cs" />
     <Compile Include="KeyValueDisplay.cs" />
-    <Compile Include="Locator.cs" />
+    <Compile Include="ServiceLocator.cs" />
     <Compile Include="Messaging\Interfaces.cs" />
     <Compile Include="Messaging\MessageHub.cs" />
     <Compile Include="Messaging\Objects.cs" />

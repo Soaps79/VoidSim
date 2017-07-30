@@ -111,7 +111,7 @@
 
         private void RegisterWithServices()
         {
-            Locator.Get<IMessageHub>().AddListener(this, SpeedChangeMessageName);
+            ServiceLocator.Get<IMessageHub>().AddListener(this, SpeedChangeMessageName);
         }
 
         public void ChangeGameSpeed(string speed)
@@ -144,7 +144,7 @@
                 NewSpeedTimeScale = value,
                 NewSpeedName = speed
             };
-            Locator.Get<IMessageHub>().QueueMessage(SpeedChangeMessageName, args);
+            ServiceLocator.Get<IMessageHub>().QueueMessage(SpeedChangeMessageName, args);
         }
 
         private void UpdateClock(float delta)
@@ -243,7 +243,7 @@
             _currentSpeedName = args.NewSpeedName;
         }
 
-        // Locator listener
+        // ServiceLocator listener
         public string Name { get { return "WorldClock"; } }
 
         #endregion
