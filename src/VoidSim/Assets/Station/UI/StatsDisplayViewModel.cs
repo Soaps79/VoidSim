@@ -36,7 +36,7 @@ namespace Assets.Station.UI
 
         private readonly List<SupplyMonitorEntry> _monitorEntries = new List<SupplyMonitorEntry>();
         private Image _display;
-        private WorldClock _worldClock;
+        private IWorldClock _worldClock;
         private TextMeshProUGUI _clockDisplay;
 
         void Start ()
@@ -54,7 +54,7 @@ namespace Assets.Station.UI
 
         private void BindWorldClock()
         {
-            _worldClock = WorldClock.Instance;
+            _worldClock = Locator.WorldClock;
 
             // instantiate UI element
             var contentHolder = _display.transform.FindChild("content_holder");

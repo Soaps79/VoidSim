@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts;
 using QGame;
 using UnityEngine;
 using TimeLength = Assets.Scripts.TimeLength;
@@ -19,7 +20,7 @@ namespace Assets.Logistics.Ships
 
 		void Start()
 		{
-			_shipDelaySeconds = WorldClock.Instance.GetSeconds(_shipDelayTime);
+			_shipDelaySeconds = Locator.WorldClock.GetSeconds(_shipDelayTime);
 			OnEveryUpdate += UpdateShips;
 		}
 

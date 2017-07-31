@@ -51,10 +51,19 @@ namespace Assets.Scripts
 			OnEveryUpdate += delta => messageHub.Update();
 		}
 
+		void Awake()
+		{
+			var clock = GetComponentInChildren<IWorldClock>();
+			if (clock == null)
+				throw new UnityException("WorldClock cannot be found");
+			ServiceInitializer.Initialize<IWorldClock>(clock);
+		}
+
 		void Start()
 		{
 			UberDebug.LogChannel(LogChannels.Trade, "Initializing");
 			UberDebug.LogChannel(LogChannels.Serialization, "Initializing");
+			
 			DOTween.Init(false, true, LogBehaviour.ErrorsOnly);
 			InititalizeKeyValueDisplay();
 			BindMouseMovementToKvd();

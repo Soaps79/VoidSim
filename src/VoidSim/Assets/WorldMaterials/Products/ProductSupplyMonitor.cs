@@ -90,8 +90,8 @@ namespace Assets.WorldMaterials.Products
 
         private void BindToWorldClock()
         {
-            WorldClock.Instance.RegisterCallback(_supplyUpdatefrequency, UpdateSupply);
-            WorldClock.Instance.RegisterCallback(_changeUpdateFrequency, UpdateChange);
+            Locator.WorldClock.RegisterCallback(_supplyUpdatefrequency, UpdateSupply);
+            Locator.WorldClock.RegisterCallback(_changeUpdateFrequency, UpdateChange);
         }
 
         private void UpdateChange(object sender, EventArgs e)

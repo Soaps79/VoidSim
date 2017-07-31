@@ -22,7 +22,7 @@ namespace Assets.Station
         public const string ENERGY_PRODUCT_NAME = "Energy";
 
         private Inventory _inventory;
-        private WorldClock _worldClock;
+        private IWorldClock _worldClock;
         private readonly List<EnergyConsumer> _consumers = new List<EnergyConsumer>();
         private Product _energyProduct;
 
@@ -45,7 +45,7 @@ namespace Assets.Station
             _inventory = inventory;
             if (_worldClock == null)
             {
-                _worldClock = WorldClock.Instance;
+                _worldClock = Locator.WorldClock;
                 _worldClock.OnDayUp += TickEnergyCosts;
             }
 

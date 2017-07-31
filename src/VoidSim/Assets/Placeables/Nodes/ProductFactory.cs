@@ -111,7 +111,7 @@ namespace Assets.Placeables.Nodes
 			var list = new List<ProductAmount>();
 			if (CurrentlyCrafting.TimeLength.TimeUnit == TimeUnit.Hour)
 			{
-				var multiplier = WorldClock.Instance.HoursPerDay / CurrentlyCrafting.TimeLength.Length;
+				var multiplier = Locator.WorldClock.HoursPerDay / CurrentlyCrafting.TimeLength.Length;
 				foreach (var ingredient in CurrentlyCrafting.Ingredients)
 				{
 					list.Add(new ProductAmount{ ProductId = ingredient.ProductId, Amount = ingredient.Quantity * multiplier });

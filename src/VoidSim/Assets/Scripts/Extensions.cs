@@ -61,5 +61,10 @@ namespace Assets.Scripts
 		{
 			get { return ServiceLocator.Get<IMessageHub>(); }
 		}
+
+		public static IWorldClock WorldClock
+		{
+			get { return ServiceLocator.Get<IWorldClock>(); }
+		}
 	}
 }

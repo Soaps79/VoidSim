@@ -55,14 +55,41 @@ namespace Assets.Scripts
 		}
 	}
 
-	public class WorldClock : SingletonBehavior<WorldClock>, IMessageListener
+	public interface IWorldClock
 	{
-		public float RealSecondsToGameHour;
-		public int MinutesPerHour;
-		public int HoursPerDay;
-		public int DaysPerWeek;
-		public int WeeksPerMonth;
-		public int MonthsPerYear;
+		float GetSeconds(TimeLength timeLength);
+		void RegisterCallback(TimeUnit unit, EventHandler callback);
+		WorldTime CurrentTime { get; }
+
+		EventHandler OnHourUp { get; set; }
+		EventHandler OnDayUp { get; set; }
+		EventHandler OnWeekUp { get; set; }
+		EventHandler OnMonthUp { get; set; }
+		EventHandler OnYearUp { get; set; }
+
+		float RealSecondsToGameHour { get; }
+		int MinutesPerHour { get; }
+		int HoursPerDay { get; }
+		int DaysPerWeek { get; }
+		int WeeksPerMonth { get; }
+		int MonthsPerYear { get; }
+	}
+
+	public class WorldClock : SingletonBehavior<WorldClock>, IMessageListener, IWorldClock
+	{
+		[SerializeField] private float _realSecondsToGameHour;
+		[SerializeField] private int _minutesPerHour;
+		[SerializeField] private int _hoursPerDay;
+		[SerializeField] private int _daysPerWeek;
+		[SerializeField] private int _weeksPerMonth;
+		[SerializeField] private int _monthsPerYear;
+
+		public float RealSecondsToGameHour { get { return _realSecondsToGameHour; } }
+		public int MinutesPerHour { get { return _minutesPerHour; } }
+		public int HoursPerDay { get { return _hoursPerDay; } }
+		public int DaysPerWeek { get { return _daysPerWeek; } }
+		public int WeeksPerMonth { get { return _weeksPerMonth; } }
+		public int MonthsPerYear { get { return _monthsPerYear; } }
 
 		private const string PAUSE_NAME = "Pause";
 
@@ -76,20 +103,21 @@ namespace Assets.Scripts
 		private string _currentSpeedName;
 		private string _prePauseSpeedName;
 
-		public EventHandler OnHourUp;
-		public EventHandler OnDayUp;
-		public EventHandler OnWeekUp;
-		public EventHandler OnMonthUp;
-		public EventHandler OnYearUp;
+		public EventHandler OnHourUp { get; set; }
+		public EventHandler OnDayUp { get; set; }
+		public EventHandler OnWeekUp { get; set; }
+		public EventHandler OnMonthUp { get; set; }
+		public EventHandler OnYearUp { get; set; }
 
-		public WorldTime CurrentTime;
+		[SerializeField] private WorldTime _initialTime;
+
+		public WorldTime CurrentTime { get; private set; }
 		private float _elapsedMS;
 
 		void Awake()
 		{
 			// editor should have value, if not, this
-			if (CurrentTime == null)
-				CurrentTime = new WorldTime();
+			CurrentTime = _initialTime ?? new WorldTime();
 
 			// pull speeds from editor
 			foreach (var initialGameSpeed in _initialGameSpeeds)
@@ -181,7 +209,7 @@ namespace Assets.Scripts
 		private void UpdateClock(float delta)
 		{
 			_elapsedMS += delta;
-			var realSecondsToGameMinute = (60 / RealSecondsToGameHour) * CurrentTimeScale;
+			var realSecondsToGameMinute = (60 / _realSecondsToGameHour) * CurrentTimeScale;
 			AddMinutes(realSecondsToGameMinute * delta);
 		}
 
@@ -189,10 +217,10 @@ namespace Assets.Scripts
 		private void AddMinutes(float minutes)
 		{
 			CurrentTime.Minute += minutes;
-			while (CurrentTime.Minute >= MinutesPerHour)
+			while (CurrentTime.Minute >= _minutesPerHour)
 			{
 				AddHours(1);
-				CurrentTime.Minute -= MinutesPerHour;
+				CurrentTime.Minute -= _minutesPerHour;
 			}
 		}
 
@@ -202,10 +230,10 @@ namespace Assets.Scripts
 			if (OnHourUp != null)
 				OnHourUp(this, null);
 
-			while (CurrentTime.Hour >= HoursPerDay)
+			while (CurrentTime.Hour >= _hoursPerDay)
 			{
 				AddDays(1);
-				CurrentTime.Hour -= HoursPerDay;
+				CurrentTime.Hour -= _hoursPerDay;
 			}
 		}
 
@@ -214,10 +242,10 @@ namespace Assets.Scripts
 			CurrentTime.Day += days;
 			if (OnDayUp != null)
 				OnDayUp(this, null);
-			while (CurrentTime.Day >= DaysPerWeek)
+			while (CurrentTime.Day >= _daysPerWeek)
 			{
 				AddWeeks(1);
-				CurrentTime.Day -= DaysPerWeek;
+				CurrentTime.Day -= _daysPerWeek;
 			}
 		}
 
@@ -226,10 +254,10 @@ namespace Assets.Scripts
 			CurrentTime.Week += weeks;
 			if (OnWeekUp != null)
 				OnWeekUp(this, null);
-			while (CurrentTime.Week >= WeeksPerMonth)
+			while (CurrentTime.Week >= _weeksPerMonth)
 			{
 				AddMonths(1);
-				CurrentTime.Week -= WeeksPerMonth;
+				CurrentTime.Week -= _weeksPerMonth;
 			}
 		}
 
@@ -238,10 +266,10 @@ namespace Assets.Scripts
 			CurrentTime.Month += months;
 			if (OnMonthUp != null)
 				OnMonthUp(this, null);
-			while (CurrentTime.Month >= MonthsPerYear)
+			while (CurrentTime.Month >= _monthsPerYear)
 			{
 				AddYears(1);
-				CurrentTime.Month -= MonthsPerYear;
+				CurrentTime.Month -= _monthsPerYear;
 			}
 		}
 
@@ -282,27 +310,27 @@ namespace Assets.Scripts
 		// would be nice to make these appear statically
 		public float SecondsPerHour
 		{
-			get {  return RealSecondsToGameHour; }
+			get {  return _realSecondsToGameHour; }
 		}
 
 		public float SecondsPerDay
 		{
-			get { return RealSecondsToGameHour * HoursPerDay; }
+			get { return _realSecondsToGameHour * _hoursPerDay; }
 		}
 
 		public float SecondsPerWeek
 		{
-			get { return RealSecondsToGameHour * HoursPerDay * DaysPerWeek; }
+			get { return _realSecondsToGameHour * _hoursPerDay * _daysPerWeek; }
 		}
 
 		public float SecondsPerMonth
 		{
-			get { return RealSecondsToGameHour * HoursPerDay * DaysPerWeek * WeeksPerMonth; }
+			get { return _realSecondsToGameHour * _hoursPerDay * _daysPerWeek * _weeksPerMonth; }
 		}
 
 		public float SecondsPerYear
 		{
-			get { return RealSecondsToGameHour * HoursPerDay * DaysPerWeek * WeeksPerMonth * MonthsPerYear; }
+			get { return _realSecondsToGameHour * _hoursPerDay * _daysPerWeek * _weeksPerMonth * _monthsPerYear; }
 		}
 
 		public float GetSeconds(TimeLength timeLength)
@@ -310,7 +338,7 @@ namespace Assets.Scripts
 			switch (timeLength.TimeUnit)
 			{
 				case TimeUnit.Hour:
-					return RealSecondsToGameHour * timeLength.Length;
+					return _realSecondsToGameHour * timeLength.Length;
 				case TimeUnit.Day:
 					return SecondsPerDay* timeLength.Length;
 				case TimeUnit.Week:

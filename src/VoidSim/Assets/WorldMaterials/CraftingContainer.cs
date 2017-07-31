@@ -103,7 +103,7 @@ namespace Assets.Scripts.WorldMaterials
                 throw new UnityException(string.Format("{0} was given a recipe for {1}", Info.Name, recipe.Container.Name));
 
             // may replace with WorldTime when it is a more flexible type
-            var seconds = WorldClock.Instance.GetSeconds(recipe.TimeLength);
+            var seconds = Locator.WorldClock.GetSeconds(recipe.TimeLength);
 
             StopWatch.AddNode(STOPWATCH_NAME, seconds, true).OnTick = CompleteCraft;
             _currentlyCrafting = queuedRecipe;
@@ -164,7 +164,7 @@ namespace Assets.Scripts.WorldMaterials
 
 	    public int ResumeCrafting(Recipe recipe, float remaining)
 	    {
-		    var seconds = WorldClock.Instance.GetSeconds(recipe.TimeLength);
+		    var seconds = Locator.WorldClock.GetSeconds(recipe.TimeLength);
 		    var node = StopWatch.AddNode(STOPWATCH_NAME, seconds, true);
 			node.OnTick = CompleteCraft;
 			node.UpdateElapsed(remaining * seconds);

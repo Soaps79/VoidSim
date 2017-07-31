@@ -68,7 +68,7 @@ namespace Assets.Logistics
 
 		void Start()
 		{
-			_journeySeconds = WorldClock.Instance.GetSeconds(_journeyTime);
+			_journeySeconds = Locator.WorldClock.GetSeconds(_journeyTime);
 			Locator.MessageHub.AddListener(this, LogisticsMessages.RegisterLocation);
 			Locator.MessageHub.AddListener(this, LogisticsMessages.TransitRequested);
 		}
