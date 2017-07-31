@@ -1,11 +1,12 @@
-﻿using Assets.Scripts.Serialization;
-using Messaging;
-using QGame;
+﻿using QGame;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.UI
 {
+	/// <summary>
+	/// Handles UI display and button presses affecting serialization
+	/// </summary>
 	public class SerializationViewModel : QScript
 	{
 		[SerializeField] private string _filename;
@@ -13,6 +14,7 @@ namespace Assets.Scripts.UI
 
 		void Awake()
 		{
+			// this behavior should be owned by something else, not this UI class
 			if (LoadOnStart)
 				Load();
 		}

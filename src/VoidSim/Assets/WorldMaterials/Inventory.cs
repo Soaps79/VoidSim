@@ -1,18 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.Serialization;
 using Assets.WorldMaterials.Products;
 using QGame;
 using Zenject;
 
 namespace Assets.WorldMaterials
 {
-    public class Inventory : QScript
+	[Serializable]
+	public class InventoryData
+	{
+		public List<InventoryProductEntryData> Products;
+		public List<InventoryPlaceableData> Placeables;
+		public int DefaultProductCapacity;
+	}
+
+	[Serializable]
+	public class InventoryProductEntryData
+	{
+		public string ProductName;
+		public int Amount;
+		public int MaxAmount;
+	}
+
+	[Serializable]
+	public class InventoryPlaceableData
+	{
+		public int Id;
+		public string PlaceableName;
+	}
+
+	public class Inventory : QScript, ISerializeData<InventoryData>
     {
-		/// <summary>
-		/// The idea here is that ProductAmount are one type of object that Inventory maintains.
-		/// Another type will probably be some sort of Placeable.
-		/// </summary>
 		[Serializable]
 		public class InventoryProductEntry
         {
@@ -251,5 +271,30 @@ namespace Assets.WorldMaterials
 
             return true;
         }
+
+	    public InventoryData GetData()
+	    {
+			// convert products and placeables to their data types
+		    var products = GetProductEntries().Select(i => new InventoryProductEntryData
+		    {
+			    ProductName = i.Product.Name,
+			    Amount = i.Amount,
+			    MaxAmount = i.MaxAmount
+		    }).ToList();
+
+		    var placeables = Placeables.Select(i => new InventoryPlaceableData
+		    {
+			    Id = i.Id,
+			    PlaceableName = i.Name
+		    }).ToList();
+
+		    var data = new InventoryData
+		    {
+			    Products = products,
+			    Placeables = placeables
+		    };
+
+		    return data;
+		}
     }
 }

@@ -40,7 +40,10 @@ namespace Assets.Station
 
         private CraftingContainer _crafter;
         private Inventory _inventory;
-	    private InventorySerializer _invSerializer = new InventorySerializer();
+
+	    private readonly CollectionSerializer<InventoryData> _inventorySerializer
+		    = new CollectionSerializer<InventoryData>();
+
 	    private const string _invCollectionName = "StationInventory";
 		private InventoryReserve _inventoryReserve;
 
@@ -218,13 +221,8 @@ namespace Assets.Station
                 throw new UnityException("Station inventory missing a dependency");
 
 			// check to see if game is loading, if not, use presets from scripable object
-	        
-	        if (Locator.Serialization.IsLoading)
-	        {
-		        var serialized = Locator.Serialization.GetCollection(_invCollectionName);
-		        var data = _invSerializer.ConvertFromSerialized(serialized);
-				_inventory.Initialize(data, _productLookup, true);
-	        }
+	        if (_inventorySerializer.HasDataFor(_inventory, "StationInventory"))
+		        _inventory.Initialize(_inventorySerializer.DeserializeData(), _productLookup, true);
 	        else
 		        _inventory.Initialize(_inventoryScriptable, _productLookup, true);
 
@@ -260,11 +258,6 @@ namespace Assets.Station
 
 	    public void HandleMessage(string type, MessageArgs args)
 	    {
-		    if (type == GameMessages.PreSave)
-		    {
-			    var data = _invSerializer.ConvertToSerializable(_inventory);
-			    Locator.Serialization.AddCollection(_invCollectionName, data);
-			}
 	    }
 
 	    public string Name { get { return "Station"; } }
