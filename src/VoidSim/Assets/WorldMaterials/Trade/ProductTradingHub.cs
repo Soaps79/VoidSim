@@ -27,7 +27,7 @@ namespace Assets.WorldMaterials.Trade
         
         void Start()
         {
-            MessageHub.Instance.AddListener(this, TradeMessages.TraderCreated);
+            Locator.MessageHub.AddListener(this, TradeMessages.TraderCreated);
 	        SceneManager.sceneLoaded += ClearLists;
 
             // TODO: re-assess when to tick trades
@@ -112,7 +112,7 @@ namespace Assets.WorldMaterials.Trade
 
                             provider.HandleProvideSuccess(info);
                             consumer.HandleConsumeSuccess(info);
-							MessageHub.Instance.QueueMessage(TradeMessages.TradeAccepted, new TradeCreatedMessageArgs { TradeManifest = info });
+							Locator.MessageHub.QueueMessage(TradeMessages.TradeAccepted, new TradeCreatedMessageArgs { TradeManifest = info });
                         }
 
                         // move on to the next consumer, break if provider has emptied its stock

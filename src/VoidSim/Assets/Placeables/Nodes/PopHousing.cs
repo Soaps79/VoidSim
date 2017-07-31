@@ -1,4 +1,5 @@
-﻿using Messaging;
+﻿using Assets.Scripts;
+using Messaging;
 using UnityEngine;
 
 namespace Assets.Placeables.Nodes
@@ -28,7 +29,7 @@ namespace Assets.Placeables.Nodes
 
 		public override void BroadcastPlacement()
 		{
-			MessageHub.Instance.QueueMessage(MessageName, new PopHousingMessageArgs { PopHousing = this });
+			Locator.MessageHub.QueueMessage(MessageName, new PopHousingMessageArgs { PopHousing = this });
 		}
 	}
 }

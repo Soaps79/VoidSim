@@ -42,9 +42,9 @@ namespace Assets.Logistics
 
 		void Start()
 		{
-			MessageHub.Instance.AddListener(this, LogisticsMessages.ShipBerthsUpdated);
-			// MessageHub.Instance.AddListener(this, GameMessages.PreSave);
-			MessageHub.Instance.QueueMessage(LogisticsMessages.RegisterLocation, 
+			Locator.MessageHub.AddListener(this, LogisticsMessages.ShipBerthsUpdated);
+			// Locator.MessageHub.AddListener(this, GameMessages.PreSave);
+			Locator.MessageHub.QueueMessage(LogisticsMessages.RegisterLocation, 
 				new TransitLocationMessageArgs { TransitLocation = this });
 
 			if (_serializer.HasDataFor(this, "TrafficControl"))

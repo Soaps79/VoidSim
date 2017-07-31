@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Assets.Controllers.GUI;
+using Assets.Scripts;
 using Messaging;
 using QGame;
 using UnityEngine;
@@ -32,7 +33,7 @@ namespace Assets.Station.UI
             _panelInstance = Instantiate(_panelPrefab, canvas.transform, false);
             _contentHolder = _panelInstance.FindChild("content_holder").GetComponent<RectTransform>();
 
-            MessageHub.Instance.AddListener(this, SystemPanel.MessageName);
+            Locator.MessageHub.AddListener(this, SystemPanel.MessageName);
         }
 
         public void HandleMessage(string type, MessageArgs args)

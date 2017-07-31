@@ -44,14 +44,14 @@ namespace Assets.Scripts.Serialization
 				_consumer = consumer;
 				_collectionName = name;
 				Name = name + "_serializer";
-				MessageHub.Instance.AddListener(this, GameMessages.PreSave, isStatic);
+				Locator.MessageHub.AddListener(this, GameMessages.PreSave, isStatic);
 				_isInitialized = true;
 			}
 
-			if (!SerializationHub.Instance.IsLoading)
+			if (!Locator.Serialization.IsLoading)
 				return false;
 
-			_data = SerializationHub.Instance.GetCollection(name);
+			_data = Locator.Serialization.GetCollection(name);
 			return !string.IsNullOrEmpty(_data);
 		}
 
@@ -76,7 +76,7 @@ namespace Assets.Scripts.Serialization
 			if (data == null)
 				return;
 
-			SerializationHub.Instance.AddCollection(_collectionName, data);
+			Locator.Serialization.AddCollection(_collectionName, data);
 		}
 
 		public string Name { get; private set; }

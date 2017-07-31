@@ -69,8 +69,8 @@ namespace Assets.Logistics
 		void Start()
 		{
 			_journeySeconds = WorldClock.Instance.GetSeconds(_journeyTime);
-			MessageHub.Instance.AddListener(this, LogisticsMessages.RegisterLocation);
-			MessageHub.Instance.AddListener(this, LogisticsMessages.TransitRequested);
+			Locator.MessageHub.AddListener(this, LogisticsMessages.RegisterLocation);
+			Locator.MessageHub.AddListener(this, LogisticsMessages.TransitRequested);
 		}
 
 		// move ships towards their destinations, inform the location when a ship arrives

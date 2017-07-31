@@ -43,12 +43,12 @@ namespace Assets.Scripts
 
 		public GameManager()
 		{
-			OnEveryUpdate += (delta) => MessageHub.Instance.Update();
-		}
-
-		void Awake()
-		{
 			ServiceInitializer.Initialize();
+
+			var messageHub = Locator.MessageHub as MessageHub;
+			if(messageHub == null)
+				throw new UnityException("MessageHub could not be found");
+			OnEveryUpdate += delta => messageHub.Update();
 		}
 
 		void Start()
@@ -60,7 +60,7 @@ namespace Assets.Scripts
 			BindMouseMovementToKvd();
 			InitializeScreenBounds();
 			InitializeProductLookup();
-			MessageHub.Instance.AddListener(this, GameMessages.GameSpeedChange);
+			Locator.MessageHub.AddListener(this, GameMessages.GameSpeedChange);
 		}
 
 		private void InitializeProductLookup()

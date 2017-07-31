@@ -32,7 +32,7 @@ namespace Assets.Station
             if (_initialCapacity > 0)
                 _inventory.SetProductMaxAmount(_populationProductId, _initialCapacity);
 
-			MessageHub.Instance.AddListener(this, PopHousing.MessageName);
+			Locator.MessageHub.AddListener(this, PopHousing.MessageName);
 
 			// remove when housing serialization is in place
 			Locator.LastId.Reset("pop_housing");

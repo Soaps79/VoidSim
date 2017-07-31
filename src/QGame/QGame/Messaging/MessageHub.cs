@@ -12,6 +12,7 @@ namespace Messaging
 		void AddListener(IMessageListener listener, string type, bool ignoresClear = false);
 		void RemoveListener(IMessageListener listener);
 		void FireMessage(string type, MessageArgs args);
+		void ClearListeners();
 	}
 
 	internal class NullMessageHub : IMessageHub
@@ -35,9 +36,14 @@ namespace Messaging
 		{
 			Debug.Log("NullMessageHub Accessed");
 		}
+
+		public void ClearListeners()
+		{
+			Debug.Log("NullMessageHub Accessed");
+		}
 	}
 
-	public class MessageHub : SingletonBehavior<MessageHub>, IMessageHub
+	public class MessageHub : IMessageHub
 	{
 		public const string AllMessages = "AllMessages";
 

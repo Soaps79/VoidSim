@@ -51,7 +51,7 @@ namespace Assets.Station
         
         void Start()
         {
-			MessageHub.Instance.AddListener(this, GameMessages.PreSave);
+			Locator.MessageHub.AddListener(this, GameMessages.PreSave);
 
             MapLayers();
             InstantiateInventory();
@@ -94,7 +94,7 @@ namespace Assets.Station
             if (product == null)
                 throw new UnityException("Energy product not found in lookup");
 
-            MessageHub.Instance.QueueMessage(ProductSupplyMonitor.CreatedMessageType,
+            Locator.MessageHub.QueueMessage(ProductSupplyMonitor.CreatedMessageType,
                 new ProductSupplyMonitorCreatedMessageArgs
                 {
                     SupplyMonitor = new ProductSupplyMonitor(new ProductSupplyMonitor.Data
@@ -111,7 +111,7 @@ namespace Assets.Station
             if (product == null)
                 throw new UnityException("Population product not found in lookup");
 
-            MessageHub.Instance.QueueMessage(ProductSupplyMonitor.CreatedMessageType,
+            Locator.MessageHub.QueueMessage(ProductSupplyMonitor.CreatedMessageType,
                 new ProductSupplyMonitorCreatedMessageArgs
                 {
                     SupplyMonitor = new ProductSupplyMonitor(new ProductSupplyMonitor.Data
@@ -129,7 +129,7 @@ namespace Assets.Station
             if (product == null)
                 throw new UnityException("Credits product not found in lookup");
 
-            MessageHub.Instance.QueueMessage(ProductSupplyMonitor.CreatedMessageType,
+            Locator.MessageHub.QueueMessage(ProductSupplyMonitor.CreatedMessageType,
                 new ProductSupplyMonitorCreatedMessageArgs
                 {
                     SupplyMonitor = new ProductSupplyMonitor(new ProductSupplyMonitor.Data
@@ -219,9 +219,9 @@ namespace Assets.Station
 
 			// check to see if game is loading, if not, use presets from scripable object
 	        
-	        if (SerializationHub.Instance.IsLoading)
+	        if (Locator.Serialization.IsLoading)
 	        {
-		        var serialized = SerializationHub.Instance.GetCollection(_invCollectionName);
+		        var serialized = Locator.Serialization.GetCollection(_invCollectionName);
 		        var data = _invSerializer.ConvertFromSerialized(serialized);
 				_inventory.Initialize(data, _productLookup, true);
 	        }
@@ -263,7 +263,7 @@ namespace Assets.Station
 		    if (type == GameMessages.PreSave)
 		    {
 			    var data = _invSerializer.ConvertToSerializable(_inventory);
-				SerializationHub.Instance.AddCollection(_invCollectionName, data);
+			    Locator.Serialization.AddCollection(_invCollectionName, data);
 			}
 	    }
 

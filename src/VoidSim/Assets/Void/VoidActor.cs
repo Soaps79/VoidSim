@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Logistics;
 using Assets.Logistics.Ships;
+using Assets.Scripts;
 using Assets.WorldMaterials.Products;
 using Assets.WorldMaterials.Trade;
 using Messaging;
@@ -30,8 +31,8 @@ namespace Assets.Void
 		{
 			_valueLookup = ProductValueLookup.Instance;
 			InstantiateVoidTrader();
-			MessageHub.Instance.QueueMessage(TradeMessages.TraderCreated, new TraderInstanceMessageArgs { Trader = _trader });
-			MessageHub.Instance.QueueMessage(LogisticsMessages.RegisterLocation, new TransitLocationMessageArgs{ TransitLocation = this });
+			Locator.MessageHub.QueueMessage(TradeMessages.TraderCreated, new TraderInstanceMessageArgs { Trader = _trader });
+			Locator.MessageHub.QueueMessage(LogisticsMessages.RegisterLocation, new TransitLocationMessageArgs{ TransitLocation = this });
 		}
 
 		private void InstantiateVoidTrader()
@@ -42,7 +43,7 @@ namespace Assets.Void
 			_trader = go.AddComponent<ProductTrader>();
 			_trader.ClientName = ClientName;
 			_trader.OnProvideMatch += HandleProvideMatch;
-			MessageHub.Instance.QueueMessage(TradeMessages.TraderCreated, new TraderInstanceMessageArgs { Trader = _trader });
+			Locator.MessageHub.QueueMessage(TradeMessages.TraderCreated, new TraderInstanceMessageArgs { Trader = _trader });
 
 			_automater = go.AddComponent<ProductTradeAutomater>();
 			_automater.Initialize(_trader, _worldClock, _tradeRequests);
@@ -51,7 +52,7 @@ namespace Assets.Void
 		private void HandleProvideMatch(TradeManifest manifest)
 		{
 			// request cargo for trade
-			MessageHub.Instance.QueueMessage(LogisticsMessages.CargoRequested, new CargoRequestedMessageArgs
+			Locator.MessageHub.QueueMessage(LogisticsMessages.CargoRequested, new CargoRequestedMessageArgs
 			{
 				Manifest = new CargoManifest(manifest)
 				{

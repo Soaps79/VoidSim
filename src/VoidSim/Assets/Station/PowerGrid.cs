@@ -36,8 +36,8 @@ namespace Assets.Station
         void Start ()
         {
             // learns of new consumers through messages
-            MessageHub.Instance.AddListener(this, EnergyConsumer.MessageName);
-            MessageHub.Instance.AddListener(this, ProductFactory.MessageName);
+            Locator.MessageHub.AddListener(this, EnergyConsumer.MessageName);
+            Locator.MessageHub.AddListener(this, ProductFactory.MessageName);
         }
 
         public void Initialize(Inventory inventory)

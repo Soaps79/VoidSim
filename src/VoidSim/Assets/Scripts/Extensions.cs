@@ -1,5 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
+using Assets.Scripts.Serialization;
 using Assets.Station;
+using Messaging;
 using QGame;
 using UnityEngine;
 
@@ -48,6 +50,16 @@ namespace Assets.Scripts
 		public static ILastIdManager LastId
 		{
 			get { return ServiceLocator.Get<ILastIdManager>(); }
+		}
+
+		public static ISerializationHub Serialization
+		{
+			get { return ServiceLocator.Get<ISerializationHub>(); }
+		}
+
+		public static IMessageHub MessageHub
+		{
+			get { return ServiceLocator.Get<IMessageHub>(); }
 		}
 	}
 }

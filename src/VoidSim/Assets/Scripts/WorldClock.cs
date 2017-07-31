@@ -122,7 +122,7 @@ namespace Assets.Scripts
 		private void RegisterWithServices()
 		{
 			KeyValueDisplay.Instance.Add("GameSpeed", () => CurrentTimeScale);
-			MessageHub.Instance.AddListener(this, GameMessages.GameSpeedChange);
+			Locator.MessageHub.AddListener(this, GameMessages.GameSpeedChange);
 		}
 
 		private void CheckForKeypress(float value)
@@ -175,7 +175,7 @@ namespace Assets.Scripts
 				NewSpeedTimeScale = value,
 				NewSpeedName = speed
 			};
-			MessageHub.Instance.QueueMessage(GameMessages.GameSpeedChange, args);
+			Locator.MessageHub.QueueMessage(GameMessages.GameSpeedChange, args);
 		}
 
 		private void UpdateClock(float delta)

@@ -1,4 +1,5 @@
 ﻿using Assets.Placeables;
+using Assets.Scripts;
 using Assets.WorldMaterials;
 using Messaging;
 using QGame;
@@ -20,7 +21,7 @@ namespace Assets.Station
         // Use this for initialization
         void Start ()
         {
-            MessageHub.Instance.AddListener(this, PlaceableMessages.PlaceablePlaced);
+            Locator.MessageHub.AddListener(this, PlaceableMessages.PlaceablePlaced);
         }
 
         public void HandleMessage(string type, MessageArgs args)

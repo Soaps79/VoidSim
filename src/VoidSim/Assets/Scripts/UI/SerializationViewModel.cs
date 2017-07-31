@@ -24,21 +24,21 @@ namespace Assets.Scripts.UI
 
 		private void SaveGame(float obj)
 		{
-			MessageHub.Instance.QueueMessage(GameMessages.PreSave, null);
-			OnNextUpdate += f => SerializationHub.Instance.WriteToFile(_filename);
+			Locator.MessageHub.QueueMessage(GameMessages.PreSave, null);
+			OnNextUpdate += f => Locator.Serialization.WriteToFile(_filename);
 		}
 
 		public void LoadScene()
 		{
 			Load();
-			MessageHub.Instance.ClearListeners();
+			Locator.MessageHub.ClearListeners();
 			var id = SceneManager.GetActiveScene().buildIndex;
 			SceneManager.LoadScene(id);
 		}
 
 		private void Load()
 		{
-			SerializationHub.Instance.LoadFromFile(_filename);
+			Locator.Serialization.LoadFromFile(_filename);
 		}
 
 		public void ExitGame()

@@ -1,4 +1,5 @@
-﻿using Messaging;
+﻿using Assets.Scripts;
+using Messaging;
 using QGame;
 using UnityEngine;
 
@@ -24,7 +25,7 @@ namespace Assets.Station
                 throw new UnityException(string.Format("SystemPanel {0} given null panel", DisplayName));
 
             Panel = panel;
-            MessageHub.Instance.QueueMessage(MessageName, new SystemPanelMessageArgs { SystemPanel = this });
+            Locator.MessageHub.QueueMessage(MessageName, new SystemPanelMessageArgs { SystemPanel = this });
         }
     }
 }

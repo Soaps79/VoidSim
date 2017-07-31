@@ -54,7 +54,7 @@ namespace Assets.Station
 			_inventory = inventory;
 			_productLookup = lookup;
 			_reserve = reserve;
-			MessageHub.Instance.AddListener(this, ProductFactory.MessageName);
+			Locator.MessageHub.AddListener(this, ProductFactory.MessageName);
 
 			var go = (GameObject)Instantiate(Resources.Load("Views/player_crafting_array_viewmodel"));
 			go.transform.SetParent(transform);

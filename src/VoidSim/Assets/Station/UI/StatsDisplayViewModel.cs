@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Assets.Scripts;
 using Assets.WorldMaterials;
 using Assets.WorldMaterials.Products;
 using Messaging;
@@ -43,7 +44,7 @@ namespace Assets.Station.UI
             InitializeDisplay();
             BindWorldClock();
             OnEveryUpdate += UpdateValues;
-            MessageHub.Instance.AddListener(this, ProductSupplyMonitor.CreatedMessageType);
+            Locator.MessageHub.AddListener(this, ProductSupplyMonitor.CreatedMessageType);
         }
         private void InitializeDisplay()
         {

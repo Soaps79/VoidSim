@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Logistics.Ships;
+using Assets.Scripts;
 using Assets.Scripts.Serialization;
 using Messaging;
 using QGame;
@@ -50,7 +51,7 @@ namespace Assets.Logistics
 		{
 			// currently listens to own message, and if ship is new, 'kicks' it
 			// may not be needed anymore?
-			MessageHub.Instance.AddListener(this, LogisticsMessages.ShipCreated);
+			Locator.MessageHub.AddListener(this, LogisticsMessages.ShipCreated);
 			_transitControl = gameObject.GetComponent<TransitControl>();
 			var lookup = ScriptableObject.Instantiate(
 				Resources.Load("Ships/ship_lookup")) as ShipSOLookup;
@@ -123,7 +124,7 @@ namespace Assets.Logistics
 
 			_toLaunch.Remove(entry);
 
-			MessageHub.Instance.QueueMessage(LogisticsMessages.ShipCreated, new ShipCreatedMessageArgs { Ship = ship });
+			Locator.MessageHub.QueueMessage(LogisticsMessages.ShipCreated, new ShipCreatedMessageArgs { Ship = ship });
 		}
 
 		// not sure if still necessary to wait a cycle?

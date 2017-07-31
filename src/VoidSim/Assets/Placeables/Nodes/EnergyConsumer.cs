@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts;
 using Assets.Station.Efficiency;
 using Messaging;
 using UnityEngine;
@@ -114,7 +115,7 @@ namespace Assets.Placeables.Nodes
 
         public override void BroadcastPlacement()
         {
-            MessageHub.Instance.QueueMessage(MessageName, new EnergyConsumerMessageArgs { EnergyConsumer = this } );
+            Locator.MessageHub.QueueMessage(MessageName, new EnergyConsumerMessageArgs { EnergyConsumer = this } );
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts;
 using Assets.Scripts.Serialization;
 using Messaging;
 using QGame;
@@ -24,7 +25,7 @@ namespace Assets.Placeables
 
 		void Start()
 		{
-			MessageHub.Instance.AddListener(this, PlaceableMessages.PlaceablePlaced);
+			Locator.MessageHub.AddListener(this, PlaceableMessages.PlaceablePlaced);
 
 			if(_serializer.HasDataFor(this, "Placeables"))
 				HandleLoadingPlaceables();

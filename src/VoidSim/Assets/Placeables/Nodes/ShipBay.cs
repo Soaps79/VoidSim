@@ -29,7 +29,7 @@ namespace Assets.Placeables.Nodes
 				shipBerth.Initialize();
 			}
 
-			MessageHub.Instance.QueueMessage(LogisticsMessages.ShipBerthsUpdated, new ShipBerthsMessageArgs { Berths = _berths });
+			Locator.MessageHub.QueueMessage(LogisticsMessages.ShipBerthsUpdated, new ShipBerthsMessageArgs { Berths = _berths });
 			BerthCount = _berths.Count;
 		}
 	}

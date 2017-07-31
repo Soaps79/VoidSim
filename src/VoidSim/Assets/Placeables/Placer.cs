@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Assets.Scripts;
 using Assets.Scripts.Serialization;
 using Messaging;
 using QGame;
@@ -47,7 +48,7 @@ namespace Assets.Placeables
 			var placeable = Instantiate(scriptable.Prefab);
 			placeable.transform.position = position;
 			placeable.BindToScriptable(scriptable);
-			MessageHub.Instance.QueueMessage(
+			Locator.MessageHub.QueueMessage(
 				PlaceableMessages.PlaceablePlaced,
 				new PlaceableUpdateArgs
 				{

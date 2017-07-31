@@ -7,11 +7,20 @@ using QGame;
 
 namespace Assets.Scripts.Serialization
 {
+	public interface ISerializationHub
+	{
+		void AddCollection(string collectionName, object obj);
+		string GetCollection(string collectionName);
+		void WriteToFile(string savename);
+		bool IsLoading { get; }
+		void LoadFromFile(string savename);
+	}
+
 	/// <summary>
 	/// Manages the actual writing and reading of game data. Game code should not interact with this, 
 	/// objects should instead instantiate a CollectionSerializer of their data type
 	/// </summary>
-	public class SerializationHub : SingletonBehavior<SerializationHub>
+	public class SerializationHub : ISerializationHub
 	{
 		private class SerializedCollection
 		{

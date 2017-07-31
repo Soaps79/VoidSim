@@ -1,4 +1,5 @@
 ﻿using Assets.Logistics;
+using Assets.Scripts;
 using Assets.Scripts.Serialization;
 using Assets.WorldMaterials;
 using Assets.WorldMaterials.Products;
@@ -44,7 +45,7 @@ namespace Assets.Station
 	        if (_serializer.HasDataFor(this, "StationTrader"))
 		        HandleGameLoad();
 
-			MessageHub.Instance.QueueMessage(TradeMessages.TraderCreated, new TraderInstanceMessageArgs { Trader = _trader });
+			Locator.MessageHub.QueueMessage(TradeMessages.TraderCreated, new TraderInstanceMessageArgs { Trader = _trader });
         }
 
 	    private void BindToTrader()
@@ -67,7 +68,7 @@ namespace Assets.Station
             _reserve.AdjustHold(manifest.ProductId, -manifest.AmountTotal);
 
             // request cargo for trade
-            MessageHub.Instance.QueueMessage(LogisticsMessages.CargoRequested, new CargoRequestedMessageArgs
+            Locator.MessageHub.QueueMessage(LogisticsMessages.CargoRequested, new CargoRequestedMessageArgs
             {
                 Manifest = new CargoManifest(manifest)
                 {

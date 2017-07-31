@@ -38,8 +38,8 @@ namespace Assets.Logistics
 
 		void Start()
 		{
-			MessageHub.Instance.AddListener(this, LogisticsMessages.ShipCreated);
-			MessageHub.Instance.AddListener(this, LogisticsMessages.CargoRequested);
+			Locator.MessageHub.AddListener(this, LogisticsMessages.ShipCreated);
+			Locator.MessageHub.AddListener(this, LogisticsMessages.CargoRequested);
 			BindToUI();
 			var node = StopWatch.AddNode("check_backlog", 5);
 			node.OnTick += HandleManifestsBacklog;
@@ -81,7 +81,7 @@ namespace Assets.Logistics
 					loc.Resume(ship);
 				}
 
-				MessageHub.Instance.QueueMessage(
+				Locator.MessageHub.QueueMessage(
 					LogisticsMessages.ShipCreated, new ShipCreatedMessageArgs { Ship = ship, IsExisting = true });
 			}
 		}

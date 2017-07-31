@@ -24,7 +24,7 @@ namespace Assets.WorldMaterials.Trade
 		void Start()
 		{
 			OnEveryUpdate += UpdateTrades;
-			MessageHub.Instance.AddListener(this, TradeMessages.TradeAccepted, true);
+			Locator.MessageHub.AddListener(this, TradeMessages.TradeAccepted, true);
 
 			if (_serializer.HasDataFor(this, "TradeMonitor", true))
 				HandleGameLoad();

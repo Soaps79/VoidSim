@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts;
 using Messaging;
 using UnityEngine;
 
@@ -35,7 +36,7 @@ namespace Assets.Logistics.Ships
 
 		public void BeginTrip(bool isContinuing = false)
 		{
-			MessageHub.Instance.QueueMessage(LogisticsMessages.TransitRequested, new TransitRequestedMessageArgs
+			Locator.MessageHub.QueueMessage(LogisticsMessages.TransitRequested, new TransitRequestedMessageArgs
 			{
 				IsContinuing = isContinuing,
 				Ship = ParentShip,

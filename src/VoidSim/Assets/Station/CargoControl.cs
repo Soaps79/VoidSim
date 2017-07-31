@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Logistics;
+using Assets.Scripts;
 using Assets.Station.UI;
 using Assets.WorldMaterials;
 using Messaging;
@@ -24,7 +25,7 @@ namespace Assets.Station
 
         void Start()
         {
-            MessageHub.Instance.AddListener(this, LogisticsMessages.ShipBerthsUpdated);
+            Locator.MessageHub.AddListener(this, LogisticsMessages.ShipBerthsUpdated);
         }
 
         public void Initialize(Inventory inventory, InventoryReserve reserve, string clientName)

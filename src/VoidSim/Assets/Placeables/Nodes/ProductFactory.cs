@@ -67,7 +67,7 @@ namespace Assets.Placeables.Nodes
 			_efficiency = GetComponent<EfficiencyNode>().Module;
 			_efficiency.OnValueChanged += OnEfficiencyChanged;
 
-			MessageHub.Instance.QueueMessage(MessageName, new ProductFactoryMessageArgs { ProductFactory = this });
+			Locator.MessageHub.QueueMessage(MessageName, new ProductFactoryMessageArgs { ProductFactory = this });
 		}
 
 		public float CurrentCraftRemainingAsZeroToOne
