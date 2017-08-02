@@ -12,12 +12,23 @@ namespace Assets.WorldMaterials.Trade
 		public ProductTrader Trader;
 	}
 
+	// the pattern used here could probably be rethought
+	// this was written to fill some gaps in trade and open up population
+	public interface IProductTraderDriver
+	{
+		bool WillConsumeFrom(ProductTrader provider, ProductAmount provided);
+		bool WillProvideTo(ProductTrader consumer, ProductAmount provided);
+		void HandleProvideSuccess(TradeManifest manifest);
+		void HandleConsumeSuccess(TradeManifest manifest);
+	}
+
 	/// <summary>
 	/// Actors will use one of these objects to manage their participation in the galaxy's trading system
 	/// </summary>
 	public class ProductTrader : QScript
-    {
-        
+	{
+		private IProductTraderDriver _driver;
+
         public string ClientName;
 
         public readonly List<ProductAmount> Providing = new List<ProductAmount>();
@@ -26,16 +37,21 @@ namespace Assets.WorldMaterials.Trade
         public Action<TradeManifest> OnProvideMatch;
         public Action<TradeManifest> OnConsumeMatch;
 
+		public void Initialize(IProductTraderDriver driver)
+		{
+			_driver = driver;
+		}
+
         public void HandleProvideSuccess(TradeManifest manifest)
         {
-            if (OnProvideMatch != null)
-                OnProvideMatch(manifest);
-        }
+			if (_driver != null)
+				_driver.HandleProvideSuccess(manifest);
+		}
 
         public void HandleConsumeSuccess(TradeManifest manifest)
         {
-            if (OnConsumeMatch != null)
-                OnConsumeMatch(manifest);
+			if (_driver != null)
+				_driver.HandleConsumeSuccess(manifest);
         }
 
         public void SetProvide(ProductAmount productAmount)
@@ -99,5 +115,15 @@ namespace Assets.WorldMaterials.Trade
                 product.Amount += amount;
             }
         }
+
+	    public bool WillConsumeFrom(ProductTrader provider, ProductAmount provided)
+	    {
+		    return _driver != null && _driver.WillConsumeFrom(provider, provided);
+	    }
+
+	    public bool WillProvideTo(ProductTrader consumer, ProductAmount provided)
+	    {
+			return _driver != null && _driver.WillProvideTo(consumer, provided);
+		}
     }
 }

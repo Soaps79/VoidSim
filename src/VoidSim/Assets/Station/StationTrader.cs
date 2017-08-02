@@ -11,15 +11,20 @@ using WorldClock = Assets.Scripts.WorldClock;
 
 namespace Assets.Station
 {
-    /// <summary>
-    /// This is currently doing multiple small jobs that will most likely become their own behaviors or systems.
-    /// Acts as a driver for ProductTrader, telling it what to buy and sell on the market. 
-    /// Ties an Inventory to a ProductTrader, moving products in and out as transactions complete.
-    /// Handles broadcasting of successful trades. Currently works only because Station is one of 2 actors, involved in every trade.
-    ///     As Void develops, trades between other actors will not be broadcast. Not sure if will be relevant.
-    ///     This seems like a job that should be handled by TradingHub, but then it has to know about currency, so ???
-    /// </summary>
-    public class StationTrader : QScript, ISerializeData<InventoryReserveData>
+//	bool WillConsumeFrom(ProductTrader provider, ProductAmount provided);
+//bool WillProvideTo(ProductTrader consumer, ProductAmount provided);
+//void HandleProvideSuccess(TradeManifest manifest);
+//void HandleConsumeSuccess(TradeManifest manifest);
+
+	/// <summary>
+	/// This is currently doing multiple small jobs that will most likely become their own behaviors or systems.
+	/// Acts as a driver for ProductTrader, telling it what to buy and sell on the market. 
+	/// Ties an Inventory to a ProductTrader, moving products in and out as transactions complete.
+	/// Handles broadcasting of successful trades. Currently works only because Station is one of 2 actors, involved in every trade.
+	///     As Void develops, trades between other actors will not be broadcast. Not sure if will be relevant.
+	///     This seems like a job that should be handled by TradingHub, but then it has to know about currency, so ???
+	/// </summary>
+	public class StationTrader : QScript, IProductTraderDriver, ISerializeData<InventoryReserveData>
     {
         private InventoryReserve _reserve;
         public string ClientName { get; set; }
@@ -52,8 +57,7 @@ namespace Assets.Station
         {
             _trader = gameObject.AddComponent<ProductTrader>();
             _trader.ClientName = ClientName;
-            _trader.OnProvideMatch += HandleProvideMatch;
-            _trader.OnConsumeMatch += HandleConsumeMatch;
+			_trader.Initialize(this);
         }
 
 		private void HandleGameLoad()
@@ -62,7 +66,11 @@ namespace Assets.Station
 			_reserve.SetFromData(data);
 		}
 
-        private void HandleProvideMatch(TradeManifest manifest)
+	    public bool WillConsumeFrom(ProductTrader provider, ProductAmount provided) { return true; }
+
+	    public bool WillProvideTo(ProductTrader consumer, ProductAmount provided) { return true; }
+
+	    public void HandleProvideSuccess(TradeManifest manifest)
         {
             // need to add logic to place a hold on the traded items in the reserve
             _reserve.AdjustHold(manifest.ProductId, -manifest.AmountTotal);
@@ -82,10 +90,8 @@ namespace Assets.Station
             CheckForTrade();
         }
 
-        private void HandleConsumeMatch(TradeManifest manifest)
+        public void HandleConsumeSuccess(TradeManifest manifest)
         {
-			// still need this? Provider does the work
-			// reserve the money?
 			_reserve.AdjustHold(manifest.ProductId, manifest.AmountTotal);
 			CheckForTrade();
         }

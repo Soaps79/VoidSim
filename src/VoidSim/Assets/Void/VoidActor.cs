@@ -14,7 +14,7 @@ using WorldClock = Assets.Scripts.WorldClock;
 
 namespace Assets.Void
 {
-	public class VoidActor : QScript, ITransitLocation
+	public class VoidActor : QScript, ITransitLocation, IProductTraderDriver
 	{
 		[Inject] private WorldClock _worldClock;
 		[Inject] private ProductLookup _productLookup;
@@ -42,14 +42,14 @@ namespace Assets.Void
 			go.name = "void_trader";
 			_trader = go.AddComponent<ProductTrader>();
 			_trader.ClientName = ClientName;
-			_trader.OnProvideMatch += HandleProvideMatch;
+			_trader.Initialize(this);
 			Locator.MessageHub.QueueMessage(TradeMessages.TraderCreated, new TraderInstanceMessageArgs { Trader = _trader });
 
 			_automater = go.AddComponent<ProductTradeAutomater>();
 			_automater.Initialize(_trader, _worldClock, _tradeRequests);
 		}
 
-		private void HandleProvideMatch(TradeManifest manifest)
+		public void HandleProvideSuccess(TradeManifest manifest)
 		{
 			// request cargo for trade
 			Locator.MessageHub.QueueMessage(LogisticsMessages.CargoRequested, new CargoRequestedMessageArgs
@@ -81,5 +81,11 @@ namespace Assets.Void
 		}
 
 		public bool IsSimpleHold { get { return true; } }
+
+		public bool WillConsumeFrom(ProductTrader provider, ProductAmount provided) { return true; }
+
+		public bool WillProvideTo(ProductTrader consumer, ProductAmount provided) { return true; }
+
+		public void HandleConsumeSuccess(TradeManifest manifest) { }
 	}
 }

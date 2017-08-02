@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts;
+using Assets.WorldMaterials.Products;
 using Messaging;
 using QGame;
 using UnityEngine;
@@ -74,8 +75,8 @@ namespace Assets.WorldMaterials.Trade
                     foreach (var consumer in consumers)
                     {
                         // only consider consumers who want this product
-                        if (consumer.ClientName == provider.ClientName
-                            || consumer.Consuming.All(i => i.ProductId != provided.ProductId)) continue;
+	                    if (!IsMatch(provider, consumer, provided))
+		                    continue;
                         
                         var amountConsumed = 0;
                         var consumed = consumer.Consuming.First(i => i.ProductId == provided.ProductId);
@@ -125,7 +126,19 @@ namespace Assets.WorldMaterials.Trade
             if (needsPruning) PruneTraderList();
         }
 
-        private void PruneTraderList()
+	    private bool IsMatch(ProductTrader provider, ProductTrader consumer, ProductAmount provided)
+	    {
+				   // eliminate trading with self
+			return consumer.ClientName != provider.ClientName
+				   // consumers who don't want this product
+			       && consumer.Consuming.Any(i => i.ProductId == provided.ProductId)
+				   // and traders who won't work with each other
+				   && consumer.WillConsumeFrom(provider, provided)
+				   && provider.WillProvideTo(consumer, provided);
+
+		}
+
+		private void PruneTraderList()
         {
             foreach (var trader in _traders)
             {
