@@ -49,7 +49,7 @@ namespace Assets.Editor
 			_index++;
 			var go = new GameObject();
 			var trader = go.AddComponent<ProductTrader>();
-			trader.ClientName = "Test" + _index;
+			trader.Initialize(null, "Test" + _index);
 
 			if (isProviding)
 				trader.Providing.Add(new ProductAmount { ProductId = productId, Amount = amount });

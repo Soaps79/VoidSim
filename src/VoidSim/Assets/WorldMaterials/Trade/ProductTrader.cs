@@ -29,7 +29,7 @@ namespace Assets.WorldMaterials.Trade
 	{
 		private IProductTraderDriver _driver;
 
-        public string ClientName;
+        public string ClientName { get; private set; }
 
         public readonly List<ProductAmount> Providing = new List<ProductAmount>();
         public readonly List<ProductAmount> Consuming = new List<ProductAmount>();
@@ -37,22 +37,29 @@ namespace Assets.WorldMaterials.Trade
         public Action<TradeManifest> OnProvideMatch;
         public Action<TradeManifest> OnConsumeMatch;
 
-		public void Initialize(IProductTraderDriver driver)
+		public void Initialize(IProductTraderDriver driver, string clientName)
 		{
 			_driver = driver;
+			ClientName = clientName;
 		}
 
         public void HandleProvideSuccess(TradeManifest manifest)
         {
 			if (_driver != null)
 				_driver.HandleProvideSuccess(manifest);
-		}
+
+	        if (OnProvideMatch != null)
+		        OnProvideMatch(manifest);
+        }
 
         public void HandleConsumeSuccess(TradeManifest manifest)
         {
 			if (_driver != null)
 				_driver.HandleConsumeSuccess(manifest);
-        }
+
+	        if (OnConsumeMatch != null)
+		        OnConsumeMatch(manifest);
+		}
 
         public void SetProvide(ProductAmount productAmount)
         {
@@ -116,14 +123,16 @@ namespace Assets.WorldMaterials.Trade
             }
         }
 
+		// will always be true if driver is not set
 	    public bool WillConsumeFrom(ProductTrader provider, ProductAmount provided)
 	    {
-		    return _driver != null && _driver.WillConsumeFrom(provider, provided);
+		    return _driver == null || _driver.WillConsumeFrom(provider, provided);
 	    }
 
-	    public bool WillProvideTo(ProductTrader consumer, ProductAmount provided)
+		// will always be true if driver is not set
+		public bool WillProvideTo(ProductTrader consumer, ProductAmount provided)
 	    {
-			return _driver != null && _driver.WillProvideTo(consumer, provided);
+			return _driver == null || _driver.WillProvideTo(consumer, provided);
 		}
     }
 }

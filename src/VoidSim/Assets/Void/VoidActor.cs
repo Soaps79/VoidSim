@@ -41,8 +41,7 @@ namespace Assets.Void
 			go.transform.SetParent(transform);
 			go.name = "void_trader";
 			_trader = go.AddComponent<ProductTrader>();
-			_trader.ClientName = ClientName;
-			_trader.Initialize(this);
+			_trader.Initialize(this, ClientName);
 			Locator.MessageHub.QueueMessage(TradeMessages.TraderCreated, new TraderInstanceMessageArgs { Trader = _trader });
 
 			_automater = go.AddComponent<ProductTradeAutomater>();
@@ -84,7 +83,7 @@ namespace Assets.Void
 
 		public bool WillConsumeFrom(ProductTrader provider, ProductAmount provided) { return true; }
 
-		public bool WillProvideTo(ProductTrader consumer, ProductAmount provided) { return true; }
+		public bool WillProvideTo(ProductTrader consumer, ProductAmount provided) {  return true; }
 
 		public void HandleConsumeSuccess(TradeManifest manifest) { }
 	}
