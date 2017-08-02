@@ -182,5 +182,23 @@ namespace Assets.Editor
 			Assert.AreEqual(3, consumed);
 			Assert.IsTrue(!consumer.Consuming.Any());
 		}
+
+		[Test]
+		public void ParentlessTraderStillTrades()
+		{
+			const int PRODUCT_ID = 1;
+			const int PROVIDE_AMOUNT = 10;
+			const int CONSUME_AMOUNT = 30;
+
+			var provider = GenerateAndAddTrader(true, PRODUCT_ID, PROVIDE_AMOUNT);
+			var consumer = GenerateAndAddTrader(false, PRODUCT_ID, CONSUME_AMOUNT);
+			var provided = new ProductAmount{ ProductId = PRODUCT_ID, Amount = CONSUME_AMOUNT };
+
+
+			CheckForTrades();
+
+			Assert.IsTrue(provider.WillProvideTo(consumer, provided));
+			Assert.IsTrue(provider.WillConsumeFrom(provider, provided));
+		}
 	}
 }
