@@ -4,6 +4,7 @@ using System.Linq;
 using Assets.Logistics;
 using Assets.Logistics.Ships;
 using Assets.Scripts;
+using Assets.WorldMaterials.Population;
 using Assets.WorldMaterials.Products;
 using Assets.WorldMaterials.Trade;
 using Messaging;
@@ -14,7 +15,7 @@ using WorldClock = Assets.Scripts.WorldClock;
 
 namespace Assets.Void
 {
-	public class VoidActor : QScript, ITransitLocation, IProductTraderDriver
+	public class VoidActor : QScript, ITransitLocation, IProductTraderDriver, IPopulationHost
 	{
 		[Inject] private WorldClock _worldClock;
 		[Inject] private ProductLookup _productLookup;
@@ -86,5 +87,10 @@ namespace Assets.Void
 		public bool WillProvideTo(ProductTrader consumer, ProductAmount provided) {  return true; }
 
 		public void HandleConsumeSuccess(TradeManifest manifest) { }
+		public float CurrentQualityOfLife { get; private set; }
+		public bool PopulationWillMigrateTo(IPopulationHost otherHost)
+		{
+			return true;
+		}
 	}
 }

@@ -11,11 +11,6 @@ using WorldClock = Assets.Scripts.WorldClock;
 
 namespace Assets.Station
 {
-//	bool WillConsumeFrom(ProductTrader provider, ProductAmount provided);
-//bool WillProvideTo(ProductTrader consumer, ProductAmount provided);
-//void HandleProvideSuccess(TradeManifest manifest);
-//void HandleConsumeSuccess(TradeManifest manifest);
-
 	/// <summary>
 	/// This is currently doing multiple small jobs that will most likely become their own behaviors or systems.
 	/// Acts as a driver for ProductTrader, telling it what to buy and sell on the market. 

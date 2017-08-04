@@ -3,7 +3,9 @@ using System.Linq;
 using Assets.Placeables.Nodes;
 using Assets.Scripts;
 using Assets.WorldMaterials;
+using Assets.WorldMaterials.Population;
 using Assets.WorldMaterials.Products;
+using Assets.WorldMaterials.Trade;
 using Messaging;
 using QGame;
 using UnityEngine;
@@ -13,7 +15,7 @@ namespace Assets.Station
     /// <summary>
     /// Placeholder for where pop will be managed
     /// </summary>
-    public class PopulationControl : QScript, IMessageListener
+    public class PopulationControl : QScript, IPopulationHost, IProductTraderDriver, IMessageListener
     {
         [SerializeField] private int _totalCapacity;
         [SerializeField] private int _initialCapacity;
@@ -21,6 +23,7 @@ namespace Assets.Station
         private const string POPULATION_PRODUCT_NAME = "Population";
         private Inventory _inventory;
         private int _populationProductId;
+	    private ProductTrader _trader;
 
         public void Initialize(Inventory inventory, int initialCapacity = 0)
         {
@@ -28,6 +31,7 @@ namespace Assets.Station
             _inventory = inventory;
             var pop = ProductLookup.Instance.GetProduct(POPULATION_PRODUCT_NAME);
             _populationProductId = pop.ID;
+	        CurrentQualityOfLife = 10;
 
             if (_initialCapacity > 0)
                 _inventory.SetProductMaxAmount(_populationProductId, _initialCapacity);
@@ -36,9 +40,16 @@ namespace Assets.Station
 
 			// remove when housing serialization is in place
 			Locator.LastId.Reset("pop_housing");
+
+	        InitializeProductTrader();
         }
 
-		public int TotalCapacity
+	    private void InitializeProductTrader()
+	    {
+		    
+	    }
+
+	    public int TotalCapacity
         {
             get { return _totalCapacity; }
         }
@@ -74,5 +85,31 @@ namespace Assets.Station
         {
             get { return "PopulationControl"; }
         }
+
+	    public float CurrentQualityOfLife { get; private set; }
+	    public bool PopulationWillMigrateTo(IPopulationHost otherHost)
+	    {
+		    return false;
+	    }
+
+	    public bool WillConsumeFrom(ProductTrader provider, ProductAmount provided)
+	    {
+		    return true;
+	    }
+
+	    public bool WillProvideTo(ProductTrader consumer, ProductAmount provided)
+	    {
+			return true;
+		}
+
+	    public void HandleProvideSuccess(TradeManifest manifest)
+	    {
+		    
+	    }
+
+	    public void HandleConsumeSuccess(TradeManifest manifest)
+	    {
+		    
+	    }
     }
 }

@@ -51,13 +51,15 @@ namespace Assets.Station
         [SerializeField]
         private List<StationLayer> _initialLayers;
         private readonly Dictionary<LayerType, StationLayer> _layers = new Dictionary<LayerType, StationLayer>();
-        
-        void Start()
+	    private PopulationControl _populationControl;
+
+	    void Start()
         {
 			Locator.MessageHub.AddListener(this, GameMessages.PreSave);
 
             MapLayers();
             InstantiateInventory();
+	        InstantiatePopulationControl();
             InstantiateTrader();
             BindInventoryToUI();
             InstantiateCraftingContainer();
@@ -67,7 +69,6 @@ namespace Assets.Station
             InstantiateCargoControl();
 
             TestPowerGrid();
-            TestPopulationControl();
             RegisterSupplyMonitors();
 
             InitializeLayers();
@@ -157,13 +158,14 @@ namespace Assets.Station
             grid.Initialize(_inventory);
         }
 
-        private void TestPopulationControl()
+        private void InstantiatePopulationControl()
         {
             var go = new GameObject();
             go.name = "population_control";
             go.transform.SetParent(_layers[LayerType.Core].transform);
             var pop = go.GetOrAddComponent<PopulationControl>();
             pop.Initialize(_inventory, 60);
+	        _populationControl = pop;
         }
 
         // Crafting items here are temporary. They will eventually work entirely through Placeables

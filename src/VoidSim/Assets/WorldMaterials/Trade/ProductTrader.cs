@@ -27,7 +27,7 @@ namespace Assets.WorldMaterials.Trade
 	/// </summary>
 	public class ProductTrader : QScript
 	{
-		private IProductTraderDriver _driver;
+		public IProductTraderDriver Driver { get; private set; }
 
         public string ClientName { get; private set; }
 
@@ -39,14 +39,14 @@ namespace Assets.WorldMaterials.Trade
 
 		public void Initialize(IProductTraderDriver driver, string clientName)
 		{
-			_driver = driver;
+			Driver = driver;
 			ClientName = clientName;
 		}
 
         public void HandleProvideSuccess(TradeManifest manifest)
         {
-			if (_driver != null)
-				_driver.HandleProvideSuccess(manifest);
+			if (Driver != null)
+				Driver.HandleProvideSuccess(manifest);
 
 	        if (OnProvideMatch != null)
 		        OnProvideMatch(manifest);
@@ -54,8 +54,8 @@ namespace Assets.WorldMaterials.Trade
 
         public void HandleConsumeSuccess(TradeManifest manifest)
         {
-			if (_driver != null)
-				_driver.HandleConsumeSuccess(manifest);
+			if (Driver != null)
+				Driver.HandleConsumeSuccess(manifest);
 
 	        if (OnConsumeMatch != null)
 		        OnConsumeMatch(manifest);
@@ -126,13 +126,13 @@ namespace Assets.WorldMaterials.Trade
 		// will always be true if driver is not set
 	    public bool WillConsumeFrom(ProductTrader provider, ProductAmount provided)
 	    {
-		    return _driver == null || _driver.WillConsumeFrom(provider, provided);
+		    return Driver == null || Driver.WillConsumeFrom(provider, provided);
 	    }
 
 		// will always be true if driver is not set
 		public bool WillProvideTo(ProductTrader consumer, ProductAmount provided)
 	    {
-			return _driver == null || _driver.WillProvideTo(consumer, provided);
+			return Driver == null || Driver.WillProvideTo(consumer, provided);
 		}
     }
 }
