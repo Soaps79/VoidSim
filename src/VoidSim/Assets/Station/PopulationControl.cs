@@ -82,17 +82,16 @@ namespace Assets.Station
 
             _housing.Add(args.PopHousing);
             UpdateCapacity();
-            _inventory.SetProductMaxAmount(_populationProductId, _totalCapacity);
 			UpdateTradeRequest();
         }
 
         private void UpdateCapacity()
         {
             _totalCapacity = _initialCapacity + _housing.Sum(i => i.Capacity);
+	        _inventory.SetProductMaxAmount(_populationProductId, _totalCapacity);
+		}
 
-        }
-
-        public string Name
+		public string Name
         {
             get { return "PopulationControl"; }
         }

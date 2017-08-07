@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Assets.Logistics;
+﻿using Assets.Logistics;
 using Assets.Logistics.Ships;
 using Assets.Scripts;
 using Assets.WorldMaterials.Population;
 using Assets.WorldMaterials.Products;
 using Assets.WorldMaterials.Trade;
-using Messaging;
 using QGame;
 using UnityEngine;
 using Zenject;
@@ -32,7 +28,6 @@ namespace Assets.Void
 		{
 			_valueLookup = ProductValueLookup.Instance;
 			InstantiateVoidTrader();
-			Locator.MessageHub.QueueMessage(TradeMessages.TraderCreated, new TraderInstanceMessageArgs { Trader = _trader });
 			Locator.MessageHub.QueueMessage(LogisticsMessages.RegisterLocation, new TransitLocationMessageArgs{ TransitLocation = this });
 		}
 
@@ -43,8 +38,7 @@ namespace Assets.Void
 			go.name = "void_trader";
 			_trader = go.AddComponent<ProductTrader>();
 			_trader.Initialize(this, ClientName);
-			Locator.MessageHub.QueueMessage(TradeMessages.TraderCreated, new TraderInstanceMessageArgs { Trader = _trader });
-
+			
 			_automater = go.AddComponent<ProductTradeAutomater>();
 			_automater.Initialize(_trader, _worldClock, _tradeRequests);
 		}

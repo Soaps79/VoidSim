@@ -52,8 +52,7 @@ namespace Assets.WorldMaterials.Trade
             if(args == null || args.Trader == null)
                 throw new UnityException("TradeHub given bad message data");
 
-            if(_traders.All(i => i.ClientName != args.Trader.ClientName))
-                _traders.Add(args.Trader);
+            _traders.Add(args.Trader);
         }
 
         protected void CheckForTrades()

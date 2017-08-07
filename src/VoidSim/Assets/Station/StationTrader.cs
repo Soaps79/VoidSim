@@ -22,7 +22,6 @@ namespace Assets.Station
 	public class StationTrader : QScript, ITraderDriver, ISerializeData<InventoryReserveData>
     {
         private InventoryReserve _reserve;
-        public string ClientName { get; set; }
 
         [SerializeField] private ProductValueLookup _valueLookup;
         [SerializeField] private Inventory _inventory;
@@ -47,14 +46,12 @@ namespace Assets.Station
 
 	        if (_serializer.HasDataFor(this, "StationTrader"))
 		        HandleGameLoad();
-
-			Locator.MessageHub.QueueMessage(TradeMessages.TraderCreated, new TraderInstanceMessageArgs { Trader = _trader });
         }
 
 	    private void BindToTrader()
         {
             _trader = gameObject.AddComponent<ProductTrader>();
-			_trader.Initialize(this, ClientName);
+			_trader.Initialize(this, Station.ClientName);
         }
 
 		private void HandleGameLoad()
@@ -81,7 +78,7 @@ namespace Assets.Station
             {
                 Manifest = new CargoManifest(manifest)
                 {
-                    Seller = ClientName,
+                    Seller = Station.ClientName,
                     Buyer = manifest.Consumer,
                     Currency = _valueLookup.GetValueOfProductAmount(manifest.ProductId, manifest.AmountTotal),
                     ProductAmount = new ProductAmount { ProductId = manifest.ProductId, Amount = manifest.AmountTotal }

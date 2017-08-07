@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts;
 using Assets.WorldMaterials.Products;
 using Messaging;
 using QGame;
@@ -43,6 +44,7 @@ namespace Assets.WorldMaterials.Trade
 			Consuming = new List<ProductAmount>();
 			Driver = driver;
 			ClientName = clientName;
+			Locator.MessageHub.QueueMessage(TradeMessages.TraderCreated, new TraderInstanceMessageArgs { Trader = this });
 		}
 
         public void HandleProvideSuccess(TradeManifest manifest)
