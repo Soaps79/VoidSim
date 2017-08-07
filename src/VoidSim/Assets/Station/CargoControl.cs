@@ -16,23 +16,23 @@ namespace Assets.Station
     {
         private Inventory _inventory;
         private InventoryReserve _reserve;
-        private string _clientName;
 
         private readonly List<CargoBay> _cargoBays = new List<CargoBay>();
 
 	    public Action<CargoBay> OnBayAdded;
 	    [SerializeField] private TransactionText _textPrefab;
+	    private PopulationControl _popControl;
 
-        void Start()
+	    void Start()
         {
             Locator.MessageHub.AddListener(this, LogisticsMessages.ShipBerthsUpdated);
         }
 
-        public void Initialize(Inventory inventory, InventoryReserve reserve, string clientName)
+        public void Initialize(Inventory inventory, InventoryReserve reserve, PopulationControl popControl)
         {
             _inventory = inventory;
             _reserve = reserve;
-            _clientName = clientName;
+	        _popControl = popControl;
         }
 
         public void HandleMessage(string type, MessageArgs args)
@@ -57,7 +57,7 @@ namespace Assets.Station
             var go = new GameObject();
             var cargoBay = go.AddComponent<CargoBay>();
 			cargoBay.transform.SetParent(transform, true);
-            cargoBay.Initialize(berth, _inventory, _reserve, _clientName, _textPrefab);
+            cargoBay.Initialize(berth, _inventory, _reserve, _textPrefab);
             _cargoBays.Add(cargoBay);
 
 	        if (OnBayAdded != null)

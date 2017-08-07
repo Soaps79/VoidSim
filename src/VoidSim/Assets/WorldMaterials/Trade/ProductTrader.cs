@@ -14,7 +14,7 @@ namespace Assets.WorldMaterials.Trade
 
 	// the pattern used here could probably be rethought
 	// this was written to fill some gaps in trade and open up population
-	public interface IProductTraderDriver
+	public interface ITraderDriver
 	{
 		bool WillConsumeFrom(ProductTrader provider, ProductAmount provided);
 		bool WillProvideTo(ProductTrader consumer, ProductAmount provided);
@@ -27,18 +27,20 @@ namespace Assets.WorldMaterials.Trade
 	/// </summary>
 	public class ProductTrader : QScript
 	{
-		public IProductTraderDriver Driver { get; private set; }
+		public ITraderDriver Driver { get; private set; }
 
         public string ClientName { get; private set; }
 
-        public readonly List<ProductAmount> Providing = new List<ProductAmount>();
-        public readonly List<ProductAmount> Consuming = new List<ProductAmount>();
+        public List<ProductAmount> Providing { get; private set; }
+        public List<ProductAmount> Consuming { get; private set; }
 
         public Action<TradeManifest> OnProvideMatch;
         public Action<TradeManifest> OnConsumeMatch;
 
-		public void Initialize(IProductTraderDriver driver, string clientName)
+		public void Initialize(ITraderDriver driver, string clientName)
 		{
+			Providing = new List<ProductAmount>();
+			Consuming = new List<ProductAmount>();
 			Driver = driver;
 			ClientName = clientName;
 		}

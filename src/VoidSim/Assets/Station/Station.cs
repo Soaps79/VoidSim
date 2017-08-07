@@ -209,7 +209,7 @@ namespace Assets.Station
 	        var cargo = Instantiate(_cargoControlPrefab);
             cargo.transform.SetParent(_layers[LayerType.Core].transform);
             cargo.name = "cargo_control";
-            cargo.Initialize(_inventory, _inventoryReserve, ClientName);
+            cargo.Initialize(_inventory, _inventoryReserve, _populationControl);
         }
 
         // centralized inventory for the station
@@ -245,7 +245,7 @@ namespace Assets.Station
             go.transform.SetParent(_layers[LayerType.Core].transform);
             var trader = go.AddComponent<StationTrader>();
             trader.ClientName = ClientName;
-            trader.Initialize(_inventory, _inventoryReserve);
+            //trader.Initialize(_inventory, _inventoryReserve);
         }
 
         // convert editor-friendly objects to more usable dictionary

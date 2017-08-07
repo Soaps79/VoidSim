@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Assets.Logistics;
 using Assets.Placeables.Nodes;
 using Assets.Scripts;
 using Assets.WorldMaterials;
@@ -15,7 +16,7 @@ namespace Assets.Station
     /// <summary>
     /// Placeholder for where pop will be managed
     /// </summary>
-    public class PopulationControl : QScript, IPopulationHost, IProductTraderDriver, IMessageListener
+    public class PopulationControl : QScript, IPopulationHost, ITraderDriver, IMessageListener
     {
         [SerializeField] private int _totalCapacity;
         [SerializeField] private int _initialCapacity;
@@ -46,7 +47,16 @@ namespace Assets.Station
 
 	    private void InitializeProductTrader()
 	    {
-		    
+		    _trader = gameObject.AddComponent<ProductTrader>();
+			_trader.Initialize(this, Station.ClientName);
+		    UpdateTradeRequest();
+	    }
+
+	    private void UpdateTradeRequest()
+	    {
+		    var remaining = _inventory.GetProductRemainingSpace(_populationProductId);
+		    if (remaining > 0)
+			    _trader.SetConsume(new ProductAmount {ProductId = _populationProductId, Amount = remaining});
 	    }
 
 	    public int TotalCapacity
@@ -73,6 +83,7 @@ namespace Assets.Station
             _housing.Add(args.PopHousing);
             UpdateCapacity();
             _inventory.SetProductMaxAmount(_populationProductId, _totalCapacity);
+			UpdateTradeRequest();
         }
 
         private void UpdateCapacity()
@@ -104,8 +115,17 @@ namespace Assets.Station
 
 	    public void HandleProvideSuccess(TradeManifest manifest)
 	    {
-		    
-	    }
+			Locator.MessageHub.QueueMessage(LogisticsMessages.CargoRequested, new CargoRequestedMessageArgs
+			{
+				Manifest = new CargoManifest(manifest)
+				{
+					Seller = Station.ClientName,
+					Buyer = manifest.Consumer,
+					Currency = 0,
+					ProductAmount = new ProductAmount { ProductId = _populationProductId, Amount = manifest.AmountTotal }
+				}
+			});
+		}
 
 	    public void HandleConsumeSuccess(TradeManifest manifest)
 	    {

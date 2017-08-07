@@ -19,7 +19,7 @@ namespace Assets.Station
 	///     As Void develops, trades between other actors will not be broadcast. Not sure if will be relevant.
 	///     This seems like a job that should be handled by TradingHub, but then it has to know about currency, so ???
 	/// </summary>
-	public class StationTrader : QScript, IProductTraderDriver, ISerializeData<InventoryReserveData>
+	public class StationTrader : QScript, ITraderDriver, ISerializeData<InventoryReserveData>
     {
         private InventoryReserve _reserve;
         public string ClientName { get; set; }
@@ -32,12 +32,15 @@ namespace Assets.Station
 	    private readonly CollectionSerializer<InventoryReserveData> _serializer
 		    = new CollectionSerializer<InventoryReserveData>();
 
-		public void Initialize(Inventory inventory, InventoryReserve reserve)
+	    private PopulationControl _popControl;
+
+	    public void Initialize(Inventory inventory, InventoryReserve reserve, PopulationControl popControl)
         {
             _inventory = inventory;
             _inventory.OnInventoryChanged += CheckForTrade;
             _reserve = reserve;
 	        _reserve.OnReserveChanged += CheckForTrade;
+	        _popControl = popControl;
 
             BindToTrader();
             _valueLookup = ProductValueLookup.Instance;
@@ -60,13 +63,17 @@ namespace Assets.Station
 			_reserve.SetFromData(data);
 		}
 
-	    public bool WillConsumeFrom(ProductTrader provider, ProductAmount provided) { return true; }
+	    public bool WillConsumeFrom(ProductTrader provider, ProductAmount provided)
+	    {
+			//if(ProductLookup.Instance.GetProduct(provided.ProductId).Name == ProductNameLookup.Population)
+			//	return _popControl.WillConsumeFrom()
+			return true;
+	    }
 
 	    public bool WillProvideTo(ProductTrader consumer, ProductAmount provided) { return true; }
 
 	    public void HandleProvideSuccess(TradeManifest manifest)
         {
-            // need to add logic to place a hold on the traded items in the reserve
             _reserve.AdjustHold(manifest.ProductId, -manifest.AmountTotal);
 
             // request cargo for trade
@@ -98,6 +105,16 @@ namespace Assets.Station
             list = _reserve.GetConsumeProducts();
             list.ForEach(i => _trader.SetConsume(i));
         }
+
+	    public void SetProvide(ProductAmount productAmount)
+	    {
+		    _trader.SetProvide(productAmount);
+	    }
+
+	    public void SetConsume(ProductAmount productAmount)
+	    {
+		    _trader.SetConsume(productAmount);
+	    }
 
 	    public InventoryReserveData GetData()
 	    {

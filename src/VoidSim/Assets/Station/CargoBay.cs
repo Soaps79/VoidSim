@@ -11,8 +11,6 @@ namespace Assets.Station
 {
 	public class CargoBay : QScript
 	{
-		private string _clientName;
-
 		public string Name { get; private set; }
 		public int AmountPerTick;
 		public int SecondsPerTick;
@@ -37,12 +35,11 @@ namespace Assets.Station
 		private ProductAmount _productOut;
 		private TransactionText _textPrefab;
 
-		public void Initialize(ShipBerth berth, Inventory inventory, InventoryReserve reserve, string clientName, TransactionText textPrefab)
+		public void Initialize(ShipBerth berth, Inventory inventory, InventoryReserve reserve, TransactionText textPrefab)
 		{
 			_berth = berth;
 			_inventory = inventory;
 			_reserve = reserve;
-			_clientName = clientName;
 			_textPrefab = textPrefab;
 
 			transform.position = berth.transform.position;
@@ -162,8 +159,8 @@ namespace Assets.Station
 		
 		private void BeginTransfer()
 		{
-			var incoming = _manifestBook.GetBuyerManifests(_clientName);
-			var outgoing = _manifestBook.GetSellerManifests(_clientName);
+			var incoming = _manifestBook.GetBuyerManifests(Station.ClientName);
+			var outgoing = _manifestBook.GetSellerManifests(Station.ClientName);
 
 			incoming.ForEach(i => _manifestsIn.Enqueue(i));
 			outgoing.ForEach(i => _manifestsOut.Enqueue(i));

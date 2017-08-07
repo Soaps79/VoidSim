@@ -15,7 +15,7 @@ using WorldClock = Assets.Scripts.WorldClock;
 
 namespace Assets.Void
 {
-	public class VoidActor : QScript, ITransitLocation, IProductTraderDriver, IPopulationHost
+	public class VoidActor : QScript, ITransitLocation, ITraderDriver, IPopulationHost
 	{
 		[Inject] private WorldClock _worldClock;
 		[Inject] private ProductLookup _productLookup;
