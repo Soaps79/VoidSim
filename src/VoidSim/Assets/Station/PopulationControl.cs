@@ -24,12 +24,16 @@ namespace Assets.Station
         private const string POPULATION_PRODUCT_NAME = "Population";
         private Inventory _inventory;
         private int _populationProductId;
+		// When there is room for more population, it it requested through this Trader which is hooked into the trade system
 	    private ProductTrader _trader;
+	    private int _inboundPopulation;
 
         public void Initialize(Inventory inventory, int initialCapacity = 0)
         {
             _initialCapacity = initialCapacity;
             _inventory = inventory;
+	        _inventory.OnProductsChanged += HandleInventoryProductChanged;
+
             var pop = ProductLookup.Instance.GetProduct(POPULATION_PRODUCT_NAME);
             _populationProductId = pop.ID;
 	        CurrentQualityOfLife = 10;
@@ -45,6 +49,12 @@ namespace Assets.Station
 	        InitializeProductTrader();
         }
 
+	    private void HandleInventoryProductChanged(int productId, int amount)
+	    {
+		    if (productId == _populationProductId)
+			    _inboundPopulation -= amount;
+	    }
+
 	    private void InitializeProductTrader()
 	    {
 		    _trader = gameObject.AddComponent<ProductTrader>();
@@ -52,11 +62,16 @@ namespace Assets.Station
 		    UpdateTradeRequest();
 	    }
 
+		// checks to see if inventory has room for more pop (discounting those already in transit)
 	    private void UpdateTradeRequest()
 	    {
 		    var remaining = _inventory.GetProductRemainingSpace(_populationProductId);
-		    if (remaining > 0)
-			    _trader.SetConsume(new ProductAmount {ProductId = _populationProductId, Amount = remaining});
+		    remaining -= _inboundPopulation;
+		    _trader.SetConsume(new ProductAmount
+		    {
+			    ProductId = _populationProductId,
+				Amount = remaining > 0  ? remaining : 0
+		    });
 	    }
 
 	    public int TotalCapacity
@@ -104,6 +119,10 @@ namespace Assets.Station
 
 	    public bool WillConsumeFrom(ProductTrader provider, ProductAmount provided)
 	    {
+			if(provided.ProductId != _populationProductId)
+				throw new UnityException("PopulationControl offered trade that was not population");
+
+		    _inboundPopulation += provided.Amount;
 		    return true;
 	    }
 
