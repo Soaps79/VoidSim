@@ -22,8 +22,8 @@ namespace Assets.Placeables
 		{
 			_placeable = placeable;
 			HandleSubsystems();
-			GenerateLine();
-			UpdateLine();
+			//GenerateLine();
+			//UpdateLine();
 		}
 
 		private void GenerateLine()
