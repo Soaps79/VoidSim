@@ -10,6 +10,7 @@ namespace Assets.Station.Efficiency
 	/// 
 	/// Consumers should hook into OnValueChanged
 	/// </summary>
+	[Serializable]
 	public class EfficiencyModule
 	{
 		private readonly List<EfficiencyAffector> _affectors = new List<EfficiencyAffector>();

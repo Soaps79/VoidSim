@@ -24,7 +24,7 @@ namespace Assets.Editor
 		public void Module_HandleSimpleValue()
 		{
 			const float affectorValue = 0.7f;
-			var affector = new EfficiencyAffector(affectorValue);
+			var affector = new EfficiencyAffector("1", affectorValue);
 
 			var triggered = 0;
 			_module.OnValueChanged += module => triggered++;
@@ -40,7 +40,7 @@ namespace Assets.Editor
 			// the double value should be offset by the half weight
 			const float weight = .5f;
 			const float value = 2.0f;
-			var affector = new EfficiencyAffector(value, weight);
+			var affector = new EfficiencyAffector("1", value, weight);
 
 			_module.RegisterAffector(affector);
 			
@@ -52,11 +52,11 @@ namespace Assets.Editor
 		{
 			const float weight1 = .5f;
 			const float value1 = 1.0f;
-			var affector = new EfficiencyAffector(value1, weight1);
+			var affector = new EfficiencyAffector("1", value1, weight1);
 
 			const float weight2 = 1.0f;
 			const float value2 = 0.5f;
-			var affecto2 = new EfficiencyAffector(value2, weight2);
+			var affecto2 = new EfficiencyAffector("2", value2, weight2);
 
 			var triggered = 0;
 			_module.OnValueChanged += module => triggered++;

@@ -140,6 +140,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CurrentEmployeeCount: 0
   MaxEmployeeCount: 10
+  _weight: 1
 --- !u!114 &114653386725603476
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -151,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75254ff2c91fb024795a3f7b63c3a6d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initialValue: 2
+  _initialValue: 1
   _weight: 1
 --- !u!114 &114844122710126056
 MonoBehaviour:

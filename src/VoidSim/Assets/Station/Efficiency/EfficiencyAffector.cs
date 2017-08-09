@@ -11,11 +11,14 @@ namespace Assets.Station.Efficiency
 
 		public Action<EfficiencyAffector> OnValueChanged;
 		private float _weight = 1.0f;
+		// mostly for debugging
+		public string Driver;
 
-		public EfficiencyAffector() { }
+		public EfficiencyAffector(string driverName) { Driver = driverName; }
 
-		public EfficiencyAffector(float value, float weight = 1.0f)
+		public EfficiencyAffector(string driverName, float value, float weight = 1.0f)
 		{
+			Driver = driverName;
 			_currentEfficiency = value;
 			_weight = weight;
 		}

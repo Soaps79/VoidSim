@@ -151,7 +151,7 @@ namespace Assets.Station
 			{
 				if (_currentUnemployed > employer.MaxEmployeeCount)
 				{
-					employer.CurrentEmployeeCount = employer.MaxEmployeeCount;
+					employer.AddEmployee(1); // employer.MaxEmployeeCount;
 					_currentUnemployed -= employer.MaxEmployeeCount;
 				}
 				else

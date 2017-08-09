@@ -47,7 +47,7 @@ namespace Assets.Placeables.Nodes
 		protected override void OnStart()
         {
 			// hook into efficiency system
-	        _affector = new EfficiencyAffector{ Weight = _weight };
+	        _affector = new EfficiencyAffector(NodeName){ Weight = _weight };
 			var efficiency = GetComponent<EfficiencyNode>();
 			efficiency.Module.RegisterAffector(_affector);
 
