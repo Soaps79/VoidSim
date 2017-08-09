@@ -21,6 +21,8 @@ namespace Assets.Station
 		public string Name { get { return "PopulationControl"; } }
 		[SerializeField] private int _totalCapacity;
 		[SerializeField] private int _initialCapacity;
+		[SerializeField] private int _currentCount;
+		[SerializeField] private int _currentUnemployed;
 		private readonly List<PopHousing> _housing = new List<PopHousing>();
 		private readonly List<PopEmployer> _employers = new List<PopEmployer>();
 
@@ -37,12 +39,15 @@ namespace Assets.Station
 
 		public void Initialize(Inventory inventory, int initialCapacity = 0)
 		{
+			var pop = ProductLookup.Instance.GetProduct(POPULATION_PRODUCT_NAME);
+			_populationProductId = pop.ID;
+
 			_initialCapacity = initialCapacity;
 			_inventory = inventory;
 			_inventory.OnProductsChanged += HandleInventoryProductChanged;
-
-			var pop = ProductLookup.Instance.GetProduct(POPULATION_PRODUCT_NAME);
-			_populationProductId = pop.ID;
+			_currentCount = _inventory.GetProductCurrentAmount(_populationProductId);
+			_currentUnemployed = _currentCount;
+			
 			CurrentQualityOfLife = 10;
 
 			if (_initialCapacity > 0)
@@ -67,12 +72,18 @@ namespace Assets.Station
 		// Hooked into _inventory's update event
 		private void HandleInventoryProductChanged(int productId, int amount)
 		{
-			if (productId == _populationProductId)
+			if (productId != _populationProductId)
+				return;
+
+			// currently the only way pop can rise is through being delivered, acknowledge the fulfilled trade
+			if (amount > 0)
 				_inboundPopulation -= amount;
+
+			_currentCount = _inventory.GetProductCurrentAmount(_populationProductId);
+			_currentUnemployed += amount;
 		}
 
-		// checks to see if inventory has room for more pop 
-		// (discounting those already in transit)
+		// checks to see if inventory has room for more pop (discounting those already in transit)
 		private void UpdateTradeRequest()
 		{
 			var remaining = _inventory.GetProductRemainingSpace(_populationProductId);
@@ -132,7 +143,23 @@ namespace Assets.Station
 				return;
 			}
 
-			_employers.Add(args.PopEmployer);
+			var employer = args.PopEmployer;
+			_employers.Add(employer);
+
+			// real basic implementation of placing employees, place as many as employer can hold
+			if (_currentUnemployed > 0)
+			{
+				if (_currentUnemployed > employer.MaxEmployeeCount)
+				{
+					employer.CurrentEmployeeCount = employer.MaxEmployeeCount;
+					_currentUnemployed -= employer.MaxEmployeeCount;
+				}
+				else
+				{
+					employer.CurrentEmployeeCount = _currentUnemployed;
+					_currentUnemployed = 0;
+				}
+			}
 		}
 
 

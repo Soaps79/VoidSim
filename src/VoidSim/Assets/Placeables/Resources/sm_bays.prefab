@@ -201,6 +201,8 @@ GameObject:
   - component: {fileID: 4601823750185464}
   - component: {fileID: 114995800722235378}
   - component: {fileID: 114146510143219000}
+  - component: {fileID: 114672244900646716}
+  - component: {fileID: 114755674872042600}
   - component: {fileID: 212765853924239094}
   - component: {fileID: 60807667202500160}
   m_Layer: 0
@@ -676,6 +678,31 @@ MonoBehaviour:
   Index: 3
   _indicator: {fileID: 212512413940736902}
   _colors: {fileID: 11400000, guid: 860de5100961aef478ae76cfef3fa84c, type: 2}
+--- !u!114 &114672244900646716
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1609187640033846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96ebd6e976f37c941bd9c02ab4ab068c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _currentValue: 0
+--- !u!114 &114755674872042600
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1609187640033846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6cf306bd6d42d64eb8bf7509c9da010, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CurrentEmployeeCount: 0
+  MaxEmployeeCount: 4
 --- !u!114 &114867690801470922
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -20,10 +20,11 @@ GameObject:
   m_Component:
   - component: {fileID: 4507295572959068}
   - component: {fileID: 114440081728357980}
+  - component: {fileID: 114317079000252276}
   - component: {fileID: 114670459786309102}
+  - component: {fileID: 114998669902454416}
   - component: {fileID: 212430412230634136}
   - component: {fileID: 60037218234332350}
-  - component: {fileID: 114317079000252276}
   m_Layer: 0
   m_Name: sm_power_plant
   m_TagString: Untagged
@@ -133,6 +134,19 @@ MonoBehaviour:
   IsInPlayerArray: 0
   InitialRecipe: Energy
   _isCore: 1
+--- !u!114 &114998669902454416
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1164498249790052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6cf306bd6d42d64eb8bf7509c9da010, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CurrentEmployeeCount: 0
+  MaxEmployeeCount: 10
 --- !u!212 &212430412230634136
 SpriteRenderer:
   m_ObjectHideFlags: 1
