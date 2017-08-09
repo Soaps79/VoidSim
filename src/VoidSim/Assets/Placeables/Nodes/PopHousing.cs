@@ -10,8 +10,7 @@ namespace Assets.Placeables.Nodes
 	}
 
 	/// <summary>
-	/// Placeholder
-	/// Written as a hook for population when it comes time
+	/// Population resides here when not assigned to a job
 	/// </summary>
 	[RequireComponent(typeof(Placeable))]
 	public class PopHousing : PlaceableNode

@@ -14,18 +14,24 @@ using UnityEngine;
 namespace Assets.Station
 {
 	/// <summary>
-	/// Placeholder for where pop will be managed
+	/// Bird's eye view of population; including housing, employment, and pops themselves
 	/// </summary>
 	public class PopulationControl : QScript, IPopulationHost, ITraderDriver, IMessageListener
 	{
+		public string Name { get { return "PopulationControl"; } }
 		[SerializeField] private int _totalCapacity;
 		[SerializeField] private int _initialCapacity;
 		private readonly List<PopHousing> _housing = new List<PopHousing>();
 		private readonly List<PopEmployer> _employers = new List<PopEmployer>();
+
+		// Population is currently stored in the Station's inventory as a Product
+		// Allows it to be handled by trade, cargo, etc
 		private const string POPULATION_PRODUCT_NAME = "Population";
 		private Inventory _inventory;
 		private int _populationProductId;
-		// When there is room for more population, it it requested through this Trader which is hooked into the trade system
+
+		// When there is room for more population, 
+		// it is requested through this Trader which is hooked into the trade system
 		private ProductTrader _trader;
 		private int _inboundPopulation;
 
@@ -51,12 +57,6 @@ namespace Assets.Station
 			InitializeProductTrader();
 		}
 
-		private void HandleInventoryProductChanged(int productId, int amount)
-		{
-			if (productId == _populationProductId)
-				_inboundPopulation -= amount;
-		}
-
 		private void InitializeProductTrader()
 		{
 			_trader = gameObject.AddComponent<ProductTrader>();
@@ -64,7 +64,15 @@ namespace Assets.Station
 			UpdateTradeRequest();
 		}
 
-		// checks to see if inventory has room for more pop (discounting those already in transit)
+		// Hooked into _inventory's update event
+		private void HandleInventoryProductChanged(int productId, int amount)
+		{
+			if (productId == _populationProductId)
+				_inboundPopulation -= amount;
+		}
+
+		// checks to see if inventory has room for more pop 
+		// (discounting those already in transit)
 		private void UpdateTradeRequest()
 		{
 			var remaining = _inventory.GetProductRemainingSpace(_populationProductId);
@@ -81,12 +89,18 @@ namespace Assets.Station
 			get { return _totalCapacity; }
 		}
 
+		// subscribed to messages for housing and employment being placed
 		public void HandleMessage(string type, MessageArgs args)
 		{
-			if (type == PopHousing.MessageName)
-				HandleHousingAdd(args as PopHousingMessageArgs);
-			else if (type == PopEmployer.MessageName)
-				HandleEmployerAdd(args as PopEmployerMessageArgs);
+			switch (type)
+			{
+				case PopHousing.MessageName:
+					HandleHousingAdd(args as PopHousingMessageArgs);
+					break;
+				case PopEmployer.MessageName:
+					HandleEmployerAdd(args as PopEmployerMessageArgs);
+					break;
+			}
 		}
 
 		private void HandleHousingAdd(PopHousingMessageArgs args)
@@ -104,6 +118,12 @@ namespace Assets.Station
 			UpdateTradeRequest();
 		}
 
+		private void UpdateCapacity()
+		{
+			_totalCapacity = _initialCapacity + _housing.Sum(i => i.Capacity);
+			_inventory.SetProductMaxAmount(_populationProductId, _totalCapacity);
+		}
+
 		private void HandleEmployerAdd(PopEmployerMessageArgs args)
 		{
 			if (args == null || args.PopEmployer == null)
@@ -115,16 +135,6 @@ namespace Assets.Station
 			_employers.Add(args.PopEmployer);
 		}
 
-		private void UpdateCapacity()
-		{
-			_totalCapacity = _initialCapacity + _housing.Sum(i => i.Capacity);
-			_inventory.SetProductMaxAmount(_populationProductId, _totalCapacity);
-		}
-
-		public string Name
-		{
-			get { return "PopulationControl"; }
-		}
 
 		public float CurrentQualityOfLife { get; private set; }
 		public bool PopulationWillMigrateTo(IPopulationHost otherHost)
@@ -143,6 +153,9 @@ namespace Assets.Station
 
 		public bool WillProvideTo(ProductTrader consumer, ProductAmount provided)
 		{
+			if (provided.ProductId != _populationProductId)
+				throw new UnityException("PopulationControl offered trade that was not population");
+
 			return true;
 		}
 
@@ -160,9 +173,6 @@ namespace Assets.Station
 			});
 		}
 
-		public void HandleConsumeSuccess(TradeManifest manifest)
-		{
-			
-		}
+		public void HandleConsumeSuccess(TradeManifest manifest) { }
 	}
 }

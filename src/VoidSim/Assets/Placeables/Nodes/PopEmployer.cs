@@ -8,10 +8,14 @@ namespace Assets.Placeables.Nodes
 		public PopEmployer PopEmployer;
 	}
 
+	/// <summary>
+	/// This node allows pop to be assigned to a job
+	/// </summary>
 	public class PopEmployer : PlaceableNode
 	{
 		public const string MessageName = "PopEmployerCreated";
-		public int EmployeeCount;
+		public int CurrentEmployeeCount;
+		public int MaxEmployeeCount;
 
 		public override void BroadcastPlacement()
 		{
