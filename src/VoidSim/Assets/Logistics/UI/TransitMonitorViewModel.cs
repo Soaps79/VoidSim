@@ -37,7 +37,7 @@ namespace Assets.Logistics.UI
 		{
 			var canvas = GameObject.Find("InfoCanvas");
 			_panel = Instantiate(_panelPrefab, canvas.transform, false);
-			_panelContent = _panel.transform.FindChild("content_holder/scroll_view/view_port/content").GetComponent<Image>();
+			_panelContent = _panel.transform.Find("content_holder/scroll_view/view_port/content").GetComponent<Image>();
 		}
 
 		private void AddEntry(Ship ship)

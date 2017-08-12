@@ -71,8 +71,8 @@ namespace Assets.WorldMaterials.UI
             //_display = Instantiate(_displayPanelPrefab, canvas.transform, false);
 
             var craftingPanel = Instantiate(_inventoryPanelPrefab, canvas.transform, false);
-            _productContentHolder = craftingPanel.transform.FindChild("content_holder/product_list");
-            _placeablesContentHolder = craftingPanel.transform.FindChild("content_holder/placeable_list");
+            _productContentHolder = craftingPanel.transform.Find("content_holder/product_list");
+            _placeablesContentHolder = craftingPanel.transform.Find("content_holder/placeable_list");
 
             gameObject.RegisterSystemPanel(craftingPanel.gameObject);
 
@@ -94,7 +94,7 @@ namespace Assets.WorldMaterials.UI
                 binder.Bind(entryInfo.Product.Name, entryInfo.Amount, entryInfo.Product.ID);
 
                 // player interface for buying and selling
-                var go2 = go.transform.FindChild("reserve_amount").gameObject;
+                var go2 = go.transform.Find("reserve_amount").gameObject;
                 var reserve = go2.GetComponent<InventoryReserveViewModel>();
                 reserve.Initialize(_inventoryReserve, entryInfo.Product.ID, entryInfo.MaxAmount);
                 reserve.gameObject.SetActive(false);

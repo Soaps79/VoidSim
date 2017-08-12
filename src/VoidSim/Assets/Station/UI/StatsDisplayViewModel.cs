@@ -57,12 +57,12 @@ namespace Assets.Station.UI
             _worldClock = Locator.WorldClock;
 
             // instantiate UI element
-            var contentHolder = _display.transform.FindChild("content_holder");
+            var contentHolder = _display.transform.Find("content_holder");
             var displayProduct = Instantiate(_displayTimePrefab);
             displayProduct.transform.SetParent(contentHolder, false);
 
             // return the text field to be updated every frame
-            _clockDisplay = displayProduct.transform.FindChild("product_value").GetComponent<TextMeshProUGUI>();
+            _clockDisplay = displayProduct.transform.Find("product_value").GetComponent<TextMeshProUGUI>();
             _clockDisplay.text = GenerateCurrentTimeString();
         }
 
@@ -88,16 +88,16 @@ namespace Assets.Station.UI
         private TextMeshProUGUI InstantiateNewUIEntry(ProductSupplyMonitor monitor)
         {
             // instantiate UI element
-            var contentHolder = _display.transform.FindChild("content_holder");
+            var contentHolder = _display.transform.Find("content_holder");
             var displayProduct = Instantiate(_displayProductPrefab);
             displayProduct.transform.SetParent(contentHolder, false);
 
             // set its name
-            var productName = displayProduct.transform.FindChild("product_image").GetComponent<Image>();
+            var productName = displayProduct.transform.Find("product_image").GetComponent<Image>();
             productName.sprite = monitor.Product.Icon;
 
             // return the text field to be updated every frame
-            return displayProduct.transform.FindChild("product_value").GetComponent<TextMeshProUGUI>();
+            return displayProduct.transform.Find("product_value").GetComponent<TextMeshProUGUI>();
         }
 
         private string GenerateCurrentTimeString()

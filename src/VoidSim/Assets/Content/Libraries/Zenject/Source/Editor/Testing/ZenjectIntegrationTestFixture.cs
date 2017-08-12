@@ -72,22 +72,22 @@ namespace Zenject
         [TearDown]
         public void TearDown()
         {
-#if UNITY_5_6
-            if (TestContext.CurrentContext.Result.Outcome == ResultState.Success)
-            {
-                Assert.That(_hasStarted, "ZenjectIntegrationTestFixture.Initialize was not called by current test");
-            }
-#else
-            if (TestContext.CurrentContext.Result.Status == TestStatus.Passed)
-            {
-                // If we expected an exception then initialize would normally not be called
-                // Unless the initialize method itself is what caused the exception
-                if (!CurrentTestHasAttribute<ExpectedExceptionAttribute>())
-                {
-                    Assert.That(_hasStarted, "ZenjectIntegrationTestFixture.Initialize was not called by current test");
-                }
-            }
-#endif
+//#if UNITY_5_6
+//            if (TestContext.CurrentContext.Result.Outcome == ResultState.Success)
+//            {
+//                Assert.That(_hasStarted, "ZenjectIntegrationTestFixture.Initialize was not called by current test");
+//            }
+//#else
+//            if (TestContext.CurrentContext.Result.Status == TestStatus.Passed)
+//            {
+//                // If we expected an exception then initialize would normally not be called
+//                // Unless the initialize method itself is what caused the exception
+//                if (!CurrentTestHasAttribute<ExpectedExceptionAttribute>())
+//                {
+//                    Assert.That(_hasStarted, "ZenjectIntegrationTestFixture.Initialize was not called by current test");
+//                }
+//            }
+//#endif
 
             ClearScene();
         }

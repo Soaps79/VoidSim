@@ -43,7 +43,7 @@ namespace Assets.WorldMaterials.UI
         {
             var canvas = GameObject.Find("InfoCanvas");
             _arrayPanel = Instantiate(_arrayPrefab, canvas.transform, false);
-            _arrayContent = _arrayPanel.transform.FindChild("content_holder").GetComponent<Image>();
+            _arrayContent = _arrayPanel.transform.Find("content_holder").GetComponent<Image>();
 			if(_arrayPanel ==  null || _arrayContent == null)
 				throw new UnityException("PlayerCraftingArrayViewModel is missing components");
         }

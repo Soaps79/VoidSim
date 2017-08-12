@@ -31,7 +31,7 @@ namespace Assets.Station.UI
         {
             var canvas = GameObject.Find("InfoCanvas");
             _panelInstance = Instantiate(_panelPrefab, canvas.transform, false);
-            _contentHolder = _panelInstance.FindChild("content_holder").GetComponent<RectTransform>();
+            _contentHolder = _panelInstance.Find("content_holder").GetComponent<RectTransform>();
 
             Locator.MessageHub.AddListener(this, SystemPanel.MessageName);
         }
@@ -52,7 +52,7 @@ namespace Assets.Station.UI
             toggle.isOn = args.SystemPanel.Panel.activeSelf;
 
             // set the icon
-            var icon = toggle.transform.FindChild("icon").GetComponent<Image>();
+            var icon = toggle.transform.Find("icon").GetComponent<Image>();
             icon.sprite = args.SystemPanel.Icon;
 
             // bind the UI Toggle with the keypress, set it to trigger panel visiblity
