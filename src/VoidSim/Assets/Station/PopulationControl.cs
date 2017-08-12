@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Assets.Logistics;
 using Assets.Placeables.Nodes;
@@ -10,6 +11,8 @@ using Assets.WorldMaterials.Trade;
 using Messaging;
 using QGame;
 using UnityEngine;
+using Random = UnityEngine.Random;
+using TimeLength = Assets.Scripts.TimeLength;
 
 namespace Assets.Station
 {
@@ -37,7 +40,20 @@ namespace Assets.Station
 		private ProductTrader _trader;
 		private int _inboundPopulation;
 
-		public void Initialize(Inventory inventory, int initialCapacity = 0)
+		public class EmploymentUpdateParams
+		{
+			public TimeLength EmploymentUpdateTimeLength;
+			public int EmploymentUpdateCount;
+			public float BaseEmployChance;
+		}
+
+		// basic employment model
+		[SerializeField] private TimeLength _employmentUpdateTimeLength;
+		[SerializeField] private int _employmentUpdateCount;
+		private string _stopwatchNodeName = "employment";
+		private float _baseEmployChance;
+		
+		public void Initialize(Inventory inventory, EmploymentUpdateParams updateParams, int initialCapacity = 0)
 		{
 			var pop = ProductLookup.Instance.GetProduct(POPULATION_PRODUCT_NAME);
 			_populationProductId = pop.ID;
@@ -60,6 +76,48 @@ namespace Assets.Station
 			Locator.LastId.Reset("pop_housing");
 
 			InitializeProductTrader();
+			InitializeEmploymentUpdate(updateParams);
+		}
+
+		// register with stopwatch to regularly check for updates
+		private void InitializeEmploymentUpdate(EmploymentUpdateParams updateParams)
+		{
+			_employmentUpdateTimeLength = updateParams.EmploymentUpdateTimeLength;
+			_employmentUpdateCount = updateParams.EmploymentUpdateCount;
+			_baseEmployChance = updateParams.BaseEmployChance;
+
+			var time = Locator.WorldClock.GetSeconds(_employmentUpdateTimeLength);
+			var node = StopWatch.AddNode(_stopwatchNodeName, time);
+			node.OnTick += HandleEmploymentUpdate;
+		}
+
+		private void HandleEmploymentUpdate()
+		{
+			if (_currentUnemployed <= 0 || !_employers.Any(i => i.HasRoom))
+				return;
+
+			// making a queue as basic distribution
+			var seeking = _employers.Where(i => i.HasRoom).OrderBy(i => i.EmployeeDesirability).ToList();
+			var employers = new Queue<PopEmployer>();
+			seeking.ForEach(i => employers.Enqueue(i));
+
+			// for each possible employee
+			for (int i = 0; i < _employmentUpdateCount; i++)
+			{
+				if (_currentUnemployed < 0 || !employers.Any())
+					break;
+
+				// see if they want the job
+				var roll = Random.value;
+				if (roll > _baseEmployChance)
+					continue;
+
+				// pop the employer, give him the worker, add to back if he still has room
+				var employer = employers.Dequeue();
+				employer.AddEmployee(1);
+				if(employer.HasRoom)
+					employers.Enqueue(employer);
+			}
 		}
 
 		private void InitializeProductTrader()
@@ -146,13 +204,14 @@ namespace Assets.Station
 			var employer = args.PopEmployer;
 			_employers.Add(employer);
 
-			// real basic implementation of placing employees, place as many as employer can hold
+			// real basic implementation of placing employees, place half the max amount
 			if (_currentUnemployed > 0)
 			{
-				if (_currentUnemployed > employer.MaxEmployeeCount)
+				var countToEmploy = employer.MaxEmployeeCount / 2;
+				if (_currentUnemployed > countToEmploy)
 				{
-					employer.AddEmployee(1); // employer.MaxEmployeeCount;
-					_currentUnemployed -= employer.MaxEmployeeCount;
+					employer.AddEmployee(countToEmploy);
+					_currentUnemployed -= countToEmploy;
 				}
 				else
 				{

@@ -13,7 +13,9 @@ using QGame;
 using UnityEngine;
 using Zenject;
 using TimeUnit = Assets.Scripts.TimeUnit;
+using TimeLength = Assets.Scripts.TimeLength;
 using WorldClock = Assets.Scripts.WorldClock;
+
 
 namespace Assets.Station
 {
@@ -164,7 +166,13 @@ namespace Assets.Station
             go.name = "population_control";
             go.transform.SetParent(_layers[LayerType.Core].transform);
             var pop = go.GetOrAddComponent<PopulationControl>();
-            pop.Initialize(_inventory, 60);
+            pop.Initialize(_inventory, 
+				new PopulationControl.EmploymentUpdateParams
+	            {
+		            BaseEmployChance = .6f,
+					EmploymentUpdateTimeLength = new TimeLength { TimeUnit = TimeUnit.Day, Length = 1},
+					EmploymentUpdateCount = 2
+	            }, 60);
 	        _populationControl = pop;
         }
 

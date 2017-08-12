@@ -25,6 +25,10 @@ namespace Assets.Placeables.Nodes
 		private EfficiencyAffector _affector;
 		public bool HasRoom {  get { return MaxEmployeeCount > CurrentEmployeeCount; } }
 
+		[SerializeField] private float _initialDesirability;
+		public float EmployeeDesirability { get { return _initialDesirability; } }
+
+
 		public override void BroadcastPlacement()
 		{
 			// hook into efficiency system
