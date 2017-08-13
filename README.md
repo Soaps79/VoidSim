@@ -1,7 +1,7 @@
 # VoidSim
 ## Development
 
-Concepts and tasks can be found in the public [Google Doc](https://docs.google.com/document/d/1bT2nHyHK3gr07vE92bUfm1ZlPeioPMD3LhMdtIkSH8o/edit?usp=sharing) and [Trello](https://trello.com/b/UQ94zc9O/spaceport)
+Concepts and tasks can be found in the public [Google Doc](https://docs.google.com/document/d/1bT2nHyHK3gr07vE92bUfm1ZlPeioPMD3LhMdtIkSH8o/edit?usp=sharing) and [Trello](https://trello.com/b/UQ94zc9O/spaceport). Also documented is a [summary](https://docs.google.com/document/d/1S708WuA_8S-gEVn_FZLBpdu-lbpbQhcxNvui4b3C3VM/edit?usp=sharing) of the development process.
 
 ## High Concept
 
