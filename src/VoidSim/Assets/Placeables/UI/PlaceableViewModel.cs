@@ -12,6 +12,7 @@ namespace Assets.Placeables
 		[SerializeField] private RectTransform _statsHolder;
 
 		[SerializeField] private EnergyConsumerViewModel _energyPrefab;
+		[SerializeField] private EmployerViewModel _employerPrefab;
 		[SerializeField] private Color _linecolor;
 		[SerializeField] private float _lineWidth;
 		private LineRenderer _line;
@@ -48,6 +49,17 @@ namespace Assets.Placeables
 		{
 			_nameText.text = _placeable.PlaceableName;
 			TryPower();
+			TryEmployees();
+		}
+
+		private void TryEmployees()
+		{
+			var employer = _placeable.GetComponent<PopEmployer>();
+			if (employer == null)
+				return;
+
+			var viewmodel = Instantiate(_employerPrefab, _statsHolder);
+			viewmodel.Bind(employer);
 		}
 
 		private void TryPower()

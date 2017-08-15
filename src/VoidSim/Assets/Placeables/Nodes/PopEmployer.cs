@@ -1,4 +1,5 @@
-﻿using Assets.Scripts;
+﻿using System;
+using Assets.Scripts;
 using Assets.Station.Efficiency;
 using Messaging;
 using UnityEngine;
@@ -28,6 +29,8 @@ namespace Assets.Placeables.Nodes
 		[SerializeField] private float _initialDesirability;
 		public float EmployeeDesirability { get { return _initialDesirability; } }
 
+		public Action OnEmployeesChanged;
+
 
 		public override void BroadcastPlacement()
 		{
@@ -43,6 +46,8 @@ namespace Assets.Placeables.Nodes
 		{
 			CurrentEmployeeCount += count;
 			_affector.Efficiency = (float)CurrentEmployeeCount / MaxEmployeeCount;
+			if (OnEmployeesChanged != null)
+				OnEmployeesChanged();
 		}
 
 		public override string NodeName { get { return "PopEmployer"; } }
