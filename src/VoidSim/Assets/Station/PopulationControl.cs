@@ -115,6 +115,7 @@ namespace Assets.Station
 				// pop the employer, give him the worker, add to back if he still has room
 				var employer = employers.Dequeue();
 				employer.AddEmployee(1);
+				_currentUnemployed -= 1;
 				if(employer.HasRoom)
 					employers.Enqueue(employer);
 			}
