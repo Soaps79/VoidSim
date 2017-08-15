@@ -172,7 +172,7 @@ namespace Assets.Station
 		            BaseEmployChance = .6f,
 					EmploymentUpdateTimeLength = new TimeLength { TimeUnit = TimeUnit.Day, Length = 1},
 					EmploymentUpdateCount = 2
-	            }, 60);
+	            }, 30);
 	        _populationControl = pop;
         }
 
