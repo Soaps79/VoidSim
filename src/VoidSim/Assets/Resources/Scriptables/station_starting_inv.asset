@@ -18,6 +18,7 @@ MonoBehaviour:
   - Small Factory
   - Small Housing
   - Small Bays
+  - Basic Needs
   ProductsToIgnore: 0200000003000000
   Products:
   - ProductName: Iron

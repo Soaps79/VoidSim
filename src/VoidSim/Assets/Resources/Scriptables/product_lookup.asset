@@ -48,12 +48,22 @@ MonoBehaviour:
     Name: Credits
     IconSprite: {fileID: 21300006, guid: 7e17a6d09f97b4043b2e6a2616e7841e, type: 3}
     Category: 3
+  - ID: 0
+    Name: Food
+    IconSprite: {fileID: 0}
+    Category: 1
+  - ID: 0
+    Name: Water
+    IconSprite: {fileID: 0}
+    Category: 1
   Containers:
   - Name: Small Factory
     CraftingSpeed: 1
   - Name: Medium Factory
     CraftingSpeed: 1.5
   - Name: Power Plant
+    CraftingSpeed: 1
+  - Name: Basic Needs
     CraftingSpeed: 1
   Recipes:
   - ResultProduct: Steel
@@ -103,4 +113,11 @@ MonoBehaviour:
       TimeUnit: 0
       Length: 6
     ContainerName: Power Plant
+  - ResultProduct: Food
+    ResultAmount: 5
+    Ingredients: []
+    TimeLength:
+      TimeUnit: 0
+      Length: 12
+    ContainerName: Basic Needs
   DefaultSmallIcon: {fileID: 21300008, guid: 7e17a6d09f97b4043b2e6a2616e7841e, type: 3}
