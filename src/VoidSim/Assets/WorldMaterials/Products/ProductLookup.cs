@@ -63,7 +63,7 @@ namespace Assets.WorldMaterials.Products
 		    _recipes = _LookupScriptable.Recipes.Select(i => new Recipe
 		    {
 				Id = ++recipeLastId,
-				DisplayName = "display", // i.DisplayName,
+				DisplayName = i.DisplayName,
 		        Container = _containers.FirstOrDefault(j => j.Name == i.ContainerName),
 		        Ingredients =
 		            i.Ingredients.Select(ing => new Ingredient

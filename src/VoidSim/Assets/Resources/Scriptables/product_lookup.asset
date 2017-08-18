@@ -66,7 +66,8 @@ MonoBehaviour:
   - Name: Basic Needs
     CraftingSpeed: 1
   Recipes:
-  - ResultProduct: Steel
+  - DisplayName: Steel
+    ResultProduct: Steel
     ResultAmount: 2
     Ingredients:
     - ProductName: Iron
@@ -75,7 +76,8 @@ MonoBehaviour:
       TimeUnit: 2
       Length: 1
     ContainerName: Small Factory
-  - ResultProduct: Power Cell
+  - DisplayName: Power Cell
+    ResultProduct: Power Cell
     ResultAmount: 2
     Ingredients:
     - ProductName: Iron
@@ -86,7 +88,8 @@ MonoBehaviour:
       TimeUnit: 2
       Length: 1
     ContainerName: Small Factory
-  - ResultProduct: Consumer Goods
+  - DisplayName: Consumer Goods
+    ResultProduct: Consumer Goods
     ResultAmount: 10
     Ingredients:
     - ProductName: Iron
@@ -97,7 +100,8 @@ MonoBehaviour:
       TimeUnit: 0
       Length: 6
     ContainerName: Small Factory
-  - ResultProduct: Building Material
+  - DisplayName: Building Material
+    ResultProduct: Building Material
     ResultAmount: 2
     Ingredients:
     - ProductName: Steel
@@ -106,14 +110,16 @@ MonoBehaviour:
       TimeUnit: 2
       Length: 2
     ContainerName: Small Factory
-  - ResultProduct: Energy
+  - DisplayName: Energy
+    ResultProduct: Energy
     ResultAmount: 2
     Ingredients: []
     TimeLength:
       TimeUnit: 0
       Length: 6
     ContainerName: Power Plant
-  - ResultProduct: Food
+  - DisplayName: Food
+    ResultProduct: Food
     ResultAmount: 5
     Ingredients: []
     TimeLength:
