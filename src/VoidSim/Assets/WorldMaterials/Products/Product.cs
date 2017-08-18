@@ -53,11 +53,7 @@ namespace Assets.WorldMaterials.Products
 	public class Recipe
 	{
 		public string DisplayName;
-		public int ResultProductID;
 		public List<RecipeResult> Results;
-
-		public string ResultProductName;
-		public int ResultAmount;
 		public List<Ingredient> Ingredients;
 		public TimeLength TimeLength;
 		public CraftingContainerInfo Container;

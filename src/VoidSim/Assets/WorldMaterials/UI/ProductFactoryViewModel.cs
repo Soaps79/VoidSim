@@ -56,7 +56,7 @@ namespace Assets.WorldMaterials.UI
 	    private void HandleOnOffToggle(bool isOn)
         {
             if(isOn)
-                _factory.StartCrafting(_recipes[_dropdown.value].ResultProductID);
+                _factory.SwitchCurrentCraftingTo(_recipes[_dropdown.value]);
             else
                 _factory.StopCrafting();
         }
@@ -80,7 +80,9 @@ namespace Assets.WorldMaterials.UI
 
             if (_factory.IsCrafting)
             {
-                var currentIndex = names.IndexOf(_factory.CurrentlyCrafting.ResultProductName);
+				// note: If it is necessary to have multiple recipes with the same name in a list,
+				// this will need to be refactored
+				var currentIndex = names.IndexOf(_factory.CurrentlyCrafting.DisplayName);
                 _dropdown.value = currentIndex;
             }
         }
@@ -90,7 +92,7 @@ namespace Assets.WorldMaterials.UI
             if (_recipeNames.Count < index + 1) return;
             var recipe = _recipes[index];
             if(_onOffToggle.isOn)
-                _factory.StartCrafting(recipe.ResultProductID);
+                _factory.SwitchCurrentCraftingTo(recipe);
         }
     }
 }

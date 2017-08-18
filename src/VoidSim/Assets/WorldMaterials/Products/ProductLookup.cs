@@ -71,29 +71,30 @@ namespace Assets.WorldMaterials.Products
 		                ProductId = _products.First(j => j.Name == ing.ProductName).ID,
                         Quantity = ing.Quantity
 		            }).ToList(),
-                ResultProductName = i.ResultProduct,
-		        ResultProductID = _products.First(j => j.Name == i.ResultProduct).ID,
-                ResultAmount = i.ResultAmount,
+			    Results = 
+				    i.Results.Select(ing => new RecipeResult
+				    {
+					    ProductId = _products.First(j => j.Name == ing.ProductName).ID,
+					    Quantity = ing.Quantity
+				    }).ToList(),
 		        TimeLength = i.TimeLength
 		    }).ToList();
 		}
 
-		string GenerateDisplayText()
-		{
-			return "";
-            // I can't bring myself to delete this, it was like 20 minutes jamming on one statement
-			//var output = _products.Aggregate("Products:", (current, product) => current + "\n" + product.Name.ToString());
-			//if (_recipes.Any())
-			//{
-			//	// Wowza.
-			//	output = _recipes.Aggregate(output + "\n\nRecipes", 
-			//		(current1, recipe) => current1 + recipe.Value.Aggregate(
-			//			string.Format("\n{0}:", recipe.Key), (current, rec) => current + rec.Ingredients.Aggregate(
-			//				" ", (c, r) => c + string.Format("{0} {1} ", r.Quantity, r.ProductId))));
-			//}
-
-			//return output;
-		}
+		// I can't bring myself to delete this, it was like 20 minutes jamming on one statement
+		//string GenerateDisplayText()
+		//{
+		//	var output = _products.Aggregate("Products:", (current, product) => current + "\n" + product.Name.ToString());
+		//	if (_recipes.Any())
+		//	{
+		//		// Wowza.
+		//		output = _recipes.Aggregate(output + "\n\nRecipes",
+		//			(current1, recipe) => current1 + recipe.Value.Aggregate(
+		//				string.Format("\n{0}:", recipe.Key), (current, rec) => current + rec.Ingredients.Aggregate(
+		//					" ", (c, r) => c + string.Format("{0} {1} ", r.Quantity, r.ProductId))));
+		//	}
+		//	return output;
+		//}
 
 		public List<Product> GetProducts()
 		{

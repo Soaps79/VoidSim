@@ -93,10 +93,10 @@ namespace Assets.Placeables.Nodes
 			LoadRecipes();
 			if (!string.IsNullOrEmpty(InitialRecipe))
 			{
-				var recipe = _recipes.FirstOrDefault(i => i.ResultProductName == InitialRecipe);
+				var recipe = _recipes.FirstOrDefault(i => i.DisplayName == InitialRecipe);
 				if (recipe == null)
 					throw new UnityException(string.Format("ProductFactory initialized with recipe it doesnt have: {0}", InitialRecipe));
-				StartCrafting(recipe);
+				SwitchCurrentCraftingTo(recipe);
 			}
 		}
 
@@ -146,7 +146,7 @@ namespace Assets.Placeables.Nodes
 				return;
 
 			_isOutOfProduct = false;
-			StartCrafting(CurrentlyCrafting);
+			SwitchCurrentCraftingTo(CurrentlyCrafting);
 		}
 
 		// loads recipes for specified container type from product lookup
@@ -161,14 +161,14 @@ namespace Assets.Placeables.Nodes
 		}
 
 		// public version, will switch recipes if it is already crafting one
-		public void StartCrafting(int productId)
+		public void SwitchCurrentCraftingTo(Recipe recipe)
 		{
 			if(IsCrafting)
 				StopCrafting();
 
-			var recipe = _recipes.FirstOrDefault(i => i.ResultProductID == productId);
-			if(recipe == null)
-				throw new UnityException(string.Format("ProductFactory asked to make product that it has no recipe for, ID: {0}", productId));
+			var existing = _recipes.FirstOrDefault(i => i.DisplayName == recipe.DisplayName);
+			if(existing == null)
+				throw new UnityException(string.Format("ProductFactory asked to make product that it has no recipe for: {0}", recipe.DisplayName));
 
 			if(_currentCraftQueueId > 0)
 				_container.CancelCrafting(_currentCraftQueueId);
@@ -199,7 +199,7 @@ namespace Assets.Placeables.Nodes
 		private void StoreProductAndRestartCrafting(Recipe recipe)
 		{
 			StoreResult(recipe);
-			StartCrafting(recipe);
+			SwitchCurrentCraftingTo(recipe);
 		}
 
 		// handles updating private data
@@ -239,7 +239,10 @@ namespace Assets.Placeables.Nodes
 		// add successful craft result to inventory
 		private void StoreResult(Recipe recipe)
 		{
-			_inventory.TryAddProduct(recipe.ResultProductID, recipe.ResultAmount);
+			foreach (var result in recipe.Results)
+			{
+				_inventory.TryAddProduct(result.ProductId, result.Quantity);
+			}
 		}
 
 		// resumes crafting on game load

@@ -139,10 +139,13 @@ namespace Assets.WorldMaterials.UI
         {
             var button = _queuedButtons.FirstOrDefault(i => i.QueueID == id);
             if(button == null)
-                throw new UnityException(string.Format("Recipe {0} complete, has no button", recipe.ResultProductID));
+                throw new UnityException(string.Format("Recipe {0} complete, has no button", recipe.DisplayName));
 
-            _inventory.TryAddProduct(recipe.ResultProductID, recipe.ResultAmount);
-            _queuedButtons.Remove(button);
+	        foreach (var result in recipe.Results)
+	        {
+		        _inventory.TryAddProduct(result.ProductId, result.Quantity);
+			}
+			_queuedButtons.Remove(button);
             Destroy(button.Button.gameObject);
         }
 

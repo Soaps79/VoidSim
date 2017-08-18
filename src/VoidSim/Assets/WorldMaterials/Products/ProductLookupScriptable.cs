@@ -31,8 +31,6 @@ namespace Assets.WorldMaterials.Products
     {
 	    public string DisplayName;
 	    public List<ResultInfo> Results;
-        public string ResultProduct;
-        public int ResultAmount;
         public List<IngredientInfo> Ingredients;
         public TimeLength TimeLength;
         public string ContainerName;
