@@ -70,8 +70,6 @@ MonoBehaviour:
     Results:
     - ProductName: Steel
       Quantity: 2
-    ResultProduct: Steel
-    ResultAmount: 2
     Ingredients:
     - ProductName: Iron
       Quantity: 10
@@ -83,8 +81,6 @@ MonoBehaviour:
     Results:
     - ProductName: Power Cell
       Quantity: 1
-    ResultProduct: Power Cell
-    ResultAmount: 2
     Ingredients:
     - ProductName: Iron
       Quantity: 10
@@ -98,8 +94,6 @@ MonoBehaviour:
     Results:
     - ProductName: Consumer Goods
       Quantity: 2
-    ResultProduct: Consumer Goods
-    ResultAmount: 10
     Ingredients:
     - ProductName: Iron
       Quantity: 1
@@ -113,8 +107,6 @@ MonoBehaviour:
     Results:
     - ProductName: Building Material
       Quantity: 1
-    ResultProduct: Building Material
-    ResultAmount: 2
     Ingredients:
     - ProductName: Steel
       Quantity: 5
@@ -126,19 +118,17 @@ MonoBehaviour:
     Results:
     - ProductName: Energy
       Quantity: 5
-    ResultProduct: Energy
-    ResultAmount: 2
     Ingredients: []
     TimeLength:
       TimeUnit: 0
       Length: 6
     ContainerName: Power Plant
-  - DisplayName: Food
+  - DisplayName: Basic Needs
     Results:
     - ProductName: Food
       Quantity: 5
-    ResultProduct: Food
-    ResultAmount: 5
+    - ProductName: Water
+      Quantity: 5
     Ingredients: []
     TimeLength:
       TimeUnit: 0
