@@ -67,16 +67,22 @@ MonoBehaviour:
     CraftingSpeed: 1
   Recipes:
   - DisplayName: Steel
+    Results:
+    - ProductName: Steel
+      Quantity: 2
     ResultProduct: Steel
     ResultAmount: 2
     Ingredients:
     - ProductName: Iron
-      Quantity: 5
+      Quantity: 10
     TimeLength:
       TimeUnit: 2
       Length: 1
     ContainerName: Small Factory
   - DisplayName: Power Cell
+    Results:
+    - ProductName: Power Cell
+      Quantity: 1
     ResultProduct: Power Cell
     ResultAmount: 2
     Ingredients:
@@ -89,6 +95,9 @@ MonoBehaviour:
       Length: 1
     ContainerName: Small Factory
   - DisplayName: Consumer Goods
+    Results:
+    - ProductName: Consumer Goods
+      Quantity: 2
     ResultProduct: Consumer Goods
     ResultAmount: 10
     Ingredients:
@@ -101,6 +110,9 @@ MonoBehaviour:
       Length: 6
     ContainerName: Small Factory
   - DisplayName: Building Material
+    Results:
+    - ProductName: Building Material
+      Quantity: 1
     ResultProduct: Building Material
     ResultAmount: 2
     Ingredients:
@@ -111,6 +123,9 @@ MonoBehaviour:
       Length: 2
     ContainerName: Small Factory
   - DisplayName: Energy
+    Results:
+    - ProductName: Energy
+      Quantity: 5
     ResultProduct: Energy
     ResultAmount: 2
     Ingredients: []
@@ -119,6 +134,9 @@ MonoBehaviour:
       Length: 6
     ContainerName: Power Plant
   - DisplayName: Food
+    Results:
+    - ProductName: Food
+      Quantity: 5
     ResultProduct: Food
     ResultAmount: 5
     Ingredients: []

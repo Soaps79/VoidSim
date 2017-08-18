@@ -18,10 +18,19 @@ namespace Assets.WorldMaterials.Products
         public int Quantity;
     }
 
+	// keeping in its own object so chance percentages, etc can be defined
+	[Serializable]
+	public class ResultInfo
+	{
+		public string ProductName;
+		public int Quantity;
+	}
+
     [Serializable]
     public class RecipeInfo
     {
 	    public string DisplayName;
+	    public List<ResultInfo> Results;
         public string ResultProduct;
         public int ResultAmount;
         public List<IngredientInfo> Ingredients;
