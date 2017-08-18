@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,10 +14,14 @@ namespace Assets.WorldMaterials.UI
         [SerializeField]
         private TextMeshProUGUI _AmountField;
 
-        public void Bind(string productName, int amount, int productId)
+	    private Color _baseColor;
+
+	    public void Bind(string productName, int amount, int productId)
         {
             _productNameField.text = productName;
             _AmountField.text = amount.ToString();
+	        _baseColor = _AmountField.color;
+
             ProductId = productId;
         }
 
@@ -24,5 +29,13 @@ namespace Assets.WorldMaterials.UI
         {
             _AmountField.text = amount.ToString();
         }
+
+	    public void PulseColorFrom(Color startColor, float time)
+	    {
+		    _AmountField.DOKill();
+		    if (startColor != null)
+			    _AmountField.color = startColor;
+		    _AmountField.DOColor(_baseColor, time);
+	    }
     }
 }

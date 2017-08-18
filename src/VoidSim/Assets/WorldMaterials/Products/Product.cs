@@ -7,71 +7,71 @@ using UnityEngine;
 
 namespace Assets.WorldMaterials.Products
 {
-    /// <summary>
-    /// Products define the material of the world. 
-    /// Recipes have ingredients and a container they can be made in.
-    /// </summary>
-    
-    // used for product transactions
-    [Serializable]
-    public class ProductAmount
-    {
-        public int ProductId;
-        public int Amount;
+	/// <summary>
+	/// Products define the material of the world. 
+	/// Recipes have ingredients and a container they can be made in.
+	/// </summary>
+	
+	// used for product transactions
+	[Serializable]
+	public class ProductAmount
+	{
+		public int ProductId;
+		public int Amount;
 
-        public ProductAmount() { }
+		public ProductAmount() { }
 
-        public ProductAmount(int id, int amount)
-        {
-            ProductId = id;
-            Amount = amount;
-        }
-    }
+		public ProductAmount(int id, int amount)
+		{
+			ProductId = id;
+			Amount = amount;
+		}
+	}
 
-    // For sorting? Feels like it could be useful in many instances
-    [Serializable]
-    public enum ProductCategory
-    {
-        Raw, Refined, Placeable, Core
-    }
+	// For sorting? Feels like it could be useful in many instances
+	[Serializable]
+	public enum ProductCategory
+	{
+		Raw, Refined, Placeable, Core
+	}
 
-    [Serializable]
-    public class Ingredient
-    {
-        public int ProductId;
-        public int Quantity;
-    }
+	[Serializable]
+	public class Ingredient
+	{
+		public int ProductId;
+		public int Quantity;
+	}
 
-    [Serializable]
-    public class Recipe
-    {
-        public int ResultProductID;
-        public string ResultProductName;
-        public int ResultAmount;
-        public List<Ingredient> Ingredients;
-        public TimeLength TimeLength;
-        public CraftingContainerInfo Container;
-	    public int Id;
-    }
+	[Serializable]
+	public class Recipe
+	{
+		public int ResultProductID;
+		public string ResultProductName;
+		public int ResultAmount;
+		public List<Ingredient> Ingredients;
+		public TimeLength TimeLength;
+		public CraftingContainerInfo Container;
+		public int Id;
+	}
 
-    [Serializable]
-    public class CraftingContainerInfo
-    {
-        public string Name;
-        public float CraftingSpeed;
-    }
+	[Serializable]
+	public class CraftingContainerInfo
+	{
+		public string Name;
+		public float CraftingSpeed;
+	}
 
-    [Serializable]
-    public class Product
-    {
-        public int ID;
-        public string Name;
-        [JsonConverter(typeof(StringEnumConverter))]
-        public ProductCategory Category;
+	[Serializable]
+	public class Product
+	{
+		public int ID;
+		public string Name;
+		[JsonConverter(typeof(StringEnumConverter))]
+		public ProductCategory Category;
 
-        public Sprite Icon;
+		public Sprite Icon;
 
-        // Value? If common currency (credits?) is a thing
-        // Quality?
-    }
+		// Value? If common currency (credits?) is a thing
+		// Quality?
+	}
 }

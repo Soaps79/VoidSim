@@ -10,16 +10,16 @@ namespace Assets.WorldMaterials.UI
 {
     public class InventoryViewModel : MonoBehaviour
     {
-        [SerializeField]
-        private Image _productEntryPrefab;
-        [SerializeField]
-        private Button _placeableEntryPrefab;
-        [SerializeField]
-        private Image _inventoryPanelPrefab;
-        [SerializeField]
-        private List<ProductCategory> _productsToIgnore = new List<ProductCategory>();
+        [SerializeField] private Image _productEntryPrefab;
+        [SerializeField] private Button _placeableEntryPrefab;
+        [SerializeField] private Image _inventoryPanelPrefab;
+        [SerializeField] private readonly List<ProductCategory> _productsToIgnore = new List<ProductCategory>();
+	    [SerializeField] private Color _increaseColor;
+	    [SerializeField] private Color _decreaseColor;
+	    [SerializeField] private float _pulseTime;
+	    private Color _normalColor;
 
-        private Transform _productContentHolder;
+		private Transform _productContentHolder;
         private Transform _placeablesContentHolder;
         private Inventory _inventory;
         private InventoryReserve _inventoryReserve;
@@ -67,7 +67,7 @@ namespace Assets.WorldMaterials.UI
 
         private void BindToUI()
         {
-            var canvas = GameObject.Find("InfoCanvas");
+			var canvas = GameObject.Find("InfoCanvas");
             //_display = Instantiate(_displayPanelPrefab, canvas.transform, false);
 
             var craftingPanel = Instantiate(_inventoryPanelPrefab, canvas.transform, false);
@@ -103,6 +103,7 @@ namespace Assets.WorldMaterials.UI
             }
         }
 
+		// items that can be picked up from inventory and placed in game
         private void DrawPlaceableEntries()
         {
             foreach (var placeable in _inventory.Placeables)
@@ -120,19 +121,17 @@ namespace Assets.WorldMaterials.UI
             }
         }
 
-        private void UpdateProductEntry(int productId, int amountChanged)
+		private void UpdateProductEntry(int productId, int amountChanged)
         {
             var entry = _productEntryList.FirstOrDefault(i => i.ProductId == productId);
-            if(entry != null) entry.SetAmount(_inventory.GetProductCurrentAmount(productId));
-        }
+	        if (entry == null)
+	        {
+				UberDebug.LogChannel(LogChannels.Warning, "InventoryViewModel given a product it didn't know");
+		        return;
+	        }
 
-        private void ClearProductEntries()
-        {
-            foreach (var entry in _productEntryList)
-            {
-                Destroy(entry);
-            }
-            _productEntryList.Clear();
+	        entry.SetAmount(_inventory.GetProductCurrentAmount(productId));
+	        entry.PulseColorFrom(amountChanged > 0 ? _increaseColor : _decreaseColor, _pulseTime);
         }
 
         private void ClearPlaceableEntries()
@@ -145,14 +144,7 @@ namespace Assets.WorldMaterials.UI
             _placeableEntryList.Clear();
         }
 
-        private static void PositionOnCanvas(Image craftingPanel)
-        {
-            var canvas = GameObject.Find("InfoCanvas");
-            craftingPanel.transform.SetParent(canvas.transform);
-            craftingPanel.rectTransform.position = new Vector3(10, 600, 0);
-        }
-
-        private void BeginPlacement(string placeableName, int inventoryId)
+	    private void BeginPlacement(string placeableName, int inventoryId)
         {
             _placer.BeginPlacement(placeableName, inventoryId);
         }
