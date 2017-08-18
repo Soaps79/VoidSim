@@ -72,6 +72,6 @@ MonoBehaviour:
     type: 2}
   _inventoryPanelPrefab: {fileID: 114508144025922512, guid: 340206acaf326b54db1495146e1cb062,
     type: 2}
-  _increaseColor: {r: 0.8858132, g: 0.9411765, b: 0.89077675, a: 1}
+  _increaseColor: {r: 0.6893382, g: 0.9191176, b: 0.709939, a: 1}
   _decreaseColor: {r: 0.7794118, g: 0.42409173, b: 0.42409173, a: 1}
   _pulseTime: 0.5
