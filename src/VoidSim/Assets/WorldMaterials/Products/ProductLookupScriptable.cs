@@ -21,6 +21,7 @@ namespace Assets.WorldMaterials.Products
     [Serializable]
     public class RecipeInfo
     {
+	    public string DisplayName;
         public string ResultProduct;
         public int ResultAmount;
         public List<IngredientInfo> Ingredients;

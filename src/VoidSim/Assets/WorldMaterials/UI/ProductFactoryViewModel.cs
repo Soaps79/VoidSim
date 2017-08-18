@@ -66,7 +66,7 @@ namespace Assets.WorldMaterials.UI
             _recipes.Clear();
             _recipes.AddRange(_factory.Recipes);
 
-            var names = _recipes.Select(i => i.ResultProductName).ToList();
+            var names = _recipes.Select(i => i.DisplayName).ToList();
             _recipeNames.Clear();
             _recipeNames.AddRange(names);
 

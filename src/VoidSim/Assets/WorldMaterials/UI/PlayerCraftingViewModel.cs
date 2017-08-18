@@ -203,7 +203,7 @@ namespace Assets.WorldMaterials.UI
 
         private string GenerateText(Recipe recipe)
         {
-            return recipe.ResultProductName;
+            return recipe.DisplayName;
         }
     }
 }
