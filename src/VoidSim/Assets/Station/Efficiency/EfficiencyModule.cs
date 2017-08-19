@@ -49,10 +49,12 @@ namespace Assets.Station.Efficiency
 		{
 			float amount;
 
-			// if any affector is less than 1, the efficiency is pulled down to the worst
-			var lowest = _affectors.Min(i => i.Efficiency);
+			// if no affectors, return full efficiency
+			var lowest = _affectors.Any() ? _affectors.Min(i => i.Efficiency) : 1.0f;
+
+			// if any affector is less than 1, the efficiency is pulled down to the worst, or minimum
 			if (lowest < 1.0)
-				amount = lowest;
+				amount = lowest >= MinimumAmount ? lowest : MinimumAmount;
 			// otherwise, bonuses (efficiency greater than 1) are added up and applied
 			else
 			{
@@ -64,7 +66,7 @@ namespace Assets.Station.Efficiency
 			if (Math.Abs(CurrentAmount - amount) < .01)
 				return;
 
-			CurrentAmount = amount >= MinimumAmount ? amount : MinimumAmount;
+			CurrentAmount = amount;
 			if (OnValueChanged != null)
 				OnValueChanged(this);
 		}
