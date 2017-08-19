@@ -1,4 +1,6 @@
 ﻿using System;
+using Assets.Scripts;
+using Assets.Station;
 using UnityEngine;
 
 namespace Assets.WorldMaterials.Population
@@ -12,10 +14,20 @@ namespace Assets.WorldMaterials.Population
 		public float WaterPerPop;
 		[Tooltip("Lowest value mood will output")]
 		public float MoodMinimum;
+		public int BaseHappiness;
+	}
+
+	[Serializable]
+	public class EmploymentParams
+	{
+		public TimeLength EmploymentUpdateTimeLength;
+		public int EmploymentUpdateCount;
+		public float BaseEmployChance;
 	}
 
 	public class PopulationSO : ScriptableObject
 	{
 		public MoodParams MoodParams;
+		public EmploymentParams EmploymentParams;
 	}
 }

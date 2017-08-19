@@ -34,28 +34,19 @@ namespace Assets.Station
 		// Allows it to be handled by trade, cargo, etc
 		private Inventory _inventory;
 		private int _populationProductId;
-		private int _foodProductId;
-		private int _waterProductId;
-
+		
 		// When there is room for more population, 
 		// it is requested through this Trader which is hooked into the trade system
 		private ProductTrader _trader;
 		private int _inboundPopulation;
 		
-		public class EmploymentUpdateParams
-		{
-			public TimeLength EmploymentUpdateTimeLength;
-			public int EmploymentUpdateCount;
-			public float BaseEmployChance;
-		}
-
 		// basic employment model
 		[SerializeField] private TimeLength _employmentUpdateTimeLength;
 		[SerializeField] private int _employmentUpdateCount;
 		private string _stopwatchNodeName = "employment";
 		private float _baseEmployChance;
 
-		public MoodMonitor MoodMonitor { get; private set; }
+		public MoodManager MoodManager { get; private set; }
 
 		// passed on to Employers
 		private readonly EfficiencyAffector _employerAffector = new EfficiencyAffector("Pop Mood");
@@ -64,11 +55,11 @@ namespace Assets.Station
 		private bool _ignoreNeeds;
 
 
-		public void Initialize(Inventory inventory, EmploymentUpdateParams updateParams, PopulationSO scriptable, int initialCapacity = 0)
+		public void Initialize(Inventory inventory, PopulationSO scriptable, int initialCapacity = 0)
 		{
 			_scriptable = scriptable;
-			MoodMonitor = new MoodMonitor(_scriptable, inventory);
-			MoodMonitor.MoodModule.OnValueChanged += HandleMoodChange;
+			MoodManager = new MoodManager(scriptable.MoodParams, inventory);
+			MoodManager.EfficiencyModule.OnValueChanged += HandleMoodChange;
 
 			_initialCapacity = initialCapacity;
 			_inventory = inventory;
@@ -91,7 +82,7 @@ namespace Assets.Station
 			Locator.LastId.Reset("pop_housing");
 
 			InitializeProductTrader();
-			InitializeEmploymentUpdate(updateParams);
+			InitializeEmploymentUpdate(_scriptable.EmploymentParams);
 		}
 
 		private void HandleMoodChange(EfficiencyModule module)
@@ -103,18 +94,14 @@ namespace Assets.Station
 		{
 			var product = ProductLookup.Instance.GetProduct(ProductNameLookup.Population);
 			_populationProductId = product.ID;
-			product = ProductLookup.Instance.GetProduct(ProductNameLookup.Food);
-			_foodProductId = product.ID;
-			product = ProductLookup.Instance.GetProduct(ProductNameLookup.Water);
-			_waterProductId = product.ID;
 		}
 
 		// register with stopwatch to regularly check for updates
-		private void InitializeEmploymentUpdate(EmploymentUpdateParams updateParams)
+		private void InitializeEmploymentUpdate(EmploymentParams @params)
 		{
-			_employmentUpdateTimeLength = updateParams.EmploymentUpdateTimeLength;
-			_employmentUpdateCount = updateParams.EmploymentUpdateCount;
-			_baseEmployChance = updateParams.BaseEmployChance;
+			_employmentUpdateTimeLength = @params.EmploymentUpdateTimeLength;
+			_employmentUpdateCount = @params.EmploymentUpdateCount;
+			_baseEmployChance = @params.BaseEmployChance;
 
 			var time = Locator.WorldClock.GetSeconds(_employmentUpdateTimeLength);
 			var node = StopWatch.AddNode(_stopwatchNodeName, time);
@@ -264,7 +251,7 @@ namespace Assets.Station
 				if (_ignoreNeeds == value)
 					return;
 
-				MoodMonitor.SetIgnoreNeeds(value);
+				MoodManager.SetIgnoreNeeds(value);
 				_ignoreNeeds = value;
 			}
 		}

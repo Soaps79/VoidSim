@@ -15,3 +15,10 @@ MonoBehaviour:
     FoodPerPop: 0.05
     WaterPerPop: 0.05
     MoodMinimum: 0.5
+    BaseHappiness: 20
+  EmploymentParams:
+    EmploymentUpdateTimeLength:
+      TimeUnit: 2
+      Length: 1
+    EmploymentUpdateCount: 2
+    BaseEmployChance: 0.6

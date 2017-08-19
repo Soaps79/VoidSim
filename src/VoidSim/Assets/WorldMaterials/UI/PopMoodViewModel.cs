@@ -22,8 +22,8 @@ namespace Assets.WorldMaterials.UI
 		public void Bind(PopulationControl popControl)
 		{
 			_popControl = popControl;
-			_popControl.MoodMonitor.MoodModule.OnValueChanged += HandleMoodChange;
-			HandleMoodChange(_popControl.MoodMonitor.MoodModule);
+			_popControl.MoodManager.EfficiencyModule.OnValueChanged += HandleMoodChange;
+			HandleMoodChange(_popControl.MoodManager.EfficiencyModule);
 
 			_tooltip = _iconImage.GetComponent<BoundTooltipTrigger>();
 			_tooltip.OnHoverActivate += GenerateDisplayString;
@@ -31,8 +31,8 @@ namespace Assets.WorldMaterials.UI
 
 		private void GenerateDisplayString(BoundTooltipTrigger trigger)
 		{
-			var text = "Overall   " + (_popControl.MoodMonitor.MoodModule.CurrentAmount * 100).ToString("0") + "%\n";
-			trigger.text = text + TooltipStringGenerator.Generate(_popControl.MoodMonitor.MoodModule);
+			var text = "Overall   " + (_popControl.MoodManager.EfficiencyModule.CurrentAmount * 100).ToString("0") + "%\n";
+			trigger.text = text + TooltipStringGenerator.Generate(_popControl.MoodManager.EfficiencyModule);
 		}
 
 		private void HandleMoodChange(EfficiencyModule module)

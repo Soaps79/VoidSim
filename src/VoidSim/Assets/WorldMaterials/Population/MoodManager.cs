@@ -3,28 +3,29 @@ using Assets.Scripts;
 using Assets.Station.Efficiency;
 using Assets.WorldMaterials.Products;
 using QGame;
-using UnityEngine;
 
 namespace Assets.WorldMaterials.Population
 {
-	public class MoodMonitor
+	public class MoodManager
 	{
-		public readonly EfficiencyModule MoodModule = new EfficiencyModule();
+		public readonly EfficiencyModule EfficiencyModule = new EfficiencyModule();
 		private readonly EfficiencyAffector _foodAffector = new EfficiencyAffector("Food");
 		private readonly EfficiencyAffector _waterAffector = new EfficiencyAffector("Water");
-		[SerializeField] private float _foodConsumedPerPop;
-		[SerializeField] private float _waterConsumedPerPop;
-		[SerializeField] private float _moodMinimumAmount;
+		private float _foodConsumedPerPop;
+		private float _waterConsumedPerPop;
+		private float _moodMinimumAmount;
 
 		private int _currentCount;
 
 		private Inventory _inventory;
 
-		public MoodMonitor(PopulationSO scriptable, Inventory inventory)
+		public MoodManager(MoodParams moodParams, Inventory inventory)
 		{
 			_inventory = inventory;
-			if (scriptable != null && scriptable.MoodParams != null)
-				SetFromScriptable(scriptable.MoodParams);
+			if (moodParams != null)
+				SetFromScriptable(moodParams);
+			else
+				UberDebug.LogChannel(LogChannels.Warning, "MoodManager given bad params");
 
 			InitializeNeedsConsumption();
 		}
@@ -38,9 +39,9 @@ namespace Assets.WorldMaterials.Population
 
 		private void InitializeNeedsConsumption()
 		{
-			MoodModule.RegisterAffector(_foodAffector);
-			MoodModule.RegisterAffector(_waterAffector);
-			MoodModule.MinimumAmount = _moodMinimumAmount;
+			EfficiencyModule.RegisterAffector(_foodAffector);
+			EfficiencyModule.RegisterAffector(_waterAffector);
+			EfficiencyModule.MinimumAmount = _moodMinimumAmount;
 			KeyValueDisplay.Instance.Add("Pop Mood", () => MoodDisplayString);
 
 			Locator.WorldClock.OnHourUp += HandleHourTick;
@@ -50,7 +51,7 @@ namespace Assets.WorldMaterials.Population
 		{
 			get
 			{
-				var display = MoodModule.CurrentAmount.ToString("0.00") + "  ";
+				var display = EfficiencyModule.CurrentAmount.ToString("0.00") + "  ";
 				display += _foodAffector.Name + " " + _foodAffector.Efficiency.ToString("0.00") + "  ";
 				display += _waterAffector.Name + " " + _waterAffector.Efficiency.ToString("0.00");
 				return display;
@@ -100,7 +101,7 @@ namespace Assets.WorldMaterials.Population
 
 		public void SetIgnoreNeeds(bool value)
 		{
-			MoodModule.MinimumAmount = value ? 1.0f : _moodMinimumAmount;
+			EfficiencyModule.MinimumAmount = value ? 1.0f : _moodMinimumAmount;
 		}
 	}
 }

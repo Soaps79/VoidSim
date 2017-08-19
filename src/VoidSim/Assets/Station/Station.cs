@@ -169,13 +169,7 @@ namespace Assets.Station
             go.name = "population_control";
             go.transform.SetParent(_layers[LayerType.Core].transform);
             var pop = go.GetOrAddComponent<PopulationControl>();
-            pop.Initialize(_inventory, 
-				new PopulationControl.EmploymentUpdateParams
-	            {
-		            BaseEmployChance = .6f,
-					EmploymentUpdateTimeLength = new TimeLength { TimeUnit = TimeUnit.Day, Length = 1},
-					EmploymentUpdateCount = 2
-	            },_popScriptable, 30);
+            pop.Initialize(_inventory,_popScriptable, 30);
 	        pop.IgnoreNeeds = _ignoreMoodInitial;
 	        _populationControl = pop;
         }
