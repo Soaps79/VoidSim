@@ -125,10 +125,7 @@ namespace Assets.WorldMaterials.UI
         {
             var entry = _productEntryList.FirstOrDefault(i => i.ProductId == productId);
 	        if (entry == null)
-	        {
-				UberDebug.LogChannel(LogChannels.Warning, "InventoryViewModel given a product it didn't know");
-		        return;
-	        }
+				return;
 
 	        entry.SetAmount(_inventory.GetProductCurrentAmount(productId));
 	        entry.PulseColorFrom(amountChanged > 0 ? _increaseColor : _decreaseColor, _pulseTime);

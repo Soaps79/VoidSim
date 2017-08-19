@@ -43,7 +43,7 @@ namespace Assets.Placeables.Nodes
 		private readonly List<Recipe> _recipes = new List<Recipe>();
 		private int _currentCraftQueueId;
 		private Inventory _inventory;
-		private EfficiencyModule _efficiency;
+		public EfficiencyModule EfficiencyModule { get; private set; }
 
 		// these next fields assigned in unity editor / prefab
 		public bool IsInPlayerArray;
@@ -64,8 +64,8 @@ namespace Assets.Placeables.Nodes
 
 		public override void BroadcastPlacement()
 		{
-			_efficiency = GetComponent<EfficiencyNode>().Module;
-			_efficiency.OnValueChanged += OnEfficiencyChanged;
+			EfficiencyModule = GetComponent<EfficiencyNode>().Module;
+			EfficiencyModule.OnValueChanged += OnEfficiencyChanged;
 
 			Locator.MessageHub.QueueMessage(MessageName, new ProductFactoryMessageArgs { ProductFactory = this });
 		}
@@ -87,7 +87,7 @@ namespace Assets.Placeables.Nodes
 				_container = gameObject.GetOrAddComponent<CraftingContainer>();
 				_container.Info = ProductLookup.Instance.GetContainer(_containerType);
 				_container.OnCraftingComplete += StoreProductAndRestartCrafting;
-				_container.CurrentEfficiency = _efficiency.CurrentAmount;
+				_container.CurrentEfficiency = EfficiencyModule.CurrentAmount;
 			}
 
 			LoadRecipes();

@@ -611,35 +611,55 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114790484017423478, guid: c1b0153b79562be49aa148e694d1dcbf,
+    - target: {fileID: 114395472322954978, guid: c1b0153b79562be49aa148e694d1dcbf,
         type: 2}
       propertyPath: m_havePropertiesChanged
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114790484017423478, guid: c1b0153b79562be49aa148e694d1dcbf,
+    - target: {fileID: 114395472322954978, guid: c1b0153b79562be49aa148e694d1dcbf,
         type: 2}
       propertyPath: m_isInputParsingRequired
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114206841460824834, guid: c1b0153b79562be49aa148e694d1dcbf,
+    - target: {fileID: 114729279401322018, guid: c1b0153b79562be49aa148e694d1dcbf,
         type: 2}
       propertyPath: m_havePropertiesChanged
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114206841460824834, guid: c1b0153b79562be49aa148e694d1dcbf,
+    - target: {fileID: 114729279401322018, guid: c1b0153b79562be49aa148e694d1dcbf,
         type: 2}
       propertyPath: m_isInputParsingRequired
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114869364198109702, guid: c1b0153b79562be49aa148e694d1dcbf,
         type: 2}
       propertyPath: m_havePropertiesChanged
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114869364198109702, guid: c1b0153b79562be49aa148e694d1dcbf,
         type: 2}
       propertyPath: m_isInputParsingRequired
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114206841460824834, guid: c1b0153b79562be49aa148e694d1dcbf,
+        type: 2}
+      propertyPath: m_havePropertiesChanged
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114206841460824834, guid: c1b0153b79562be49aa148e694d1dcbf,
+        type: 2}
+      propertyPath: m_isInputParsingRequired
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114790484017423478, guid: c1b0153b79562be49aa148e694d1dcbf,
+        type: 2}
+      propertyPath: m_havePropertiesChanged
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114790484017423478, guid: c1b0153b79562be49aa148e694d1dcbf,
+        type: 2}
+      propertyPath: m_isInputParsingRequired
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 224732640035515900, guid: c1b0153b79562be49aa148e694d1dcbf,
         type: 2}
@@ -650,31 +670,6 @@ Prefab:
         type: 2}
       propertyPath: m_AnchorMax.y
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 224732640035515900, guid: c1b0153b79562be49aa148e694d1dcbf,
-        type: 2}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 224478109648414616, guid: c1b0153b79562be49aa148e694d1dcbf,
-        type: 2}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 224478109648414616, guid: c1b0153b79562be49aa148e694d1dcbf,
-        type: 2}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 224478109648414616, guid: c1b0153b79562be49aa148e694d1dcbf,
-        type: 2}
-      propertyPath: m_AnchoredPosition.x
-      value: 109.45
-      objectReference: {fileID: 0}
-    - target: {fileID: 224478109648414616, guid: c1b0153b79562be49aa148e694d1dcbf,
-        type: 2}
-      propertyPath: m_AnchoredPosition.y
-      value: -11.85
       objectReference: {fileID: 0}
     - target: {fileID: 224301611828047498, guid: c1b0153b79562be49aa148e694d1dcbf,
         type: 2}
@@ -2091,7 +2086,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 1705557829
   m_SortingOrder: 0
   m_TargetDisplay: 0

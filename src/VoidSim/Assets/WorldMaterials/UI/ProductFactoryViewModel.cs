@@ -2,6 +2,7 @@
 using System.Linq;
 using Assets.Controllers.GUI;
 using Assets.Placeables.Nodes;
+using Assets.Station.Efficiency;
 using Assets.WorldMaterials.Products;
 using QGame;
 using TMPro;
@@ -20,6 +21,7 @@ namespace Assets.WorldMaterials.UI
         [SerializeField] private Toggle _onOffToggle;
 	    [SerializeField] private Toggle _isBuyingToggle;
 		[SerializeField] private SliderBinding _slider;
+	    [SerializeField] private TMP_Text _efficiencyAmountText;
 
         private readonly List<string> _recipeNames = new List<string>();
         private readonly List<Recipe> _recipes = new List<Recipe>();
@@ -32,9 +34,17 @@ namespace Assets.WorldMaterials.UI
             BindToggles();
             BindSlider();
             _dropdown.onValueChanged.AddListener(HandleCurrentCraftingChanged);
+	        productFactory.EfficiencyModule.OnValueChanged += UpdateEfficiency;
+			UpdateEfficiency(productFactory.EfficiencyModule);
         }
 
-        private void BindSlider()
+	    private void UpdateEfficiency(EfficiencyModule module)
+	    {
+		    var percent = module.CurrentAmount * 100;
+			_efficiencyAmountText.text = percent.ToString("0");
+	    }
+
+	    private void BindSlider()
         {
             _slider.Initialize(() => _factory.CurrentCraftRemainingAsZeroToOne);
         }
