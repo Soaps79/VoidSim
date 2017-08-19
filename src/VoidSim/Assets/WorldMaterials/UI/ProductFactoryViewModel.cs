@@ -2,12 +2,14 @@
 using System.Linq;
 using Assets.Controllers.GUI;
 using Assets.Placeables.Nodes;
+using Assets.Scripts.UI;
 using Assets.Station.Efficiency;
 using Assets.WorldMaterials.Products;
 using QGame;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UI.Extensions;
 
 namespace Assets.WorldMaterials.UI
 {
@@ -36,7 +38,19 @@ namespace Assets.WorldMaterials.UI
             _dropdown.onValueChanged.AddListener(HandleCurrentCraftingChanged);
 	        productFactory.EfficiencyModule.OnValueChanged += UpdateEfficiency;
 			UpdateEfficiency(productFactory.EfficiencyModule);
+
+	        InitializeEfficiencyTooltip();
         }
+
+	    private void InitializeEfficiencyTooltip()
+	    {
+		    var trigger = _efficiencyAmountText.GetComponent<BoundTooltipTrigger>();
+		    if (trigger != null)
+		    {
+			    trigger.OnHoverActivate += tooltipTrigger => tooltipTrigger.text =
+				    TooltipStringGenerator.Generate(_factory.EfficiencyModule);
+		    }
+	    }
 
 	    private void UpdateEfficiency(EfficiencyModule module)
 	    {

@@ -35,7 +35,7 @@ namespace Assets.Placeables.Nodes
 		public override void BroadcastPlacement()
 		{
 			// hook into efficiency system
-			_countAffector = new EfficiencyAffector("Employee Count");
+			_countAffector = new EfficiencyAffector("Employees");
 
 			var efficiency = GetComponent<EfficiencyNode>();
 			efficiency.Module.RegisterAffector(_countAffector);

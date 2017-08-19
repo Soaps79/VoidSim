@@ -14,7 +14,7 @@ namespace Assets.Station.Efficiency
 	[Serializable]
 	public class EfficiencyModule
 	{
-		private readonly List<EfficiencyAffector> _affectors = new List<EfficiencyAffector>();
+		public List<EfficiencyAffector> Affectors = new List<EfficiencyAffector>();
 		public float CurrentAmount = 1.0f;
 
 		private float _minimumAmount;
@@ -35,7 +35,7 @@ namespace Assets.Station.Efficiency
 
 		public void RegisterAffector(EfficiencyAffector affector)
 		{
-			_affectors.Add(affector);
+			Affectors.Add(affector);
 			affector.OnValueChanged += OnAffectorChanged;
 			UpdateValue();
 		}
@@ -50,7 +50,7 @@ namespace Assets.Station.Efficiency
 			float amount;
 
 			// if no affectors, return full efficiency
-			var lowest = _affectors.Any() ? _affectors.Min(i => i.Efficiency) : 1.0f;
+			var lowest = Affectors.Any() ? Affectors.Min(i => i.Efficiency) : 1.0f;
 
 			// if any affector is less than 1, the efficiency is pulled down to the worst, or minimum
 			if (lowest < 1.0)
@@ -59,7 +59,7 @@ namespace Assets.Station.Efficiency
 			else
 			{
 				var bonus = 0.0f;
-				_affectors.ForEach(i => bonus += i.Efficiency - 1.0f);
+				Affectors.ForEach(i => bonus += i.Efficiency - 1.0f);
 				amount = 1.0f + bonus;
 			}
 
@@ -75,10 +75,10 @@ namespace Assets.Station.Efficiency
 		//private void UpdateValue()
 		//{
 		//	var overall = 0.0f;
-		//	var weightSum = _affectors.Sum(i => i.Weight);
+		//	var weightSum = Affectors.Sum(i => i.Weight);
 		//	var baseValue = weightSum / 1;
 
-		//	var weightedValueSum = _affectors.Sum(i => i.Efficiency * i.Weight * baseValue);
+		//	var weightedValueSum = Affectors.Sum(i => i.Efficiency * i.Weight * baseValue);
 
 		//	if (weightSum != 0)
 		//		overall = weightedValueSum / weightSum;
@@ -95,7 +95,7 @@ namespace Assets.Station.Efficiency
 
 		public void Clear()
 		{
-			_affectors.Clear();
+			Affectors.Clear();
 			OnValueChanged = null;
 			CurrentAmount = 1.0f;
 		}

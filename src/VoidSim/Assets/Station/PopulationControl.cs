@@ -64,7 +64,7 @@ namespace Assets.Station
 		[SerializeField] private float _moodMinimumAmount;
 
 		// passed on to Employers
-		private readonly EfficiencyAffector _employerAffector = new EfficiencyAffector("Employee Mood");
+		private readonly EfficiencyAffector _employerAffector = new EfficiencyAffector("Pop Mood");
 
 		private bool _ignoreNeeds;
 
