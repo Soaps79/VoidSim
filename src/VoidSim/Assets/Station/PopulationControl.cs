@@ -195,7 +195,7 @@ namespace Assets.Station
 			var consumed = _inventory.TryRemoveProduct(_foodProductId, need);
 			if (consumed < need)
 			{
-				_foodAffector.Efficiency = consumed == 0 ? 0 : (float)need / consumed;
+				_foodAffector.Efficiency = consumed == 0 ? 0 : (float)consumed / need;
 			}
 			else
 			{
@@ -210,7 +210,7 @@ namespace Assets.Station
 			var consumed = _inventory.TryRemoveProduct(_waterProductId, need);
 			if (consumed < need)
 			{
-				_waterAffector.Efficiency = consumed == 0 ? 0 : (float)need / consumed;
+				_waterAffector.Efficiency = consumed == 0 ? 0 : (float)consumed / need;
 			}
 			else
 			{

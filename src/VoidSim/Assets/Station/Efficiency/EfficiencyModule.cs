@@ -96,8 +96,8 @@ namespace Assets.Station.Efficiency
 		public void Clear()
 		{
 			_affectors.Clear();
-			CurrentAmount = 1.0f;
 			OnValueChanged = null;
+			CurrentAmount = 1.0f;
 		}
 	}
 }
