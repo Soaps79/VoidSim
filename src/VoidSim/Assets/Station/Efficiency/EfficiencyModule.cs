@@ -16,6 +16,7 @@ namespace Assets.Station.Efficiency
 	{
 		private readonly List<EfficiencyAffector> _affectors = new List<EfficiencyAffector>();
 		public float CurrentAmount = 1.0f;
+		public float MinimumAmount { get; set; }
 
 		public Action<EfficiencyModule> OnValueChanged;
 
@@ -50,7 +51,7 @@ namespace Assets.Station.Efficiency
 			if (Math.Abs(CurrentAmount - amount) < .01)
 				return;
 
-			CurrentAmount = amount;
+			CurrentAmount = amount >= MinimumAmount ? amount : MinimumAmount;
 			if (OnValueChanged != null)
 				OnValueChanged(this);
 		}

@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Assets.Logistics;
 using Assets.Placeables.Nodes;
 using Assets.Scripts;
+using Assets.Station.Efficiency;
 using Assets.WorldMaterials;
 using Assets.WorldMaterials.Population;
 using Assets.WorldMaterials.Products;
@@ -30,15 +32,16 @@ namespace Assets.Station
 
 		// Population is currently stored in the Station's inventory as a Product
 		// Allows it to be handled by trade, cargo, etc
-		private const string POPULATION_PRODUCT_NAME = "Population";
 		private Inventory _inventory;
 		private int _populationProductId;
+		private int _foodProductId;
+		private int _waterProductId;
 
 		// When there is room for more population, 
 		// it is requested through this Trader which is hooked into the trade system
 		private ProductTrader _trader;
 		private int _inboundPopulation;
-
+		
 		public class EmploymentUpdateParams
 		{
 			public TimeLength EmploymentUpdateTimeLength;
@@ -51,19 +54,31 @@ namespace Assets.Station
 		[SerializeField] private int _employmentUpdateCount;
 		private string _stopwatchNodeName = "employment";
 		private float _baseEmployChance;
-		
+
+		// handling employee mood
+		private readonly EfficiencyModule _moodModule = new EfficiencyModule();
+		private readonly EfficiencyAffector _foodAffector = new EfficiencyAffector("Food");
+		private readonly EfficiencyAffector _waterAffector = new EfficiencyAffector("Water");
+		[SerializeField] private float _foodConsumedPerPop;
+		[SerializeField] private float _waterConsumedPerPop;
+
+		// passed on to Employers
+		private readonly EfficiencyAffector _employerAffector = new EfficiencyAffector("Employee Mood");
+
 		public void Initialize(Inventory inventory, EmploymentUpdateParams updateParams, int initialCapacity = 0)
 		{
-			var pop = ProductLookup.Instance.GetProduct(POPULATION_PRODUCT_NAME);
-			_populationProductId = pop.ID;
-
 			_initialCapacity = initialCapacity;
 			_inventory = inventory;
 			_inventory.OnProductsChanged += HandleInventoryProductChanged;
+
+			GetProductIds();
 			_currentCount = _inventory.GetProductCurrentAmount(_populationProductId);
 			_currentUnemployed = _currentCount;
-			
+
+			// still temporary values while system is worked out
 			CurrentQualityOfLife = 10;
+			_foodConsumedPerPop = 0.5f;
+			_waterConsumedPerPop = 0.2f;
 
 			if (_initialCapacity > 0)
 				_inventory.SetProductMaxAmount(_populationProductId, _initialCapacity);
@@ -76,6 +91,17 @@ namespace Assets.Station
 
 			InitializeProductTrader();
 			InitializeEmploymentUpdate(updateParams);
+			InitializeNeedsConsumption();
+		}
+
+		private void GetProductIds()
+		{
+			var product = ProductLookup.Instance.GetProduct(ProductNameLookup.Population);
+			_populationProductId = product.ID;
+			product = ProductLookup.Instance.GetProduct(ProductNameLookup.Food);
+			_foodProductId = product.ID;
+			product = ProductLookup.Instance.GetProduct(ProductNameLookup.Water);
+			_waterProductId = product.ID;
 		}
 
 		// register with stopwatch to regularly check for updates
@@ -117,6 +143,72 @@ namespace Assets.Station
 				_currentUnemployed -= 1;
 				if(employer.HasRoom)
 					employers.Enqueue(employer);
+			}
+		}
+
+		private void InitializeNeedsConsumption()
+		{
+			_moodModule.RegisterAffector(_foodAffector);
+			_moodModule.RegisterAffector(_waterAffector);
+			_moodModule.OnValueChanged += HandleMoodChange;
+			KeyValueDisplay.Instance.Add("Pop Mood", () => GetMoodDisplayString);
+
+			Locator.WorldClock.OnHourUp += HandleHourTick;
+		}
+
+		private void HandleMoodChange(EfficiencyModule module)
+		{
+			_employerAffector.Efficiency = module.CurrentAmount;
+		}
+
+		public object GetMoodDisplayString
+		{
+			get
+			{
+				var display = _moodModule.CurrentAmount.ToString("0.00");
+				display += _foodAffector.Name + " " + _foodAffector.Efficiency.ToString("0.00") + "  ";
+				display += _waterAffector.Name + " " + _waterAffector.Efficiency.ToString("0.00");
+				return display;
+			}
+		}
+
+		private void HandleHourTick(object sender, EventArgs e)
+		{
+			var currentHour = Locator.WorldClock.CurrentTime.Hour;
+			if (currentHour == 10 || currentHour == 18)
+			{
+				HandleFoodConsumption();
+				HandleWaterConsumption();
+			}
+		}
+
+		private void HandleFoodConsumption()
+		{
+			var exact = _foodConsumedPerPop * _currentCount;
+			var need =  (int)Math.Ceiling(exact);
+			var consumed = _inventory.TryRemoveProduct(_foodProductId, need);
+			if (consumed < need)
+			{
+				_foodAffector.Efficiency = consumed == 0 ? 0 : (float)need / consumed;
+			}
+			else
+			{
+				_foodAffector.Efficiency = 1.0f;
+			}
+		}
+
+		private void HandleWaterConsumption()
+		{
+			var exact = _waterConsumedPerPop * _currentCount;
+			var need = (int)Math.Ceiling(exact);
+			var consumed = _inventory.TryRemoveProduct(_waterProductId, need);
+			if (consumed < need)
+			{
+				_waterAffector.Efficiency = consumed == 0 ? 0 : (float)need / consumed;
+			}
+			else
+			{
+				_waterAffector.Efficiency = 1.0f;
 			}
 		}
 
@@ -202,6 +294,7 @@ namespace Assets.Station
 			}
 
 			var employer = args.PopEmployer;
+			employer.RegisterMood(_employerAffector);
 			_employers.Add(employer);
 
 			// real basic implementation of placing employees, place half the max amount

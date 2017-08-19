@@ -37,3 +37,5 @@ MonoBehaviour:
     Amount: 10000
   - ProductName: Population
     Amount: 20
+  - ProductName: Food
+    Amount: 50

@@ -23,7 +23,7 @@ namespace Assets.Placeables.Nodes
 		public int CurrentEmployeeCount;
 		public int MaxEmployeeCount;
 		[SerializeField] private float _weight = 1.0f;
-		private EfficiencyAffector _affector;
+		private EfficiencyAffector _countAffector;
 		public bool HasRoom {  get { return MaxEmployeeCount > CurrentEmployeeCount; } }
 
 		[SerializeField] private float _initialDesirability;
@@ -35,17 +35,24 @@ namespace Assets.Placeables.Nodes
 		public override void BroadcastPlacement()
 		{
 			// hook into efficiency system
-			_affector = new EfficiencyAffector(NodeName);
+			_countAffector = new EfficiencyAffector("Employee Count");
+
 			var efficiency = GetComponent<EfficiencyNode>();
-			efficiency.Module.RegisterAffector(_affector);
+			efficiency.Module.RegisterAffector(_countAffector);
 
 			Locator.MessageHub.QueueMessage(MessageName, new PopEmployerMessageArgs { PopEmployer = this });
+		}
+
+		public void RegisterMood(EfficiencyAffector affector)
+		{
+			var efficiency = GetComponent<EfficiencyNode>();
+			efficiency.Module.RegisterAffector(affector);
 		}
 
 		public void AddEmployee(int count)
 		{
 			CurrentEmployeeCount += count;
-			_affector.Efficiency = (float)CurrentEmployeeCount / MaxEmployeeCount;
+			_countAffector.Efficiency = (float)CurrentEmployeeCount / MaxEmployeeCount;
 			if (OnEmployeesChanged != null)
 				OnEmployeesChanged();
 		}

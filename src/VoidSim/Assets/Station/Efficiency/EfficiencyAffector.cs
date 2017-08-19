@@ -10,14 +10,13 @@ namespace Assets.Station.Efficiency
 		private float _currentEfficiency = 1.0f;
 
 		public Action<EfficiencyAffector> OnValueChanged;
-		// mostly for debugging
-		public string Driver;
+		public string Name;
 
-		public EfficiencyAffector(string driverName) { Driver = driverName; }
+		public EfficiencyAffector(string driverName) { Name = driverName; }
 
 		public EfficiencyAffector(string driverName, float value)
 		{
-			Driver = driverName;
+			Name = driverName;
 			_currentEfficiency = value;
 		}
 
