@@ -18,6 +18,7 @@ namespace Assets.Editor
 		public void TearDown()
 		{
 			_module.Clear();
+			_module.MinimumAmount = 0.0f;
 		}
 
 		[Test]
@@ -26,12 +27,22 @@ namespace Assets.Editor
 			const float affectorValue = 0.7f;
 			var affector = new EfficiencyAffector("1", affectorValue);
 
-			var triggered = 0;
-			_module.OnValueChanged += module => triggered++;
 			_module.RegisterAffector(affector);
 
 			Assert.IsTrue(Math.Abs(affector.Efficiency - _module.CurrentAmount) < .01);
-			Assert.AreEqual(1, triggered);
+		}
+
+		[Test]
+		public void Module_HandleMinimumAmount()
+		{
+			const float affectorValue = 0.7f;
+			const float minimumAmount = 0.8f;
+			var affector = new EfficiencyAffector("1", affectorValue);
+
+			_module.MinimumAmount = minimumAmount;
+			_module.RegisterAffector(affector);
+
+			Assert.IsTrue(Math.Abs(minimumAmount - _module.CurrentAmount) < .01);
 		}
 
 		[Test]

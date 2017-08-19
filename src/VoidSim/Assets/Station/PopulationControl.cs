@@ -55,15 +55,17 @@ namespace Assets.Station
 		private string _stopwatchNodeName = "employment";
 		private float _baseEmployChance;
 
-		// handling employee mood
+		// move employee mood into its own object eventually
 		private readonly EfficiencyModule _moodModule = new EfficiencyModule();
 		private readonly EfficiencyAffector _foodAffector = new EfficiencyAffector("Food");
 		private readonly EfficiencyAffector _waterAffector = new EfficiencyAffector("Water");
 		[SerializeField] private float _foodConsumedPerPop;
 		[SerializeField] private float _waterConsumedPerPop;
+		[SerializeField] private float _moodMinimumAmount;
 
 		// passed on to Employers
 		private readonly EfficiencyAffector _employerAffector = new EfficiencyAffector("Employee Mood");
+
 
 		public void Initialize(Inventory inventory, EmploymentUpdateParams updateParams, int initialCapacity = 0)
 		{
@@ -79,6 +81,7 @@ namespace Assets.Station
 			CurrentQualityOfLife = 10;
 			_foodConsumedPerPop = 0.5f;
 			_waterConsumedPerPop = 0.2f;
+			_moodMinimumAmount = 0.5f;
 
 			if (_initialCapacity > 0)
 				_inventory.SetProductMaxAmount(_populationProductId, _initialCapacity);
@@ -151,7 +154,8 @@ namespace Assets.Station
 			_moodModule.RegisterAffector(_foodAffector);
 			_moodModule.RegisterAffector(_waterAffector);
 			_moodModule.OnValueChanged += HandleMoodChange;
-			KeyValueDisplay.Instance.Add("Pop Mood", () => GetMoodDisplayString);
+			_moodModule.MinimumAmount = _moodMinimumAmount;
+			KeyValueDisplay.Instance.Add("Pop Mood", () => MoodDisplayString);
 
 			Locator.WorldClock.OnHourUp += HandleHourTick;
 		}
@@ -161,11 +165,11 @@ namespace Assets.Station
 			_employerAffector.Efficiency = module.CurrentAmount;
 		}
 
-		public object GetMoodDisplayString
+		public object MoodDisplayString
 		{
 			get
 			{
-				var display = _moodModule.CurrentAmount.ToString("0.00");
+				var display = _moodModule.CurrentAmount.ToString("0.00") + "  ";
 				display += _foodAffector.Name + " " + _foodAffector.Efficiency.ToString("0.00") + "  ";
 				display += _waterAffector.Name + " " + _waterAffector.Efficiency.ToString("0.00");
 				return display;
