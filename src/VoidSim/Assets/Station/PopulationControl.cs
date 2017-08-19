@@ -66,6 +66,8 @@ namespace Assets.Station
 		// passed on to Employers
 		private readonly EfficiencyAffector _employerAffector = new EfficiencyAffector("Employee Mood");
 
+		private bool _ignoreNeeds;
+
 
 		public void Initialize(Inventory inventory, EmploymentUpdateParams updateParams, int initialCapacity = 0)
 		{
@@ -320,6 +322,20 @@ namespace Assets.Station
 
 
 		public float CurrentQualityOfLife { get; private set; }
+
+		public bool IgnoreNeeds
+		{
+			get { return _ignoreNeeds; }
+			set
+			{
+				if (_ignoreNeeds == value)
+					return;
+
+				_moodModule.MinimumAmount = value ? 1.0f : _moodMinimumAmount;
+				_ignoreNeeds = value;
+			}
+		}
+
 		public bool PopulationWillMigrateTo(IPopulationHost otherHost)
 		{
 			return false;

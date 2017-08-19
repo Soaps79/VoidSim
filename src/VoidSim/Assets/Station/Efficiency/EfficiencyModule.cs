@@ -16,7 +16,20 @@ namespace Assets.Station.Efficiency
 	{
 		private readonly List<EfficiencyAffector> _affectors = new List<EfficiencyAffector>();
 		public float CurrentAmount = 1.0f;
-		public float MinimumAmount { get; set; }
+
+		private float _minimumAmount;
+		public float MinimumAmount
+		{
+			get { return _minimumAmount; }
+			set
+			{
+				if(Math.Abs(value - _minimumAmount) < .01f)
+					return;
+
+				_minimumAmount = value;
+				UpdateValue();
+			}
+		}
 
 		public Action<EfficiencyModule> OnValueChanged;
 

@@ -39,6 +39,7 @@ namespace Assets.Station
         [SerializeField] private PlaceablesLookup _placeablesLookup;
         [SerializeField] private TraderRequestsSO _voidTradeRequests;
 	    [SerializeField] private CargoControl _cargoControlPrefab;
+	    [SerializeField] private bool _ignoreMoodInitial;
 
         private CraftingContainer _crafter;
         private Inventory _inventory;
@@ -173,6 +174,7 @@ namespace Assets.Station
 					EmploymentUpdateTimeLength = new TimeLength { TimeUnit = TimeUnit.Day, Length = 1},
 					EmploymentUpdateCount = 2
 	            }, 30);
+	        pop.IgnoreNeeds = _ignoreMoodInitial;
 	        _populationControl = pop;
         }
 
@@ -270,5 +272,10 @@ namespace Assets.Station
 	    }
 
 	    public string Name { get { return "Station"; } }
+
+	    public void TogglePopMood()
+	    {
+		    _populationControl.IgnoreNeeds = !_populationControl.IgnoreNeeds;
+	    }
     }
 }
