@@ -614,32 +614,32 @@ Prefab:
     - target: {fileID: 114790484017423478, guid: c1b0153b79562be49aa148e694d1dcbf,
         type: 2}
       propertyPath: m_havePropertiesChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114790484017423478, guid: c1b0153b79562be49aa148e694d1dcbf,
         type: 2}
       propertyPath: m_isInputParsingRequired
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114206841460824834, guid: c1b0153b79562be49aa148e694d1dcbf,
         type: 2}
       propertyPath: m_havePropertiesChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114206841460824834, guid: c1b0153b79562be49aa148e694d1dcbf,
         type: 2}
       propertyPath: m_isInputParsingRequired
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114869364198109702, guid: c1b0153b79562be49aa148e694d1dcbf,
         type: 2}
       propertyPath: m_havePropertiesChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114869364198109702, guid: c1b0153b79562be49aa148e694d1dcbf,
         type: 2}
       propertyPath: m_isInputParsingRequired
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224732640035515900, guid: c1b0153b79562be49aa148e694d1dcbf,
         type: 2}
@@ -3425,6 +3425,7 @@ MonoBehaviour:
   _voidTradeRequests: {fileID: 11400000, guid: 7d947a633fc96884aa52b58009038e9d, type: 2}
   _cargoControlPrefab: {fileID: 114166193650585450, guid: 2a11a610a8e4ed8418a75d773be7bebf,
     type: 2}
+  _ignoreMoodInitial: 0
   _initialLayers:
   - {fileID: 1192252418}
   - {fileID: 824730045}
