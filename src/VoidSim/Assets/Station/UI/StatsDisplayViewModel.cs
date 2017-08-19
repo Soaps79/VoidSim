@@ -2,6 +2,7 @@
 using Assets.Scripts;
 using Assets.WorldMaterials;
 using Assets.WorldMaterials.Products;
+using Assets.WorldMaterials.UI;
 using Messaging;
 using QGame;
 using TMPro;
@@ -27,14 +28,12 @@ namespace Assets.Station.UI
             public ProductSupplyMonitor Monitor;
         }
 
-        [SerializeField]
-        private Image _displayPanelPrefab;
-        [SerializeField]
-        private Image _displayTimePrefab;
-        [SerializeField]
-        private Image _displayProductPrefab;
+        [SerializeField] private Image _displayPanelPrefab;
+        [SerializeField] private Image _displayTimePrefab;
+        [SerializeField] private Image _displayProductPrefab;
+	    [SerializeField] private Image _displayMoodPrefab;
 
-        private readonly List<SupplyMonitorEntry> _monitorEntries = new List<SupplyMonitorEntry>();
+		private readonly List<SupplyMonitorEntry> _monitorEntries = new List<SupplyMonitorEntry>();
         private Image _display;
         private IWorldClock _worldClock;
         private TextMeshProUGUI _clockDisplay;
@@ -82,10 +81,22 @@ namespace Assets.Station.UI
             valueDisplay.text = supplyMonitor.GetAmountOutput();
 
             _monitorEntries.Add(new SupplyMonitorEntry { Monitor = supplyMonitor, Text = valueDisplay });
+	        if (_monitorEntries.Count == 2)
+		        AddMoodMonitor();
         }
 
+	    private void AddMoodMonitor()
+	    {
+            var contentHolder = _display.transform.Find("content_holder");
+		    var mood = Instantiate(_displayMoodPrefab);
+		    var viewmodel = mood.GetComponent<PopMoodViewModel>();
+            var popControl = GameObject.Find("population_control").GetComponent<PopulationControl>();
+		    viewmodel.Bind(popControl);
+			mood.transform.SetParent(contentHolder, false);
+	    }
 
-        private TextMeshProUGUI InstantiateNewUIEntry(ProductSupplyMonitor monitor)
+
+	    private TextMeshProUGUI InstantiateNewUIEntry(ProductSupplyMonitor monitor)
         {
             // instantiate UI element
             var contentHolder = _display.transform.Find("content_holder");
@@ -93,8 +104,8 @@ namespace Assets.Station.UI
             displayProduct.transform.SetParent(contentHolder, false);
 
             // set its name
-            var productName = displayProduct.transform.Find("product_image").GetComponent<Image>();
-            productName.sprite = monitor.Product.Icon;
+            var product_icon = displayProduct.transform.Find("product_image").GetComponent<Image>();
+            product_icon.sprite = monitor.Product.Icon;
 
             // return the text field to be updated every frame
             return displayProduct.transform.Find("product_value").GetComponent<TextMeshProUGUI>();

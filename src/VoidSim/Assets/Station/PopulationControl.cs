@@ -56,7 +56,7 @@ namespace Assets.Station
 		private float _baseEmployChance;
 
 		// move employee mood into its own object eventually
-		private readonly EfficiencyModule _moodModule = new EfficiencyModule();
+		public readonly EfficiencyModule MoodModule = new EfficiencyModule();
 		private readonly EfficiencyAffector _foodAffector = new EfficiencyAffector("Food");
 		private readonly EfficiencyAffector _waterAffector = new EfficiencyAffector("Water");
 		[SerializeField] private float _foodConsumedPerPop;
@@ -153,10 +153,10 @@ namespace Assets.Station
 
 		private void InitializeNeedsConsumption()
 		{
-			_moodModule.RegisterAffector(_foodAffector);
-			_moodModule.RegisterAffector(_waterAffector);
-			_moodModule.OnValueChanged += HandleMoodChange;
-			_moodModule.MinimumAmount = _moodMinimumAmount;
+			MoodModule.RegisterAffector(_foodAffector);
+			MoodModule.RegisterAffector(_waterAffector);
+			MoodModule.OnValueChanged += HandleMoodChange;
+			MoodModule.MinimumAmount = _moodMinimumAmount;
 			KeyValueDisplay.Instance.Add("Pop Mood", () => MoodDisplayString);
 
 			Locator.WorldClock.OnHourUp += HandleHourTick;
@@ -171,7 +171,7 @@ namespace Assets.Station
 		{
 			get
 			{
-				var display = _moodModule.CurrentAmount.ToString("0.00") + "  ";
+				var display = MoodModule.CurrentAmount.ToString("0.00") + "  ";
 				display += _foodAffector.Name + " " + _foodAffector.Efficiency.ToString("0.00") + "  ";
 				display += _waterAffector.Name + " " + _waterAffector.Efficiency.ToString("0.00");
 				return display;
@@ -331,7 +331,7 @@ namespace Assets.Station
 				if (_ignoreNeeds == value)
 					return;
 
-				_moodModule.MinimumAmount = value ? 1.0f : _moodMinimumAmount;
+				MoodModule.MinimumAmount = value ? 1.0f : _moodMinimumAmount;
 				_ignoreNeeds = value;
 			}
 		}
