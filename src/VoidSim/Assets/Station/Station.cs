@@ -5,6 +5,7 @@ using Assets.Scripts;
 using Assets.Scripts.Serialization;
 using Assets.Scripts.WorldMaterials;
 using Assets.WorldMaterials;
+using Assets.WorldMaterials.Population;
 using Assets.WorldMaterials.Products;
 using Assets.WorldMaterials.Trade;
 using Assets.WorldMaterials.UI;
@@ -40,8 +41,9 @@ namespace Assets.Station
         [SerializeField] private TraderRequestsSO _voidTradeRequests;
 	    [SerializeField] private CargoControl _cargoControlPrefab;
 	    [SerializeField] private bool _ignoreMoodInitial;
+	    [SerializeField] private PopulationSO _popScriptable;
 
-        private CraftingContainer _crafter;
+		private CraftingContainer _crafter;
         private Inventory _inventory;
 
 	    private readonly CollectionSerializer<InventoryData> _inventorySerializer
@@ -173,7 +175,7 @@ namespace Assets.Station
 		            BaseEmployChance = .6f,
 					EmploymentUpdateTimeLength = new TimeLength { TimeUnit = TimeUnit.Day, Length = 1},
 					EmploymentUpdateCount = 2
-	            }, 30);
+	            },_popScriptable, 30);
 	        pop.IgnoreNeeds = _ignoreMoodInitial;
 	        _populationControl = pop;
         }

@@ -71,7 +71,36 @@ namespace Assets.Scripts
 			BindMouseMovementToKvd();
 			InitializeScreenBounds();
 			InitializeProductLookup();
+			InitializeProductIds();
 			Locator.MessageHub.AddListener(this, GameMessages.GameSpeedChange);
+		}
+
+		private void InitializeProductIds()
+		{
+			var product = ProductLookup.GetProduct(ProductNameLookup.Population);
+			if( product == null)
+				throw new UnityException("Population product not found");
+			ProductIdLookup.Population = product.ID;
+
+			product = ProductLookup.GetProduct(ProductNameLookup.Energy);
+			if (product == null)
+				throw new UnityException("Energy product not found");
+			ProductIdLookup.Energy = product.ID;
+
+			product = ProductLookup.GetProduct(ProductNameLookup.Credits);
+			if (product == null)
+				throw new UnityException("Credits product not found");
+			ProductIdLookup.Credits = product.ID;
+
+			product = ProductLookup.GetProduct(ProductNameLookup.Food);
+			if (product == null)
+				throw new UnityException("Food product not found");
+			ProductIdLookup.Food = product.ID;
+
+			product = ProductLookup.GetProduct(ProductNameLookup.Water);
+			if (product == null)
+				throw new UnityException("Water product not found");
+			ProductIdLookup.Water = product.ID;
 		}
 
 		private void InitializeProductLookup()

@@ -55,22 +55,21 @@ namespace Assets.Station
 		private string _stopwatchNodeName = "employment";
 		private float _baseEmployChance;
 
-		// move employee mood into its own object eventually
-		public readonly EfficiencyModule MoodModule = new EfficiencyModule();
-		private readonly EfficiencyAffector _foodAffector = new EfficiencyAffector("Food");
-		private readonly EfficiencyAffector _waterAffector = new EfficiencyAffector("Water");
-		[SerializeField] private float _foodConsumedPerPop;
-		[SerializeField] private float _waterConsumedPerPop;
-		[SerializeField] private float _moodMinimumAmount;
+		public MoodMonitor MoodMonitor { get; private set; }
 
 		// passed on to Employers
 		private readonly EfficiencyAffector _employerAffector = new EfficiencyAffector("Pop Mood");
 
+		private PopulationSO _scriptable;
 		private bool _ignoreNeeds;
 
 
-		public void Initialize(Inventory inventory, EmploymentUpdateParams updateParams, int initialCapacity = 0)
+		public void Initialize(Inventory inventory, EmploymentUpdateParams updateParams, PopulationSO scriptable, int initialCapacity = 0)
 		{
+			_scriptable = scriptable;
+			MoodMonitor = new MoodMonitor(_scriptable, inventory);
+			MoodMonitor.MoodModule.OnValueChanged += HandleMoodChange;
+
 			_initialCapacity = initialCapacity;
 			_inventory = inventory;
 			_inventory.OnProductsChanged += HandleInventoryProductChanged;
@@ -81,9 +80,6 @@ namespace Assets.Station
 
 			// still temporary values while system is worked out
 			CurrentQualityOfLife = 10;
-			_foodConsumedPerPop = 0.5f;
-			_waterConsumedPerPop = 0.2f;
-			_moodMinimumAmount = 0.5f;
 
 			if (_initialCapacity > 0)
 				_inventory.SetProductMaxAmount(_populationProductId, _initialCapacity);
@@ -96,7 +92,11 @@ namespace Assets.Station
 
 			InitializeProductTrader();
 			InitializeEmploymentUpdate(updateParams);
-			InitializeNeedsConsumption();
+		}
+
+		private void HandleMoodChange(EfficiencyModule module)
+		{
+			_employerAffector.Efficiency = module.CurrentAmount;
 		}
 
 		private void GetProductIds()
@@ -148,73 +148,6 @@ namespace Assets.Station
 				_currentUnemployed -= 1;
 				if(employer.HasRoom)
 					employers.Enqueue(employer);
-			}
-		}
-
-		private void InitializeNeedsConsumption()
-		{
-			MoodModule.RegisterAffector(_foodAffector);
-			MoodModule.RegisterAffector(_waterAffector);
-			MoodModule.OnValueChanged += HandleMoodChange;
-			MoodModule.MinimumAmount = _moodMinimumAmount;
-			KeyValueDisplay.Instance.Add("Pop Mood", () => MoodDisplayString);
-
-			Locator.WorldClock.OnHourUp += HandleHourTick;
-		}
-
-		private void HandleMoodChange(EfficiencyModule module)
-		{
-			_employerAffector.Efficiency = module.CurrentAmount;
-		}
-
-		public object MoodDisplayString
-		{
-			get
-			{
-				var display = MoodModule.CurrentAmount.ToString("0.00") + "  ";
-				display += _foodAffector.Name + " " + _foodAffector.Efficiency.ToString("0.00") + "  ";
-				display += _waterAffector.Name + " " + _waterAffector.Efficiency.ToString("0.00");
-				return display;
-			}
-		}
-
-		private void HandleHourTick(object sender, EventArgs e)
-		{
-			var currentHour = Locator.WorldClock.CurrentTime.Hour;
-			if (currentHour == 10 || currentHour == 18)
-			{
-				HandleFoodConsumption();
-				HandleWaterConsumption();
-			}
-		}
-
-		private void HandleFoodConsumption()
-		{
-			var exact = _foodConsumedPerPop * _currentCount;
-			var need =  (int)Math.Ceiling(exact);
-			var consumed = _inventory.TryRemoveProduct(_foodProductId, need);
-			if (consumed < need)
-			{
-				_foodAffector.Efficiency = consumed == 0 ? 0 : (float)consumed / need;
-			}
-			else
-			{
-				_foodAffector.Efficiency = 1.0f;
-			}
-		}
-
-		private void HandleWaterConsumption()
-		{
-			var exact = _waterConsumedPerPop * _currentCount;
-			var need = (int)Math.Ceiling(exact);
-			var consumed = _inventory.TryRemoveProduct(_waterProductId, need);
-			if (consumed < need)
-			{
-				_waterAffector.Efficiency = consumed == 0 ? 0 : (float)consumed / need;
-			}
-			else
-			{
-				_waterAffector.Efficiency = 1.0f;
 			}
 		}
 
@@ -331,7 +264,7 @@ namespace Assets.Station
 				if (_ignoreNeeds == value)
 					return;
 
-				MoodModule.MinimumAmount = value ? 1.0f : _moodMinimumAmount;
+				MoodMonitor.SetIgnoreNeeds(value);
 				_ignoreNeeds = value;
 			}
 		}

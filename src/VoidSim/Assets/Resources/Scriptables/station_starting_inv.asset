@@ -39,3 +39,5 @@ MonoBehaviour:
     Amount: 20
   - ProductName: Food
     Amount: 50
+  - ProductName: Water
+    Amount: 50
