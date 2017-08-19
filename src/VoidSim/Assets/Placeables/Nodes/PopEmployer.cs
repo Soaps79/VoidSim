@@ -35,7 +35,7 @@ namespace Assets.Placeables.Nodes
 		public override void BroadcastPlacement()
 		{
 			// hook into efficiency system
-			_affector = new EfficiencyAffector(NodeName) { Weight = _weight };
+			_affector = new EfficiencyAffector(NodeName);
 			var efficiency = GetComponent<EfficiencyNode>();
 			efficiency.Module.RegisterAffector(_affector);
 

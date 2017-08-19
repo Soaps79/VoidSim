@@ -62,9 +62,10 @@ namespace Assets.Scripts
 
 		void Start()
 		{
+			UberDebug.LogChannel(LogChannels.Warning, "Initializing");
 			UberDebug.LogChannel(LogChannels.Trade, "Initializing");
 			UberDebug.LogChannel(LogChannels.Serialization, "Initializing");
-			
+
 			DOTween.Init(false, true, LogBehaviour.ErrorsOnly);
 			InititalizeKeyValueDisplay();
 			BindMouseMovementToKvd();

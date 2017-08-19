@@ -10,17 +10,15 @@ namespace Assets.Station.Efficiency
 		private float _currentEfficiency = 1.0f;
 
 		public Action<EfficiencyAffector> OnValueChanged;
-		private float _weight = 1.0f;
 		// mostly for debugging
 		public string Driver;
 
 		public EfficiencyAffector(string driverName) { Driver = driverName; }
 
-		public EfficiencyAffector(string driverName, float value, float weight = 1.0f)
+		public EfficiencyAffector(string driverName, float value)
 		{
 			Driver = driverName;
 			_currentEfficiency = value;
-			_weight = weight;
 		}
 
 		public float Efficiency
@@ -32,19 +30,6 @@ namespace Assets.Station.Efficiency
 					return;
 
 				_currentEfficiency = value;
-				CheckValueChanged();
-			}
-		}
-
-		public float Weight
-		{
-			get { return _weight; }
-			set
-			{
-				if (Math.Abs(value - _weight) < .01f)
-					return;
-
-				_weight = value;
 				CheckValueChanged();
 			}
 		}

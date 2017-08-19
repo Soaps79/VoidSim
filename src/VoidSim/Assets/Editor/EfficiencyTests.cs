@@ -35,37 +35,82 @@ namespace Assets.Editor
 		}
 
 		[Test]
-		public void Affector_HandleWeightedValue()
+		public void Module_EventsTriggered()
 		{
-			// the double value should be offset by the half weight
-			const float weight = .5f;
-			const float value = 2.0f;
-			var affector = new EfficiencyAffector("1", value, weight);
+			const float value1 = 1.2f;
+			var affector = new EfficiencyAffector("1", value1);
 
-			_module.RegisterAffector(affector);
-			
-			Assert.IsTrue(Math.Abs(1 - _module.CurrentAmount) < .01);
-		}
-
-		[Test]
-		public void Affector_HandleMultipleWeightedValues()
-		{
-			const float weight1 = .5f;
-			const float value1 = 1.0f;
-			var affector = new EfficiencyAffector("1", value1, weight1);
-
-			const float weight2 = 1.0f;
-			const float value2 = 0.5f;
-			var affecto2 = new EfficiencyAffector("2", value2, weight2);
+			const float value2 = .8f;
+			var affector2 = new EfficiencyAffector("2", value2);
 
 			var triggered = 0;
 			_module.OnValueChanged += module => triggered++;
+			_module.RegisterAffector(affector);
+			_module.RegisterAffector(affector2);
+			
+			Assert.AreEqual(2, triggered);
+		}
+
+		[Test]
+		public void Module_SingleNegativeValue_BringsDownResult()
+		{
+			const float value1 = 1.0f;
+			var affector = new EfficiencyAffector("1", value1);
+
+			const float value2 = .8f;
+			var affector2 = new EfficiencyAffector("2", value2);
+
+			_module.RegisterAffector(affector);
+			_module.RegisterAffector(affector2);
+
+			Assert.IsTrue(Math.Abs(value2 - _module.CurrentAmount) < .01);
+		}
+
+		[Test]
+		public void Module_MultipleNegativeValues_LowestSelected()
+		{
+			const float value1 = .2f;
+			var affector = new EfficiencyAffector("1", value1);
+
+			const float value2 = .8f;
+			var affecto2 = new EfficiencyAffector("2", value2);
+
+			_module.RegisterAffector(affector);
+			_module.RegisterAffector(affecto2);
+
+			Assert.IsTrue(Math.Abs(value1 - _module.CurrentAmount) < .01);
+		}
+
+		[Test]
+		public void Module_FullEfficiency()
+		{
+			const float value1 = 1.0f;
+			var affector = new EfficiencyAffector("1", value1);
+
+			const float value2 = 1.0f;
+			var affecto2 = new EfficiencyAffector("2", value2);
 
 			_module.RegisterAffector(affector);
 			_module.RegisterAffector(affecto2);
 
 			Assert.IsTrue(Math.Abs(1 - _module.CurrentAmount) < .01);
-			Assert.AreEqual(2, triggered);
+		}
+
+		[Test]
+		public void Module_StackingBonuses()
+		{
+			const float value1 = .25f;
+			var affector = new EfficiencyAffector("1", 1 + value1);
+
+			const float value2 = .5f;
+			var affecto2 = new EfficiencyAffector("2", 1 + value2);
+
+			_module.RegisterAffector(affector);
+			_module.RegisterAffector(affecto2);
+
+			var expected = value1 + value2;
+			var actualBonus = _module.CurrentAmount - 1;
+			Assert.IsTrue(Math.Abs(expected - actualBonus) < .01);
 		}
 	}
 }
