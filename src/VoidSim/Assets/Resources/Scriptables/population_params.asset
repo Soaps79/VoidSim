@@ -11,11 +11,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61c338604c2014c4b96370ed3c64d6be, type: 3}
   m_Name: population_params
   m_EditorClassIdentifier: 
+  InitialCount: 20
+  BaseCapacity: 30
   MoodParams:
     FoodPerPop: 0.05
     WaterPerPop: 0.05
     MoodMinimum: 0.5
-    BaseHappiness: 20
+    BaseLeisure: 30
   EmploymentParams:
     EmploymentUpdateTimeLength:
       TimeUnit: 2

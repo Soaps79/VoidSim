@@ -165,11 +165,10 @@ namespace Assets.Station
 
         private void InstantiatePopulationControl()
         {
-            var go = new GameObject();
-            go.name = "population_control";
-            go.transform.SetParent(_layers[LayerType.Core].transform);
+	        var go = new GameObject {name = "population_control"};
+	        go.transform.SetParent(_layers[LayerType.Core].transform);
             var pop = go.GetOrAddComponent<PopulationControl>();
-            pop.Initialize(_inventory,_popScriptable, 30);
+            pop.Initialize(_inventory,_popScriptable);
 	        pop.IgnoreNeeds = _ignoreMoodInitial;
 	        _populationControl = pop;
         }

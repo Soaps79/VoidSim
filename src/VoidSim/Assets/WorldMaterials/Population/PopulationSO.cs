@@ -14,7 +14,7 @@ namespace Assets.WorldMaterials.Population
 		public float WaterPerPop;
 		[Tooltip("Lowest value mood will output")]
 		public float MoodMinimum;
-		public int BaseHappiness;
+		public int BaseLeisure;
 	}
 
 	[Serializable]
@@ -27,6 +27,8 @@ namespace Assets.WorldMaterials.Population
 
 	public class PopulationSO : ScriptableObject
 	{
+		public int InitialCount;
+		public int BaseCapacity;
 		public MoodParams MoodParams;
 		public EmploymentParams EmploymentParams;
 	}

@@ -1,21 +1,25 @@
 ﻿using System;
+using Assets.Placeables.Nodes;
 using Assets.Scripts;
 using Assets.Station.Efficiency;
 using Assets.WorldMaterials.Products;
+using Messaging;
 using QGame;
 
 namespace Assets.WorldMaterials.Population
 {
-	public class MoodManager
+	public class MoodManager : IMessageListener
 	{
 		public readonly EfficiencyModule EfficiencyModule = new EfficiencyModule();
 		private readonly EfficiencyAffector _foodAffector = new EfficiencyAffector("Food");
 		private readonly EfficiencyAffector _waterAffector = new EfficiencyAffector("Water");
+		private readonly EfficiencyAffector _leisureAffector = new EfficiencyAffector("Leisure");
 		private float _foodConsumedPerPop;
 		private float _waterConsumedPerPop;
 		private float _moodMinimumAmount;
+		private int _currentLeisure;
 
-		private int _currentCount;
+		private int _currentPopCount;
 
 		private Inventory _inventory;
 
@@ -28,6 +32,7 @@ namespace Assets.WorldMaterials.Population
 				UberDebug.LogChannel(LogChannels.Warning, "MoodManager given bad params");
 
 			InitializeNeedsConsumption();
+			Locator.MessageHub.AddListener(this, LeisureProvider.MessageName);
 		}
 
 		private void SetFromScriptable(MoodParams param)
@@ -35,27 +40,17 @@ namespace Assets.WorldMaterials.Population
 			_foodConsumedPerPop = param.FoodPerPop;
 			_waterConsumedPerPop = param.WaterPerPop;
 			_moodMinimumAmount = param.MoodMinimum;
+			_currentLeisure = param.BaseLeisure;
 		}
 
 		private void InitializeNeedsConsumption()
 		{
 			EfficiencyModule.RegisterAffector(_foodAffector);
 			EfficiencyModule.RegisterAffector(_waterAffector);
+			EfficiencyModule.RegisterAffector(_leisureAffector);
 			EfficiencyModule.MinimumAmount = _moodMinimumAmount;
-			KeyValueDisplay.Instance.Add("Pop Mood", () => MoodDisplayString);
 
 			Locator.WorldClock.OnHourUp += HandleHourTick;
-		}
-
-		public object MoodDisplayString
-		{
-			get
-			{
-				var display = EfficiencyModule.CurrentAmount.ToString("0.00") + "  ";
-				display += _foodAffector.Name + " " + _foodAffector.Efficiency.ToString("0.00") + "  ";
-				display += _waterAffector.Name + " " + _waterAffector.Efficiency.ToString("0.00");
-				return display;
-			}
 		}
 
 		private void HandleHourTick(object sender, EventArgs e)
@@ -63,7 +58,7 @@ namespace Assets.WorldMaterials.Population
 			var currentHour = Locator.WorldClock.CurrentTime.Hour;
 			if (currentHour == 10 || currentHour == 18)
 			{
-				_currentCount = _inventory.GetProductCurrentAmount(ProductIdLookup.Population);
+				_currentPopCount = _inventory.GetProductCurrentAmount(ProductIdLookup.Population);
 				HandleFoodConsumption();
 				HandleWaterConsumption();
 			}
@@ -71,7 +66,7 @@ namespace Assets.WorldMaterials.Population
 
 		private void HandleFoodConsumption()
 		{
-			var exact = _foodConsumedPerPop * _currentCount;
+			var exact = _foodConsumedPerPop * _currentPopCount;
 			var need = (int)Math.Ceiling(exact);
 			var consumed = _inventory.TryRemoveProduct(ProductIdLookup.Food, need);
 			if (consumed < need)
@@ -86,7 +81,7 @@ namespace Assets.WorldMaterials.Population
 
 		private void HandleWaterConsumption()
 		{
-			var exact = _waterConsumedPerPop * _currentCount;
+			var exact = _waterConsumedPerPop * _currentPopCount;
 			var need = (int)Math.Ceiling(exact);
 			var consumed = _inventory.TryRemoveProduct(ProductIdLookup.Water, need);
 			if (consumed < need)
@@ -103,5 +98,29 @@ namespace Assets.WorldMaterials.Population
 		{
 			EfficiencyModule.MinimumAmount = value ? 1.0f : _moodMinimumAmount;
 		}
+
+		public void HandleMessage(string type, MessageArgs args)
+		{
+			if (type == LeisureProvider.MessageName && args != null)
+				HandleLeisureNode(args as LeisureProviderMessageArgs);
+		}
+
+		private void HandleLeisureNode(LeisureProviderMessageArgs args)
+		{
+			if (args == null)
+				return;
+
+			_currentLeisure += args.LeisureProvider.AmountProvided;
+			UpdateLeisureAffector();
+		}
+
+		private void UpdateLeisureAffector()
+		{
+			if (_currentPopCount == 0) return;
+			var fulfilled = (float)_currentLeisure / _currentPopCount;
+			_leisureAffector.Efficiency = fulfilled;
+		}
+
+		public string Name { get { return "MoodManager"; } }
 	}
 }

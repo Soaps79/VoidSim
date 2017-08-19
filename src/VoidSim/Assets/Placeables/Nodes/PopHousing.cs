@@ -20,6 +20,7 @@ namespace Assets.Placeables.Nodes
 		[SerializeField] private int _initialValue;
 
 		public int Capacity { get; private set; }
+		public int LeisureProvided;
 
 		void Awake()
 		{

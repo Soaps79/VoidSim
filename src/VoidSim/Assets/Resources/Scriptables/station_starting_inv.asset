@@ -35,9 +35,7 @@ MonoBehaviour:
     Amount: 500
   - ProductName: Credits
     Amount: 10000
-  - ProductName: Population
-    Amount: 20
   - ProductName: Food
-    Amount: 50
+    Amount: 200
   - ProductName: Water
-    Amount: 50
+    Amount: 200

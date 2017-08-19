@@ -24,7 +24,7 @@ namespace Assets.Station
 	{
 		public string Name { get { return "PopulationControl"; } }
 		[SerializeField] private int _totalCapacity;
-		[SerializeField] private int _initialCapacity;
+		[SerializeField] private int _baseCapacity;
 		[SerializeField] private int _currentCount;
 		[SerializeField] private int _currentUnemployed;
 		private readonly List<PopHousing> _housing = new List<PopHousing>();
@@ -55,13 +55,12 @@ namespace Assets.Station
 		private bool _ignoreNeeds;
 
 
-		public void Initialize(Inventory inventory, PopulationSO scriptable, int initialCapacity = 0)
+		public void Initialize(Inventory inventory, PopulationSO scriptable)
 		{
 			_scriptable = scriptable;
 			MoodManager = new MoodManager(scriptable.MoodParams, inventory);
 			MoodManager.EfficiencyModule.OnValueChanged += HandleMoodChange;
 
-			_initialCapacity = initialCapacity;
 			_inventory = inventory;
 			_inventory.OnProductsChanged += HandleInventoryProductChanged;
 
@@ -72,8 +71,9 @@ namespace Assets.Station
 			// still temporary values while system is worked out
 			CurrentQualityOfLife = 10;
 
-			if (_initialCapacity > 0)
-				_inventory.SetProductMaxAmount(_populationProductId, _initialCapacity);
+			_baseCapacity = scriptable.BaseCapacity;
+			_inventory.SetProductMaxAmount(_populationProductId, scriptable.BaseCapacity);
+			_inventory.TryAddProduct(_populationProductId, _scriptable.InitialCount);
 
 			Locator.MessageHub.AddListener(this, PopHousing.MessageName);
 			Locator.MessageHub.AddListener(this, PopEmployer.MessageName);
@@ -171,11 +171,6 @@ namespace Assets.Station
 			});
 		}
 
-		public int TotalCapacity
-		{
-			get { return _totalCapacity; }
-		}
-
 		// subscribed to messages for housing and employment being placed
 		public void HandleMessage(string type, MessageArgs args)
 		{
@@ -207,7 +202,7 @@ namespace Assets.Station
 
 		private void UpdateCapacity()
 		{
-			_totalCapacity = _initialCapacity + _housing.Sum(i => i.Capacity);
+			_totalCapacity = _baseCapacity + _housing.Sum(i => i.Capacity);
 			_inventory.SetProductMaxAmount(_populationProductId, _totalCapacity);
 		}
 
