@@ -461,6 +461,7 @@ GameObject:
   - component: {fileID: 224249120280137110}
   - component: {fileID: 222218126394141166}
   - component: {fileID: 114729279401322018}
+  - component: {fileID: 114995706794858460}
   m_Layer: 0
   m_Name: efficiency_amount
   m_TagString: Untagged
@@ -1958,6 +1959,26 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114995706794858460
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1937198138169988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4d7c934af453a9469701b72267593ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: 'tooltip!
+
+    tooltip!
+
+    tooltip!
+
+    tooltip!'
+  useMousePosition: 0
+  offset: {x: 0, y: 0, z: 0}
 --- !u!222 &222047111098219384
 CanvasRenderer:
   m_ObjectHideFlags: 1
