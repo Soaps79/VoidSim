@@ -10,7 +10,7 @@ namespace Assets.Station.UI
 	{
 		[SerializeField] private float _offsetY;
 		[SerializeField] private float _travelTime;
-		[SerializeField] private IndicatorColors _colors;
+		[SerializeField] private GameColors _colors;
 
 		public void Initialize(GameObject canvas, int amount, bool wasBought, Vector3 position)
 		{

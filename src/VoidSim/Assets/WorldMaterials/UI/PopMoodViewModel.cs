@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.UI;
+﻿using Assets.Scripts;
+using Assets.Scripts.UI;
 using Assets.Station;
 using Assets.Station.Efficiency;
 using QGame;
@@ -18,6 +19,7 @@ namespace Assets.WorldMaterials.UI
 		[SerializeField] private Sprite _iconHigh;
 		[SerializeField] private Sprite _iconVeryHigh;
 		[SerializeField] private Image _iconImage;
+		[SerializeField] private GameColors _colors;
 
 		public void Bind(PopulationControl popControl)
 		{
@@ -31,8 +33,7 @@ namespace Assets.WorldMaterials.UI
 
 		private void GenerateDisplayString(BoundTooltipTrigger trigger)
 		{
-			var text = "Overall   " + (_popControl.MoodManager.EfficiencyModule.CurrentAmount * 100).ToString("0") + "%\n";
-			trigger.text = text + TooltipStringGenerator.Generate(_popControl.MoodManager.EfficiencyModule);
+			trigger.text = TooltipStringGenerator.Generate(_popControl.MoodManager.EfficiencyModule, _colors);
 		}
 
 		private void HandleMoodChange(EfficiencyModule module)
@@ -44,7 +45,7 @@ namespace Assets.WorldMaterials.UI
 				_iconImage.sprite = _iconVeryHigh;
 			else if (Mathf.Abs(current - range) < .01f)
 				_iconImage.sprite = _iconHigh;
-			else if (current > range / 2)
+			else if (current >= range / 2)
 				_iconImage.sprite = _iconMedium;
 			else
 				_iconImage.sprite = _iconLow;

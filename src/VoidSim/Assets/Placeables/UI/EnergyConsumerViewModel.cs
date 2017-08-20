@@ -14,7 +14,7 @@ namespace Assets.Placeables.UI
 		private float _lastValue;
 		[SerializeField] private Slider _slider;
 		private Image _sliderFill;
-		[SerializeField] private IndicatorColors _colors;
+		[SerializeField] private GameColors _colors;
 
 		public void Bind(EnergyConsumer consumer)
 		{

@@ -29,6 +29,7 @@ namespace Assets.WorldMaterials.Population
 	{
 		public int InitialCount;
 		public int BaseCapacity;
+		public GameColors Colors;
 		public MoodParams MoodParams;
 		public EmploymentParams EmploymentParams;
 	}

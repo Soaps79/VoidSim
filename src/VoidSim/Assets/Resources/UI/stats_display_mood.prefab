@@ -140,6 +140,7 @@ MonoBehaviour:
   _iconHigh: {fileID: 21300022, guid: 7e17a6d09f97b4043b2e6a2616e7841e, type: 3}
   _iconVeryHigh: {fileID: 21300024, guid: 7e17a6d09f97b4043b2e6a2616e7841e, type: 3}
   _iconImage: {fileID: 114103824679146934}
+  _colors: {fileID: 11400000, guid: 860de5100961aef478ae76cfef3fa84c, type: 2}
 --- !u!114 &114857571905573128
 MonoBehaviour:
   m_ObjectHideFlags: 1

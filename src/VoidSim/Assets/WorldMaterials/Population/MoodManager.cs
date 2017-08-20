@@ -26,6 +26,8 @@ namespace Assets.WorldMaterials.Population
 		public MoodManager(MoodParams moodParams, Inventory inventory)
 		{
 			_inventory = inventory;
+			_inventory.OnProductsChanged += HandleInventoryUpdate;
+
 			if (moodParams != null)
 				SetFromScriptable(moodParams);
 			else
@@ -33,6 +35,13 @@ namespace Assets.WorldMaterials.Population
 
 			InitializeNeedsConsumption();
 			Locator.MessageHub.AddListener(this, LeisureProvider.MessageName);
+			UpdateLeisureAffector();
+		}
+
+		private void HandleInventoryUpdate(int productId, int amount)
+		{
+			if(productId == ProductIdLookup.Population)
+				UpdateLeisureAffector();
 		}
 
 		private void SetFromScriptable(MoodParams param)
@@ -58,10 +67,15 @@ namespace Assets.WorldMaterials.Population
 			var currentHour = Locator.WorldClock.CurrentTime.Hour;
 			if (currentHour == 10 || currentHour == 18)
 			{
-				_currentPopCount = _inventory.GetProductCurrentAmount(ProductIdLookup.Population);
+				UpdatePopCount();
 				HandleFoodConsumption();
 				HandleWaterConsumption();
 			}
+		}
+
+		private void UpdatePopCount()
+		{
+			_currentPopCount = _inventory.GetProductCurrentAmount(ProductIdLookup.Population);
 		}
 
 		private void HandleFoodConsumption()
@@ -116,6 +130,7 @@ namespace Assets.WorldMaterials.Population
 
 		private void UpdateLeisureAffector()
 		{
+			UpdatePopCount();
 			if (_currentPopCount == 0) return;
 			var fulfilled = (float)_currentLeisure / _currentPopCount;
 			_leisureAffector.Efficiency = fulfilled;

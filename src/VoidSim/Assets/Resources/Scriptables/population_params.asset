@@ -13,11 +13,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InitialCount: 20
   BaseCapacity: 30
+  Colors: {fileID: 11400000, guid: 860de5100961aef478ae76cfef3fa84c, type: 2}
   MoodParams:
     FoodPerPop: 0.05
     WaterPerPop: 0.05
     MoodMinimum: 0.5
-    BaseLeisure: 30
+    BaseLeisure: 15
   EmploymentParams:
     EmploymentUpdateTimeLength:
       TimeUnit: 2

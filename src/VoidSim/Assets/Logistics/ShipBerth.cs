@@ -79,7 +79,7 @@ namespace Assets.Logistics
 			_indicator.DOColor(color, .5f);
 		}
 
-		[SerializeField] private IndicatorColors _colors;
+		[SerializeField] private GameColors _colors;
 
 		public Action<TrafficShip> OnShipDock;
 		public Action<TrafficShip> OnShipUndock;
