@@ -6,78 +6,27 @@
       "LastId": 0
     },
     {
-      "Name": "pop_housing",
-      "LastId": 0
-    },
-    {
       "Name": "transit_entry",
-      "LastId": 11
+      "LastId": 9
     },
     {
-      "Name": "crafting_container_crafting_container",
-      "LastId": 10
-    },
-    {
-      "Name": "ship_bay",
-      "LastId": 1
+      "Name": "product_factory",
+      "LastId": 2
     }
   ]
 },
   "ShipGenerator": {
-  "Ships": [],
+  "Ships": [
+    {
+      "ShipName": "ship_8",
+      "SOName": "sm_cargo_1",
+      "TimeRemaining": 7.049717
+    }
+  ],
   "LastId": 8
 },
   "TrafficControl": {
-  "Berths": [
-    {
-      "ShipSize": "Corvette",
-      "State": "Reserved",
-      "IsInUse": true,
-      "Name": "ship_bay_1_1"
-    },
-    {
-      "ShipSize": "Corvette",
-      "State": "Reserved",
-      "IsInUse": true,
-      "Name": "ship_bay_1_2"
-    },
-    {
-      "ShipSize": "Corvette",
-      "State": "Reserved",
-      "IsInUse": true,
-      "Name": "ship_bay_1_3"
-    },
-    {
-      "ShipSize": "Corvette",
-      "State": "Reserved",
-      "IsInUse": true,
-      "Name": "ship_bay_1_4"
-    },
-    {
-      "ShipSize": "Corvette",
-      "State": "Empty",
-      "IsInUse": false,
-      "Name": "ship_bay_1_5"
-    },
-    {
-      "ShipSize": "Corvette",
-      "State": "Empty",
-      "IsInUse": false,
-      "Name": "ship_bay_1_6"
-    },
-    {
-      "ShipSize": "Corvette",
-      "State": "Empty",
-      "IsInUse": false,
-      "Name": "ship_bay_1_7"
-    },
-    {
-      "ShipSize": "Corvette",
-      "State": "Empty",
-      "IsInUse": false,
-      "Name": "ship_bay_1_8"
-    }
-  ]
+  "Berths": []
 },
   "ShipMonitor": {
   "Ships": [
@@ -87,7 +36,7 @@
       "Status": "Hold",
       "Ticker": {
         "TotalTicks": 14.4000006,
-        "ElapsedTicks": 12.5461073
+        "ElapsedTicks": 1.03119457
       },
       "Navigation": {
         "Locations": [
@@ -105,10 +54,10 @@
     {
       "Name": "ship_2",
       "SOName": "sm_cargo_2",
-      "Status": "Hold",
+      "Status": "Transit",
       "Ticker": {
         "TotalTicks": 14.4000006,
-        "ElapsedTicks": 5.746071
+        "ElapsedTicks": 8.835576
       },
       "Navigation": {
         "Locations": [
@@ -126,18 +75,18 @@
     {
       "Name": "ship_3",
       "SOName": "sm_cargo_1",
-      "Status": "Transit",
+      "Status": "Hold",
       "Ticker": {
-        "TotalTicks": 14.4000006,
-        "ElapsedTicks": 9.370975
+        "TotalTicks": 21.6,
+        "ElapsedTicks": 19.9775467
       },
       "Navigation": {
         "Locations": [
-          "Void",
-          "Station"
+          "Station",
+          "Void"
         ],
-        "LastDeparted": "Station",
-        "CurrentDestination": "Void"
+        "LastDeparted": "Void",
+        "CurrentDestination": "Station"
       },
       "ManifestBook": {
         "Manifests": []
@@ -147,10 +96,10 @@
     {
       "Name": "ship_4",
       "SOName": "sm_cargo_1",
-      "Status": "Traffic",
+      "Status": "Hold",
       "Ticker": {
         "TotalTicks": 21.6,
-        "ElapsedTicks": 16.5527439
+        "ElapsedTicks": 11.3861723
       },
       "Navigation": {
         "Locations": [
@@ -163,60 +112,15 @@
       "ManifestBook": {
         "Manifests": []
       },
-      "TrafficShipData": {
-        "Phase": "Approaching",
-        "Position": {
-          "X": -10.0242682,
-          "Y": -2.65547132,
-          "Z": 0.0
-        },
-        "Rotation": {
-          "X": -0.00335658,
-          "Y": -5.57717249E-05,
-          "Z": 0.0166132525,
-          "W": -0.999856353
-        },
-        "TargetRotation": {
-          "X": 0.0,
-          "Y": 0.0,
-          "Z": 0.0
-        },
-        "StartingDistance": 63.045826,
-        "TravelTime": 11.5455647,
-        "ApproachFromLeft": true,
-        "BerthName": "ship_bay_1_1",
-        "Waypoints": [
-          {
-            "X": -59.64989,
-            "Y": 0.0270524025,
-            "Z": 0.0
-          },
-          {
-            "X": 3.30402946,
-            "Y": -3.37593532,
-            "Z": 0.0
-          },
-          {
-            "X": 60.1501122,
-            "Y": -1.478909,
-            "Z": 0.0
-          }
-        ],
-        "LocalScale": {
-          "X": 0.291715145,
-          "Y": 0.291715145,
-          "Z": 0.0
-        },
-        "ElapsedMovement": 6.67349052
-      }
+      "TrafficShipData": null
     },
     {
       "Name": "ship_5",
       "SOName": "sm_cargo_3",
-      "Status": "Traffic",
+      "Status": "Hold",
       "Ticker": {
         "TotalTicks": 21.6,
-        "ElapsedTicks": 14.616847
+        "ElapsedTicks": 9.364264
       },
       "Navigation": {
         "Locations": [
@@ -229,60 +133,15 @@
       "ManifestBook": {
         "Manifests": []
       },
-      "TrafficShipData": {
-        "Phase": "Approaching",
-        "Position": {
-          "X": 14.2919426,
-          "Y": -4.15290165,
-          "Z": 0.0
-        },
-        "Rotation": {
-          "X": 0.003760733,
-          "Y": 8.301048E-05,
-          "Z": 0.02206742,
-          "W": -0.9997494
-        },
-        "TargetRotation": {
-          "X": 0.0,
-          "Y": 0.0,
-          "Z": 0.0
-        },
-        "StartingDistance": 55.9313164,
-        "TravelTime": 10.85735,
-        "ApproachFromLeft": false,
-        "BerthName": "ship_bay_1_2",
-        "Waypoints": [
-          {
-            "X": 60.1501122,
-            "Y": -7.717723,
-            "Z": 0.0
-          },
-          {
-            "X": 4.38702965,
-            "Y": -3.38293529,
-            "Z": 0.0
-          },
-          {
-            "X": -59.64989,
-            "Y": -9.759251,
-            "Z": 0.0
-          }
-        ],
-        "LocalScale": {
-          "X": 0.257624865,
-          "Y": 0.257624865,
-          "Z": 0.0
-        },
-        "ElapsedMovement": 6.67349052
-      }
+      "TrafficShipData": null
     },
     {
       "Name": "ship_6",
       "SOName": "sm_cargo_1",
-      "Status": "Traffic",
+      "Status": "Transit",
       "Ticker": {
-        "TotalTicks": 21.6,
-        "ElapsedTicks": 2.98405886
+        "TotalTicks": 14.4000006,
+        "ElapsedTicks": 12.3956881
       },
       "Navigation": {
         "Locations": [
@@ -295,126 +154,15 @@
       "ManifestBook": {
         "Manifests": []
       },
-      "TrafficShipData": {
-        "Phase": "Approaching",
-        "Position": {
-          "X": 14.5172367,
-          "Y": -5.12840271,
-          "Z": 0.0
-        },
-        "Rotation": {
-          "X": 0.00352075929,
-          "Y": 0.000118016,
-          "Z": 0.03350102,
-          "W": -0.9994325
-        },
-        "TargetRotation": {
-          "X": 0.0,
-          "Y": 0.0,
-          "Z": 0.0
-        },
-        "StartingDistance": 57.2069435,
-        "TravelTime": 11.2498693,
-        "ApproachFromLeft": false,
-        "BerthName": "ship_bay_1_3",
-        "Waypoints": [
-          {
-            "X": 60.1501122,
-            "Y": -10.2783051,
-            "Z": 0.0
-          },
-          {
-            "X": 3.30402946,
-            "Y": -3.8629353,
-            "Z": 0.0
-          },
-          {
-            "X": -59.64989,
-            "Y": -10.2062788,
-            "Z": 0.0
-          }
-        ],
-        "LocalScale": {
-          "X": 0.277255535,
-          "Y": 0.277255535,
-          "Z": 0.0
-        },
-        "ElapsedMovement": 6.67349052
-      }
+      "TrafficShipData": null
     },
     {
       "Name": "ship_7",
       "SOName": "sm_cargo_2",
-      "Status": "Traffic",
-      "Ticker": {
-        "TotalTicks": 14.4000006,
-        "ElapsedTicks": 14.4121208
-      },
-      "Navigation": {
-        "Locations": [
-          "Station",
-          "Void"
-        ],
-        "LastDeparted": "Void",
-        "CurrentDestination": "Station"
-      },
-      "ManifestBook": {
-        "Manifests": []
-      },
-      "TrafficShipData": {
-        "Phase": "Approaching",
-        "Position": {
-          "X": -40.7629967,
-          "Y": -6.938559,
-          "Z": 0.0
-        },
-        "Rotation": {
-          "X": 0.000387987966,
-          "Y": -1.25710976E-05,
-          "Z": 0.0323837437,
-          "W": 0.9994754
-        },
-        "TargetRotation": {
-          "X": 0.0,
-          "Y": 0.0,
-          "Z": 0.0
-        },
-        "StartingDistance": 64.1843643,
-        "TravelTime": 9.8154335,
-        "ApproachFromLeft": true,
-        "BerthName": "ship_bay_1_4",
-        "Waypoints": [
-          {
-            "X": -59.64989,
-            "Y": -8.220953,
-            "Z": 0.0
-          },
-          {
-            "X": 4.38702965,
-            "Y": -3.872935,
-            "Z": 0.0
-          },
-          {
-            "X": 60.1501122,
-            "Y": -13.4211483,
-            "Z": 0.0
-          }
-        ],
-        "LocalScale": {
-          "X": 0.765062332,
-          "Y": 0.765062332,
-          "Z": 0.0
-        },
-        "ElapsedMovement": 1.87034416
-      }
-    },
-    {
-      "Name": "ship_8",
-      "SOName": "sm_cargo_1",
       "Status": "Transit",
       "Ticker": {
         "TotalTicks": 14.4000006,
-        "ElapsedTicks": 4.279772
+        "ElapsedTicks": 4.93295527
       },
       "Navigation": {
         "Locations": [
@@ -438,12 +186,12 @@
   "Products": [
     {
       "ProductName": "Iron",
-      "Amount": 90,
+      "Amount": 100,
       "MaxAmount": 10000
     },
     {
       "ProductName": "Plastic",
-      "Amount": 80,
+      "Amount": 100,
       "MaxAmount": 10000
     },
     {
@@ -458,7 +206,7 @@
     },
     {
       "ProductName": "Consumer Goods",
-      "Amount": 130,
+      "Amount": 30,
       "MaxAmount": 10000
     },
     {
@@ -468,18 +216,28 @@
     },
     {
       "ProductName": "Energy",
-      "Amount": 500,
+      "Amount": 486,
       "MaxAmount": 1000000
     },
     {
       "ProductName": "Population",
-      "Amount": 40,
-      "MaxAmount": 60
+      "Amount": 20,
+      "MaxAmount": 30
     },
     {
       "ProductName": "Credits",
       "Amount": 10000,
       "MaxAmount": 1000000
+    },
+    {
+      "ProductName": "Food",
+      "Amount": 186,
+      "MaxAmount": 10000
+    },
+    {
+      "ProductName": "Water",
+      "Amount": 186,
+      "MaxAmount": 10000
     }
   ],
   "Placeables": [
@@ -488,19 +246,34 @@
       "PlaceableName": "Small Power Plant"
     },
     {
-      "Id": 2,
-      "PlaceableName": "Small Factory"
-    },
-    {
-      "Id": 3,
-      "PlaceableName": "Small Factory"
-    },
-    {
       "Id": 4,
       "PlaceableName": "Small Housing"
+    },
+    {
+      "Id": 5,
+      "PlaceableName": "Small Bays"
+    },
+    {
+      "Id": 6,
+      "PlaceableName": "Basic Needs"
     }
   ],
   "DefaultProductCapacity": 0
+},
+  "PopulationControl": {
+  "CurrentCount": 20,
+  "CurrentUnemployed": 4,
+  "Capacity": 0,
+  "Employers": [
+    {
+      "EmployerName": "product_factory_1",
+      "Count": 10
+    },
+    {
+      "EmployerName": "product_factory_2",
+      "Count": 6
+    }
+  ]
 },
   "StationTrader": {
   "Entries": [
@@ -539,27 +312,93 @@
       "Amount": 0,
       "ShouldConsume": false,
       "ShouldProvide": false
+    },
+    {
+      "ProductId": 10,
+      "Amount": 0,
+      "ShouldConsume": false,
+      "ShouldProvide": false
+    },
+    {
+      "ProductId": 11,
+      "Amount": 0,
+      "ShouldConsume": false,
+      "ShouldProvide": false
     }
   ],
   "HoldEntries": []
 },
   "FactoryControl": {
-  "Factories": []
+  "Factories": [
+    {
+      "Name": "product_factory_1",
+      "IsCrafting": false,
+      "CurrentlyCraftingRecipeId": 0,
+      "RemainingCraftTime": 0.0,
+      "IsBuying": false
+    },
+    {
+      "Name": "product_factory_2",
+      "IsCrafting": false,
+      "CurrentlyCraftingRecipeId": 0,
+      "RemainingCraftTime": 0.0,
+      "IsBuying": false
+    }
+  ]
 },
   "Placeables": {
   "Placeables": [
     {
-      "PlaceableName": "Small Bays",
-      "InstanceName": "ship_bay_1",
+      "PlaceableName": "Small Factory",
+      "InstanceName": "product_factory_1",
       "Position": {
-        "X": 3.86102962,
-        "Y": -3.96293521,
+        "X": -14.3762541,
+        "Y": 0.3022759,
         "Z": 0.0
       },
       "Nodes": [
         {
-          "NodeName": "ShipBay",
-          "InstanceName": "ship_bay_1"
+          "NodeName": "EnergyConsumer",
+          "InstanceName": "product_factory_1"
+        },
+        {
+          "NodeName": "ProductFactory",
+          "InstanceName": "product_factory_1"
+        },
+        {
+          "NodeName": "efficency",
+          "InstanceName": "product_factory_1"
+        },
+        {
+          "NodeName": "PopEmployer",
+          "InstanceName": "product_factory_1"
+        }
+      ]
+    },
+    {
+      "PlaceableName": "Small Factory",
+      "InstanceName": "product_factory_2",
+      "Position": {
+        "X": -11.9023285,
+        "Y": -7.8866663,
+        "Z": 0.0
+      },
+      "Nodes": [
+        {
+          "NodeName": "EnergyConsumer",
+          "InstanceName": "product_factory_2"
+        },
+        {
+          "NodeName": "ProductFactory",
+          "InstanceName": "product_factory_2"
+        },
+        {
+          "NodeName": "efficency",
+          "InstanceName": "product_factory_2"
+        },
+        {
+          "NodeName": "PopEmployer",
+          "InstanceName": "product_factory_2"
         }
       ]
     }

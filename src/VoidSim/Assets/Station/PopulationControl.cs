@@ -4,6 +4,7 @@ using System.Linq;
 using Assets.Logistics;
 using Assets.Placeables.Nodes;
 using Assets.Scripts;
+using Assets.Scripts.Serialization;
 using Assets.Station.Efficiency;
 using Assets.WorldMaterials;
 using Assets.WorldMaterials.Population;
@@ -17,11 +18,26 @@ using TimeLength = Assets.Scripts.TimeLength;
 
 namespace Assets.Station
 {
+	public class PopulationData
+	{
+		public int CurrentCount;
+		public int CurrentUnemployed;
+		public int Capacity;
+		public List<EmployerData> Employers;
+	}
+
+	public class EmployerData
+	{
+		public string EmployerName;
+		public int Count;
+	}
+
 	/// <summary>
 	/// Bird's eye view of population; including housing, employment, and pops themselves
 	/// </summary>
-	public class PopulationControl : QScript, IPopulationHost, ITraderDriver, IMessageListener
+	public class PopulationControl : QScript, IPopulationHost, ISerializeData<PopulationData>, ITraderDriver, IMessageListener
 	{
+		private const string _placeableNameSuffix = "pop_housing_";
 		public string Name { get { return "PopulationControl"; } }
 		[SerializeField] private int _totalCapacity;
 		[SerializeField] private int _baseCapacity;
@@ -43,7 +59,7 @@ namespace Assets.Station
 		// basic employment model
 		[SerializeField] private TimeLength _employmentUpdateTimeLength;
 		[SerializeField] private int _employmentUpdateCount;
-		private string _stopwatchNodeName = "employment";
+		private readonly string _stopwatchNodeName = "employment";
 		private float _baseEmployChance;
 
 		public MoodManager MoodManager { get; private set; }
@@ -54,6 +70,13 @@ namespace Assets.Station
 		private PopulationSO _scriptable;
 		private bool _ignoreNeeds;
 
+		private readonly CollectionSerializer<PopulationData> _serializer
+			= new CollectionSerializer<PopulationData>();
+		private PopulationData _deserialized;
+		// will go away when pop has a serialized model
+		private int _handledDeserializedCount;
+
+		private const string _collectionName = "PopulationControl";
 
 		public void Initialize(Inventory inventory, PopulationSO scriptable)
 		{
@@ -64,7 +87,7 @@ namespace Assets.Station
 			_inventory = inventory;
 			_inventory.OnProductsChanged += HandleInventoryProductChanged;
 
-			GetProductIds();
+			_populationProductId = ProductIdLookup.Population;
 			_currentCount = _inventory.GetProductCurrentAmount(_populationProductId);
 			_currentUnemployed = _currentCount;
 
@@ -72,28 +95,41 @@ namespace Assets.Station
 			CurrentQualityOfLife = 10;
 
 			_baseCapacity = scriptable.BaseCapacity;
+
+			if (_serializer.HasDataFor(this, _collectionName))
+				LoadFromFile();
+			else
+				LoadFromScriptable(scriptable);
+
 			_inventory.SetProductMaxAmount(_populationProductId, scriptable.BaseCapacity);
-			_inventory.TryAddProduct(_populationProductId, _scriptable.InitialCount);
 
 			Locator.MessageHub.AddListener(this, PopHousing.MessageName);
 			Locator.MessageHub.AddListener(this, PopEmployer.MessageName);
 
 			// remove when housing serialization is in place
-			Locator.LastId.Reset("pop_housing");
+			//Locator.LastId.Reset("pop_housing");
 
 			InitializeProductTrader();
 			InitializeEmploymentUpdate(_scriptable.EmploymentParams);
 		}
 
+		private void LoadFromScriptable(PopulationSO scriptable)
+		{
+			_inventory.TryAddProduct(_populationProductId, _scriptable.InitialCount);
+		}
+
+		private void LoadFromFile()
+		{
+			_deserialized = _serializer.DeserializeData();
+			_currentUnemployed = _deserialized.CurrentUnemployed;
+			_currentCount = _deserialized.CurrentCount;
+			if(_inventory.GetProductCurrentAmount(ProductIdLookup.Population) != _currentCount)
+				throw new UnityException("PopControl data not matching station inventory");
+		}
+
 		private void HandleMoodChange(EfficiencyModule module)
 		{
 			_employerAffector.Efficiency = module.CurrentAmount;
-		}
-
-		private void GetProductIds()
-		{
-			var product = ProductLookup.Instance.GetProduct(ProductNameLookup.Population);
-			_populationProductId = product.ID;
 		}
 
 		// register with stopwatch to regularly check for updates
@@ -193,7 +229,7 @@ namespace Assets.Station
 				return;
 			}
 
-			args.PopHousing.name = "pop_housing_" + Locator.LastId.GetNext("pop_housing");
+			args.PopHousing.name = _placeableNameSuffix + Locator.LastId.GetNext("pop_housing");
 
 			_housing.Add(args.PopHousing);
 			UpdateCapacity();
@@ -218,6 +254,20 @@ namespace Assets.Station
 			employer.RegisterMood(_employerAffector);
 			_employers.Add(employer);
 
+			if (_deserialized != null && _deserialized.Employers.Any(i => i.EmployerName == employer.name))
+				HandleExistingEmployer(employer);
+			else
+				HandleNewEmployer(employer);
+		}
+
+		private void HandleExistingEmployer(PopEmployer employer)
+		{
+			var data = _deserialized.Employers.First(i => i.EmployerName == employer.name);
+			employer.AddEmployee(data.Count);
+		}
+
+		private void HandleNewEmployer(PopEmployer employer)
+		{
 			// real basic implementation of placing employees, place half the max amount
 			if (_currentUnemployed > 0)
 			{
@@ -288,5 +338,21 @@ namespace Assets.Station
 		}
 
 		public void HandleConsumeSuccess(TradeManifest manifest) { }
+		public PopulationData GetData()
+		{
+			var data = new PopulationData
+			{
+				CurrentCount = _currentCount,
+				CurrentUnemployed = _currentUnemployed,
+				Capacity = _totalCapacity,
+				Employers = _employers.Select(i => 
+					new EmployerData
+					{
+						EmployerName = i.name,
+						Count = i.CurrentEmployeeCount
+					}).ToList()
+			};
+			return data;
+		}
 	}
 }

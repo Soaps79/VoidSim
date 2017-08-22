@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Logistics;
 using Assets.Placeables;
 using Assets.Placeables.Nodes;
 using Assets.Scripts;
@@ -11,7 +10,6 @@ using Assets.WorldMaterials.Products;
 using Assets.WorldMaterials.UI;
 using Messaging;
 using ModestTree;
-using Newtonsoft.Json;
 using QGame;
 using UnityEngine;
 
@@ -61,7 +59,7 @@ namespace Assets.Station
 			go.name = "player_crafting_array_viewmodel";
 			var viewModel = go.GetComponent<PlayerCraftingArrayViewModel>();
 			viewModel.Bind(this);
-			if(_serializer.HasDataFor(this, "FactoryControl"))
+			if(_serializer.HasDataFor(this, _collectionName))
 				Load();
 		}
 

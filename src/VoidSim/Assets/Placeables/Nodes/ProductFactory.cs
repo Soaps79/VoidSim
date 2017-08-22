@@ -21,6 +21,7 @@ namespace Assets.Placeables.Nodes
 	public class ProductFactoryData
 	{
 		public string Name;
+		public bool IsCrafting;
 		public int CurrentlyCraftingRecipeId;
 		public float RemainingCraftTime;
 		public bool IsBuying;
@@ -249,10 +250,13 @@ namespace Assets.Placeables.Nodes
 		public void Resume(ProductFactoryData data)
 		{
 			IsBuying = data.IsBuying;
-			var recipe = _productLookup.GetRecipe(data.CurrentlyCraftingRecipeId);
-			_currentCraftQueueId = _container.ResumeCrafting(recipe, data.RemainingCraftTime);
-			CurrentlyCrafting = recipe;
-			IsCrafting = true;
+			if (data.IsCrafting)
+			{
+				var recipe = _productLookup.GetRecipe(data.CurrentlyCraftingRecipeId);
+				_currentCraftQueueId = _container.ResumeCrafting(recipe, data.RemainingCraftTime);
+				CurrentlyCrafting = recipe;
+				IsCrafting = true;
+			}
 		}
 
 		// returns data for serialization
@@ -261,8 +265,9 @@ namespace Assets.Placeables.Nodes
 			return new ProductFactoryData
 			{
 				Name = name,
+				IsCrafting = IsCrafting,
 				IsBuying = IsBuying,
-				CurrentlyCraftingRecipeId = CurrentlyCrafting.Id,
+				CurrentlyCraftingRecipeId = IsCrafting ? CurrentlyCrafting.Id : 0,
 				RemainingCraftTime = _container.CurrentCraftRemainingAsZeroToOne
 			};
 		}
