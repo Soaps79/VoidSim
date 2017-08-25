@@ -20,7 +20,7 @@ namespace Assets.Scripts.Initialization
 			InitializeLastIds();
 		}
 
-		// manual intiialization
+		// manual initialization
 		public static void Initialize<T>(object obj) where T: class
 		{
 			ServiceLocator.Register<T>(obj);
