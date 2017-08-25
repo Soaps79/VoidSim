@@ -3,11 +3,11 @@ using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.Scenes
 {
-	public class SceneController : QScript
+	public class MainMenuController : QScript
 	{
 		public void OnNewGame()
 		{
-			SceneManager.LoadScene("scene1");
+			SceneManager.LoadScene("loading");
 		}
 	}
 }
