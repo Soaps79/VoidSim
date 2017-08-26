@@ -52,7 +52,7 @@ namespace Assets.Controllers
             _cameraMap.Add(SpringCameraKey, SpringCamera);
 
             // override active camera
-            ChangeCamera(SpringCameraKey);
+            ChangeCamera(FreeCameraKey);
         }
 
         public void ChangeCamera(string cameraKey)
