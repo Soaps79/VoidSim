@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Assets.Controllers.GUI;
 using UnityEngine;
 using Zenject;
+using Object = UnityEngine.Object;
 
 namespace Assets.Placeables.UI
 {
@@ -11,12 +13,14 @@ namespace Assets.Placeables.UI
 			= new Dictionary<string, PlaceableViewModel>();
 
 		private static PlaceablesLookup _scriptable;
+		private static Transform _centerPoint;
 
 		/// <summary>
 		/// Must be called once in order for object to function
 		/// </summary>
-		public static void Initialize()
+		public static void Initialize(Transform centerPoint)
 		{
+			_centerPoint = centerPoint;
 			_scriptable = Object.Instantiate(Resources.Load("placeables_lookup")) as PlaceablesLookup;
 		}
 
@@ -36,9 +40,21 @@ namespace Assets.Placeables.UI
 			var canvas = GameObject.Find("InfoCanvas");
 			var viewModelInstance = GameObject.Instantiate(_scriptable.ViewModel, canvas.transform, false);
 			viewModelInstance.Bind(placeable);
+			var position = GetUiObjectPosition(placeable.transform);
+			viewModelInstance.transform.position = position;
 			var close = viewModelInstance.GetComponent<ClosePanelButton>();
 			if (close != null)
 				close.OnClose += () => { DisableUI(placeable.name); };
+		}
+
+		private static Vector2 GetUiObjectPosition(Transform placeableTransform)
+		{
+			const float distance = 80f;
+			var placeablePoint = Camera.main.WorldToScreenPoint(placeableTransform.position);
+			var stationPoint = Camera.main.WorldToScreenPoint(_centerPoint.position);
+			var direction = placeablePoint - stationPoint;
+			return stationPoint + (direction.normalized * distance);
+			//var angleInRadians = Mathf.Atan2(placeablePoint.y - stationPoint.y, placeablePoint.x - stationPoint.x);
 		}
 
 		// destroy the UI item

@@ -19,6 +19,8 @@ namespace Assets.Placeables
 	/// </summary>
 	public class PlaceablesMonitor : QScript, IMessageListener, ISerializeData<PlaceablesMonitorData>
 	{
+		public Transform CenterUI;
+
 		private readonly List<Placeable> _placeables = new List<Placeable>();
 
 		private readonly CollectionSerializer<PlaceablesMonitorData> _serializer 
@@ -27,7 +29,7 @@ namespace Assets.Placeables
 		void Start()
 		{
 			Locator.MessageHub.AddListener(this, PlaceableMessages.PlaceablePlaced);
-			PlaceableUIFactory.Initialize();
+			PlaceableUIFactory.Initialize(CenterUI);
 
 			if(_serializer.HasDataFor(this, "Placeables"))
 				HandleLoadingPlaceables();
