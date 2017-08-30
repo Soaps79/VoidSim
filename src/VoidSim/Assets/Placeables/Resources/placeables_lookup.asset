@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cca8bf64afbb3a746a960d8214aea7ed, type: 3}
   m_Name: placeables_lookup
   m_EditorClassIdentifier: 
-  _viewModel: {fileID: 114358666785339644, guid: d5b83c46069d2214186c858c9d4d5759,
+  ViewModel: {fileID: 114358666785339644, guid: d5b83c46069d2214186c858c9d4d5759,
     type: 2}
   Placeables:
   - {fileID: 11400000, guid: c1165df45981aa540a75a440defc0fed, type: 2}

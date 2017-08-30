@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Assets.Placeables.UI;
 using Assets.Scripts;
 using Assets.Scripts.Serialization;
 using Messaging;
@@ -26,6 +27,7 @@ namespace Assets.Placeables
 		void Start()
 		{
 			Locator.MessageHub.AddListener(this, PlaceableMessages.PlaceablePlaced);
+			PlaceableUIFactory.Initialize();
 
 			if(_serializer.HasDataFor(this, "Placeables"))
 				HandleLoadingPlaceables();

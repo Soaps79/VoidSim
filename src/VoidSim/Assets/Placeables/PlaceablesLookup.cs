@@ -5,15 +5,7 @@ namespace Assets.Placeables
 {
 	public class PlaceablesLookup : ScriptableObject
 	{
-		[SerializeField] private PlaceableViewModel _viewModel;
+		public PlaceableViewModel ViewModel;
         public List<PlaceableScriptable> Placeables;
-
-		void OnEnable()
-		{
-			foreach (var placeable in Placeables)
-			{
-				placeable.ViewModel = _viewModel;
-			}
-		}
     }
 }

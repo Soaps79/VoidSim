@@ -19,9 +19,12 @@ namespace Assets.Placeables
 
 		private Placeable _placeable;
 
+		public string PlaceableName { get; private set; }
+
 		public void Bind(Placeable placeable)
 		{
 			_placeable = placeable;
+			PlaceableName = placeable.name;
 			HandleSubsystems();
 			//GenerateLine();
 			//UpdateLine();

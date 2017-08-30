@@ -13,7 +13,6 @@ namespace Assets.Placeables
 		public Placeable Prefab;
 
 		public static ProductLookupScriptable ProductLookup;
-		[HideInInspector] public PlaceableViewModel ViewModel { get; set; }
 
 		void OnEnable()
 		{
