@@ -7,9 +7,9 @@ namespace Assets.Controllers.Cameras
     {
         public override string Name { get { return "MouseZoomControl"; } }
 
-        public int MaxOrthoSize = 16;
-        public int MinOrthoSize = 2;
-        public int ZoomSpeed = 40;
+        public int MaxOrthoSize = 100;
+        public int MinOrthoSize = 8;
+        public int ZoomSpeed = 100;
 
         public override void Execute(ICamera camera, float timeDelta)
         {
