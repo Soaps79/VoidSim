@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Assets.Controllers.GUI;
+using Assets.Scripts.UI;
 using UnityEngine;
 using Zenject;
 using Object = UnityEngine.Object;
@@ -49,12 +50,12 @@ namespace Assets.Placeables.UI
 
 		private static Vector2 GetUiObjectPosition(Transform placeableTransform)
 		{
-			const float distance = 80f;
+			const float distance = 300f;
 			var placeablePoint = Camera.main.WorldToScreenPoint(placeableTransform.position);
 			var stationPoint = Camera.main.WorldToScreenPoint(_centerPoint.position);
+
 			var direction = placeablePoint - stationPoint;
 			return stationPoint + (direction.normalized * distance);
-			//var angleInRadians = Mathf.Atan2(placeablePoint.y - stationPoint.y, placeablePoint.x - stationPoint.x);
 		}
 
 		// destroy the UI item

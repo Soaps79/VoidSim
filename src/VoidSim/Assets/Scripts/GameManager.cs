@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Initialization;
+using Assets.Scripts.UI;
 using Assets.WorldMaterials.Products;
 using DG.Tweening;
 using Messaging;
@@ -67,7 +68,7 @@ namespace Assets.Scripts
 			UberDebug.LogChannel(LogChannels.Serialization, "Initializing");
 
 			DOTween.Init(false, true, LogBehaviour.ErrorsOnly);
-			InititalizeKeyValueDisplay();
+			InititalizeDebugDisplay();
 			BindMouseMovementToKvd();
 			InitializeScreenBounds();
 			InitializeProductLookup();
@@ -116,8 +117,11 @@ namespace Assets.Scripts
 			KeyValueDisplay.Instance.Add("MousePos", () => Input.mousePosition.ToString());
 		}
 
-		private void InititalizeKeyValueDisplay()
+		private void InititalizeDebugDisplay()
 		{
+			var uiHelper = GetComponentInChildren<DebugUIHelper>();
+			uiHelper.Initialize();
+
 			if (KVDUIGameObject == null)
 			{
 				Debug.Log("GameManager's KVD UI object is null");
