@@ -13,6 +13,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ProductName: Basic Needs
   IconSprite: {fileID: 21300006, guid: 0292be98de478244b8e9b7e62a559597, type: 3}
-  PlacedSprite: {fileID: 21300004, guid: ed48e76a45db81345859da8cd1747f0a, type: 3}
+  PlacedSprite: {fileID: 21300008, guid: ed48e76a45db81345859da8cd1747f0a, type: 3}
   Layer: 0
   Prefab: {fileID: 114599005958062186, guid: 4f5d2fab6571d4840a4cf47ea4577677, type: 2}

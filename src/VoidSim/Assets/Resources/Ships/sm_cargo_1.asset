@@ -13,8 +13,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MinScale: 0.16
   MaxScale: 1
-  MinTravelTime: 15
-  MaxTravelTime: 20
+  MinTravelTime: 25
+  MaxTravelTime: 30
   Sprite: {fileID: 21300000, guid: 553e15eef7349b94996602782634dc87, type: 3}
   TrafficShipPrefab: {fileID: 114541816545147578, guid: 877867a639a31df4f9f1605f6db66060,
     type: 2}

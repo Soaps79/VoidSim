@@ -13,6 +13,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ProductName: Small Housing
   IconSprite: {fileID: 21300010, guid: 0292be98de478244b8e9b7e62a559597, type: 3}
-  PlacedSprite: {fileID: 21300008, guid: ed48e76a45db81345859da8cd1747f0a, type: 3}
+  PlacedSprite: {fileID: 21300004, guid: ed48e76a45db81345859da8cd1747f0a, type: 3}
   Layer: 1
   Prefab: {fileID: 114840166276243458, guid: 4b7e0587c60211944821e7b3d994c01a, type: 2}

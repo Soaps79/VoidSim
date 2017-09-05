@@ -8,7 +8,6 @@ namespace Assets.Logistics.Ships
 	public class TrafficScheduleEntry
 	{
 		public float InitialDelay;
-		public float RegularDelay;
 		public string SOName;
 	}
 

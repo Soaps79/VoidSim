@@ -13,26 +13,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Entries:
   - InitialDelay: 1
-    RegularDelay: 2
     SOName: sm_cargo_1
-  - InitialDelay: 8
-    RegularDelay: 2
+  - InitialDelay: 20
     SOName: sm_cargo_2
-  - InitialDelay: 18
-    RegularDelay: 2
+  - InitialDelay: 42
     SOName: sm_cargo_1
-  - InitialDelay: 26
-    RegularDelay: 2
+  - InitialDelay: 70
     SOName: sm_cargo_1
-  - InitialDelay: 28
-    RegularDelay: 2
+  - InitialDelay: 86
     SOName: sm_cargo_3
-  - InitialDelay: 40
-    RegularDelay: 2
+  - InitialDelay: 104
     SOName: sm_cargo_1
-  - InitialDelay: 48
-    RegularDelay: 2
+  - InitialDelay: 148
     SOName: sm_cargo_2
-  - InitialDelay: 60
-    RegularDelay: 2
+  - InitialDelay: 170
     SOName: sm_cargo_1

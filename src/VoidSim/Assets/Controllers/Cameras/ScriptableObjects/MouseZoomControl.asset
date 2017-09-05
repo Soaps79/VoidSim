@@ -11,6 +11,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03619033e00526840bbf4b1cb7232aac, type: 3}
   m_Name: MouseZoomControl
   m_EditorClassIdentifier: 
-  MaxOrthoSize: 100
+  MaxOrthoSize: 160
   MinOrthoSize: 8
   ZoomSpeed: 200

@@ -11,4 +11,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e4d7deec296223499fd87a1442abb81, type: 3}
   m_Name: PanAndScanControl
   m_EditorClassIdentifier: 
-  MoveSpeed: 10
+  MoveSpeed: 50
