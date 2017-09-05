@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8a109c2157c82748ab67e652315bd77, type: 3}
   m_Name: sm_cargo_2
   m_EditorClassIdentifier: 
-  MinScale: 0.06
+  MinScale: 0.16
   MaxScale: 1
   MinTravelTime: 14
   MaxTravelTime: 18

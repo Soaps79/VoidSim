@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: ed48e76a45db81345859da8cd1747f0a
-timeCreated: 1502931804
+timeCreated: 1504651600
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -100,9 +100,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 795
-        width: 103
-        height: 229
+        y: 1582
+        width: 206
+        height: 466
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -113,10 +113,10 @@ TextureImporter:
       name: plc_sm_power_plant
       rect:
         serializedVersion: 2
-        x: 116
-        y: 883
-        width: 158
-        height: 133
+        x: 223
+        y: 1778
+        width: 325
+        height: 262
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -127,10 +127,10 @@ TextureImporter:
       name: plc_basic_needs
       rect:
         serializedVersion: 2
-        x: 276
-        y: 927
-        width: 71
-        height: 97
+        x: 709
+        y: 1792
+        width: 304
+        height: 239
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,10 +141,10 @@ TextureImporter:
       name: plc_sm_bays
       rect:
         serializedVersion: 2
-        x: 119
-        y: 792
-        width: 109
-        height: 85
+        x: 230
+        y: 1574
+        width: 237
+        height: 197
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -155,10 +155,10 @@ TextureImporter:
       name: plc_sm_housing
       rect:
         serializedVersion: 2
-        x: 351
-        y: 908
-        width: 159
-        height: 116
+        x: 548
+        y: 1853
+        width: 151
+        height: 195
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
