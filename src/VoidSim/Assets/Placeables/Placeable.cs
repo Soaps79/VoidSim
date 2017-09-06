@@ -66,16 +66,13 @@ namespace Assets.Placeables
 
 		public void InitializeNodes(PlaceableData data = null)
 		{
+			name = PlaceableNode.DefaultName;
 			_nodes = GetComponents<PlaceableNode>().ToList();
 			foreach (var node in _nodes)
 			{
 				if (data != null && data.Nodes != null && data.Nodes.Any(i => i.NodeName == node.NodeName))
 				{
 					node.name = data.Nodes.First(i => i.NodeName == node.NodeName).InstanceName;
-				}
-				else
-				{
-					node.name = PlaceableNode.DefaultName;
 				}
 				node.BroadcastPlacement();
 			}
