@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Assets.Station;
 using ModestTree;
 using QGame;
 
@@ -21,11 +23,36 @@ namespace Assets.Placeables
 	public class HardPointManager : QScript, IHardPointManager
 	{
 		private readonly List<HardPoint> _points = new List<HardPoint>();
+		private LayerType _layer;
 
-		void Start()
+		public void Initialize(LayerType layer)
 		{
+			_layer = layer;
 			var points = GetComponentsInChildren<HardPoint>();
-			_points.AddRange(points);
+			var index = 1;
+			foreach (var hardPoint in points)
+			{
+				hardPoint.name = "hardpoint_" + GetAbbreviation(_layer) +"_" + index;
+				_points.Add(hardPoint);
+				index++;
+			}
+		}
+
+		private string GetAbbreviation(LayerType layer)
+		{
+			switch (layer)
+			{
+				case LayerType.Top:
+					return "top";
+				case LayerType.Middle:
+					return "mid";
+				case LayerType.Bottom:
+					return "bot";
+				case LayerType.Core:
+					return "core";
+			}
+
+			return "notfound";
 		}
 
 		public void ActivateHardpoints()

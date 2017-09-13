@@ -21,7 +21,10 @@ namespace Assets.Station
 			_inventory = inventory;
 			var hardpoints = GetComponentInChildren<HardPointManager>();
 			if (hardpoints != null)
+			{
+				hardpoints.Initialize(LayerType);
 				_hardPoints = hardpoints;
+			}
 			else
 				_hardPoints = new NullHardpointManager();
 		}
