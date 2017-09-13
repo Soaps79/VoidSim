@@ -4991,7 +4991,7 @@ GameObject:
   - component: {fileID: 1203824006}
   - component: {fileID: 1203824007}
   m_Layer: 0
-  m_Name: hardpoints (1)
+  m_Name: hardpoints
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

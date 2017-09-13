@@ -19,14 +19,21 @@ namespace Assets.Station
 		{
 			_parentStation = parentStation;
 			_inventory = inventory;
+			InitializeHardpoints();
+		}
+
+		// find and initialize the hardpoint manager, or instantiate a null one
+		private void InitializeHardpoints()
+		{
 			var hardpoints = GetComponentInChildren<HardPointManager>();
-			if (hardpoints != null)
+			if (hardpoints == null)
 			{
-				hardpoints.Initialize(LayerType);
-				_hardPoints = hardpoints;
-			}
-			else
 				_hardPoints = new NullHardpointManager();
+				return;
+			}
+
+			hardpoints.Initialize(LayerType);
+			_hardPoints = hardpoints;
 		}
 
 		// Use this for initialization
@@ -65,7 +72,7 @@ namespace Assets.Station
 
 		private void HandlePlaced(PlaceableUpdateArgs placed)
 		{
-			_hardPoints.CompletePlacement();
+			_hardPoints.DeactivateHardpoints();
 			if (placed.Layer == LayerType)
 				placed.Placeable.transform.SetParent(transform);
 		}
