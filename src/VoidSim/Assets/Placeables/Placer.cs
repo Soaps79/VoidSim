@@ -52,7 +52,8 @@ namespace Assets.Placeables
 				PlaceableMessages.PlaceablePlaced,
 				new PlaceableUpdateArgs
 				{
-					ObjectPlaced = placeable,
+					State = PlaceablePlacementState.Placed,
+					Placeable = placeable,
 					Layer = scriptable.Layer
 				});
 			placeable.InitializeNodes(data);

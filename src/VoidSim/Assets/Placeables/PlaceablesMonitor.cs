@@ -57,8 +57,8 @@ namespace Assets.Placeables
 
 		private void HandlePlaceablePlaced(PlaceableUpdateArgs args)
 		{
-			if(args != null && args.ObjectPlaced != null)
-				_placeables.Add(args.ObjectPlaced);
+			if(args != null && args.State == PlaceablePlacementState.Placed && args.Placeable != null)
+				_placeables.Add(args.Placeable);
 		}
 
 		public string Name { get { return "PlaceablesMonitor"; } }

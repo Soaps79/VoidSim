@@ -19,11 +19,13 @@ namespace Assets.Placeables
 		public const string PlaceablePlaced = "PlaceablePlaced";
 	}
 
+	public enum PlaceablePlacementState { BeginPlacement, Placed, Cancelled, Removed }
+
 	public class PlaceableUpdateArgs : MessageArgs
 	{
-		public Placeable ObjectPlaced;
+		public PlaceablePlacementState State;
+		public Placeable Placeable;
 		public LayerType Layer;
-		public bool WasRemoved;
 	}
 
 	public class PlaceableData
