@@ -2,6 +2,7 @@
 using Assets.Placeables;
 using Assets.Scripts;
 using Assets.WorldMaterials;
+using DG.Tweening;
 using Messaging;
 using QGame;
 using UnityEngine;
@@ -14,11 +15,14 @@ namespace Assets.Station
 		private Inventory _inventory;
 		public LayerType LayerType;
 		private IHardPointManager _hardPoints;
+		private SpriteRenderer _sprite;
+		private bool _isFaded;
 
 		public void Initialize(Station parentStation, Inventory inventory)
 		{
 			_parentStation = parentStation;
 			_inventory = inventory;
+			_sprite = GetComponent<SpriteRenderer>();
 			InitializeHardpoints();
 		}
 
@@ -61,20 +65,45 @@ namespace Assets.Station
 				case PlaceablePlacementState.Placed:
 					HandlePlaced(placed);
 					break;
+				case PlaceablePlacementState.Cancelled:
+					CompletePlacement();
+					break;
 			}
 		}
 
 		private void HandleBeginPlacement(PlaceableUpdateArgs placed)
 		{
+			// this is a little janky, will get better as this is more fleshed out
 			if (placed.Layer == LayerType)
+			{
 				_hardPoints.ActivateHardpoints();
+			}
+			else if (_sprite != null)
+			{
+				var color = _sprite.color;
+				color.a = .5f;
+				_sprite.DOColor(color, .3f);
+				_isFaded = true;
+			}
 		}
 
 		private void HandlePlaced(PlaceableUpdateArgs placed)
 		{
-			_hardPoints.DeactivateHardpoints();
 			if (placed.Layer == LayerType)
 				placed.Placeable.transform.SetParent(transform);
+
+			CompletePlacement();
+		}
+
+		private void CompletePlacement()
+		{
+			_hardPoints.DeactivateHardpoints();
+			if (_isFaded)
+			{
+				var color = _sprite.color;
+				color.a = 1f;
+				_sprite.DOColor(color, .3f);
+			}
 		}
 
 		public string Name { get { return string.Format("StationLayer {0}", LayerType); } }

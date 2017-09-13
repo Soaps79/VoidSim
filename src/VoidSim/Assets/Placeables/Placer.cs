@@ -11,7 +11,7 @@ namespace Assets.Placeables
 	public class Placer : QScript
 	{
 		private GameObject _toPlaceGo;
-		private PlaceableScriptable _toPlaceableScriptable;
+		private PlaceableScriptable _toPlaceScriptable;
 		private int _toPlaceInventoryId;
 		private PlaceablesLookup _lookup;
 
@@ -39,7 +39,7 @@ namespace Assets.Placeables
 
 		private void HandlePlaceObject()
 		{
-			PlaceObject(_toPlaceableScriptable, _toPlaceGo.transform.position);
+			PlaceObject(_toPlaceScriptable, _toPlaceGo.transform.position);
 			CompletePlacement(true);
 		}
 
@@ -69,10 +69,18 @@ namespace Assets.Placeables
 			if (OnPlacementComplete != null)
 				OnPlacementComplete(wasPlaced ? _toPlaceInventoryId : 0);
 
+			Locator.MessageHub.QueueMessage(
+				PlaceableMessages.PlaceablePlaced,
+				new PlaceableUpdateArgs
+				{
+					State = PlaceablePlacementState.Cancelled,
+					Layer = _toPlaceScriptable.Layer
+				});
+
 			_toPlaceInventoryId = 0;
 			Destroy(_toPlaceGo);
 			_toPlaceGo = null;
-			_toPlaceableScriptable = null;
+			_toPlaceScriptable = null;
 			enabled = false;
 		}
 
@@ -83,7 +91,7 @@ namespace Assets.Placeables
 				throw new UnityException(string.Format("Placer asked to place {0}: Has no entry in PlaceablesLookup", placeableName));
 
 			_toPlaceInventoryId = inventoryId;
-			_toPlaceableScriptable = placeable;
+			_toPlaceScriptable = placeable;
 			var go = new GameObject();
 			var rend = go.AddComponent<SpriteRenderer>();
 			rend.sprite = placeable.PlacedSprite;
