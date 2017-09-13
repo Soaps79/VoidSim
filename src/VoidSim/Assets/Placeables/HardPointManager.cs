@@ -5,7 +5,20 @@ using QGame;
 
 namespace Assets.Placeables
 {
-	public class HardPointManager : QScript
+	public interface IHardPointManager
+	{
+		void ActivateHardpoints();
+		void CompletePlacement();
+	}
+
+	public class NullHardpointManager : IHardPointManager
+	{
+		public void ActivateHardpoints() { }
+
+		public void CompletePlacement() { }
+	}
+
+	public class HardPointManager : QScript, IHardPointManager
 	{
 		private readonly List<HardPoint> _points = new List<HardPoint>();
 
@@ -15,15 +28,14 @@ namespace Assets.Placeables
 			_points.AddRange(points);
 		}
 
-		public bool TryActivateHardpoints()
+		public void ActivateHardpoints()
 		{
 			var open = _points.Where(i => !i.IsUsed);
 
 			if (!open.Any())
-				return false;
+				return;
 
 			open.ForEach(i => i.Show());
-			return true;
 		}
 
 		public void CompletePlacement()

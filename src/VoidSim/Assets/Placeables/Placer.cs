@@ -91,6 +91,14 @@ namespace Assets.Placeables
 			rend.sortingOrder = 1;
 			_toPlaceGo = go;
 
+			Locator.MessageHub.QueueMessage(
+				PlaceableMessages.PlaceablePlaced,
+				new PlaceableUpdateArgs
+				{
+					State = PlaceablePlacementState.BeginPlacement,
+					Layer = placeable.Layer
+				});
+
 			enabled = true;
 		}
 

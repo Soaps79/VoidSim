@@ -4,6 +4,7 @@ using Assets.Scripts;
 using Assets.WorldMaterials;
 using Messaging;
 using QGame;
+using UnityEngine;
 
 namespace Assets.Station
 {
@@ -12,13 +13,17 @@ namespace Assets.Station
 		private Station _parentStation;
 		private Inventory _inventory;
 		public LayerType LayerType;
-		private HardPointManager _hardPoints;
+		private IHardPointManager _hardPoints;
 
 		public void Initialize(Station parentStation, Inventory inventory)
 		{
 			_parentStation = parentStation;
 			_inventory = inventory;
-			_hardPoints = GetComponentInChildren<HardPointManager>();
+			var hardpoints = GetComponentInChildren<HardPointManager>();
+			if (hardpoints != null)
+				_hardPoints = hardpoints;
+			else
+				_hardPoints = new NullHardpointManager();
 		}
 
 		// Use this for initialization
@@ -30,16 +35,36 @@ namespace Assets.Station
 		public void HandleMessage(string type, MessageArgs args)
 		{
 			if (type == PlaceableMessages.PlaceablePlaced)
-				HandlePlaceableAdd(args as PlaceableUpdateArgs);
+				HandlePlaceableUpdate(args as PlaceableUpdateArgs);
 		}
 
-		private void HandlePlaceableAdd(PlaceableUpdateArgs placed)
+		private void HandlePlaceableUpdate(PlaceableUpdateArgs placed)
 		{
-			if (placed == null || placed.Layer != LayerType || placed.State != PlaceablePlacementState.Placed)
-				return;
+			if (placed == null)
+				throw new UnityException("StationLayer recieved bad placeable data");
 
-			placed.Placeable.transform.SetParent(transform);
+			switch (placed.State)
+			{
+				case PlaceablePlacementState.BeginPlacement:
+					HandleBeginPlacement(placed);
+					break;
+				case PlaceablePlacementState.Placed:
+					HandlePlaced(placed);
+					break;
+			}
+		}
+
+		private void HandleBeginPlacement(PlaceableUpdateArgs placed)
+		{
+			if (placed.Layer == LayerType)
+				_hardPoints.ActivateHardpoints();
+		}
+
+		private void HandlePlaced(PlaceableUpdateArgs placed)
+		{
 			_hardPoints.CompletePlacement();
+			if (placed.Layer == LayerType)
+				placed.Placeable.transform.SetParent(transform);
 		}
 
 		public string Name { get { return string.Format("StationLayer {0}", LayerType); } }
