@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Station;
-using ModestTree;
 using QGame;
 
 namespace Assets.Placeables
@@ -38,6 +37,7 @@ namespace Assets.Placeables
 			{
 				hardPoint.name = "hardpoint_" + GetAbbreviation(_layer) +"_" + hardPoint.Number;
 				hardPoint.Sprite.sortingLayerName = layer.ToString();
+				hardPoint.Sprite.sortingOrder = 1;
 				_points.Add(hardPoint);
 			}
 		}
@@ -63,7 +63,7 @@ namespace Assets.Placeables
 		// show all hardpoints on screen
 		public void ActivateHardpoints()
 		{
-			var open = _points.Where(i => !i.IsUsed);
+			var open = _points.Where(i => !i.IsUsed).ToList();
 
 			if (!open.Any())
 				return;
