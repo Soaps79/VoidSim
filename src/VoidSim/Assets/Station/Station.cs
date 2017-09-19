@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Placeables;
+using Assets.Placeables.HardPoints;
 using Assets.Scripts;
 using Assets.Scripts.Serialization;
 using Assets.Scripts.WorldMaterials;
@@ -56,13 +57,16 @@ namespace Assets.Station
         [SerializeField]
         private List<StationLayer> _initialLayers;
         private readonly Dictionary<LayerType, StationLayer> _layers = new Dictionary<LayerType, StationLayer>();
+	    private HardPointMonitor _hardPointMonitor;
 	    private PopulationControl _populationControl;
 
 	    void Start()
         {
 			Locator.MessageHub.AddListener(this, GameMessages.PreSave);
 
-            MapLayers();
+			MapLayers();
+	        InitializeHardPoints();
+
             InstantiateInventory();
 	        InstantiatePopulationControl();
             InstantiateTrader();
@@ -79,7 +83,12 @@ namespace Assets.Station
             InitializeLayers();
         }
 
-        private void MapLayers()
+	    private void InitializeHardPoints()
+	    {
+		    _hardPointMonitor = new HardPointMonitor();
+	    }
+
+	    private void MapLayers()
         {
             foreach (var layer in _initialLayers)
             {

@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Station;
+using Messaging;
 using QGame;
 
-namespace Assets.Placeables
+namespace Assets.Placeables.HardPoints
 {
 	public interface IHardPointGroup
 	{
@@ -20,11 +20,18 @@ namespace Assets.Placeables
 		public void DeactivateHardpoints() { }
 	}
 
+	public class HardPointGroupUpdateMessage : MessageArgs
+	{
+		public IHardPointGroup Group;
+		public LayerType Layer;
+	}
+
 	/// <summary>
 	/// This object holds references to a group of hardpoints, and facilitates outside interaction with them
 	/// </summary>
 	public class HardPointGroup : QScript, IHardPointGroup
 	{
+		public const string MessageName = "HardPointGroup";
 		private readonly List<HardPoint> _points = new List<HardPoint>();
 		private LayerType _layer;
 

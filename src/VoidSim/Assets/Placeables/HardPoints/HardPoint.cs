@@ -1,9 +1,8 @@
 ﻿using System;
 using QGame;
-using TMPro;
 using UnityEngine;
 
-namespace Assets.Placeables
+namespace Assets.Placeables.HardPoints
 {
 	[Serializable]
 	public enum HardPointType { Small, Module }

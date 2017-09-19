@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Assets.Placeables;
+using Assets.Placeables.HardPoints;
 using Assets.Scripts;
 using Assets.WorldMaterials;
 using DG.Tweening;
@@ -38,6 +39,12 @@ namespace Assets.Station
 
 			hardpoints.Initialize(LayerType);
 			_hardPoints = hardpoints;
+			Locator.MessageHub.QueueMessage(HardPointGroup.MessageName, 
+				new HardPointGroupUpdateMessage
+				{
+					Group =  hardpoints,
+					Layer = LayerType
+				});
 		}
 
 		// Use this for initialization
@@ -73,12 +80,7 @@ namespace Assets.Station
 
 		private void HandleBeginPlacement(PlaceableUpdateArgs placed)
 		{
-			// this is a little janky, will get better as this is more fleshed out
-			if (placed.Layer == LayerType)
-			{
-				_hardPoints.ActivateHardpoints();
-			}
-			else if (_sprite != null)
+			if (placed.Layer != LayerType && _sprite != null)
 			{
 				var color = _sprite.color;
 				color.a = .5f;
@@ -97,7 +99,6 @@ namespace Assets.Station
 
 		private void CompletePlacement()
 		{
-			_hardPoints.DeactivateHardpoints();
 			if (_isFaded)
 			{
 				var color = _sprite.color;
