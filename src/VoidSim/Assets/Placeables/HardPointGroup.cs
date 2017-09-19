@@ -7,7 +7,7 @@ using QGame;
 
 namespace Assets.Placeables
 {
-	public interface IHardPointManager
+	public interface IHardPointGroup
 	{
 		void ActivateHardpoints();
 		void DeactivateHardpoints();
@@ -15,7 +15,7 @@ namespace Assets.Placeables
 
 	// exists so that non-active layers (core) do not have
 	// to null check all over the place
-	public class NullHardpointManager : IHardPointManager
+	public class NullHardpointGroup : IHardPointGroup
 	{
 		public void ActivateHardpoints() { }
 		public void DeactivateHardpoints() { }
@@ -24,7 +24,7 @@ namespace Assets.Placeables
 	/// <summary>
 	/// This object holds references to a group of hardpoints, and facilitates outside interaction with them
 	/// </summary>
-	public class HardPointManager : QScript, IHardPointManager
+	public class HardPointGroup : QScript, IHardPointGroup
 	{
 		private readonly List<HardPoint> _points = new List<HardPoint>();
 		private LayerType _layer;
@@ -33,14 +33,12 @@ namespace Assets.Placeables
 		{
 			_layer = layer;
 			var points = GetComponentsInChildren<HardPoint>();
-			var index = 1;
 			// name the hardpoint and set its drawing layer
 			foreach (var hardPoint in points)
 			{
-				hardPoint.name = "hardpoint_" + GetAbbreviation(_layer) +"_" + index;
+				hardPoint.name = "hardpoint_" + GetAbbreviation(_layer) +"_" + hardPoint.Number;
 				hardPoint.Sprite.sortingLayerName = layer.ToString();
 				_points.Add(hardPoint);
-				index++;
 			}
 		}
 

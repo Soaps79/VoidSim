@@ -14,7 +14,7 @@ namespace Assets.Station
 		private Station _parentStation;
 		private Inventory _inventory;
 		public LayerType LayerType;
-		private IHardPointManager _hardPoints;
+		private IHardPointGroup _hardPoints;
 		private SpriteRenderer _sprite;
 		private bool _isFaded;
 
@@ -29,10 +29,10 @@ namespace Assets.Station
 		// find and initialize the hardpoint manager, or instantiate a null one
 		private void InitializeHardpoints()
 		{
-			var hardpoints = GetComponentInChildren<HardPointManager>();
+			var hardpoints = GetComponentInChildren<HardPointGroup>();
 			if (hardpoints == null)
 			{
-				_hardPoints = new NullHardpointManager();
+				_hardPoints = new NullHardpointGroup();
 				return;
 			}
 

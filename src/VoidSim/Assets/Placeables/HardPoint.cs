@@ -15,6 +15,7 @@ namespace Assets.Placeables
 	public class HardPoint : QScript
 	{
 		public HardPointType HardPointType;
+		public int Number;
 		public SpriteRenderer Sprite;
 
 		public bool IsUsed { get; private set; }
