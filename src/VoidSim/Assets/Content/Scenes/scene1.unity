@@ -1316,7 +1316,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HardPointType: 0
   Number: 1
-  Sprite: {fileID: 0}
 --- !u!224 &336259218 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 224588242661106304, guid: 340206acaf326b54db1495146e1cb062,
@@ -1397,7 +1396,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HardPointType: 0
   Number: 1
-  Sprite: {fileID: 0}
 --- !u!1 &380011952
 GameObject:
   m_ObjectHideFlags: 0
@@ -1753,7 +1751,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HardPointType: 0
   Number: 4
-  Sprite: {fileID: 0}
 --- !u!1 &493648862
 GameObject:
   m_ObjectHideFlags: 0
@@ -2185,7 +2182,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HardPointType: 0
   Number: 4
-  Sprite: {fileID: 0}
 --- !u!1 &502624387
 GameObject:
   m_ObjectHideFlags: 0
@@ -2828,7 +2824,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HardPointType: 0
   Number: 2
-  Sprite: {fileID: 0}
 --- !u!1 &584535754
 GameObject:
   m_ObjectHideFlags: 0
@@ -4382,7 +4377,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HardPointType: 0
   Number: 3
-  Sprite: {fileID: 0}
 --- !u!1 &929717288
 GameObject:
   m_ObjectHideFlags: 0
@@ -4785,7 +4779,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HardPointType: 0
   Number: 4
-  Sprite: {fileID: 0}
 --- !u!1 &1073304482
 GameObject:
   m_ObjectHideFlags: 0
@@ -4861,7 +4854,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HardPointType: 0
   Number: 2
-  Sprite: {fileID: 0}
 --- !u!1001 &1085863975
 Prefab:
   m_ObjectHideFlags: 0
@@ -5101,7 +5093,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HardPointType: 0
   Number: 6
-  Sprite: {fileID: 0}
 --- !u!4 &1114165624
 Transform:
   m_ObjectHideFlags: 0
@@ -5219,7 +5210,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HardPointType: 0
   Number: 2
-  Sprite: {fileID: 0}
 --- !u!1 &1173992319
 GameObject:
   m_ObjectHideFlags: 0
@@ -5295,7 +5285,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HardPointType: 0
   Number: 3
-  Sprite: {fileID: 0}
 --- !u!1 &1179495105
 GameObject:
   m_ObjectHideFlags: 0
@@ -5537,7 +5526,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HardPointType: 0
   Number: 3
-  Sprite: {fileID: 0}
 --- !u!1 &1241314703
 GameObject:
   m_ObjectHideFlags: 0
@@ -5613,7 +5601,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HardPointType: 0
   Number: 5
-  Sprite: {fileID: 0}
 --- !u!1 &1247789016
 GameObject:
   m_ObjectHideFlags: 0
@@ -5689,7 +5676,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HardPointType: 0
   Number: 5
-  Sprite: {fileID: 0}
 --- !u!4 &1260289585
 Transform:
   m_ObjectHideFlags: 0
@@ -6761,7 +6747,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HardPointType: 0
   Number: 1
-  Sprite: {fileID: 0}
 --- !u!1 &2012521117
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,5 +1,6 @@
 ﻿using System;
 using QGame;
+using TMPro;
 using UnityEngine;
 
 namespace Assets.Placeables.HardPoints
@@ -15,14 +16,23 @@ namespace Assets.Placeables.HardPoints
 	{
 		public HardPointType HardPointType;
 		public int Number;
-		public SpriteRenderer Sprite;
+		private SpriteRenderer _sprite;
+		public SpriteRenderer Sprite {
+			get
+			{
+				if(_sprite == null)
+					InitSprite();
+				return _sprite;
+			}
+		}
 
 		public bool IsUsed { get; private set; }
 
-		void Start()
+		// had this as Start(), but didnt get called on half of them?
+		void InitSprite()
 		{
-			Sprite = GetComponent<SpriteRenderer>();
-			Sprite.enabled = false;
+			_sprite = GetComponent<SpriteRenderer>();
+			_sprite.enabled = false;
 		}
 
 		public void Show()

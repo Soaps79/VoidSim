@@ -54,7 +54,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HardPointType: 0
   Number: 0
-  Sprite: {fileID: 0}
+  Sprite: {fileID: 212106433360315842}
 --- !u!212 &212106433360315842
 SpriteRenderer:
   m_ObjectHideFlags: 1

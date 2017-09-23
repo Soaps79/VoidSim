@@ -3,6 +3,7 @@ using System.Linq;
 using Assets.Station;
 using Messaging;
 using QGame;
+using UnityEngine;
 
 namespace Assets.Placeables.HardPoints
 {
@@ -43,6 +44,8 @@ namespace Assets.Placeables.HardPoints
 			foreach (var hardPoint in points)
 			{
 				hardPoint.name = "hardpoint_" + GetAbbreviation(_layer) +"_" + hardPoint.Number;
+				if(hardPoint.Sprite == null)
+					throw new UnityException("Hardpoint missing sprite");
 				hardPoint.Sprite.sortingLayerName = layer.ToString();
 				hardPoint.Sprite.sortingOrder = 1;
 				_points.Add(hardPoint);
