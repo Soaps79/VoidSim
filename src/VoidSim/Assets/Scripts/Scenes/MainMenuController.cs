@@ -7,9 +7,21 @@ namespace Assets.Scripts.Scenes
 {
 	public class MainMenuController : QScript
 	{
+		public CanvasGroup MenuToLoad;
+
 		void Start()
 		{
 			ServiceInitializer.Initialize();
+			OnEveryUpdate += CheckForMenuLoadButtonPress;
+		}
+
+		private void CheckForMenuLoadButtonPress(float obj)
+		{
+			if (Input.GetButtonDown("Confirm"))
+			{
+				MenuToLoad.gameObject.SetActive(true);
+				OnEveryUpdate -= CheckForMenuLoadButtonPress;
+			}
 		}
 
 		public void OnNewGame()
