@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts;
 using Assets.Station;
 using Messaging;
@@ -17,6 +18,7 @@ namespace Assets.Placeables.HardPoints
 		{
 			Locator.MessageHub.AddListener(this, HardPointGroup.MessageName);
 			Locator.MessageHub.AddListener(this, PlaceableMessages.PlaceablePlaced);
+			
 		}
 
 		public void HandleMessage(string type, MessageArgs args)
@@ -50,5 +52,10 @@ namespace Assets.Placeables.HardPoints
 		}
 
 		public string Name { get { return "HardPointMonitor"; } }
+
+		public IEnumerable<HardPoint> GetHardPoints(LayerType layer)
+		{
+			return _groups.ContainsKey(layer) ? _groups[layer].GetAvailableHardPoints() : Enumerable.Empty<HardPoint>();
+		}
 	}
 }

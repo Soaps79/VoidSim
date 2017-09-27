@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Assets.Placeables.HardPoints;
 using Assets.Scripts;
@@ -7,6 +8,7 @@ using UnityEngine;
 
 namespace Assets.Placeables.Placement
 {
+	[RequireComponent(typeof(HardPointMagnet))]
 	public class Placer : QScript
 	{
 		private GameObject _toPlaceGo;
@@ -16,12 +18,17 @@ namespace Assets.Placeables.Placement
 
 		public Action<int> OnPlacementComplete;
 		private HardPointMonitor _hardpointMonitor;
+		private readonly List<HardPoint> _availableHardPoints = new List<HardPoint>();
+		private HardPoint _currentPlacementPoint;
+		private HardPointMagnet _magnet;
 
 		public void Initialize(PlaceablesLookup placeables, HardPointMonitor hardPointMonitor)
 		{
 			_lookup = placeables;
 			_hardpointMonitor = hardPointMonitor;
-			OnEveryUpdate += BindSpritePositionToMouseCursor;
+			_magnet = gameObject.GetComponent<HardPointMagnet>();
+			_magnet.Initialize(hardPointMonitor);
+
 			OnEveryUpdate += CheckForKeyPress;
 			enabled = false;
 		}
@@ -78,6 +85,8 @@ namespace Assets.Placeables.Placement
 					Layer = _toPlaceScriptable.Layer
 				});
 
+			_magnet.Complete();
+
 			_toPlaceInventoryId = 0;
 			Destroy(_toPlaceGo);
 			_toPlaceGo = null;
@@ -99,7 +108,8 @@ namespace Assets.Placeables.Placement
 			rend.sortingLayerName = placeable.Layer.ToString();
 			rend.sortingOrder = 1;
 			_toPlaceGo = go;
-
+			_magnet.Begin(_toPlaceGo, placeable.Layer);
+			
 			Locator.MessageHub.QueueMessage(
 				PlaceableMessages.PlaceablePlaced,
 				new PlaceableUpdateArgs
@@ -109,13 +119,6 @@ namespace Assets.Placeables.Placement
 				});
 
 			enabled = true;
-		}
-
-		private void BindSpritePositionToMouseCursor(float obj)
-		{
-			var mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			mousePosition.z = 0;
-			_toPlaceGo.transform.position = mousePosition;
 		}
 	}
 }
