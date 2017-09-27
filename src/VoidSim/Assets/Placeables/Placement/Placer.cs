@@ -17,15 +17,12 @@ namespace Assets.Placeables.Placement
 		private PlaceablesLookup _lookup;
 
 		public Action<int> OnPlacementComplete;
-		private HardPointMonitor _hardpointMonitor;
-		private readonly List<HardPoint> _availableHardPoints = new List<HardPoint>();
-		private HardPoint _currentPlacementPoint;
 		private HardPointMagnet _magnet;
+		private static string _hardpointName; // hacky, I know
 
 		public void Initialize(PlaceablesLookup placeables, HardPointMonitor hardPointMonitor)
 		{
 			_lookup = placeables;
-			_hardpointMonitor = hardPointMonitor;
 			_magnet = gameObject.GetComponent<HardPointMagnet>();
 			_magnet.Initialize(hardPointMonitor);
 
@@ -47,6 +44,10 @@ namespace Assets.Placeables.Placement
 
 		private void HandlePlaceObject()
 		{
+			if (!_magnet.CanPlace())
+				return;
+
+			_hardpointName = _magnet.SnappedTo.name;
 			PlaceObject(_toPlaceScriptable, _toPlaceGo.transform.position);
 			CompletePlacement(true);
 		}
@@ -54,6 +55,7 @@ namespace Assets.Placeables.Placement
 		public static void PlaceObject(PlaceableScriptable scriptable, Vector3 position, PlaceableData data = null)
 		{
 			var placeable = Instantiate(scriptable.Prefab);
+			placeable.HardPointName = data == null ? _hardpointName : data.HardPointName;
 			placeable.transform.position = position;
 			placeable.BindToScriptable(scriptable);
 			Locator.MessageHub.QueueMessage(

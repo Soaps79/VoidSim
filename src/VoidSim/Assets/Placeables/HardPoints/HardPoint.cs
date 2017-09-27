@@ -16,6 +16,8 @@ namespace Assets.Placeables.HardPoints
 	{
 		public HardPointType HardPointType;
 		public int Number;
+		private string _placedName;
+
 		private SpriteRenderer _sprite;
 		public SpriteRenderer Sprite {
 			get
@@ -43,6 +45,13 @@ namespace Assets.Placeables.HardPoints
 		public void Hide()
 		{
 			Sprite.enabled = false;
+		}
+
+		public void HandlePlacement(Placeable placed)
+		{
+			placed.HardPointName = name;
+			_placedName = placed.name;
+			IsUsed = true;
 		}
 	}
 }

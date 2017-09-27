@@ -12,7 +12,7 @@ namespace Assets.Placeables.Placement
 		private HardPointMonitor _hardpointMonitor;
 		private readonly List<HardPoint> _availableHardPoints = new List<HardPoint>();
 		[SerializeField] private float _snapDistance;
-		private HardPoint _snappedTo;
+		public HardPoint SnappedTo { get; private set; }
 		private GameObject _toPlace;
 
 		public void Initialize(HardPointMonitor hardPointMonitor)
@@ -22,7 +22,7 @@ namespace Assets.Placeables.Placement
 
 		public bool CanPlace()
 		{
-			return _snappedTo != null;
+			return SnappedTo != null;
 		}
 
 		private void CheckForSnap(float delta)
@@ -33,8 +33,8 @@ namespace Assets.Placeables.Placement
 			if (point == null)
 				return;
 
-			_snappedTo = point;
-			_toPlace.transform.position = _snappedTo.transform.position;
+			SnappedTo = point;
+			_toPlace.transform.position = SnappedTo.transform.position;
 			OnEveryUpdate -= BindSpritePositionToMouseCursor;
 			OnEveryUpdate -= CheckForSnap;
 			OnEveryUpdate += CheckForUnsnap;
@@ -43,7 +43,7 @@ namespace Assets.Placeables.Placement
 		private void CheckForUnsnap(float delta)
 		{
 			var mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			if (Vector3.Distance(mousePosition, _snappedTo.transform.position) <= _snapDistance)
+			if (Vector3.Distance(mousePosition, SnappedTo.transform.position) <= _snapDistance)
 				return;
 
 			OnEveryUpdate += BindSpritePositionToMouseCursor;
@@ -71,7 +71,7 @@ namespace Assets.Placeables.Placement
 		public void Complete()
 		{
 			_toPlace = null;
-			_snappedTo = null;
+			SnappedTo = null;
 			_availableHardPoints.Clear();
 			ClearAllDelegates();
 		}

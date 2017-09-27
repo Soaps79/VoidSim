@@ -12,6 +12,7 @@ namespace Assets.Placeables.HardPoints
 		void ActivateHardpoints();
 		void DeactivateHardpoints();
 		IEnumerable<HardPoint> GetAvailableHardPoints();
+		void HandlePlacement(Placeable placeable);
 	}
 
 	// exists so that non-active layers (core) do not have
@@ -21,6 +22,7 @@ namespace Assets.Placeables.HardPoints
 		public void ActivateHardpoints() { }
 		public void DeactivateHardpoints() { }
 		public IEnumerable<HardPoint> GetAvailableHardPoints() { return new List<HardPoint>(); }
+		public void HandlePlacement(Placeable placeable) { }
 	}
 
 	public class HardPointGroupUpdateMessage : MessageArgs
@@ -92,6 +94,13 @@ namespace Assets.Placeables.HardPoints
 		public IEnumerable<HardPoint> GetAvailableHardPoints()
 		{
 			return _points.Where(i => !i.IsUsed);
+		}
+
+		public void HandlePlacement(Placeable placeable)
+		{
+			var point = _points.FirstOrDefault(i => i.name == placeable.HardPointName);
+			if(point != null)
+				point.HandlePlacement(placeable);
 		}
 	}
 }

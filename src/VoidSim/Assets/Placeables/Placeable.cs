@@ -32,6 +32,7 @@ namespace Assets.Placeables
 	{
 		public string PlaceableName;
 		public string InstanceName;
+		public string HardPointName;
 		public Vector3Data Position;
 		public List<PlaceableNodeData> Nodes;
 	}
@@ -49,6 +50,8 @@ namespace Assets.Placeables
 	{
 		[HideInInspector] public LayerType Layer;
 		public string PlaceableName { get { return _scriptable.ProductName; } }
+		public string HardPointName { get; set; }
+
 		private PlaceableScriptable _scriptable;
 		private List<PlaceableNode> _nodes;
 		private PlaceableViewModel _viewModelInstance;
@@ -87,6 +90,7 @@ namespace Assets.Placeables
 				InstanceName = name,
 				PlaceableName = PlaceableName,
 				Position = transform.position,
+				HardPointName = HardPointName,
 				Nodes = _nodes.Select(i => new PlaceableNodeData
 				{
 					NodeName = i.NodeName, InstanceName = i.name

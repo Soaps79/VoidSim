@@ -35,10 +35,15 @@ namespace Assets.Placeables.HardPoints
 			if (!_groups.ContainsKey(args.Layer))
 				return;
 
-			if(args.State == PlaceablePlacementState.BeginPlacement)
+			if (args.State == PlaceablePlacementState.BeginPlacement)
+			{
 				_groups[args.Layer].ActivateHardpoints();
-			else 
-				_groups[args.Layer].DeactivateHardpoints();
+				return;
+			}
+			else if (args.State == PlaceablePlacementState.Placed)
+				_groups[args.Layer].HandlePlacement(args.Placeable);
+
+			_groups[args.Layer].DeactivateHardpoints();
 		}
 
 		private void HandleGroupUpdate(HardPointGroupUpdateMessage args)
