@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Placeables;
+using Assets.Placeables.Placement;
 using Assets.Scripts;
 using Assets.WorldMaterials.Products;
 using UnityEngine;
@@ -28,23 +29,18 @@ namespace Assets.WorldMaterials.UI
         private PlaceablesLookup _placeablesLookup;
         private Placer _placer;
 
-        public void BindToInventory(Inventory inventory, InventoryScriptable inventoryScriptable, PlaceablesLookup placeablesLookup, InventoryReserve inventoryReserve)
+        public void BindToInventory(Inventory inventory, InventoryScriptable inventoryScriptable, PlaceablesLookup placeablesLookup, InventoryReserve inventoryReserve, Placer placer)
         {
             _inventory = inventory;
             _inventory.OnProductsChanged += UpdateProductEntry;
             _placeablesLookup = placeablesLookup;
             _inventoryReserve = inventoryReserve;
 
-            InitializePlacer();
-            UpdateIgnoreList(inventoryScriptable);
-            BindToUI();
-        }
+	        _placer = placer;
+	        _placer.OnPlacementComplete += HandlePlacementComplete;
 
-        private void InitializePlacer()
-        {
-            _placer = gameObject.GetOrAddComponent<Placer>();
-            _placer.Initialize(_placeablesLookup);
-            _placer.OnPlacementComplete += HandlePlacementComplete;
+			UpdateIgnoreList(inventoryScriptable);
+            BindToUI();
         }
 
         private void HandlePlacementComplete(int id)

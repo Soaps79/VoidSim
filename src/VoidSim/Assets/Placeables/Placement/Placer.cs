@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Linq;
+using Assets.Placeables.HardPoints;
 using Assets.Scripts;
-using Assets.Scripts.Serialization;
-using Messaging;
 using QGame;
 using UnityEngine;
 
-namespace Assets.Placeables
+namespace Assets.Placeables.Placement
 {
 	public class Placer : QScript
 	{
@@ -16,10 +15,12 @@ namespace Assets.Placeables
 		private PlaceablesLookup _lookup;
 
 		public Action<int> OnPlacementComplete;
+		private HardPointMonitor _hardpointMonitor;
 
-		public void Initialize(PlaceablesLookup placeables)
+		public void Initialize(PlaceablesLookup placeables, HardPointMonitor hardPointMonitor)
 		{
 			_lookup = placeables;
+			_hardpointMonitor = hardPointMonitor;
 			OnEveryUpdate += BindSpritePositionToMouseCursor;
 			OnEveryUpdate += CheckForKeyPress;
 			enabled = false;
