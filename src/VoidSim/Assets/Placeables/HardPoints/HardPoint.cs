@@ -16,7 +16,7 @@ namespace Assets.Placeables.HardPoints
 	{
 		public HardPointType HardPointType;
 		public int Number;
-		private string _placedName;
+		[SerializeField] private string _placedName;
 
 		private SpriteRenderer _sprite;
 		public SpriteRenderer Sprite {
