@@ -7,6 +7,10 @@ using UnityEngine;
 
 namespace Assets.Placeables.Placement
 {
+	/// <summary>
+	/// This class handles the placeable sprit during placement.
+	/// It stick the sprite to the cursor, sticking it to a HardPoint when one is near.
+	/// </summary>
 	public class HardPointMagnet : QScript
 	{
 		private HardPointMonitor _hardpointMonitor;
@@ -17,14 +21,17 @@ namespace Assets.Placeables.Placement
 
 		public void Initialize(HardPointMonitor hardPointMonitor)
 		{
+			// monitor provides list of hard points for given layer when placement is started
 			_hardpointMonitor = hardPointMonitor;
 		}
 
+		// Is placeable snapped to an available HardPoint?
 		public bool CanPlace()
 		{
 			return SnappedTo != null;
 		}
 
+		// placeable is stuck to cursor, checking for proximity to available hard points
 		private void CheckForSnap(float delta)
 		{
 			var point = _availableHardPoints.FirstOrDefault(
@@ -35,6 +42,7 @@ namespace Assets.Placeables.Placement
 
 			SnappedTo = point;
 			_toPlace.transform.position = SnappedTo.transform.position;
+			// after snapping to position, un-stick it from mouse cursor
 			OnEveryUpdate -= BindSpritePositionToMouseCursor;
 			OnEveryUpdate -= CheckForSnap;
 			OnEveryUpdate += CheckForUnsnap;
@@ -46,11 +54,13 @@ namespace Assets.Placeables.Placement
 			if (Vector3.Distance(mousePosition, SnappedTo.transform.position) <= _snapDistance)
 				return;
 
+			// when mouse cursor is far enough away from snapped point, placeable goes back to sticking to it
 			OnEveryUpdate += BindSpritePositionToMouseCursor;
 			OnEveryUpdate += CheckForSnap;
 			OnEveryUpdate -= CheckForUnsnap;
 		}
 
+		// keeps placebale stuck to mouse cursor
 		private void BindSpritePositionToMouseCursor(float delta)
 		{
 			var mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -59,6 +69,7 @@ namespace Assets.Placeables.Placement
 			transform.position = mousePosition;
 		}
 
+		// get available hard points, stick sprite to cursor, start looking for nearby hardpoints
 		public void Begin(GameObject toPlace, LayerType layer)
 		{
 			_toPlace = toPlace;
@@ -68,6 +79,7 @@ namespace Assets.Placeables.Placement
 			OnEveryUpdate += CheckForSnap;
 		}
 
+		// null all the things
 		public void Complete()
 		{
 			_toPlace = null;
