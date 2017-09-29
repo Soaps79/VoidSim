@@ -32,6 +32,7 @@ namespace Assets.Station
 		public List<ProductFactory> Factories = new List<ProductFactory>();
 
 		public Action OnFactoryListUpdated;
+		public Action<Recipe> OnCraftComplete;
 		private InventoryReserve _reserve;
 		//private int _lastFactoryId;
 
@@ -83,6 +84,7 @@ namespace Assets.Station
 			var factory = args.ProductFactory;
 			factory.Initialize(_inventory, _productLookup);
 			factory.OnIsBuyingchanged += RefreshPurchasing;
+			factory.OnCraftComplete += HandleCraftComplete;
 
 			if (factory.IsCore && _deserialized.Any())
 			{
@@ -101,6 +103,12 @@ namespace Assets.Station
 
 			Factories.Add(args.ProductFactory);
 			CheckCallback();
+		}
+
+		private void HandleCraftComplete(Recipe recipe)
+		{
+			if (OnCraftComplete != null)
+				OnCraftComplete(recipe);
 		}
 
 		private void CheckForDeserialized(ProductFactory factory)

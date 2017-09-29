@@ -62,6 +62,7 @@ namespace Assets.Placeables.Nodes
 		private bool _isOutOfProduct;
 		public bool IsBuying { get; private set; }
 		public Action OnIsBuyingchanged;
+		public Action<Recipe> OnCraftComplete;
 
 		public override void BroadcastPlacement()
 		{
@@ -201,6 +202,8 @@ namespace Assets.Placeables.Nodes
 		{
 			StoreResult(recipe);
 			SwitchCurrentCraftingTo(recipe);
+			if (OnCraftComplete != null)
+				OnCraftComplete(recipe);
 		}
 
 		// handles updating private data
