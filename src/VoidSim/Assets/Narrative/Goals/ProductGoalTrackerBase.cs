@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Assets.Narrative.Goals
 {
@@ -41,6 +42,19 @@ namespace Assets.Narrative.Goals
 				goal.TriggerComplete(true);
 			}
 			Goals.RemoveAll(i => completedGoals.Contains(i));
+		}
+
+		public string DisplayString
+		{
+			get
+			{
+				// rafactor to actually use the builder
+				var builder = new StringBuilder();
+				builder.Append(Goals.Aggregate("",
+					(current, goal) => current + "  " + goal.ProductName + " " + goal.ElapsedAmount + "/" + goal.TotalAmount));
+
+				return builder.ToString();
+			}
 		}
 	}
 }

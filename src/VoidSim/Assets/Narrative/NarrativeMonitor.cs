@@ -11,7 +11,7 @@ namespace Assets.Narrative
 	[Serializable]
 	public enum GoalType
 	{
-		CraftProduct, AccumulateProduct
+		CraftProduct, AccumulateProduct, SellProduct
 	}
 
 	// currently, all goals deal with products, write new code knowing this probably won't always be true
@@ -43,9 +43,10 @@ namespace Assets.Narrative
 	/// </summary>
 	public class NarrativeMonitor : QScript
 	{
-		private CraftGoalTracker _craftGoalTracker;
+		private CraftProductTracker _craftProductTracker;
 		[SerializeField] private List<ProductAmountGoal> _initialProductGoals = new List<ProductAmountGoal>();
-		private AccumulateGoalTracker _accumulateGoalTracker;
+		private AccumulateProductTracker _accumulateProductTracker;
+		private SellProductTracker _sellProductTracker;
 
 		void Start()
 		{
@@ -56,8 +57,9 @@ namespace Assets.Narrative
 		private void Initialize(float obj)
 		{
 			InitializeProducts();
-			InitializeCraftGoalTracker();
-			InitializeAccumulateGoalTracker();
+			InitializeCraftProductTracker();
+			InitializeAccumulateProductTracker();
+			InitializeSellProductTracker();
 		}
 
 		private void InitializeProducts()
@@ -72,17 +74,24 @@ namespace Assets.Narrative
 			}
 		}
 
-		private void InitializeCraftGoalTracker()
+		private void InitializeCraftProductTracker()
 		{
-			_craftGoalTracker = new CraftGoalTracker();
-			AddGoalsToTracker(_craftGoalTracker);
-			KeyValueDisplay.Instance.Add("Make", () => _craftGoalTracker.DisplayString);
+			_craftProductTracker = new CraftProductTracker();
+			AddGoalsToTracker(_craftProductTracker);
+			KeyValueDisplay.Instance.Add("Make", () => _craftProductTracker.DisplayString);
 		}
-		private void InitializeAccumulateGoalTracker()
+		private void InitializeAccumulateProductTracker()
 		{
-			_accumulateGoalTracker = new AccumulateGoalTracker();
-			AddGoalsToTracker(_accumulateGoalTracker);
-			KeyValueDisplay.Instance.Add("Have", () => _accumulateGoalTracker.DisplayString);
+			_accumulateProductTracker = new AccumulateProductTracker();
+			AddGoalsToTracker(_accumulateProductTracker);
+			KeyValueDisplay.Instance.Add("Have", () => _accumulateProductTracker.DisplayString);
+		}
+
+		private void InitializeSellProductTracker()
+		{
+			_sellProductTracker = new SellProductTracker();
+			AddGoalsToTracker(_sellProductTracker);
+			KeyValueDisplay.Instance.Add("Sell", () => _sellProductTracker.DisplayString);
 		}
 
 		// finds initial goals of a tracker's type and hends them off

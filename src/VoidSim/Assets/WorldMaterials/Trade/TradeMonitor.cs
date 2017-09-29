@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts;
 using Assets.Scripts.Serialization;
@@ -20,6 +21,8 @@ namespace Assets.WorldMaterials.Trade
 
 		private readonly CollectionSerializer<TradeMonitorData> _serializer
 			= new CollectionSerializer<TradeMonitorData>();
+
+		public Action<TradeManifest> OnTradeComplete;
 
 		void Start()
 		{
@@ -45,6 +48,14 @@ namespace Assets.WorldMaterials.Trade
 			if (!_activeManifests.Any())
 				return;
 
+			var complete = _activeManifests.Where(i => i.Status == TradeStatus.Complete).ToList();
+			if (!complete.Any())
+				return;
+
+			if (OnTradeComplete != null)
+			{
+				complete.ForEach(i => OnTradeComplete(i));
+			}
 			_activeManifests.RemoveAll(i => i.Status == TradeStatus.Complete);
 		}
 

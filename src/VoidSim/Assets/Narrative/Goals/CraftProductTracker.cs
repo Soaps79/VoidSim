@@ -12,12 +12,12 @@ namespace Assets.Narrative.Goals
 	/// This objects hooks into the station's FactoryControl, and responds to any completed craft
 	/// by checking if there is a related goal, and progressing that goal accordingly
 	/// </summary>
-	public class CraftGoalTracker : ProductGoalTrackerBase
+	public class CraftProductTracker : ProductGoalTrackerBase
 	{
 		public override GoalType GoalType { get { return GoalType.CraftProduct; } }
 		private readonly FactoryControl _factoryControl;
 
-		public CraftGoalTracker()
+		public CraftProductTracker()
 		{
 			_factoryControl = GameObject.Find("factory_control").GetComponent<FactoryControl>();
 			_factoryControl.OnCraftComplete += HandleCraftComplete;

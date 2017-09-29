@@ -4153,8 +4153,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 194, y: 92.43}
-  m_SizeDelta: {x: 388, y: 248.13}
+  m_AnchoredPosition: {x: 31.02, y: 92.43}
+  m_SizeDelta: {x: 713.95, y: 248.13}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &831776413
 MonoBehaviour:
@@ -6509,7 +6509,7 @@ MonoBehaviour:
     ProductId: 0
     TotalAmount: 80
     ElapsedAmount: 0
-    Type: 1
+    Type: 2
     IsComplete: 0
 --- !u!1 &1797063556
 GameObject:
