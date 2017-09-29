@@ -235,7 +235,7 @@ namespace Assets.Station
         {
             var go = new GameObject();
             go.transform.SetParent(_layers[LayerType.Core].transform);
-            go.name = "inventory";
+            go.name = "station_inventory";
             _inventory = go.GetOrAddComponent<Inventory>();
             if (_inventory == null || _inventoryScriptable == null)
                 throw new UnityException("Station inventory missing a dependency");
