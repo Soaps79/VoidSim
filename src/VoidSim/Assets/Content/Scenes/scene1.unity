@@ -3699,7 +3699,7 @@ Prefab:
     - target: {fileID: 224559047067320838, guid: 01a26998e2e905e4f963ae8d6a8cdb86,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 103.48
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224559047067320838, guid: 01a26998e2e905e4f963ae8d6a8cdb86,
         type: 2}
@@ -3759,7 +3759,7 @@ Prefab:
     - target: {fileID: 224698362454762502, guid: 01a26998e2e905e4f963ae8d6a8cdb86,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -51.74
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224698362454762502, guid: 01a26998e2e905e4f963ae8d6a8cdb86,
         type: 2}
@@ -3769,7 +3769,7 @@ Prefab:
     - target: {fileID: 224698362454762502, guid: 01a26998e2e905e4f963ae8d6a8cdb86,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 91.48
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1052229069084876, guid: 01a26998e2e905e4f963ae8d6a8cdb86, type: 2}
       propertyPath: m_IsActive
@@ -6498,6 +6498,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52e124cfb8372a44bb3a7c6fce8f67e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _productGoals:
+  - ProductName: Consumer Goods
+    ProductId: 0
+    TotalAmount: 50
+    ElapsedAmount: 0
+  - ProductName: Steel
+    ProductId: 0
+    TotalAmount: 10
+    ElapsedAmount: 0
 --- !u!1 &1797063556
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Assets.Station;
 using Assets.WorldMaterials.Products;
 using QGame;
@@ -8,6 +9,7 @@ using UnityEngine;
 
 namespace Assets.Narrative.Goals
 {
+	[Serializable]
 	public class ProductGoal
 	{
 		public string ProductName;
@@ -16,6 +18,10 @@ namespace Assets.Narrative.Goals
 		public int ElapsedAmount;
 	}
 
+	/// <summary>
+	/// This objects hooks into the station's FactoryControl, and responds to any completed craft
+	/// by checking if there is a related goal, and progressing that goal accordingly
+	/// </summary>
 	public class CraftGoalTracker
 	{
 		private FactoryControl _factoryControl;
@@ -49,6 +55,24 @@ namespace Assets.Narrative.Goals
 
 			// tell something the goal is complete
 			_productGoals.RemoveAll(i => completedGoals.Contains(i));
+		}
+
+		public void AddGoal(ProductGoal goal)
+		{
+			_productGoals.Add(goal);
+		}
+
+		public string DisplayString
+		{
+			get
+			{
+				// rafactor to actually use the builder
+				var builder = new StringBuilder();
+				builder.Append(_productGoals.Aggregate("",
+					(current, goal) => current + "  " + goal.ProductName + " " + goal.ElapsedAmount + "/" + goal.TotalAmount));
+
+				return builder.ToString();
+			}
 		}
 	}
 }
