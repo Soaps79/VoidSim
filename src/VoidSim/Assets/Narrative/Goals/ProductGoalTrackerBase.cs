@@ -11,11 +11,14 @@ namespace Assets.Narrative.Goals
 	{
 		public abstract GoalType GoalType { get; }
 
+		protected virtual void OnGoalAdded(ProductAmountGoal goal) { }
+
 		public List<ProductAmountGoal> Goals = new List<ProductAmountGoal>();
 		
 		public void AddGoal(ProductAmountGoal goal)
 		{
 			Goals.Add(goal);
+			OnGoalAdded(goal);
 		}
 
 		public void HandleProductupdate(int productId, int amount)
@@ -37,11 +40,12 @@ namespace Assets.Narrative.Goals
 			if (!completedGoals.Any())
 				return;
 
+			// Missions will handle their completed goals, setting IsActive to false if they're done being tracked
 			foreach (var goal in completedGoals)
 			{
 				goal.TriggerComplete(true);
 			}
-			Goals.RemoveAll(i => completedGoals.Contains(i));
+			Goals.RemoveAll(i => !i.IsActive);
 		}
 
 		public string DisplayString

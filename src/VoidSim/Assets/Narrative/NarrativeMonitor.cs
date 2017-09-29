@@ -2,49 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Narrative.Goals;
+using Assets.Narrative.Missions;
 using Assets.WorldMaterials.Products;
 using QGame;
 using UnityEngine;
 
 namespace Assets.Narrative
 {
-	[Serializable]
-	public enum GoalType
-	{
-		CraftProduct, AccumulateProduct, SellProduct
-	}
-
-	// currently, all goals deal with products, write new code knowing this probably won't always be true
-	[Serializable]
-	public class ProductAmountGoal
-	{
-		public string ProductName;
-		public int ProductId;
-		public int TotalAmount;
-		public int ElapsedAmount;
-		public GoalType Type;
-		public bool IsComplete;
-		public Action<ProductAmountGoal> OnCompleteChange;
-
-		// if change is true, set IsComplete to it and tell listeners
-		public void TriggerComplete(bool isComplete)
-		{
-			if (IsComplete == isComplete)
-				return;
-
-			IsComplete = isComplete;
-			if (OnCompleteChange != null)
-				OnCompleteChange(this);
-		}
-	}
-
 	/// <summary>
 	/// Orchestrate the Narrative. Will probably end up handling too many duties, and jobs will be broken out.
 	/// </summary>
 	public class NarrativeMonitor : QScript
 	{
 		private CraftProductTracker _craftProductTracker;
-		[SerializeField] private List<ProductAmountGoal> _initialProductGoals = new List<ProductAmountGoal>();
+		[SerializeField] private List<Mission> _initialMissions = new List<Mission>();
 		private AccumulateProductTracker _accumulateProductTracker;
 		private SellProductTracker _sellProductTracker;
 
@@ -56,6 +27,7 @@ namespace Assets.Narrative
 
 		private void Initialize(float obj)
 		{
+			_initialMissions.ForEach(i => i.Initialize());
 			InitializeProducts();
 			InitializeCraftProductTracker();
 			InitializeAccumulateProductTracker();
@@ -65,45 +37,52 @@ namespace Assets.Narrative
 		private void InitializeProducts()
 		{
 			var allProducts = ProductLookup.Instance.GetProducts();
-			foreach (var productGoal in _initialProductGoals)
+			foreach (var mission in _initialMissions)
 			{
-				var product = allProducts.FirstOrDefault(i => i.Name == productGoal.ProductName);
-				if (product == null)
-					throw new UnityException("NarrativeMonitor given bad product");
-				productGoal.ProductId = product.ID;
+				foreach (var productGoal in mission.Goals)
+				{
+					var product = allProducts.FirstOrDefault(i => i.Name == productGoal.ProductName);
+					if (product == null)
+						throw new UnityException("NarrativeMonitor given bad product");
+					productGoal.ProductId = product.ID;
+				}
 			}
 		}
 
 		private void InitializeCraftProductTracker()
 		{
 			_craftProductTracker = new CraftProductTracker();
-			AddGoalsToTracker(_craftProductTracker);
+			AddInitialGoalsToTracker(_craftProductTracker);
 			KeyValueDisplay.Instance.Add("Make", () => _craftProductTracker.DisplayString);
 		}
 		private void InitializeAccumulateProductTracker()
 		{
 			_accumulateProductTracker = new AccumulateProductTracker();
-			AddGoalsToTracker(_accumulateProductTracker);
+			AddInitialGoalsToTracker(_accumulateProductTracker);
 			KeyValueDisplay.Instance.Add("Have", () => _accumulateProductTracker.DisplayString);
 		}
 
 		private void InitializeSellProductTracker()
 		{
 			_sellProductTracker = new SellProductTracker();
-			AddGoalsToTracker(_sellProductTracker);
+			AddInitialGoalsToTracker(_sellProductTracker);
 			KeyValueDisplay.Instance.Add("Sell", () => _sellProductTracker.DisplayString);
 		}
 
 		// finds initial goals of a tracker's type and hends them off
-		private void AddGoalsToTracker(ProductGoalTrackerBase tracker)
+		private void AddInitialGoalsToTracker(ProductGoalTrackerBase tracker)
 		{
-			var goals = _initialProductGoals.Where(i => i.Type == tracker.GoalType);
-			if (!goals.Any())
+			var missions = _initialMissions.Where(i => i.Goals.Any(j => j.Type == tracker.GoalType)).ToList();
+
+			if (!missions.Any())
 				return;
 
-			foreach (var goal in goals)
+			foreach (var mission in missions)
 			{
-				tracker.AddGoal(goal);
+				foreach (var goal in mission.Goals.Where(i => i.Type == tracker.GoalType))
+				{
+					tracker.AddGoal(goal);
+				}
 			}
 		}
 

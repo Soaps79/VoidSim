@@ -6498,19 +6498,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52e124cfb8372a44bb3a7c6fce8f67e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initialProductGoals:
-  - ProductName: Consumer Goods
-    ProductId: 0
-    TotalAmount: 50
-    ElapsedAmount: 0
-    Type: 0
-    IsComplete: 0
-  - ProductName: Consumer Goods
-    ProductId: 0
-    TotalAmount: 80
-    ElapsedAmount: 0
-    Type: 2
-    IsComplete: 0
+  _initialMissions:
+  - Name: Distribute Consumer Goods
+    FlavorText: Longer version of Distribute Consumer Goods. Longer version of Distribute
+      Consumer Goods. Longer version of Distribute Consumer Goods. Longer version
+      of Distribute Consumer Goods.
+    Goals:
+    - Type: 0
+      IsComplete: 0
+      IsActive: 0
+      ProductName: Consumer Goods
+      ProductId: 0
+      TotalAmount: 50
+      ElapsedAmount: 0
+    - Type: 2
+      IsComplete: 0
+      IsActive: 0
+      ProductName: Consumer Goods
+      ProductId: 0
+      TotalAmount: 100
+      ElapsedAmount: 0
+  - Name: Get Steel
+    FlavorText: 'Longer version of Get Steel. Longer version of Get Steel. Longer
+      version of Get Steel. '
+    Goals:
+    - Type: 1
+      IsComplete: 0
+      IsActive: 0
+      ProductName: Steel
+      ProductId: 0
+      TotalAmount: 70
+      ElapsedAmount: 0
 --- !u!1 &1797063556
 GameObject:
   m_ObjectHideFlags: 0

@@ -18,5 +18,14 @@ namespace Assets.Narrative.Goals
 			_inventory = GameObject.Find("station_inventory").GetComponent<Inventory>();
 			_inventory.OnProductsChanged += HandleProductupdate;
 		}
+
+		// set goal elapsed to current inventory level
+		// if goal is complete, complete it
+		protected override void OnGoalAdded(ProductAmountGoal goal)
+		{
+			goal.ElapsedAmount = _inventory.GetProductCurrentAmount(goal.ProductId);
+			if(goal.ElapsedAmount > goal.TotalAmount)
+				goal.TriggerComplete(true);
+		}
 	}
 }
