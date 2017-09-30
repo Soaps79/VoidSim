@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -7,6 +8,7 @@ namespace Assets.Narrative.Goals
 	/// <summary>
 	/// Handles simple elapsed vs total amounts for product goals
 	/// </summary>
+	[Serializable]
 	public abstract class ProductGoalTrackerBase
 	{
 		public abstract GoalType GoalType { get; }

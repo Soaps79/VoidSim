@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Narrative.Goals;
 using Assets.Narrative.Missions;
@@ -14,10 +13,9 @@ namespace Assets.Narrative
 	/// </summary>
 	public class NarrativeMonitor : QScript
 	{
-		private CraftProductTracker _craftProductTracker;
+		// this is so ugly, extract an interface pls
+		private List<ProductGoalTrackerBase> _trackers = new List<ProductGoalTrackerBase>();
 		[SerializeField] private List<Mission> _initialMissions = new List<Mission>();
-		private AccumulateProductTracker _accumulateProductTracker;
-		private SellProductTracker _sellProductTracker;
 
 		void Start()
 		{
@@ -51,22 +49,22 @@ namespace Assets.Narrative
 
 		private void InitializeCraftProductTracker()
 		{
-			_craftProductTracker = new CraftProductTracker();
-			AddInitialGoalsToTracker(_craftProductTracker);
-			KeyValueDisplay.Instance.Add("Make", () => _craftProductTracker.DisplayString);
+			var tracker = new CraftProductTracker();
+			AddInitialGoalsToTracker(tracker);
+			KeyValueDisplay.Instance.Add("Make", () => tracker.DisplayString);
 		}
 		private void InitializeAccumulateProductTracker()
 		{
-			_accumulateProductTracker = new AccumulateProductTracker();
-			AddInitialGoalsToTracker(_accumulateProductTracker);
-			KeyValueDisplay.Instance.Add("Have", () => _accumulateProductTracker.DisplayString);
+			var tracker = new AccumulateProductTracker();
+			AddInitialGoalsToTracker(tracker);
+			KeyValueDisplay.Instance.Add("Have", () => tracker.DisplayString);
 		}
 
 		private void InitializeSellProductTracker()
 		{
-			_sellProductTracker = new SellProductTracker();
-			AddInitialGoalsToTracker(_sellProductTracker);
-			KeyValueDisplay.Instance.Add("Sell", () => _sellProductTracker.DisplayString);
+			var tracker = new SellProductTracker();
+			AddInitialGoalsToTracker(tracker);
+			KeyValueDisplay.Instance.Add("Sell", () => tracker.DisplayString);
 		}
 
 		// finds initial goals of a tracker's type and hends them off
