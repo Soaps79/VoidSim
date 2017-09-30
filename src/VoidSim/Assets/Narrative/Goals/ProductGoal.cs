@@ -10,7 +10,8 @@ namespace Assets.Narrative.Goals
 	{
 		CraftProduct,
 		AccumulateProduct,
-		SellProduct
+		SellProduct,
+		PlacePlaceable
 	}
 
 	/// <summary>
@@ -23,6 +24,7 @@ namespace Assets.Narrative.Goals
 		public string ProductName;
 		public bool IsComplete;
 		public bool IsActive;
+		public bool NeedsPlacement;
 		public int ElapsedAmount;
 	}
 
@@ -33,6 +35,7 @@ namespace Assets.Narrative.Goals
 		public GoalType Type;
 		public bool IsComplete;
 		public bool IsActive;
+		public bool NeedsPlacement;
 		public Action<ProductGoal> OnCompleteChange;
 
 		public string ProductName;

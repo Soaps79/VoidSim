@@ -23,7 +23,7 @@ namespace Assets.Narrative
 	public class NarrativeMonitor : QScript, ISerializeData<MissionGroupProgressData>
 	{
 		// this is so ugly, extract an interface pls
-		private readonly List<ProductGoalTrackerBase> _trackers = new List<ProductGoalTrackerBase>();
+		private readonly List<IGoalTracker> _trackers = new List<IGoalTracker>();
 		[SerializeField] private MissionGroupSO _missionGroupSO;
 		[SerializeField] private List<Mission> _activeMissions;
 		private readonly List<string> _completedMissionNames = new List<string>();
@@ -153,7 +153,7 @@ namespace Assets.Narrative
 		}
 
 		// finds goals of a tracker's type and hends them off
-		private void SeeIfTrackerCares(ProductGoalTrackerBase tracker, Mission mission)
+		private void SeeIfTrackerCares(IGoalTracker tracker, Mission mission)
 		{
 			var goals = mission.Goals.Where(i => i.Type == tracker.GoalType).ToList();
 			if (goals.Any())

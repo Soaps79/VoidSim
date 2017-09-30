@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Assets.Placeables.Placement;
 using Assets.Placeables.UI;
@@ -26,6 +27,8 @@ namespace Assets.Placeables
 
 		private readonly CollectionSerializer<PlaceablesMonitorData> _serializer 
 			= new CollectionSerializer<PlaceablesMonitorData>();
+
+		public Action<Placeable> OnPlaced;
 
 		void Start()
 		{
@@ -58,8 +61,12 @@ namespace Assets.Placeables
 
 		private void HandlePlaceablePlaced(PlaceableUpdateArgs args)
 		{
-			if(args != null && args.State == PlaceablePlacementState.Placed && args.Placeable != null)
+			if (args != null && args.State == PlaceablePlacementState.Placed && args.Placeable != null)
+			{
 				_placeables.Add(args.Placeable);
+				if (OnPlaced != null)
+					OnPlaced(args.Placeable);
+			}
 		}
 
 		public string Name { get { return "PlaceablesMonitor"; } }

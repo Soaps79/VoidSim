@@ -5,11 +5,18 @@ using System.Text;
 
 namespace Assets.Narrative.Goals
 {
+	public interface IGoalTracker
+	{
+		GoalType GoalType { get; }
+		string DisplayString { get; }
+		void AddGoal(ProductGoal goal);
+	}
+
 	/// <summary>
 	/// Handles simple elapsed vs total amounts for product goals
 	/// </summary>
 	[Serializable]
-	public abstract class ProductGoalTrackerBase
+	public abstract class ProductGoalTrackerBase : IGoalTracker
 	{
 		public abstract GoalType GoalType { get; }
 
