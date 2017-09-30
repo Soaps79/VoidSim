@@ -20,6 +20,7 @@ namespace Assets.Narrative.Goals
 	public class ProductGoalProgressData
 	{
 		public GoalType Type;
+		public string ProductName;
 		public bool IsComplete;
 		public bool IsActive;
 		public int ElapsedAmount;
@@ -76,7 +77,8 @@ namespace Assets.Narrative.Goals
 				Type = Type,
 				IsComplete = IsComplete,
 				IsActive = IsActive,
-				ElapsedAmount = ElapsedAmount
+				ElapsedAmount = ElapsedAmount,
+				ProductName = ProductName
 			};
 		}
 	}

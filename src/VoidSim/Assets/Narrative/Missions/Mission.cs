@@ -3,15 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Narrative.Goals;
 using Assets.Scripts.Serialization;
+using UnityEngine;
 
 namespace Assets.Narrative.Missions
 {
+	// Mission data is serialized in two parts.
+	// The first is the content data, which is static names, descriptions, 
+	// goals and such. This is kept with the SerializableObject.
+	// The other is for when a game is loaded, and holds the progress that was made when the game was saved.
 	[Serializable]
 	public class MissionProgressData
 	{
-		
+		public string Name;
+		public List<ProductGoalProgressData> Goals;
 	}
 
+	/// <summary>
+	/// This object represents a mission instance in progress, and should have whatever hooks are needed for in-game use.
+	/// </summary>
 	[Serializable]
 	public class Mission : ISerializeData<MissionProgressData>
 	{
@@ -22,12 +31,6 @@ namespace Assets.Narrative.Missions
 		public List<ProductGoal> Goals;
 		public Action<Mission> OnComplete;
 
-		private void ActivateGoal(ProductGoal goal)
-		{
-			goal.IsActive = true;
-			goal.OnCompleteChange += HandleCompleteChange;
-		}
-
 		public void AddAndActivateGoal(ProductGoal goal)
 		{
 			if (Goals == null)
@@ -36,23 +39,48 @@ namespace Assets.Narrative.Missions
 			ActivateGoal(goal);
 
 			Goals.Add(goal);
-			HandleCompleteChange(goal);
+			HandleGoalCompleteChange(goal);
 		}
 
-		private void HandleCompleteChange(ProductGoal goal)
+		private void ActivateGoal(ProductGoal goal)
 		{
-			if (!Goals.All(i => i.IsComplete))
-				return;
+			goal.IsActive = true;
+			goal.OnCompleteChange += HandleGoalCompleteChange;
+		}
 
-			Goals.ForEach(i => i.IsActive = false);
-			IsComplete = true;
-			if (OnComplete != null)
-				OnComplete(this);
+		private void HandleGoalCompleteChange(ProductGoal goal)
+		{
+			if (Goals.All(i => i.IsComplete))
+			{
+				Goals.ForEach(i => i.IsActive = false);
+				IsComplete = true;
+				if (OnComplete != null)
+					OnComplete(this);
+			}
 		}
 
 		public MissionProgressData GetData()
 		{
-			throw new NotImplementedException();
+			return new MissionProgressData
+			{
+				Name = Name,
+				Goals = Goals.Select(i => i.GetData()).ToList()
+			};
+		}
+
+		// used when loading progress from saved game
+		public void SetProgress(MissionProgressData missionData)
+		{
+			foreach (var goalInfo in missionData.Goals)
+			{
+				var goal = Goals.FirstOrDefault(i => i.ProductName == goalInfo.ProductName);
+				if(goal == null)
+					throw new UnityException("In-progress goal not created from scriptable");
+
+				goal.ElapsedAmount = goalInfo.ElapsedAmount;
+				if(goalInfo.IsComplete)
+					goal.TriggerComplete(true);
+			}
 		}
 	}
 }

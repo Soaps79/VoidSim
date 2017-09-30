@@ -25,17 +25,17 @@ namespace Assets.Narrative.Goals
 
 		public void HandleProductupdate(int productId, int amount)
 		{
+			var goals = Goals.Where(i => i.ProductId == productId);
+			if (!goals.Any())
+				return;
+
 			var completedGoals = new List<ProductGoal>();
-			
-				var goals = Goals.Where(i => i.ProductId == productId);
-				if (!goals.Any())
-					return;
 
 			// this is just one way to compare, will need to extract and vary
 			foreach (var productGoal in goals)
 			{
 				productGoal.ElapsedAmount += amount;
-				if (productGoal.ElapsedAmount > productGoal.TotalAmount)
+				if (productGoal.ElapsedAmount >= productGoal.TotalAmount)
 					completedGoals.Add(productGoal);
 			}
 

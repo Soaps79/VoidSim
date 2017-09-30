@@ -13,7 +13,7 @@ namespace Assets.Narrative
 	public class MissionGroupProgressData
 	{
 		public string Name;
-		public List<MissionProgressData> Missions;
+		public List<MissionProgressData> ActiveMissions;
 		public List<string> CompletedMissions;
 	}
 
@@ -23,7 +23,7 @@ namespace Assets.Narrative
 	public class NarrativeMonitor : QScript, ISerializeData<MissionGroupProgressData>
 	{
 		// this is so ugly, extract an interface pls
-		private List<ProductGoalTrackerBase> _trackers = new List<ProductGoalTrackerBase>();
+		private readonly List<ProductGoalTrackerBase> _trackers = new List<ProductGoalTrackerBase>();
 		[SerializeField] private MissionGroupSO _missionGroupSO;
 		[SerializeField] private List<Mission> _activeMissions;
 		private readonly List<string> _completedMissionNames = new List<string>();
@@ -59,7 +59,20 @@ namespace Assets.Narrative
 		private void LoadMissions()
 		{
 			var data = _serializer.DeserializeData();
-			// do more things
+			if(data.Name != _missionGroupSO.name)
+				throw new UnityException("Mission group progress data does not match Scriptable");
+
+			_completedMissionNames.AddRange(data.CompletedMissions);
+			foreach (var missionData in data.ActiveMissions)
+			{
+				// create the mission from the SO
+				var content = _missionGroupSO.Missions.FirstOrDefault(i => i.name == missionData.Name);
+				if(content == null)
+					throw new UnityException("In-progress mission not found in scriptable");
+				var mission = BeginMission(content);
+				// progress it to where it was saved
+				mission.SetProgress(missionData);
+			}
 		}
 
 		// start the mission group fresh
@@ -73,7 +86,7 @@ namespace Assets.Narrative
 		}
 
 		// create mission with its static content
-		private void BeginMission(MissionSO missionSO)
+		private Mission BeginMission(MissionSO missionSO)
 		{
 			var mission = new Mission
 			{
@@ -88,6 +101,7 @@ namespace Assets.Narrative
 			mission.OnComplete += HandleMissionComplete;
 			_trackers.ForEach(i => SeeIfTrackerCares(i, mission));
 			_activeMissions.Add(mission);
+			return mission;
 		}
 
 		// complete mission, see if any new ones are triggered
@@ -98,7 +112,7 @@ namespace Assets.Narrative
 
 			var next = _missionGroupSO.Missions.Where(i => i.PrereqMissionName == mission.Name).ToList();
 			if (next.Any())
-				next.ForEach(BeginMission);
+				next.ForEach(i => BeginMission(i));
 		}
 
 		// get static Product data
@@ -151,7 +165,7 @@ namespace Assets.Narrative
 			var data = new MissionGroupProgressData
 			{
 				Name = _missionGroupSO.name,
-				Missions = _activeMissions.Select(i => i.GetData()).ToList(),
+				ActiveMissions = _activeMissions.Select(i => i.GetData()).ToList(),
 				CompletedMissions = _completedMissionNames.ToList()
 			};
 

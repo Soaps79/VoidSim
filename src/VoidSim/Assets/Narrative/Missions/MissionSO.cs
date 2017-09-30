@@ -14,6 +14,9 @@ namespace Assets.Narrative.Missions
 		[HideInInspector] public int ProductId;
 	}
 
+	/// <summary>
+	/// Static representation of mission data for content creation in the editor.
+	/// </summary>
 	[Serializable]
 	public class MissionSO : ScriptableObject
 	{
