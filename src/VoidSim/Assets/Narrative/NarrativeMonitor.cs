@@ -47,6 +47,7 @@ namespace Assets.Narrative
 			InitializeCraftProductTracker();
 			InitializeAccumulateProductTracker();
 			InitializeSellProductTracker();
+			InitializePlacePlaceableTracker();
 
 			// if there is loading data, bring missions up to date
 			if (_serializer.HasDataFor(this, "Narrative"))
@@ -109,6 +110,7 @@ namespace Assets.Narrative
 		{
 			_completedMissionNames.Add(mission.Name);
 			_activeMissions.Remove(mission);
+			_trackers.ForEach(i => i.Prune());
 
 			var next = _missionGroupSO.Missions.Where(i => i.PrereqMissionName == mission.Name).ToList();
 			if (next.Any())
@@ -124,9 +126,8 @@ namespace Assets.Narrative
 				foreach (var productGoal in mission.Goals)
 				{
 					var product = allProducts.FirstOrDefault(i => i.Name == productGoal.ProductName);
-					if (product == null)
-						throw new UnityException("NarrativeMonitor given bad product");
-					productGoal.ProductId = product.ID;
+					if (product != null)
+						productGoal.ProductId = product.ID;
 				}
 			}
 		}
@@ -149,6 +150,13 @@ namespace Assets.Narrative
 		{
 			var tracker = new SellProductTracker();
 			KeyValueDisplay.Instance.Add("Sell", () => tracker.DisplayString);
+			_trackers.Add(tracker);
+		}
+
+		private void InitializePlacePlaceableTracker()
+		{
+			var tracker = new PlacePlaceableTracker();
+			KeyValueDisplay.Instance.Add("Place", () => tracker.DisplayString);
 			_trackers.Add(tracker);
 		}
 

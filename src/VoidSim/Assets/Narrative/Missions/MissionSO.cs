@@ -11,6 +11,7 @@ namespace Assets.Narrative.Missions
 		public GoalType Type;
 		public string ProductName;
 		public int TotalAmount;
+		public bool NeedsPlacement;
 		[HideInInspector] public int ProductId;
 	}
 

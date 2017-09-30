@@ -10,6 +10,7 @@ namespace Assets.Narrative.Goals
 		GoalType GoalType { get; }
 		string DisplayString { get; }
 		void AddGoal(ProductGoal goal);
+		void Prune();
 	}
 
 	/// <summary>
@@ -54,6 +55,11 @@ namespace Assets.Narrative.Goals
 			{
 				goal.TriggerComplete(true);
 			}
+			Prune();
+		}
+
+		public void Prune()
+		{
 			Goals.RemoveAll(i => !i.IsActive);
 		}
 

@@ -62,12 +62,14 @@ namespace Assets.Narrative.Goals
 			ProductId = info.ProductId;
 			TotalAmount = info.TotalAmount;
 			Type = info.Type;
+			NeedsPlacement = info.NeedsPlacement;
 		}
 
 		public void SetFromData(ProductGoalProgressData progressData)
 		{
 			IsActive = progressData.IsActive;
 			ElapsedAmount = progressData.ElapsedAmount;
+			NeedsPlacement = progressData.NeedsPlacement;
 
 			if (progressData.IsComplete)
 				TriggerComplete(true); 
@@ -81,7 +83,8 @@ namespace Assets.Narrative.Goals
 				IsComplete = IsComplete,
 				IsActive = IsActive,
 				ElapsedAmount = ElapsedAmount,
-				ProductName = ProductName
+				ProductName = ProductName,
+				NeedsPlacement = NeedsPlacement
 			};
 		}
 	}

@@ -1,36 +1,67 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Assets.Placeables;
-using Assets.Station;
 using UnityEngine;
 
 namespace Assets.Narrative.Goals
 {
-	public class PlacePlaceableTracker : ProductGoalTrackerBase
+	/// <summary>
+	/// Watches the PlaceableMonitor changes in state (placed, soon removed)
+	/// and handles placement goals accodingly
+	/// 
+	/// It's not pretty
+	/// Currently works by toggling a goal's NeedsPlacement flag
+	/// It might only work once?
+	/// </summary>
+	public class PlacePlaceableTracker : IGoalTracker
 	{
-		public override GoalType GoalType { get { return GoalType.PlacePlaceable; } }
+		public GoalType GoalType { get { return GoalType.PlacePlaceable; } }
 
-
-		private readonly PlaceablesMonitor _placeablesMonitor;
+		private readonly List<ProductGoal> _goals = new List<ProductGoal>();
 
 		public PlacePlaceableTracker()
 		{
 			// here be brittle
-			_placeablesMonitor = GameObject.Find("core").GetComponent<PlaceablesMonitor>();
-			_placeablesMonitor.OnPlaced += HandlePlaced;
+			var placeablesMonitor = GameObject.Find("core").GetComponent<PlaceablesMonitor>();
+			placeablesMonitor.OnPlaced += HandlePlaced;
 		}
 
 		private void HandlePlaced(Placeable placeable)
 		{
-			//foreach (var goal in Goals)
-			//{
-			//	if (goal.ProductName == placeable.PlaceableName)
-			//	{
-			//		goal.TriggerComplete(true);
-			//	}
+			foreach (var goal in _goals)
+			{
+				if (goal.ProductName == placeable.PlaceableName)
+				{
+					goal.NeedsPlacement = false;
+					goal.TriggerComplete(true);
+				}
+			}
 
-			//}
+			_goals.RemoveAll(i => !i.IsActive);
+		}
 
-			//var completed = Goals.Where(i => i.)
+		public void Prune()
+		{
+			_goals.RemoveAll(i => !i.IsActive);
+		}
+
+		public string DisplayString
+		{
+			get
+			{
+				// rafactor to actually use the builder
+				var builder = new StringBuilder();
+				builder.Append(_goals.Aggregate("",
+					(current, goal) => current + "  " + goal.ProductName));
+
+				return builder.ToString();
+			}
+		}
+
+		public void AddGoal(ProductGoal goal)
+		{
+			_goals.Add(goal);
 		}
 	}
 }
