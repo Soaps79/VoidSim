@@ -13,11 +13,11 @@ namespace Assets.Narrative.Goals
 	{
 		public abstract GoalType GoalType { get; }
 
-		protected virtual void OnGoalAdded(ProductAmountGoal goal) { }
+		protected virtual void OnGoalAdded(ProductGoal goal) { }
 
-		public List<ProductAmountGoal> Goals = new List<ProductAmountGoal>();
+		public List<ProductGoal> Goals = new List<ProductGoal>();
 		
-		public void AddGoal(ProductAmountGoal goal)
+		public void AddGoal(ProductGoal goal)
 		{
 			Goals.Add(goal);
 			OnGoalAdded(goal);
@@ -25,7 +25,7 @@ namespace Assets.Narrative.Goals
 
 		public void HandleProductupdate(int productId, int amount)
 		{
-			var completedGoals = new List<ProductAmountGoal>();
+			var completedGoals = new List<ProductGoal>();
 			
 				var goals = Goals.Where(i => i.ProductId == productId);
 				if (!goals.Any())

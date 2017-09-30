@@ -21,7 +21,7 @@ namespace Assets.Narrative.Goals
 
 		// set goal elapsed to current inventory level
 		// if goal is complete, complete it
-		protected override void OnGoalAdded(ProductAmountGoal goal)
+		protected override void OnGoalAdded(ProductGoal goal)
 		{
 			goal.ElapsedAmount = _inventory.GetProductCurrentAmount(goal.ProductId);
 			if(goal.ElapsedAmount > goal.TotalAmount)

@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73c448dc9873b2842b4ec4985c0fc046, type: 3}
+  m_Name: learn_trading
+  m_EditorClassIdentifier: 
+  DisplayName: Trade Some Things
+  FlavorText: 'Traders need a place to land to conduct business. Grab a block of ship
+    bays from the toolbox, and place it on the station. Ships will automatically start
+    bringing the goods the factory ordered. To sell your goods, click on Consumer
+    Goods in your inventory, and set them to sell (the - button). '
+  PrereqMissionName: learn_crafting
+  Goals:
+  - Type: 2
+    ProductName: Consumer Goods
+    TotalAmount: 100
+    ProductId: 0

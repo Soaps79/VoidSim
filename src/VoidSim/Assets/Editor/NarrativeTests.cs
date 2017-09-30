@@ -4,24 +4,13 @@ using NUnit.Framework;
 
 namespace Assets.Editor
 {
-	//public class TestProductGoalTracker : ProductGoalTrackerBase
-	//{
-	//	private GoalType _goalType;
-	//	public override GoalType GoalType { get { return _goalType; } }
-
-	//	public TestProductGoalTracker(GoalType type)
-	//	{
-	//		_goalType = type;
-	//	}
-	//}
-
 	public class NarrativeTests
 	{
 		[Test]
 		public void Mission_GoalIsAddedAndActivated()
 		{
 			var mission = new Mission();
-			var goal = new ProductAmountGoal();
+			var goal = new ProductGoal();
 			mission.AddAndActivateGoal(goal);
 
 			Assert.AreEqual(1, mission.Goals.Count);
@@ -40,7 +29,7 @@ namespace Assets.Editor
 					marked = m.IsComplete;
 				};
 
-			var goal = new ProductAmountGoal();
+			var goal = new ProductGoal();
 			mission.AddAndActivateGoal(goal);
 			goal.TriggerComplete(true);
 
@@ -60,7 +49,7 @@ namespace Assets.Editor
 				marked = m.IsComplete;
 			};
 
-			var goal = new ProductAmountGoal();
+			var goal = new ProductGoal();
 			goal.TriggerComplete(true);
 			mission.AddAndActivateGoal(goal);
 
@@ -80,10 +69,10 @@ namespace Assets.Editor
 				marked = m.IsComplete;
 			};
 
-			var goal = new ProductAmountGoal();
+			var goal = new ProductGoal();
 			mission.AddAndActivateGoal(goal);
 
-			var goal2 = new ProductAmountGoal();
+			var goal2 = new ProductGoal();
 			mission.AddAndActivateGoal(goal2);
 
 			goal.TriggerComplete(true);
@@ -107,11 +96,11 @@ namespace Assets.Editor
 				marked = m.IsComplete;
 			};
 
-			var goal = new ProductAmountGoal();
+			var goal = new ProductGoal();
 			mission.AddAndActivateGoal(goal);
 			goal.TriggerComplete(true);
 
-			var goal2 = new ProductAmountGoal();
+			var goal2 = new ProductGoal();
 			mission.AddAndActivateGoal(goal2);
 			goal2.TriggerComplete(true);
 

@@ -2,20 +2,34 @@
 using System.Linq;
 using Assets.Narrative.Goals;
 using Assets.Narrative.Missions;
+using Assets.Scripts.Serialization;
 using Assets.WorldMaterials.Products;
 using QGame;
 using UnityEngine;
 
 namespace Assets.Narrative
 {
+	// Saves only what is needed for mission group progress
+	public class MissionGroupProgressData
+	{
+		public string Name;
+		public List<MissionProgressData> Missions;
+		public List<string> CompletedMissions;
+	}
+
 	/// <summary>
 	/// Orchestrate the Narrative. Will probably end up handling too many duties, and jobs will be broken out.
 	/// </summary>
-	public class NarrativeMonitor : QScript
+	public class NarrativeMonitor : QScript, ISerializeData<MissionGroupProgressData>
 	{
 		// this is so ugly, extract an interface pls
 		private List<ProductGoalTrackerBase> _trackers = new List<ProductGoalTrackerBase>();
-		[SerializeField] private List<Mission> _initialMissions = new List<Mission>();
+		[SerializeField] private MissionGroupSO _missionGroupSO;
+		[SerializeField] private List<Mission> _activeMissions;
+		private readonly List<string> _completedMissionNames = new List<string>();
+
+		private readonly CollectionSerializer<MissionGroupProgressData> _serializer
+			= new CollectionSerializer<MissionGroupProgressData>();
 
 		void Start()
 		{
@@ -25,17 +39,73 @@ namespace Assets.Narrative
 
 		private void Initialize(float obj)
 		{
-			_initialMissions.ForEach(i => i.Initialize());
+			// loads necessary static data
+			// this is bad form, writing to a SO, fix it
 			InitializeProducts();
+			
+			// trackers will be given goals as the missions are begun
 			InitializeCraftProductTracker();
 			InitializeAccumulateProductTracker();
 			InitializeSellProductTracker();
+
+			// if there is loading data, bring missions up to date
+			if (_serializer.HasDataFor(this, "Narrative"))
+				LoadMissions();
+			else
+				CreateStartingMissions();
 		}
 
+		// match progress data with static content
+		private void LoadMissions()
+		{
+			var data = _serializer.DeserializeData();
+			// do more things
+		}
+
+		// start the mission group fresh
+		private void CreateStartingMissions()
+		{
+			_activeMissions = new List<Mission>();
+			foreach (var missionSO in _missionGroupSO.Missions.Where(i => string.IsNullOrEmpty(i.PrereqMissionName)))
+			{
+				BeginMission(missionSO);
+			}
+		}
+
+		// create mission with its static content
+		private void BeginMission(MissionSO missionSO)
+		{
+			var mission = new Mission
+			{
+				Name = missionSO.name,
+				DisplayName = missionSO.DisplayName,
+				FlavorText = missionSO.FlavorText
+			};
+			foreach (var goalInfo in missionSO.Goals)
+			{
+				mission.AddAndActivateGoal(new ProductGoal(goalInfo));
+			}
+			mission.OnComplete += HandleMissionComplete;
+			_trackers.ForEach(i => SeeIfTrackerCares(i, mission));
+			_activeMissions.Add(mission);
+		}
+
+		// complete mission, see if any new ones are triggered
+		private void HandleMissionComplete(Mission mission)
+		{
+			_completedMissionNames.Add(mission.Name);
+			_activeMissions.Remove(mission);
+
+			var next = _missionGroupSO.Missions.Where(i => i.PrereqMissionName == mission.Name).ToList();
+			if (next.Any())
+				next.ForEach(BeginMission);
+		}
+
+		// get static Product data
 		private void InitializeProducts()
 		{
 			var allProducts = ProductLookup.Instance.GetProducts();
-			foreach (var mission in _initialMissions)
+			foreach (var mission in _missionGroupSO.Missions)
 			{
 				foreach (var productGoal in mission.Goals)
 				{
@@ -50,39 +120,42 @@ namespace Assets.Narrative
 		private void InitializeCraftProductTracker()
 		{
 			var tracker = new CraftProductTracker();
-			AddInitialGoalsToTracker(tracker);
 			KeyValueDisplay.Instance.Add("Make", () => tracker.DisplayString);
+			_trackers.Add(tracker);
 		}
+
 		private void InitializeAccumulateProductTracker()
 		{
 			var tracker = new AccumulateProductTracker();
-			AddInitialGoalsToTracker(tracker);
 			KeyValueDisplay.Instance.Add("Have", () => tracker.DisplayString);
+			_trackers.Add(tracker);
 		}
 
 		private void InitializeSellProductTracker()
 		{
 			var tracker = new SellProductTracker();
-			AddInitialGoalsToTracker(tracker);
 			KeyValueDisplay.Instance.Add("Sell", () => tracker.DisplayString);
+			_trackers.Add(tracker);
 		}
 
-		// finds initial goals of a tracker's type and hends them off
-		private void AddInitialGoalsToTracker(ProductGoalTrackerBase tracker)
+		// finds goals of a tracker's type and hends them off
+		private void SeeIfTrackerCares(ProductGoalTrackerBase tracker, Mission mission)
 		{
-			var missions = _initialMissions.Where(i => i.Goals.Any(j => j.Type == tracker.GoalType)).ToList();
-
-			if (!missions.Any())
-				return;
-
-			foreach (var mission in missions)
-			{
-				foreach (var goal in mission.Goals.Where(i => i.Type == tracker.GoalType))
-				{
-					tracker.AddGoal(goal);
-				}
-			}
+			var goals = mission.Goals.Where(i => i.Type == tracker.GoalType).ToList();
+			if (goals.Any())
+				goals.ForEach(tracker.AddGoal);
 		}
 
+		public MissionGroupProgressData GetData()
+		{
+			var data = new MissionGroupProgressData
+			{
+				Name = _missionGroupSO.name,
+				Missions = _activeMissions.Select(i => i.GetData()).ToList(),
+				CompletedMissions = _completedMissionNames.ToList()
+			};
+
+			return data;
+		}
 	}
 }

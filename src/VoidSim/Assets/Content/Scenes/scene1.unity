@@ -3699,7 +3699,7 @@ Prefab:
     - target: {fileID: 224559047067320838, guid: 01a26998e2e905e4f963ae8d6a8cdb86,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 103.48
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224559047067320838, guid: 01a26998e2e905e4f963ae8d6a8cdb86,
         type: 2}
@@ -3734,12 +3734,12 @@ Prefab:
     - target: {fileID: 114685487118876116, guid: 01a26998e2e905e4f963ae8d6a8cdb86,
         type: 2}
       propertyPath: m_havePropertiesChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114685487118876116, guid: 01a26998e2e905e4f963ae8d6a8cdb86,
         type: 2}
       propertyPath: m_isInputParsingRequired
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224698362454762502, guid: 01a26998e2e905e4f963ae8d6a8cdb86,
         type: 2}
@@ -3759,7 +3759,7 @@ Prefab:
     - target: {fileID: 224698362454762502, guid: 01a26998e2e905e4f963ae8d6a8cdb86,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -51.74
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224698362454762502, guid: 01a26998e2e905e4f963ae8d6a8cdb86,
         type: 2}
@@ -3769,7 +3769,7 @@ Prefab:
     - target: {fileID: 224698362454762502, guid: 01a26998e2e905e4f963ae8d6a8cdb86,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 91.48
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1052229069084876, guid: 01a26998e2e905e4f963ae8d6a8cdb86, type: 2}
       propertyPath: m_IsActive
@@ -6498,39 +6498,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52e124cfb8372a44bb3a7c6fce8f67e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initialMissions:
-  - Name: Distribute Consumer Goods
-    FlavorText: Longer version of Distribute Consumer Goods. Longer version of Distribute
-      Consumer Goods. Longer version of Distribute Consumer Goods. Longer version
-      of Distribute Consumer Goods.
-    IsComplete: 0
-    Goals:
-    - Type: 0
-      IsComplete: 0
-      IsActive: 0
-      ProductName: Consumer Goods
-      ProductId: 0
-      TotalAmount: 50
-      ElapsedAmount: 0
-    - Type: 2
-      IsComplete: 0
-      IsActive: 0
-      ProductName: Consumer Goods
-      ProductId: 0
-      TotalAmount: 100
-      ElapsedAmount: 0
-  - Name: Get Steel
-    FlavorText: 'Longer version of Get Steel. Longer version of Get Steel. Longer
-      version of Get Steel. '
-    IsComplete: 0
-    Goals:
-    - Type: 1
-      IsComplete: 0
-      IsActive: 0
-      ProductName: Steel
-      ProductId: 0
-      TotalAmount: 70
-      ElapsedAmount: 0
+  _missionGroupSO: {fileID: 11400000, guid: 99b8f15b05cd1194aa22f2db821ceba1, type: 2}
+  _activeMissions: []
 --- !u!1 &1797063556
 GameObject:
   m_ObjectHideFlags: 0
