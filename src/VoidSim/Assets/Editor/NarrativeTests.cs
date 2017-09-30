@@ -49,6 +49,26 @@ namespace Assets.Editor
 		}
 
 		[Test]
+		public void Mission_SingleGoal_AlreadyTriggered()
+		{
+			var mission = new Mission();
+			var triggered = false;
+			var marked = false;
+			mission.OnComplete += (m) =>
+			{
+				triggered = true;
+				marked = m.IsComplete;
+			};
+
+			var goal = new ProductAmountGoal();
+			goal.TriggerComplete(true);
+			mission.AddAndActivateGoal(goal);
+
+			Assert.IsTrue(triggered);
+			Assert.IsTrue(marked);
+		}
+
+		[Test]
 		public void Mission_MultipleGoals()
 		{
 			var mission = new Mission();
@@ -71,6 +91,30 @@ namespace Assets.Editor
 			Assert.IsFalse(marked);
 
 			goal2.TriggerComplete(true);
+			Assert.IsTrue(triggered);
+			Assert.IsTrue(marked);
+		}
+
+		[Test]
+		public void Mission_MultipleGoals_AlreadyTriggered()
+		{
+			var mission = new Mission();
+			var triggered = false;
+			var marked = false;
+			mission.OnComplete += (m) =>
+			{
+				triggered = true;
+				marked = m.IsComplete;
+			};
+
+			var goal = new ProductAmountGoal();
+			mission.AddAndActivateGoal(goal);
+			goal.TriggerComplete(true);
+
+			var goal2 = new ProductAmountGoal();
+			mission.AddAndActivateGoal(goal2);
+			goal2.TriggerComplete(true);
+
 			Assert.IsTrue(triggered);
 			Assert.IsTrue(marked);
 		}
