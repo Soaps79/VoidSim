@@ -33,6 +33,8 @@ namespace Assets.Narrative.Goals
 			{
 				if (goal.ProductName == placeable.PlaceableName)
 				{
+					if (goal.TotalAmount >= goal.ElapsedAmount)
+						goal.ElapsedAmount++;
 					goal.NeedsPlacement = false;
 					goal.TriggerComplete(true);
 				}

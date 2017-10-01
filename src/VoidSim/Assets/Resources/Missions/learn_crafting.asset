@@ -21,7 +21,7 @@ MonoBehaviour:
   Goals:
   - Type: 3
     ProductName: Small Factory
-    TotalAmount: 0
+    TotalAmount: 1
     NeedsPlacement: 1
     ProductId: 5
   - Type: 0
