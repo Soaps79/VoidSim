@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Assets.Narrative.Goals;
 using Assets.Narrative.Missions;
+using Assets.Narrative.UI;
 using Assets.Scripts.Serialization;
 using Assets.WorldMaterials.Products;
 using QGame;
@@ -31,6 +33,9 @@ namespace Assets.Narrative
 		private readonly CollectionSerializer<MissionGroupProgressData> _serializer
 			= new CollectionSerializer<MissionGroupProgressData>();
 
+		[SerializeField] private MissionGroupViewModel _viewModelPrefab;
+		public Action<Mission> OnMissionBegin;
+
 		void Start()
 		{
 			// delay to let the game objects get set up
@@ -39,6 +44,8 @@ namespace Assets.Narrative
 
 		private void Initialize(float obj)
 		{
+			InitializeUI();
+
 			// loads necessary static data
 			// this is bad form, writing to a SO, fix it
 			InitializeProducts();
@@ -54,6 +61,13 @@ namespace Assets.Narrative
 				LoadMissions();
 			else
 				CreateStartingMissions();
+		}
+
+		private void InitializeUI()
+		{
+			var canvas = GameObject.Find("InfoCanvas");
+			var viewModel = Instantiate(_viewModelPrefab, canvas.transform, false);
+			viewModel.Initialize(this);
 		}
 
 		// match progress data with static content
@@ -102,6 +116,8 @@ namespace Assets.Narrative
 			mission.OnComplete += HandleMissionComplete;
 			_trackers.ForEach(i => SeeIfTrackerCares(i, mission));
 			_activeMissions.Add(mission);
+			if (OnMissionBegin != null)
+				OnMissionBegin(mission);
 			return mission;
 		}
 
