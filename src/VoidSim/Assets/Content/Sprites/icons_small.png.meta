@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 7e17a6d09f97b4043b2e6a2616e7841e
-timeCreated: 1503172300
+timeCreated: 1507253919
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -17,6 +17,7 @@ TextureImporter:
     21300020: sm_ico_mood_medium
     21300022: sm_ico_mood_high
     21300024: sm_ico_mood_veryhigh
+    21300026: sm_ico_info
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -238,7 +239,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -252,7 +253,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -266,7 +267,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -276,6 +277,20 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 64
+        y: 96
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: sm_ico_info
+      rect:
+        serializedVersion: 2
+        x: 80
         y: 96
         width: 16
         height: 16

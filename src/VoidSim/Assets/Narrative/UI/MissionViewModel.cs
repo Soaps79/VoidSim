@@ -1,9 +1,11 @@
 ﻿using Assets.Narrative.Missions;
+using Assets.Scripts.UI;
 using DG.Tweening;
 using QGame;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UI.Extensions;
 
 namespace Assets.Narrative.UI
 {
@@ -12,6 +14,7 @@ namespace Assets.Narrative.UI
 		[SerializeField] private GoalViewModel _goalPrefab;
 		[SerializeField] private RectTransform _goalList;
 		[SerializeField] private TMP_Text _nameText;
+		[SerializeField] private Image _infoIcon;
 		private string _flavorText;
 
 		public void Initialize(Mission mission)
@@ -23,7 +26,13 @@ namespace Assets.Narrative.UI
 				instance.Initialize(goal);
 			}
 
-			_flavorText = mission.FlavorText;
+			var trigger = _infoIcon.GetComponent<BoundTooltipTrigger>();
+			if (trigger != null)
+			{
+				trigger.OnHoverActivate += tooltipTrigger => tooltipTrigger.text =
+					mission.FlavorText;
+			}
+
 			_nameText.text = mission.DisplayName;
 		}
 
