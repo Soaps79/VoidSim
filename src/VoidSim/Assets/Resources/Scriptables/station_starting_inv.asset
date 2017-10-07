@@ -19,6 +19,7 @@ MonoBehaviour:
   - Small Housing
   - Small Bays
   - Basic Needs
+  - Small Lounge
   ProductsToIgnore: 0200000003000000
   Products:
   - ProductName: Iron

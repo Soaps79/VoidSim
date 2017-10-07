@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d68151eb36a6c54eb6702f32efe7b72, type: 3}
+  m_Name: plc_sm_lounge
+  m_EditorClassIdentifier: 
+  ProductName: Small Lounge
+  IconSprite: {fileID: 21300012, guid: 0292be98de478244b8e9b7e62a559597, type: 3}
+  PlacedSprite: {fileID: 21300010, guid: ed48e76a45db81345859da8cd1747f0a, type: 3}
+  Layer: 1
+  Prefab: {fileID: 114439710200841554, guid: d5998e4b1078119409ec8f8d0ed69356, type: 2}

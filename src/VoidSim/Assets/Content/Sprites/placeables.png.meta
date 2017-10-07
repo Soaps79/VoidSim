@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: ed48e76a45db81345859da8cd1747f0a
-timeCreated: 1504654136
+timeCreated: 1507418843
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -9,6 +9,7 @@ TextureImporter:
     21300004: plc_sm_housing
     21300006: plc_sm_bays
     21300008: plc_basic_needs
+    21300010: plc_sm_lounge
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -161,6 +162,20 @@ TextureImporter:
         height: 195
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: plc_sm_lounge
+      rect:
+        serializedVersion: 2
+        x: 1015
+        y: 1801
+        width: 405
+        height: 247
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
