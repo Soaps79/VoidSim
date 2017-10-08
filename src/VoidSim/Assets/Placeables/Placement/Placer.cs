@@ -80,7 +80,6 @@ namespace Assets.Placeables.Placement
 		// placement has been dismissed by user
 		private void CancelPlacement()
 		{
-			CompletePlacement(false);
 			Locator.MessageHub.QueueMessage(
 				PlaceableMessages.PlaceablePlaced,
 				new PlaceableUpdateArgs
@@ -88,6 +87,7 @@ namespace Assets.Placeables.Placement
 					State = PlaceablePlacementState.Cancelled,
 					Layer = _toPlaceScriptable.Layer
 				});
+			CompletePlacement(false);
 		}
 
 		// turn off the magnet, null all the things

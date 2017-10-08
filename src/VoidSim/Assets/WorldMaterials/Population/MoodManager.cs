@@ -5,6 +5,7 @@ using Assets.Station.Efficiency;
 using Assets.WorldMaterials.Products;
 using Messaging;
 using QGame;
+using UnityEditor;
 
 namespace Assets.WorldMaterials.Population
 {
@@ -22,6 +23,8 @@ namespace Assets.WorldMaterials.Population
 		private int _currentPopCount;
 
 		private Inventory _inventory;
+		private float _maxLeisureBonus;
+		private int _baseLeisure;
 
 		public MoodManager(MoodParams moodParams, Inventory inventory)
 		{
@@ -50,6 +53,8 @@ namespace Assets.WorldMaterials.Population
 			_waterConsumedPerPop = param.WaterPerPop;
 			_moodMinimumAmount = param.MoodMinimum;
 			_currentLeisure = param.BaseLeisure;
+			_maxLeisureBonus = param.MaxLeisureBonus;
+			_baseLeisure = param.BaseLeisure;
 		}
 
 		private void InitializeNeedsConsumption()
@@ -131,9 +136,19 @@ namespace Assets.WorldMaterials.Population
 		private void UpdateLeisureAffector()
 		{
 			UpdatePopCount();
-			if (_currentPopCount == 0) return;
-			var fulfilled = (float)_currentLeisure / _currentPopCount;
-			_leisureAffector.Efficiency = fulfilled;
+			if (_currentPopCount == 0) { return; }
+			
+			var leisure = (float)_currentLeisure / _currentPopCount;
+
+			if (leisure > 1)
+			{
+				if (_currentLeisure <= _baseLeisure)
+					leisure = 1;
+				else if (leisure > _maxLeisureBonus)
+					leisure = _maxLeisureBonus;
+			}
+
+			_leisureAffector.Efficiency = leisure;
 		}
 
 		public string Name { get { return "MoodManager"; } }

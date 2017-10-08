@@ -15,6 +15,7 @@ namespace Assets.WorldMaterials.Population
 		[Tooltip("Lowest value mood will output")]
 		public float MoodMinimum;
 		public int BaseLeisure;
+		public float MaxLeisureBonus;
 	}
 
 	[Serializable]
