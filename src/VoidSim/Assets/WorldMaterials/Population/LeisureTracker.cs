@@ -6,24 +6,39 @@ using UnityEngine;
 
 namespace Assets.WorldMaterials.Population
 {
+	/// <summary>
+	/// Listens for LeisureProvider nodes to be placed.
+	/// Affects population accordingly.
+	/// </summary>
 	public class LeisureTracker : IMessageListener
 	{
 		public readonly EfficiencyAffector Affector = new EfficiencyAffector("Leisure");
+		// leisure is calculated as the amount provided over the amount needed
+		// there is a max amount that leisure will affect population's mood
 		private int _currentLeisure;
 		private int _currentPopCount;
-		private readonly int _baseLeisure;
-		private readonly float _maxLeisureBonus;
+		private int _baseLeisure;
+		private float _maxLeisureBonus;
+
+		public LeisureTracker() { }
 
 		public LeisureTracker(MoodParams moodParams, int currentPopCount)
+		{
+			Initialize(moodParams, currentPopCount);
+			Locator.MessageHub.AddListener(this, LeisureProvider.MessageName);
+		}
+
+		// exposed for use in testing
+		public void Initialize(MoodParams moodParams, int currentPopCount)
 		{
 			_baseLeisure = moodParams.BaseLeisure;
 			_currentLeisure = _baseLeisure;
 			_maxLeisureBonus = moodParams.MaxLeisureBonus;
 			_currentPopCount = currentPopCount;
-			Locator.MessageHub.AddListener(this, LeisureProvider.MessageName);
 			UpdateLeisureAffector();
 		}
 
+		// calculate the current leisure and inform Affector
 		private void UpdateLeisureAffector()
 		{
 			if (_currentPopCount == 0) { return; }
@@ -57,7 +72,8 @@ namespace Assets.WorldMaterials.Population
 			AddLeisure(args.LeisureProvider.AmountProvided);
 		}
 
-		private void AddLeisure(int amount)
+		// exposed for use in testing
+		public void AddLeisure(int amount)
 		{
 			_currentLeisure += amount;
 			UpdateLeisureAffector();
