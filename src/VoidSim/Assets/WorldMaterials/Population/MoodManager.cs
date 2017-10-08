@@ -9,12 +9,11 @@ using UnityEditor;
 
 namespace Assets.WorldMaterials.Population
 {
-	public class MoodManager : IMessageListener
+	public class MoodManager
 	{
 		public readonly EfficiencyModule EfficiencyModule = new EfficiencyModule();
 		private readonly EfficiencyAffector _foodAffector = new EfficiencyAffector("Food");
 		private readonly EfficiencyAffector _waterAffector = new EfficiencyAffector("Water");
-		private readonly EfficiencyAffector _leisureAffector = new EfficiencyAffector("Leisure");
 		private float _foodConsumedPerPop;
 		private float _waterConsumedPerPop;
 		private float _moodMinimumAmount;
@@ -25,6 +24,7 @@ namespace Assets.WorldMaterials.Population
 		private Inventory _inventory;
 		private float _maxLeisureBonus;
 		private int _baseLeisure;
+		private LeisureTracker _leisureTracker;
 
 		public MoodManager(MoodParams moodParams, Inventory inventory)
 		{
@@ -37,14 +37,18 @@ namespace Assets.WorldMaterials.Population
 				UberDebug.LogChannel(LogChannels.Warning, "MoodManager given bad params");
 
 			InitializeNeedsConsumption();
-			Locator.MessageHub.AddListener(this, LeisureProvider.MessageName);
-			UpdateLeisureAffector();
+			UpdatePopCount();
+			_leisureTracker = new LeisureTracker(moodParams, _currentPopCount);
+			EfficiencyModule.RegisterAffector(_leisureTracker.Affector);
 		}
 
 		private void HandleInventoryUpdate(int productId, int amount)
 		{
-			if(productId == ProductIdLookup.Population)
-				UpdateLeisureAffector();
+			if (productId != ProductIdLookup.Population)
+				return;
+
+			UpdatePopCount();
+			_leisureTracker.UpdatePopCount(_currentPopCount);
 		}
 
 		private void SetFromScriptable(MoodParams param)
@@ -61,7 +65,6 @@ namespace Assets.WorldMaterials.Population
 		{
 			EfficiencyModule.RegisterAffector(_foodAffector);
 			EfficiencyModule.RegisterAffector(_waterAffector);
-			EfficiencyModule.RegisterAffector(_leisureAffector);
 			EfficiencyModule.MinimumAmount = _moodMinimumAmount;
 
 			Locator.WorldClock.OnHourUp += HandleHourTick;
@@ -81,6 +84,7 @@ namespace Assets.WorldMaterials.Population
 		private void UpdatePopCount()
 		{
 			_currentPopCount = _inventory.GetProductCurrentAmount(ProductIdLookup.Population);
+
 		}
 
 		private void HandleFoodConsumption()
@@ -117,40 +121,5 @@ namespace Assets.WorldMaterials.Population
 		{
 			EfficiencyModule.MinimumAmount = value ? 1.0f : _moodMinimumAmount;
 		}
-
-		public void HandleMessage(string type, MessageArgs args)
-		{
-			if (type == LeisureProvider.MessageName && args != null)
-				HandleLeisureNode(args as LeisureProviderMessageArgs);
-		}
-
-		private void HandleLeisureNode(LeisureProviderMessageArgs args)
-		{
-			if (args == null)
-				return;
-
-			_currentLeisure += args.LeisureProvider.AmountProvided;
-			UpdateLeisureAffector();
-		}
-
-		private void UpdateLeisureAffector()
-		{
-			UpdatePopCount();
-			if (_currentPopCount == 0) { return; }
-			
-			var leisure = (float)_currentLeisure / _currentPopCount;
-
-			if (leisure > 1)
-			{
-				if (_currentLeisure <= _baseLeisure)
-					leisure = 1;
-				else if (leisure > _maxLeisureBonus)
-					leisure = _maxLeisureBonus;
-			}
-
-			_leisureAffector.Efficiency = leisure;
-		}
-
-		public string Name { get { return "MoodManager"; } }
 	}
 }
