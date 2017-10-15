@@ -29,13 +29,10 @@ namespace Assets.Placeables.Placement
 			_lookup = placeables;
 			_magnet = gameObject.GetComponent<HardPointMagnet>();
 			_magnet.Initialize(hardPointMonitor);
-
-			OnEveryUpdate += CheckForKeyPress;
-			enabled = false;
 		}
 
 		// handles user placing object or dismissing it
-		private void CheckForKeyPress(float obj)
+		private void CheckForPlacementKeyPress(float obj)
 		{
 			if (Input.GetButtonDown("Confirm"))
 			{
@@ -77,12 +74,12 @@ namespace Assets.Placeables.Placement
 				OnPlacementComplete(wasPlaced ? _toPlaceInventoryId : 0);
 
 			_magnet.Complete();
+			OnEveryUpdate = null;
 
 			_toPlaceInventoryId = 0;
 			Destroy(_toPlaceGo);
 			_toPlaceGo = null;
 			_toPlaceScriptable = null;
-			enabled = false;
 		}
 
 		// loads up a GO with placeable's sprite
@@ -105,7 +102,10 @@ namespace Assets.Placeables.Placement
 
 			// magnet handles positioning of placement sprite
 			_magnet.Begin(_toPlaceGo, placeable.Layer);
-			
+			_magnet.Begin(_toPlaceGo, placeable.Layer);
+
+			OnEveryUpdate += CheckForPlacementKeyPress;
+
 			Locator.MessageHub.QueueMessage(
 				PlaceableMessages.PlaceablePlaced,
 				new PlaceableUpdateArgs
@@ -113,8 +113,6 @@ namespace Assets.Placeables.Placement
 					State = PlaceablePlacementState.BeginPlacement,
 					Layer = placeable.Layer
 				});
-
-			enabled = true;
 		}
 	}
 }
