@@ -27,8 +27,11 @@ namespace Assets.Narrative.Goals
 			placeablesMonitor.OnPlaced += HandlePlaced;
 		}
 
-		private void HandlePlaced(Placeable placeable)
+		private void HandlePlaced(Placeable placeable, PlaceablePlacementState state)
 		{
+			if (state != PlaceablePlacementState.Placed)
+				return;
+
 			foreach (var goal in _goals)
 			{
 				if (goal.ProductName == placeable.PlaceableName)

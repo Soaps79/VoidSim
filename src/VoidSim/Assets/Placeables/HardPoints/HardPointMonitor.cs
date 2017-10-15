@@ -35,15 +35,19 @@ namespace Assets.Placeables.HardPoints
 			if (!_groups.ContainsKey(args.Layer))
 				return;
 
-			if (args.State == PlaceablePlacementState.BeginPlacement)
+			switch (args.State)
 			{
-				_groups[args.Layer].ActivateHardpoints();
-				return;
+				case PlaceablePlacementState.BeginPlacement:
+					_groups[args.Layer].ActivateHardpoints();
+					return;
+				case PlaceablePlacementState.Placed:
+					_groups[args.Layer].HandlePlacement(args.Placeable);
+					_groups[args.Layer].DeactivateHardpoints();
+					break;
+				case PlaceablePlacementState.Removed:
+					_groups[args.Layer].HandleRemoval(args.Placeable);
+					break;
 			}
-			else if (args.State == PlaceablePlacementState.Placed)
-				_groups[args.Layer].HandlePlacement(args.Placeable);
-
-			_groups[args.Layer].DeactivateHardpoints();
 		}
 
 		private void HandleGroupUpdate(HardPointGroupUpdateMessage args)

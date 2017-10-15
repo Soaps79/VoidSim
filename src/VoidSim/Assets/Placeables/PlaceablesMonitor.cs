@@ -28,7 +28,7 @@ namespace Assets.Placeables
 		private readonly CollectionSerializer<PlaceablesMonitorData> _serializer 
 			= new CollectionSerializer<PlaceablesMonitorData>();
 
-		public Action<Placeable> OnPlaced;
+		public Action<Placeable, PlaceablePlacementState> OnPlaced;
 
 		void Start()
 		{
@@ -56,17 +56,29 @@ namespace Assets.Placeables
 		public void HandleMessage(string type, MessageArgs args)
 		{
 			if (type == PlaceableMessages.PlaceablePlaced && args != null)
-				HandlePlaceablePlaced(args as PlaceableUpdateArgs);
+				HandlePlaceableUpdate(args as PlaceableUpdateArgs);
 		}
 
-		private void HandlePlaceablePlaced(PlaceableUpdateArgs args)
+		private void HandlePlaceableUpdate(PlaceableUpdateArgs args)
 		{
-			if (args != null && args.State == PlaceablePlacementState.Placed && args.Placeable != null)
+			if(args == null)
+				throw new UnityException("PlaceablesMonitor given bad data");
+
+			switch (args.State)
 			{
-				_placeables.Add(args.Placeable);
-				if (OnPlaced != null)
-					OnPlaced(args.Placeable);
+				case PlaceablePlacementState.Placed:
+					_placeables.Add(args.Placeable);
+					break;
+				case PlaceablePlacementState.Removed:
+					if (!_placeables.Remove(args.Placeable))
+						return;
+					Destroy(args.Placeable.gameObject);
+					break;
 			}
+
+			// follow this post adding remove
+			if (OnPlaced != null)
+				OnPlaced(args.Placeable, args.State);
 		}
 
 		public string Name { get { return "PlaceablesMonitor"; } }

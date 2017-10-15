@@ -53,5 +53,11 @@ namespace Assets.Placeables.HardPoints
 			_placedName = placed.name;
 			IsUsed = true;
 		}
+
+		public void HandleRemoval(Placeable placed)
+		{
+			_placedName = string.Empty;
+			IsUsed = false;
+		}
 	}
 }

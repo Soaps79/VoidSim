@@ -70,6 +70,8 @@ MonoBehaviour:
     type: 2}
   _placeableEntryPrefab: {fileID: 114485723729212228, guid: 737654b580223754faac6928bd4c9ad6,
     type: 2}
+  _removePrefab: {fileID: 114665105608814636, guid: 1f9eee6559b69a944b28d192075562db,
+    type: 2}
   _inventoryPanelPrefab: {fileID: 114508144025922512, guid: 340206acaf326b54db1495146e1cb062,
     type: 2}
   _increaseColor: {r: 0.4865917, g: 0.9191176, b: 0.52536964, a: 1}

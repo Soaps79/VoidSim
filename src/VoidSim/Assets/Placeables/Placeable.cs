@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Controllers.GUI;
+using Assets.Placeables.Placement;
 using Assets.Placeables.UI;
 using Assets.Scripts;
 using Assets.Scripts.Serialization;
@@ -100,7 +101,21 @@ namespace Assets.Placeables
 
 		public void OnPointerClick(PointerEventData eventData)
 		{
-			PlaceableUIFactory.ToggleUI(this);
+			if (UserPlacement.RemoveIsActive)
+			{
+				Locator.MessageHub.QueueMessage(
+					PlaceableMessages.PlaceablePlaced, 
+					new PlaceableUpdateArgs
+					{
+						Layer = Layer,
+						Placeable = this,
+						State = PlaceablePlacementState.Removed
+					});
+			}
+			else
+			{
+				PlaceableUIFactory.ToggleUI(this);
+			}
 		}
 	}
 }

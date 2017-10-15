@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Assets.Controllers.GUI;
 using Assets.Placeables;
 using Assets.Placeables.Placement;
 using Assets.Scripts;
@@ -13,6 +14,7 @@ namespace Assets.WorldMaterials.UI
     {
         [SerializeField] private Image _productEntryPrefab;
         [SerializeField] private Button _placeableEntryPrefab;
+	    [SerializeField] private Toggle _removePrefab;
         [SerializeField] private Image _inventoryPanelPrefab;
         [SerializeField] private readonly List<ProductCategory> _productsToIgnore = new List<ProductCategory>();
 	    [SerializeField] private Color _increaseColor;
@@ -73,8 +75,8 @@ namespace Assets.WorldMaterials.UI
 
             gameObject.RegisterSystemPanel(craftingPanel.gameObject);
 
-            //PositionOnCanvas(craftingPanel);
-            DrawProductEntries();
+			DrawRemoveToggle();
+			DrawProductEntries();
             DrawPlaceableEntries();
         }
 
@@ -103,30 +105,28 @@ namespace Assets.WorldMaterials.UI
 		// items that can be picked up from inventory and placed in game
         private void DrawPlaceableEntries()
         {
-	        var button = Instantiate(_placeableEntryPrefab, _placeablesContentHolder.transform, false);
-	        var image = button.GetComponent<Image>();
-	        image.sprite = _removeSprite;
-	        button.onClick.AddListener(() => { BeginRemove(); });
-	        _placeableEntryList.Add(button);
-
-			foreach (var placeable in _inventory.Placeables)
+	        foreach (var placeable in _inventory.Placeables)
             {
                 var scriptable = _placeablesLookup.Placeables.FirstOrDefault(i => i.ProductName == placeable.Name );
 
                 if(scriptable == null)
                     throw new UnityException("Placeable name in inventory has no lookup value");
 
-                button = Instantiate(_placeableEntryPrefab, _placeablesContentHolder.transform, false);
-                image = button.GetComponent<Image>();
+                var button = Instantiate(_placeableEntryPrefab, _placeablesContentHolder.transform, false);
+                var image = button.GetComponent<Image>();
                 image.sprite = scriptable.IconSprite;
                 button.onClick.AddListener(() => { BeginPlacement(placeable.Name, placeable.Id); });
                 _placeableEntryList.Add(button);
             }
         }
 
-	    private void BeginRemove()
+		// adds remove button to inventory, only added once
+	    private void DrawRemoveToggle()
 	    {
-		    Remover.BeginRemove(_removeSprite.texture);
+		    var toggle = Instantiate(_removePrefab, _placeablesContentHolder.transform, false);
+		    var binder = toggle.gameObject.AddComponent<ToggleButtonPressBinder>();
+			binder.Bind(toggle, "Cancel", true);
+		    toggle.onValueChanged.AddListener(_userPlacement.HandleRemoveToggle);
 	    }
 
 	    private void UpdateProductEntry(int productId, int amountChanged)

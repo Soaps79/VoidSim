@@ -23,6 +23,7 @@ namespace Assets.Placeables.Placement
 
 		public Action<int> OnPlacementComplete;
 		private HardPointMagnet _magnet;
+		public static bool RemoveIsActive { get; private set; }
 
 		public void Initialize(PlaceablesLookup placeables, HardPointMonitor hardPointMonitor)
 		{
@@ -113,6 +114,27 @@ namespace Assets.Placeables.Placement
 					State = PlaceablePlacementState.BeginPlacement,
 					Layer = placeable.Layer
 				});
+		}
+
+		public void HandleRemoveToggle(bool isOn)
+		{
+			if (isOn == RemoveIsActive)
+				return;
+
+			if(isOn)
+				BeginRemove();
+			else
+				CancelRemove();
+		}
+
+		public void BeginRemove()
+		{
+			RemoveIsActive = true;
+		}
+
+		public void CancelRemove()
+		{
+			RemoveIsActive = false;
 		}
 	}
 }
