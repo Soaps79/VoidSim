@@ -70,7 +70,7 @@ namespace Assets.Station
 			MapLayers();
 	        InitializeHardPoints();
 
-			InstantiatePlacer();
+			InstantiateUserPlacement();
             InstantiateInventory();
 	        InstantiatePopulationControl();
             InstantiateTrader();
@@ -265,12 +265,12 @@ namespace Assets.Station
 			trader.Initialize(_inventory, _inventoryReserve, _populationControl);
 		}
 
-	    private void InstantiatePlacer()
+	    private void InstantiateUserPlacement()
 	    {
-		    var placer = Instantiate(_userPlacementPrefab);
-			placer.transform.SetParent(_layers[LayerType.Core].transform);
-			placer.Initialize(_placeablesLookup, _hardPointMonitor);
-		    _userPlacement = placer;
+		    var placement = Instantiate(_userPlacementPrefab);
+			placement.transform.SetParent(_layers[LayerType.Core].transform);
+			placement.Initialize(_placeablesLookup, _hardPointMonitor);
+		    _userPlacement = placement;
 	    }
 
         // convert editor-friendly objects to more usable dictionary

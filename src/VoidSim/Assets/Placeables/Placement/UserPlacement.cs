@@ -23,7 +23,6 @@ namespace Assets.Placeables.Placement
 
 		public Action<int> OnPlacementComplete;
 		private HardPointMagnet _magnet;
-		private static string _hardpointName; // hacky, I know. refactor if extracting static PlaceObject
 
 		public void Initialize(PlaceablesLookup placeables, HardPointMonitor hardPointMonitor)
 		{
@@ -54,27 +53,8 @@ namespace Assets.Placeables.Placement
 			if (!_magnet.CanPlace())
 				return;
 
-			_hardpointName = _magnet.SnappedTo.name;
-			PlaceObject(_toPlaceScriptable, _toPlaceGo.transform.position);
+			Placer.PlaceObject(_toPlaceScriptable, _toPlaceGo.transform.position, _magnet.SnappedTo.name);
 			CompletePlacement(true);
-		}
-
-		// static function also used on game load, can be moved elsewhere if need be
-		public static void PlaceObject(PlaceableScriptable scriptable, Vector3 position, PlaceableData data = null)
-		{
-			var placeable = Instantiate(scriptable.Prefab);
-			placeable.HardPointName = data == null ? _hardpointName : data.HardPointName;
-			placeable.transform.position = position;
-			placeable.BindToScriptable(scriptable);
-			Locator.MessageHub.QueueMessage(
-				PlaceableMessages.PlaceablePlaced,
-				new PlaceableUpdateArgs
-				{
-					State = PlaceablePlacementState.Placed,
-					Placeable = placeable,
-					Layer = scriptable.Layer
-				});
-			placeable.InitializeNodes(data);
 		}
 
 		// placement has been dismissed by user
