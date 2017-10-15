@@ -18,6 +18,7 @@ namespace Assets.WorldMaterials.UI
 	    [SerializeField] private Color _increaseColor;
 	    [SerializeField] private Color _decreaseColor;
 	    [SerializeField] private float _pulseTime;
+	    [SerializeField] private Sprite _removeSprite;
 	    private Color _normalColor;
 
 		private Transform _productContentHolder;
@@ -27,17 +28,17 @@ namespace Assets.WorldMaterials.UI
         private readonly List<ProductEntryBinder> _productEntryList = new List<ProductEntryBinder>();
         private readonly List<Button> _placeableEntryList = new List<Button>();
         private PlaceablesLookup _placeablesLookup;
-        private Placer _placer;
+        private UserPlacement _userPlacement;
 
-        public void BindToInventory(Inventory inventory, InventoryScriptable inventoryScriptable, PlaceablesLookup placeablesLookup, InventoryReserve inventoryReserve, Placer placer)
+        public void BindToInventory(Inventory inventory, InventoryScriptable inventoryScriptable, PlaceablesLookup placeablesLookup, InventoryReserve inventoryReserve, UserPlacement userPlacement)
         {
             _inventory = inventory;
             _inventory.OnProductsChanged += UpdateProductEntry;
             _placeablesLookup = placeablesLookup;
             _inventoryReserve = inventoryReserve;
 
-	        _placer = placer;
-	        _placer.OnPlacementComplete += HandlePlacementComplete;
+	        _userPlacement = userPlacement;
+	        _userPlacement.OnPlacementComplete += HandlePlacementComplete;
 
 			UpdateIgnoreList(inventoryScriptable);
             BindToUI();
@@ -102,22 +103,33 @@ namespace Assets.WorldMaterials.UI
 		// items that can be picked up from inventory and placed in game
         private void DrawPlaceableEntries()
         {
-            foreach (var placeable in _inventory.Placeables)
+	        var button = Instantiate(_placeableEntryPrefab, _placeablesContentHolder.transform, false);
+	        var image = button.GetComponent<Image>();
+	        image.sprite = _removeSprite;
+	        button.onClick.AddListener(() => { BeginRemove(); });
+	        _placeableEntryList.Add(button);
+
+			foreach (var placeable in _inventory.Placeables)
             {
                 var scriptable = _placeablesLookup.Placeables.FirstOrDefault(i => i.ProductName == placeable.Name );
 
                 if(scriptable == null)
                     throw new UnityException("Placeable name in inventory has no lookup value");
 
-                var button = Instantiate(_placeableEntryPrefab, _placeablesContentHolder.transform, false);
-                var image = button.GetComponent<Image>();
+                button = Instantiate(_placeableEntryPrefab, _placeablesContentHolder.transform, false);
+                image = button.GetComponent<Image>();
                 image.sprite = scriptable.IconSprite;
                 button.onClick.AddListener(() => { BeginPlacement(placeable.Name, placeable.Id); });
                 _placeableEntryList.Add(button);
             }
         }
 
-		private void UpdateProductEntry(int productId, int amountChanged)
+	    private void BeginRemove()
+	    {
+		    Remover.BeginRemove(_removeSprite.texture);
+	    }
+
+	    private void UpdateProductEntry(int productId, int amountChanged)
         {
             var entry = _productEntryList.FirstOrDefault(i => i.ProductId == productId);
 	        if (entry == null)
@@ -139,7 +151,7 @@ namespace Assets.WorldMaterials.UI
 
 	    private void BeginPlacement(string placeableName, int inventoryId)
         {
-            _placer.BeginPlacement(placeableName, inventoryId);
+            _userPlacement.BeginPlacement(placeableName, inventoryId);
         }
     }
 }

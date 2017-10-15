@@ -49,7 +49,7 @@ namespace Assets.Placeables
 			{
 				var scriptable = placeablesLookup.Placeables.FirstOrDefault(i => i.ProductName == placeableData.PlaceableName);
 				if(scriptable != null)
-					Placer.PlaceObject(scriptable, placeableData.Position, placeableData);
+					UserPlacement.PlaceObject(scriptable, placeableData.Position, placeableData);
 			}
 		}
 

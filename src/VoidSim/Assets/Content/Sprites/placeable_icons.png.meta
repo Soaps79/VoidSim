@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 0292be98de478244b8e9b7e62a559597
-timeCreated: 1507419575
+timeCreated: 1508092050
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -11,6 +11,7 @@ TextureImporter:
     21300008: icon_plc_sm_bays
     21300010: icon_plc_sm_housing
     21300012: icon_plc_sm_lounge
+    21300014: icon_plc_remove
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -172,6 +173,20 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 64
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: icon_plc_remove
+      rect:
+        serializedVersion: 2
+        x: 128
         y: 128
         width: 64
         height: 64

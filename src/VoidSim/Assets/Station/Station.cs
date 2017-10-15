@@ -44,7 +44,7 @@ namespace Assets.Station
 	    [SerializeField] private CargoControl _cargoControlPrefab;
 	    [SerializeField] private bool _ignoreMoodInitial;
 	    [SerializeField] private PopulationSO _popScriptable;
-	    [SerializeField] private Placer _placerPrefab;
+	    [SerializeField] private UserPlacement _userPlacementPrefab;
 
 		private CraftingContainer _crafter;
         private Inventory _inventory;
@@ -61,7 +61,7 @@ namespace Assets.Station
         private readonly Dictionary<LayerType, StationLayer> _layers = new Dictionary<LayerType, StationLayer>();
 	    private HardPointMonitor _hardPointMonitor;
 	    private PopulationControl _populationControl;
-	    private Placer _placer;
+	    private UserPlacement _userPlacement;
 
 	    void Start()
         {
@@ -267,10 +267,10 @@ namespace Assets.Station
 
 	    private void InstantiatePlacer()
 	    {
-		    var placer = Instantiate(_placerPrefab);
+		    var placer = Instantiate(_userPlacementPrefab);
 			placer.transform.SetParent(_layers[LayerType.Core].transform);
 			placer.Initialize(_placeablesLookup, _hardPointMonitor);
-		    _placer = placer;
+		    _userPlacement = placer;
 	    }
 
         // convert editor-friendly objects to more usable dictionary
@@ -280,7 +280,7 @@ namespace Assets.Station
             go.transform.SetParent(_layers[LayerType.Core].transform);
             go.name = "inventory_viewmodel";
             var viewmodel = go.GetOrAddComponent<InventoryViewModel>();
-            viewmodel.BindToInventory(_inventory, _inventoryScriptable, _placeablesLookup, _inventoryReserve, _placer);
+            viewmodel.BindToInventory(_inventory, _inventoryScriptable, _placeablesLookup, _inventoryReserve, _userPlacement);
         }
 
 	    public void HandleMessage(string type, MessageArgs args)

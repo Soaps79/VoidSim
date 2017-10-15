@@ -14,7 +14,7 @@ namespace Assets.Placeables.Placement
 	/// Also presents static function to use in game loading.
 	/// </summary>
 	[RequireComponent(typeof(HardPointMagnet))]
-	public class Placer : QScript
+	public class UserPlacement : QScript
 	{
 		private GameObject _toPlaceGo;
 		private PlaceableScriptable _toPlaceScriptable;
