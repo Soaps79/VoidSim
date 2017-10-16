@@ -89,15 +89,14 @@ namespace Assets.Station
             consumer.OnAmountConsumedChanged += HandleConsumerAmountChanged;
 	        consumer.OnRemove += HandleRemoveConsumer;
             _consumers.Add(consumer);
-            Debug.Log("PowerGrid consumer added");
             UpdateDemand();
 		}
 
 	    private void HandleRemoveConsumer(EnergyConsumer node)
 	    {
-		    using (node as EnergyConsumer)
+		    if (_consumers.Remove(node))
 		    {
-			    
+			    UpdateDemand();
 		    }
 	    }
 
@@ -155,12 +154,8 @@ namespace Assets.Station
 		        return;
 
 	        factory.name = "power_plant_" + Locator.LastId.GetNext("power_plant");
-            AddProvider(args.ProductFactory);
-        }
-
-        private void AddProvider(ProductFactory factory)
-        {
-            factory.Initialize(_inventory, ProductLookup.Instance);
+			// power plant resposible for initializing power providers
+			factory.Initialize(_inventory, ProductLookup.Instance);
         }
 
         public string Name

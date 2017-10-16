@@ -101,8 +101,17 @@ namespace Assets.Station
 				CheckForDeserialized(factory);
 			}
 
-			Factories.Add(args.ProductFactory);
+			factory.OnRemove += HandleFactoryRemove;
+			Factories.Add(factory);
 			CheckCallback();
+		}
+
+		private void HandleFactoryRemove(ProductFactory obj)
+		{
+			if (Factories.Remove(obj))
+			{
+				CheckCallback();
+			}
 		}
 
 		private void HandleCraftComplete(Recipe recipe)

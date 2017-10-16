@@ -156,12 +156,21 @@ namespace Assets.Station
 			// name it since popcontrol owns all pop housings
 			args.PopHousing.name = _placeableNameSuffix + Locator.LastId.GetNext("pop_housing");
 			_housing.Add(args.PopHousing);
+			args.PopHousing.OnRemove += HandleRemove;
 
 			// update capacity, put out a request for inhabitants
 			UpdateCapacity();
 			UpdateTradeRequest();
 		}
-		
+
+		private void HandleRemove(PopHousing obj)
+		{
+			if (_housing.Remove(obj))
+			{
+				UpdateCapacity();
+			}
+		}
+
 		private void UpdateCapacity()
 		{
 			_totalCapacity = _baseCapacity + _housing.Sum(i => i.Capacity);

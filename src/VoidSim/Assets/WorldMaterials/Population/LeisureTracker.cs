@@ -70,6 +70,12 @@ namespace Assets.WorldMaterials.Population
 				throw new UnityException("LeisureTracker given bad leisure node args");
 
 			AddLeisure(args.LeisureProvider.AmountProvided);
+			args.LeisureProvider.OnRemove += HandleRemove;
+		}
+
+		private void HandleRemove(LeisureProvider obj)
+		{
+			AddLeisure(-obj.AmountProvided);
 		}
 
 		// exposed for use in testing
