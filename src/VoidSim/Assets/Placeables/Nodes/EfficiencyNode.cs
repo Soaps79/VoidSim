@@ -6,8 +6,9 @@ namespace Assets.Placeables.Nodes
 	/// <summary>
 	/// Node to tie together all providers and consumers on same placeable
 	/// </summary>
-	public class EfficiencyNode : PlaceableNode
+	public class EfficiencyNode : PlaceableNode<EfficiencyNode>
 	{
+		protected override EfficiencyNode GetThis() { return this; }
 		[SerializeField] private float _currentValue;
 
 		public EfficiencyModule Module { get; private set; }

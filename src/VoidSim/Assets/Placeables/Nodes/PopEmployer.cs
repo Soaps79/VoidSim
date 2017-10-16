@@ -17,8 +17,9 @@ namespace Assets.Placeables.Nodes
 	[RequireComponent(typeof(Placeable))]
 	[RequireComponent(typeof(EfficiencyNode))]
 
-	public class PopEmployer : PlaceableNode
+	public class PopEmployer : PlaceableNode<PopEmployer>
 	{
+	    protected override PopEmployer GetThis() { return this; }
 		public const string MessageName = "PopEmployerCreated";
 		public int CurrentEmployeeCount;
 		public int MaxEmployeeCount;

@@ -1,12 +1,41 @@
-﻿using QGame;
+﻿using System;
+using System.Security;
+using QGame;
 
 namespace Assets.Placeables
 {
-	public abstract class PlaceableNode : QScript
+	public interface IPlaceableNode
 	{
-		public const string DefaultName = "unnamed_node";
+		void BroadcastPlacement();
+		string NodeName { get; }
+		void HandleRemove();
+		string Name { get; set; }
+	}
+
+	public abstract class PlaceableNode<T> : QScript, IDisposable, IPlaceableNode where T: PlaceableNode<T>
+	{
+		public Action<T> OnRemove;
 		public abstract void BroadcastPlacement();
 		public abstract string NodeName { get; }
+
+		public string Name
+		{
+			get { return name; }
+			set { name = value; }
+		}
+
+		protected abstract T GetThis();
+
+		protected virtual void OnHandleRemove() { }
+
+		public void HandleRemove()
+		{
+			OnHandleRemove();
+			if (OnRemove != null)
+				OnRemove(GetThis());
+		}
+
+		public void Dispose() { }
 	}
 
 	// how to handle interactions with other nodes?

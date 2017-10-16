@@ -8,8 +8,9 @@ namespace Assets.Placeables.Nodes
 		public LeisureProvider LeisureProvider;
 	}
 
-	public class LeisureProvider : PlaceableNode
+	public class LeisureProvider : PlaceableNode<LeisureProvider>
 	{
+	    protected override LeisureProvider GetThis() { return this; }
 		public const string MessageName = "LeisureNodeCreated";
 		public int AmountProvided;
 

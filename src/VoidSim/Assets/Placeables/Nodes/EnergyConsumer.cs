@@ -22,10 +22,12 @@ namespace Assets.Placeables.Nodes
     /// </summary>
     [RequireComponent(typeof(Placeable))]
     [RequireComponent(typeof(EfficiencyNode))]
-	public class EnergyConsumer : PlaceableNode
+	public class EnergyConsumer : PlaceableNode<EnergyConsumer>
     {
 	    public override string NodeName { get { return "EnergyConsumer"; } }
-		public const string MessageName = "EnergyConsumerCreated";
+	    protected override EnergyConsumer GetThis() { return this; }
+
+	    public const string MessageName = "EnergyConsumerCreated";
 
         [SerializeField] private float _initialValue;
 	    [SerializeField] private float _weight = 1.0f;

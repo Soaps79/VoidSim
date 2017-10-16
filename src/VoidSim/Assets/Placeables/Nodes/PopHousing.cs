@@ -13,8 +13,9 @@ namespace Assets.Placeables.Nodes
 	/// Population resides here when not assigned to a job
 	/// </summary>
 	[RequireComponent(typeof(Placeable))]
-	public class PopHousing : PlaceableNode
+	public class PopHousing : PlaceableNode<PopHousing>
 	{
+	    protected override PopHousing GetThis() { return this; }
 		public override string NodeName { get { return "PopHousing"; } }
 		public const string MessageName = "PopHousingCreated";
 		[SerializeField] private int _initialValue;

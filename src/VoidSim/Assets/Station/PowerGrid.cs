@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Placeables;
 using Assets.Placeables.Nodes;
 using Assets.Scripts;
 using Assets.WorldMaterials;
@@ -86,12 +87,21 @@ namespace Assets.Station
         {
             if (consumer == null) return;
             consumer.OnAmountConsumedChanged += HandleConsumerAmountChanged;
+	        consumer.OnRemove += HandleRemoveConsumer;
             _consumers.Add(consumer);
             Debug.Log("PowerGrid consumer added");
             UpdateDemand();
 		}
 
-        private void UpdateDemand()
+	    private void HandleRemoveConsumer(EnergyConsumer node)
+	    {
+		    using (node as EnergyConsumer)
+		    {
+			    
+		    }
+	    }
+
+	    private void UpdateDemand()
         {
             var total = _consumers.Sum(i => i.AmountConsumed);
             if (_currentTotalDemand != total)

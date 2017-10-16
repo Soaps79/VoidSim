@@ -42,7 +42,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _colorOn: {r: 0.875, g: 0, b: 0, a: 1}
-  _duration: 0.5
+  _duration: 0.3
 --- !u!114 &114241936383342448
 MonoBehaviour:
   m_ObjectHideFlags: 1

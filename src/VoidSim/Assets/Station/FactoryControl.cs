@@ -95,7 +95,7 @@ namespace Assets.Station
 			else
 			{
 				// factories that are core, ie: energy, will get named by their own managers
-				if (factory.name == PlaceableNode.DefaultName)
+				if (factory.name == Placeable.DefaultName)
 					factory.name = "product_factory_" + Locator.LastId.GetNext("product_factory");
 
 				CheckForDeserialized(factory);

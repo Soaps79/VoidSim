@@ -32,8 +32,9 @@ namespace Assets.Placeables.Nodes
 	/// </summary>
 	[RequireComponent(typeof(Placeable))]
 	[RequireComponent(typeof(EfficiencyNode))]
-	public class ProductFactory : PlaceableNode, ISerializeData<ProductFactoryData>
+	public class ProductFactory : PlaceableNode<ProductFactory>, ISerializeData<ProductFactoryData>
 	{
+	    protected override ProductFactory GetThis() { return this; }
 		public override string NodeName { get { return "ProductFactory"; } }
 		public const string MessageName = "ProductFactoryPlaced";
 

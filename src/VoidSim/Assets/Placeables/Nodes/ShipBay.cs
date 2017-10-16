@@ -8,15 +8,16 @@ using UnityEngine;
 namespace Assets.Placeables.Nodes
 {
 	[RequireComponent(typeof(Placeable))]
-	public class ShipBay : PlaceableNode
+	public class ShipBay : PlaceableNode<ShipBay>
 	{
+	    protected override ShipBay GetThis() { return this; }
 		public override string NodeName { get { return "ShipBay"; } }
 		public int BerthCount;
 		private List<ShipBerth> _berths;
 
 		public override void BroadcastPlacement()
 		{
-			if (name == DefaultName)
+			if (name == Placeable.DefaultName)
 			{
 				var lastId = Locator.LastId.GetNext("ship_bay");
 				name = "ship_bay_" + lastId;

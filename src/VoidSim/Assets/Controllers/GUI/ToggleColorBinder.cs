@@ -5,6 +5,12 @@ using UnityEngine.UI;
 
 namespace Assets.Controllers.GUI
 {
+	/// <summary>
+	/// Simple object that fades an image from its base color to a specified color
+	/// when a Toggle is triggered, then reverses back when it's turned off
+	/// 
+	/// Can be expanded to support fading outside images, if need be
+	/// </summary>
 	[RequireComponent(typeof(Image))]
 	[RequireComponent(typeof(Toggle))]
 	public class ToggleColorBinder : QScript
@@ -27,6 +33,7 @@ namespace Assets.Controllers.GUI
 
 		private void HandleValueChanged(bool value)
 		{
+			// stop all current tweens before starting a new one
 			_image.DOKill();
 
 			if (value)

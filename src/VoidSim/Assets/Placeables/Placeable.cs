@@ -53,8 +53,9 @@ namespace Assets.Placeables
 		public string PlaceableName { get { return _scriptable.ProductName; } }
 		public string HardPointName { get; set; }
 
+		public const string DefaultName = "unnamed_placeable";
 		private PlaceableScriptable _scriptable;
-		private List<PlaceableNode> _nodes;
+		private List<IPlaceableNode> _nodes;
 		private PlaceableViewModel _viewModelInstance;
 
 		public void BindToScriptable(PlaceableScriptable scriptable)
@@ -72,13 +73,13 @@ namespace Assets.Placeables
 
 		public void InitializeNodes(PlaceableData data = null)
 		{
-			name = PlaceableNode.DefaultName;
-			_nodes = GetComponents<PlaceableNode>().ToList();
+			name = DefaultName;
+			_nodes = GetComponents<IPlaceableNode>().ToList();
 			foreach (var node in _nodes)
 			{
 				if (data != null && data.Nodes != null && data.Nodes.Any(i => i.NodeName == node.NodeName))
 				{
-					node.name = data.Nodes.First(i => i.NodeName == node.NodeName).InstanceName;
+					node.Name = data.Nodes.First(i => i.NodeName == node.NodeName).InstanceName;
 				}
 				node.BroadcastPlacement();
 			}
@@ -94,7 +95,7 @@ namespace Assets.Placeables
 				HardPointName = HardPointName,
 				Nodes = _nodes.Select(i => new PlaceableNodeData
 				{
-					NodeName = i.NodeName, InstanceName = i.name
+					NodeName = i.NodeName, InstanceName = i.Name
 				}).ToList()
 			};
 		}
