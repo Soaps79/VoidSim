@@ -1,4 +1,4 @@
-# Stellar Crossing (working Title)
+# Stellar Crossing
 ## Development
 
 The latest progress video:
