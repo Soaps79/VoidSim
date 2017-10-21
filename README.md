@@ -1,4 +1,4 @@
-# VoidSim
+# Stellar Crossing (working Title)
 ## Development
 
 The latest progress video:
