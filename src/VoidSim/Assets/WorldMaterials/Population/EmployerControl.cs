@@ -149,6 +149,7 @@ namespace Assets.WorldMaterials.Population
 		private void HandleEmployerRemove(PopEmployer obj)
 		{
 			CurrentUnemployed += obj.CurrentEmployeeCount;
+			_employers.Remove(obj);
 		}
 
 		private void HandleExistingEmployer(PopEmployer employer)
