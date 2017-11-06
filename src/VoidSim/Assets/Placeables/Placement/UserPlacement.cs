@@ -103,7 +103,6 @@ namespace Assets.Placeables.Placement
 
 			// magnet handles positioning of placement sprite
 			_magnet.Begin(_toPlaceGo, placeable.Layer);
-			_magnet.Begin(_toPlaceGo, placeable.Layer);
 
 			OnEveryUpdate += CheckForPlacementKeyPress;
 

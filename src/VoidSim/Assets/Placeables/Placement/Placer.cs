@@ -41,7 +41,7 @@ namespace Assets.Placeables.Placement
 		private static Placeable CreatePlaceable(PlaceableScriptable scriptable, Vector3 position)
 		{
 			var placeable = GameObject.Instantiate(scriptable.Prefab);
-			placeable.transform.position = position;
+			placeable.transform.position = new Vector3(position.x, position.y, 1);
 			placeable.BindToScriptable(scriptable);
 			return placeable;
 		}
