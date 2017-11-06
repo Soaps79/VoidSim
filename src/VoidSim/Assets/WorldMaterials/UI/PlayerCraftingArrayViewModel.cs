@@ -20,11 +20,13 @@ namespace Assets.WorldMaterials.UI
     {
         [SerializeField] private Image _arrayPrefab;
         [SerializeField] private Image _factoryPrefab;
+
         private Image _arrayPanel;
         private Image _arrayContent;
         private bool _hasAFactory;
 	    private FactoryControl _control;
 		private readonly List<ProductFactoryViewModel> _children = new List<ProductFactoryViewModel>();
+	    private ToggleButtonPressBinder _panelToggleBinder;
 
 	    void Start()
         {
@@ -46,9 +48,19 @@ namespace Assets.WorldMaterials.UI
             _arrayContent = _arrayPanel.transform.Find("content_holder").GetComponent<Image>();
 			if(_arrayPanel ==  null || _arrayContent == null)
 				throw new UnityException("PlayerCraftingArrayViewModel is missing components");
-        }
 
-   //     private void HandleFactoryAdd(ProductFactoryMessageArgs args)
+			OnNextUpdate += f => FindBinder();
+		}
+
+		private void FindBinder()
+	    {
+			var go = GameObject.Find("binder_player_crafting_array_viewmodel");
+		    if (go == null)
+			    throw new UnityException("player crafting could not find toggle binder");
+			_panelToggleBinder = go.GetComponent<ToggleButtonPressBinder>();
+		}
+
+	    //     private void HandleFactoryAdd(ProductFactoryMessageArgs args)
    //     {   
    //         if (args == null || args.ProductFactory == null || !args.ProductFactory.IsInPlayerArray) return;
 
@@ -69,29 +81,32 @@ namespace Assets.WorldMaterials.UI
 		    _children.ForEach(i => Destroy(i.gameObject));
 			_children.Clear();
 
-		    foreach (var factory in _control.Factories)
+		    if (_control.Factories.Any())
 		    {
-			    if(!factory.IsInPlayerArray)
-					continue;
+			    foreach (var factory in _control.Factories)
+			    {
+				    if (!factory.IsInPlayerArray)
+					    continue;
 
-			    var go = Instantiate(_factoryPrefab, _arrayContent.transform, false);
-			    var viewmodel = go.gameObject.GetOrAddComponent<ProductFactoryViewModel>();
-			    viewmodel.Bind(factory);
-				_children.Add(viewmodel);
+				    var go = Instantiate(_factoryPrefab, _arrayContent.transform, false);
+				    var viewmodel = go.gameObject.GetOrAddComponent<ProductFactoryViewModel>();
+				    viewmodel.Bind(factory);
+				    _children.Add(viewmodel);
+			    }
+		    }
+		    else
+		    {
+				_panelToggleBinder.Toggle.isOn = false;
 			}
 
-			if(!_hasAFactory && _children.Any())
+		    if(!_hasAFactory && _children.Any())
 				OnNextUpdate += f =>  SignalFirstFactoryPlaced();
 	    }
 
 		// will open the UI panel if this is the first factory placed
 		private void SignalFirstFactoryPlaced()
 	    {
-		    var go = GameObject.Find("binder_player_crafting_array_viewmodel");
-			if(go == null)
-				return;
-			var binder = go.GetComponent<ToggleButtonPressBinder>();
-		    binder.Toggle.isOn = true;
+		    _panelToggleBinder.Toggle.isOn = true;
 		    _hasAFactory = true;
 	    }
     }

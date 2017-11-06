@@ -112,6 +112,8 @@ namespace Assets.Placeables
 						Placeable = this,
 						State = PlaceablePlacementState.Removed
 					});
+
+				_nodes.ForEach(i => i.HandleRemove());
 			}
 			else
 			{
