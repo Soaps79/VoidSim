@@ -58,7 +58,22 @@ namespace Assets.Logistics
 		public string BerthName { get; private set; }
 
 		// replace with state machine
-		public TrafficPhase Phase { get; private set; }
+		private TrafficPhase _phase;
+
+		public TrafficPhase Phase
+		{
+			get
+			{
+				return _phase;
+			}
+			private set
+			{
+				if (value == _phase) return;
+				_phase = value;
+				CheckPhaseChangeCallback();
+			}
+		}
+
 		public Action<TrafficPhase> OnPhaseChanged;
 		private ShipSO _scriptable;
 
@@ -91,7 +106,6 @@ namespace Assets.Logistics
 			OnEveryUpdate += ScaleWithProximity;
 			ManifestBook = _parent.ManifestBook;
 			Phase = TrafficPhase.None;
-			CheckPhaseChangeCallback();
 		}
 
 		private void SetName()
@@ -162,7 +176,6 @@ namespace Assets.Logistics
 			TweenApproach(RotationWhenDocked, _travelTime);
 
 			Phase = TrafficPhase.Approaching;
-			CheckPhaseChangeCallback();
 		}
 
 		private Vector3 RotationWhenDocked
@@ -185,20 +198,28 @@ namespace Assets.Logistics
 		{
 			_berth.ConfirmLanding(this);
 			Phase = TrafficPhase.Docked;
-			CheckPhaseChangeCallback();
 		}
 
 		public void BeginDeparture()
+		{
+			UpdateTargetRotation();
+			TweenDeparture(_targetRotation, _travelTime);
+			Phase = TrafficPhase.Departing;
+		}
+
+		private void UpdateTargetRotation()
 		{
 			var dir = _waypoints[2] - transform.position;
 			var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 			var rotation = Quaternion.AngleAxis(_approachFromLeft ? angle : 180 + angle, Vector3.forward);
 			_targetRotation = rotation.eulerAngles;
+		}
 
+		public void BeginEarlyDeparture()
+		{
+			UpdateTargetRotation();
 			TweenDeparture(_targetRotation, _travelTime);
-
 			Phase = TrafficPhase.Departing;
-			CheckPhaseChangeCallback();
 		}
 
 		// move and rotate from berth to edge of traffic
@@ -206,17 +227,17 @@ namespace Assets.Logistics
 		{
 			transform.DOMove(_waypoints[2], time)
 				.SetEase(Ease.InSine)
-				.OnComplete(DepartComplete);
+				.OnComplete(CompleteDeparture);
 
 			transform.DORotate(rotateTo, time)
 				.SetEase(Ease.OutSine);
 		}
 
-		private void DepartComplete()
+		private void CompleteDeparture()
 		{
 			_parent.CompleteTraffic();
+			Destroy(_viewModel.gameObject);
 			Phase = TrafficPhase.None;
-			CheckPhaseChangeCallback();
 		}
 
 		#region Serialization
@@ -242,7 +263,7 @@ namespace Assets.Logistics
 			transform.position = data.Position;
 			transform.rotation = data.Rotation;
 
-			Phase = data.Phase;
+			_phase = data.Phase;
 
 			switch (Phase)
 			{
