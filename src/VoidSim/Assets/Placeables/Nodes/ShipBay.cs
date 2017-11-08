@@ -13,7 +13,7 @@ namespace Assets.Placeables.Nodes
 	    protected override ShipBay GetThis() { return this; }
 		public override string NodeName { get { return "ShipBay"; } }
 		public int BerthCount;
-		private List<ShipBerth> _berths;
+		public List<ShipBerth> Berths { get; private set; }
 
 		public override void BroadcastPlacement()
 		{
@@ -23,15 +23,19 @@ namespace Assets.Placeables.Nodes
 				name = "ship_bay_" + lastId;
 			}
 
-			_berths = gameObject.GetComponentsInChildren<ShipBerth>().ToList();
-			foreach (var shipBerth in _berths)
+			Berths = gameObject.GetComponentsInChildren<ShipBerth>().ToList();
+			foreach (var shipBerth in Berths)
 			{
 				shipBerth.name = string.Format("{0}_{1}", name, shipBerth.Index);
 				shipBerth.Initialize();
 			}
 
-			Locator.MessageHub.QueueMessage(LogisticsMessages.ShipBerthsUpdated, new ShipBerthsMessageArgs { Berths = _berths });
-			BerthCount = _berths.Count;
+			Locator.MessageHub.QueueMessage(LogisticsMessages.ShipBerthsUpdated, new ShipBerthsMessageArgs
+			{
+				ShipBay = this,
+				Berths = Berths
+			});
+			BerthCount = Berths.Count;
 		}
 	}
 }

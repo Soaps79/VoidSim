@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Assets.Logistics.Ships;
+using Assets.Placeables.Nodes;
 using Messaging;
 
 namespace Assets.Logistics
@@ -44,7 +45,7 @@ namespace Assets.Logistics
 
     public class ShipBerthsMessageArgs : MessageArgs
     {
-        public bool WereRemoved;
+	    public ShipBay ShipBay;
         public List<ShipBerth> Berths;
     }
 }

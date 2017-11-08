@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Logistics.Ships;
+using Assets.Placeables.Nodes;
 using Assets.Scripts;
 using Assets.Scripts.Serialization;
 using Messaging;
@@ -150,9 +151,24 @@ namespace Assets.Logistics
 			if(args == null || !args.Berths.Any())
 				throw new UnityException("TrafficControl given bad berths message");
 
-			if (!args.WereRemoved)
+			args.ShipBay.OnRemove += HandleShipBayRemove;
+			AddBerths(args.Berths);
+		}
+
+		private void HandleShipBayRemove(ShipBay shipBay)
+		{
+			var names = shipBay.Berths.Select(i => i.name);
+			var berths = _berths.Where(i => names.Contains(i.name)).ToList();
+
+			foreach (var shipBerth in berths)
 			{
-				AddBerths(args.Berths);
+				var ship = _shipsInTraffic.FirstOrDefault(
+					i => i.TrafficShip.BerthName == shipBerth.name 
+					&& (i.TrafficShip.Phase == TrafficPhase.Approaching || i.TrafficShip.Phase == TrafficPhase.Docked));
+				if(ship != null)
+					ship.TrafficShip.BeginEarlyDeparture();
+
+				_berths.Remove(shipBerth);
 			}
 		}
 
@@ -173,6 +189,7 @@ namespace Assets.Logistics
 			}
 			if (isFirst && _holder.Count > 0)
 			{
+				// I don't think this has ever been tested, was meant as placeholder
 				RemoveShipsFromHold();
 			}
 		}

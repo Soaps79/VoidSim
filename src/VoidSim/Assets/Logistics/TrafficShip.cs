@@ -217,6 +217,7 @@ namespace Assets.Logistics
 
 		public void BeginEarlyDeparture()
 		{
+			transform.DOKill();
 			UpdateTargetRotation();
 			TweenDeparture(_targetRotation, _travelTime);
 			Phase = TrafficPhase.Departing;
