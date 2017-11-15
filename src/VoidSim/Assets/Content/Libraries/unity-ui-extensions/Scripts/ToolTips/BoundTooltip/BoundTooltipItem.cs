@@ -31,10 +31,10 @@ namespace UnityEngine.UI.Extensions
 			if (TooltipText.text != text)
 				TooltipText.text = text;
 
+			gameObject.SetActive(true);
 			transform.position = pos + ToolTipOffset;
 			transform.SetAsLastSibling();
 
-			gameObject.SetActive(true);
 		}
 
 		public void HideTooltip()

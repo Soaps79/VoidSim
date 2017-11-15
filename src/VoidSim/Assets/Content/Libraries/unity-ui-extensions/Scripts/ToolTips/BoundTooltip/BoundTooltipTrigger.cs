@@ -12,7 +12,7 @@ namespace UnityEngine.UI.Extensions
 		[TextAreaAttribute]
 		public string text;
 
-		public bool useMousePosition = false;
+		public bool useMousePosition = true;
 
 		public Action<BoundTooltipTrigger> OnHoverActivate;
 
