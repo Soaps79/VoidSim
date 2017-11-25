@@ -99,9 +99,9 @@ namespace Assets.WorldMaterials.UI
 				_panelToggleBinder.Toggle.isOn = false;
 			}
 
-		    if(!_hasAFactory && _children.Any())
-				OnNextUpdate += f =>  SignalFirstFactoryPlaced();
-	    }
+			//if (!_hasAFactory && _children.Any())
+			//	OnNextUpdate += f => SignalFirstFactoryPlaced();
+		}
 
 		// will open the UI panel if this is the first factory placed
 		private void SignalFirstFactoryPlaced()
