@@ -73,9 +73,9 @@ namespace Assets.Placeables.Nodes
 			Locator.MessageHub.QueueMessage(MessageName, new ProductFactoryMessageArgs { ProductFactory = this });
 		}
 
-		public float CurrentCraftRemainingAsZeroToOne
+		public float CurrentCraftRemainingAsZeroToOne()
 		{
-			get { return _container.CurrentCraftRemainingAsZeroToOne; }
+			return _container.CurrentCraftRemainingAsZeroToOne;
 		}
 
 		// Factory binds to Inventory and initializes its container. Will begin crafting if InitialRecipe not null

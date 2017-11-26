@@ -60,7 +60,7 @@ namespace Assets.WorldMaterials.UI
 
 		private void BindSlider()
 		{
-			_slider.Initialize(() => _factory.CurrentCraftRemainingAsZeroToOne);
+			_slider.Initialize(_factory.CurrentCraftRemainingAsZeroToOne);
 		}
 
 		private void BindToggles()

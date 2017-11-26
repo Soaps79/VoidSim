@@ -79,7 +79,7 @@ namespace QGame
         {
             get
             {
-                return _elapsedLifetime / _lifetime;
+	            return _lifetime > 0 ? _elapsedLifetime / _lifetime : 0;
             }
         }
 

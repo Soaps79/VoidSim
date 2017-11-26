@@ -60,10 +60,10 @@ namespace Assets.Station.UI
             binder.name = "binder_" + args.SystemPanel.name;
             binder.Bind(toggle, args.SystemPanel.InputAxis);
             binder.transform.SetParent(transform);
-            binder.OnToggle += (isOn) => SetVisibility(isOn, args.SystemPanel.Panel.gameObject);
+			binder.OnToggle += (isOn) => SetVisibility(isOn, args.SystemPanel.Panel.gameObject);
 
-            // save the reference
-            var entry = new SystemPanelEntry {Panel = args.SystemPanel, Binder = binder};
+			// save the reference
+			var entry = new SystemPanelEntry {Panel = args.SystemPanel, Binder = binder};
             _entries.Add(entry);
         }
 
