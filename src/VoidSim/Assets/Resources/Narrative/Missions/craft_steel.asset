@@ -18,4 +18,5 @@ MonoBehaviour:
   - Type: 1
     ProductName: Steel
     TotalAmount: 100
-    ProductId: 0
+    NeedsPlacement: 0
+    ProductId: 3

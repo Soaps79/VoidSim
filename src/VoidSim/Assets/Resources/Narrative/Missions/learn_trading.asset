@@ -21,4 +21,5 @@ MonoBehaviour:
   - Type: 2
     ProductName: Consumer Goods
     TotalAmount: 100
-    ProductId: 0
+    NeedsPlacement: 0
+    ProductId: 5

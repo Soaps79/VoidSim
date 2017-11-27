@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Narrative.Conversations;
 using Assets.Narrative.Goals;
 using Assets.Narrative.Missions;
 using Assets.Narrative.UI;
@@ -30,11 +31,15 @@ namespace Assets.Narrative
 		[SerializeField] private List<Mission> _activeMissions;
 		private readonly List<string> _completedMissionNames = new List<string>();
 
+		[SerializeField] private Conversation _InitialConversation;
+		[SerializeField] private ConversationViewModel _conversationPrefab;
+
 		private readonly CollectionSerializer<MissionGroupProgressData> _serializer
 			= new CollectionSerializer<MissionGroupProgressData>();
 
 		[SerializeField] private MissionGroupViewModel _viewModelPrefab;
 		public Action<Mission> OnMissionBegin;
+		private GameObject _canvas;
 
 		void Start()
 		{
@@ -65,8 +70,8 @@ namespace Assets.Narrative
 
 		private void InitializeUI()
 		{
-			var canvas = GameObject.Find("InfoCanvas");
-			var viewModel = Instantiate(_viewModelPrefab, canvas.transform, false);
+			_canvas = GameObject.Find("InfoCanvas");
+			var viewModel = Instantiate(_viewModelPrefab, _canvas.transform, false);
 			viewModel.Initialize(this);
 		}
 
