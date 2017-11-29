@@ -87,7 +87,6 @@ namespace Assets.Narrative
 			{
 				missionGroup.Missions.ForEach(i => BeginMission(i));
 			}
-			_conversationViewModel.gameObject.SetActive(false);
 		}
 
 		// instantiate and wire up the mission view model

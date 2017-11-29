@@ -180,6 +180,7 @@ GameObject:
   - component: {fileID: 114809669330389938}
   - component: {fileID: 114930493829095478}
   - component: {fileID: 114576317038540990}
+  - component: {fileID: 225469231421514226}
   m_Layer: 5
   m_Name: conversation_panel
   m_TagString: Untagged
@@ -545,6 +546,7 @@ MonoBehaviour:
   _buttonArray: {fileID: 224711987172937888}
   _buttonPrefab: {fileID: 114162124990881354, guid: 7231c329f61fa3d4b992f5eaebabaf45,
     type: 2}
+  _canvasGroup: {fileID: 225469231421514226}
 --- !u!114 &114669743440396394
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1214,3 +1216,14 @@ RectTransform:
   m_AnchoredPosition: {x: -0.19998169, y: -9.410004}
   m_SizeDelta: {x: -4.1, y: -31.12}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &225469231421514226
+CanvasGroup:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1751321933182780}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

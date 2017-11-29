@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Assets.Narrative.Conversations;
+using DG.Tweening;
 using QGame;
 using TMPro;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace Assets.Narrative.UI
 		[SerializeField] private TMP_Text _bodyText;
 		[SerializeField] private RectTransform _buttonArray;
 		[SerializeField] private Button _buttonPrefab;
+		[SerializeField] private CanvasGroup _canvasGroup;
 		private readonly List<Button> _activeButtons = new List<Button>();
 
 		// most of the logic in here is based on this index being maintained
@@ -27,6 +29,12 @@ namespace Assets.Narrative.UI
 		{
 			_conversation = conversation;
 			_conversationNameLabel.text = conversation.Title;
+			_canvasGroup.DOPlay();
+			if (gameObject.activeSelf == false)
+			{
+				gameObject.SetActive(true);
+				_canvasGroup.DOFade(1f, .5f);
+			}
 			BindCurrentNode();
 		}
 
@@ -42,6 +50,8 @@ namespace Assets.Narrative.UI
 			if (IsLastNode())
 			{
 				_conversation.Complete();
+				_canvasGroup.DOFade(0, .5f)
+					.OnComplete(() => { gameObject.SetActive(false); });
 				return;
 			}
 

@@ -36,9 +36,10 @@ namespace Assets.Narrative.Conversations
 	[Serializable]
 	public class Conversation : ScriptableObject
 	{
+		public string Title;
+
 		public List<MissionGroupSO> Missions;
 		public List<ConversationNode> Nodes;
-		public string Title;
 
 		public Action<Conversation> OnComplete;
 
