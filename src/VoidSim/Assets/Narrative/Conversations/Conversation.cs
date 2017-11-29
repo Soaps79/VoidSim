@@ -8,7 +8,7 @@ namespace Assets.Narrative.Conversations
 	[Serializable]
 	public class ConversationNode
 	{
-		public string ActorName;
+		public NarrativeActorSO Actor;
 		public string Text;
 		public bool HasDecision;
 	}
@@ -39,5 +39,13 @@ namespace Assets.Narrative.Conversations
 		public List<MissionGroupSO> Missions;
 		public List<ConversationNode> Nodes;
 		public string Title;
+
+		public Action<Conversation> OnComplete;
+
+		public void Complete()
+		{
+			if (OnComplete != null)
+				OnComplete(this);
+		}
 	}
 }

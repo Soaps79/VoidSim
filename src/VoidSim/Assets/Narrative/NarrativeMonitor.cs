@@ -31,13 +31,14 @@ namespace Assets.Narrative
 		[SerializeField] private List<Mission> _activeMissions;
 		private readonly List<string> _completedMissionNames = new List<string>();
 
-		[SerializeField] private Conversation _InitialConversation;
-		[SerializeField] private ConversationViewModel _conversationPrefab;
+		[SerializeField] private Conversation _initialConversation;
+		[SerializeField] private ConversationViewModel _conversationViewModelPrefab;
+		private ConversationViewModel _conversationViewModel;
 
 		private readonly CollectionSerializer<MissionGroupProgressData> _serializer
 			= new CollectionSerializer<MissionGroupProgressData>();
 
-		[SerializeField] private MissionGroupViewModel _viewModelPrefab;
+		[SerializeField] private MissionGroupViewModel _missionViewModelPrefab;
 		public Action<Mission> OnMissionBegin;
 		private GameObject _canvas;
 
@@ -49,7 +50,9 @@ namespace Assets.Narrative
 
 		private void Initialize(float obj)
 		{
-			InitializeUI();
+			_canvas = GameObject.Find("InfoCanvas");
+			InitializeConversations();
+			InitializeMissionsUI();
 
 			// loads necessary static data
 			// this is bad form, writing to a SO, fix it
@@ -68,10 +71,29 @@ namespace Assets.Narrative
 				CreateStartingMissions();
 		}
 
-		private void InitializeUI()
+		private void InitializeConversations()
 		{
-			_canvas = GameObject.Find("InfoCanvas");
-			var viewModel = Instantiate(_viewModelPrefab, _canvas.transform, false);
+			_conversationViewModel = Instantiate(_conversationViewModelPrefab, _canvas.transform, false);
+			_conversationViewModel.BeginConversation(_initialConversation);
+			_initialConversation.OnComplete += HandleConversationComplete;
+		}
+
+		private void HandleConversationComplete(Conversation conversation)
+		{
+			if (!conversation.Missions.Any())
+				return;
+
+			foreach (var missionGroup in conversation.Missions)
+			{
+				missionGroup.Missions.ForEach(i => BeginMission(i));
+			}
+			_conversationViewModel.gameObject.SetActive(false);
+		}
+
+		// instantiate and wire up the mission view model
+		private void InitializeMissionsUI()
+		{
+			var viewModel = Instantiate(_missionViewModelPrefab, _canvas.transform, false);
 			viewModel.Initialize(this);
 		}
 
@@ -181,7 +203,7 @@ namespace Assets.Narrative
 			_trackers.Add(tracker);
 		}
 
-		// finds goals of a tracker's type and hends them off
+		// finds goals of a tracker's type and hands them off
 		private void SeeIfTrackerCares(IGoalTracker tracker, Mission mission)
 		{
 			var goals = mission.Goals.Where(i => i.Type == tracker.GoalType).ToList();

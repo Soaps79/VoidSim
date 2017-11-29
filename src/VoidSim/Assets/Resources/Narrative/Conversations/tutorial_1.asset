@@ -14,7 +14,7 @@ MonoBehaviour:
   Missions:
   - {fileID: 11400000, guid: 99b8f15b05cd1194aa22f2db821ceba1, type: 2}
   Nodes:
-  - ActorName: advisor
+  - Actor: {fileID: 11400000, guid: 7c1f78a46bb4da243b895bdaba401c16, type: 2}
     Text: Welcome to your new space station!
     HasDecision: 0
   Title: Learn the Basics

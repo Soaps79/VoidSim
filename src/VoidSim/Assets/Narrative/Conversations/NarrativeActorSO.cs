@@ -4,7 +4,7 @@ namespace Assets.Narrative.Conversations
 {
 	public class NarrativeActorSO : ScriptableObject
 	{
-		public Sprite Portrait;
+		public Sprite PortraitSprite;
 		public string DisplayName;
 		public string Name;
 	}

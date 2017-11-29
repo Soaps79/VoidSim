@@ -11,6 +11,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 662512af7be5497488190bdcd9542e81, type: 3}
   m_Name: advisor
   m_EditorClassIdentifier: 
-  Portrait: {fileID: 21300000, guid: 1c62aa0f66d4b2c4a85532b5464366dd, type: 3}
+  PortraitSprite: {fileID: 21300000, guid: 1c62aa0f66d4b2c4a85532b5464366dd, type: 3}
   DisplayName: Reginald Millington III
   Name: advisor
