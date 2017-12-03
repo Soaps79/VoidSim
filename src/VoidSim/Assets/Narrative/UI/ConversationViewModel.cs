@@ -30,7 +30,7 @@ namespace Assets.Narrative.UI
 		private Conversation _conversation;
 		private readonly List<Button> _activeButtons = new List<Button>();
 		private ConversationEntry _currentNode;
-		public Action<MissionGroupSO> OnMissionsNeedStart { get; set; }
+		public Action<List<MissionSO>> OnMissionsNeedStart { get; set; }
 
 		public void BeginConversation(Conversation conversation)
 		{

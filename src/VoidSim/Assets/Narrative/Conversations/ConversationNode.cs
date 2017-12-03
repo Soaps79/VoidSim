@@ -12,6 +12,6 @@ namespace Assets.Narrative.Conversations
 		[HideLabel]
 		[MultiLineProperty(10)]
 		public string Text;
-		public MissionGroupSO Missions;
+		public List<MissionSO> Missions;
 	}
 }

@@ -17,4 +17,5 @@ MonoBehaviour:
     Factories will turn your plain boring goods into something that\u2019s actually
     worth money, or we can use to improve the station. Tell your factory to produce
     some Consumer Goods, that we can then sell out into the galaxy.\r"
-  Missions: {fileID: 0}
+  Missions:
+  - {fileID: 11400000, guid: 56c5140a1cc9f0243babb8e1ed800edb, type: 2}

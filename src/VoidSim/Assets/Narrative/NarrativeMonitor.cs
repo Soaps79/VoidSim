@@ -38,7 +38,7 @@ namespace Assets.Narrative
 		private readonly CollectionSerializer<MissionGroupProgressData> _serializer
 			= new CollectionSerializer<MissionGroupProgressData>();
 
-		[SerializeField] private MissionGroupViewModel _missionViewModelPrefab;
+		[SerializeField] private MissionListViewModel _missionViewModelPrefab;
 		public Action<Mission> OnMissionBegin;
 		private GameObject _canvas;
 
@@ -100,17 +100,17 @@ namespace Assets.Narrative
 		}
 
 		// start the mission group fresh
-		public void ActivateMissionGroup(MissionGroupSO group)
+		public void ActivateMissionGroup(List<MissionSO> group)
 		{
 			InitializeMissionGroupProducts(group);
-			var toStart = group.Missions.Where(
+			var toStart = group.Where(
 				i => string.IsNullOrEmpty(i.PrereqMissionName) 
 					|| _completedMissionNames.Contains(i.PrereqMissionName)).ToList();
 			foreach (var missionSO in toStart)
 			{
 				BeginMission(missionSO);
 			}
-			_unstartedMissions.AddRange(group.Missions.Except(toStart));
+			_unstartedMissions.AddRange(group.Except(toStart));
 		}
 
 		// create mission with its static content
@@ -142,15 +142,15 @@ namespace Assets.Narrative
 
 			var next = _unstartedMissions.Where(i => i.PrereqMissionName == mission.Name).ToList();
 			if (next.Any())
-				next.ForEach(i => BeginMission(i));
+				next.ForEach(BeginMission);
 		}
 
 		// get static Product data
 		// this is bad form, writing to a SO, fix it
-		private void InitializeMissionGroupProducts(MissionGroupSO group)
+		private void InitializeMissionGroupProducts(IList<MissionSO> group)
 		{
 			var allProducts = ProductLookup.Instance.GetProducts();
-			foreach (var mission in group.Missions)
+			foreach (var mission in group)
 			{
 				foreach (var productGoal in mission.Goals)
 				{

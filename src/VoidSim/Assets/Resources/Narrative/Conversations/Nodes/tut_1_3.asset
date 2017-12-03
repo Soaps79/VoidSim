@@ -15,4 +15,5 @@ MonoBehaviour:
   Text: "Speaking of which\u2026 You should also build some landing docks. Most new
     captains have already started that by the time I get out here to greet them. You
     DO know that our entire purpose out here is to bring in traffic, don\u2019t you?\r"
-  Missions: {fileID: 11400000, guid: 99b8f15b05cd1194aa22f2db821ceba1, type: 2}
+  Missions:
+  - {fileID: 11400000, guid: 14bf6f4cd24306f4b8227ea11ae6073f, type: 2}

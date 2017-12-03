@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.Narrative.UI
 {
-	public class MissionGroupViewModel : QScript
+	public class MissionListViewModel : QScript
 	{
 		[SerializeField] private MissionViewModel _missionPrefab;
 		[SerializeField] private RectTransform _missionList;
