@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Name: tut_1_2
   m_EditorClassIdentifier: 
   Actor: {fileID: 11400000, guid: 7c1f78a46bb4da243b895bdaba401c16, type: 2}
-  Text: Try building a factory
-  HasDecision: 0
-  Missions: {fileID: 11400000, guid: 99b8f15b05cd1194aa22f2db821ceba1, type: 2}
+  Text: "Let\u2019s start with the basics. These skills will serve you on any station
+    dad decides to give you.\r\n\r\nBuild a factory on the station\u2019s upper layer.
+    Factories will turn your plain boring goods into something that\u2019s actually
+    worth money, or we can use to improve the station. Tell your factory to produce
+    some Consumer Goods, that we can then sell out into the galaxy.\r"
+  Missions: {fileID: 0}

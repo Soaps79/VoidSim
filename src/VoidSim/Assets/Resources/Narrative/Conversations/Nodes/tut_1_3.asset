@@ -9,10 +9,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cbd41b88eb4fc66408f0c833b9504c93, type: 3}
-  m_Name: tut_1_1
+  m_Name: tut_1_3
   m_EditorClassIdentifier: 
   Actor: {fileID: 11400000, guid: 7c1f78a46bb4da243b895bdaba401c16, type: 2}
-  Text: "I love watching someone walk into their first day on THIS job. People spend
-    their entire lives learning what it takes to run a station! So you can imagine
-    why YOU, stepping in straight out of school would require an advisor of my caliber.\r"
-  Missions: {fileID: 0}
+  Text: "Speaking of which\u2026 You should also build some landing docks. Most new
+    captains have already started that by the time I get out here to greet them. You
+    DO know that our entire purpose out here is to bring in traffic, don\u2019t you?\r"
+  Missions: {fileID: 11400000, guid: 99b8f15b05cd1194aa22f2db821ceba1, type: 2}

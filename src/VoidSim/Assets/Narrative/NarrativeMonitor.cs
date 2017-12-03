@@ -164,28 +164,24 @@ namespace Assets.Narrative
 		private void InitializeCraftProductTracker()
 		{
 			var tracker = new CraftProductTracker();
-			KeyValueDisplay.Instance.Add("Make", () => tracker.DisplayString);
 			_trackers.Add(tracker);
 		}
 
 		private void InitializeAccumulateProductTracker()
 		{
 			var tracker = new AccumulateProductTracker();
-			KeyValueDisplay.Instance.Add("Have", () => tracker.DisplayString);
 			_trackers.Add(tracker);
 		}
 
 		private void InitializeSellProductTracker()
 		{
 			var tracker = new SellProductTracker();
-			KeyValueDisplay.Instance.Add("Sell", () => tracker.DisplayString);
 			_trackers.Add(tracker);
 		}
 
 		private void InitializePlacePlaceableTracker()
 		{
 			var tracker = new PlacePlaceableTracker();
-			KeyValueDisplay.Instance.Add("Place", () => tracker.DisplayString);
 			_trackers.Add(tracker);
 		}
 

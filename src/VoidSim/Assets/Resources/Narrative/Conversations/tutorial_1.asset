@@ -20,4 +20,8 @@ MonoBehaviour:
     - ButtonText: Next
       Next:
         Node: {fileID: 11400000, guid: e471ff0780e400e419d21926e331ffae, type: 2}
-        Transitions: []
+        Transitions:
+        - ButtonText: Next
+          Next:
+            Node: {fileID: 11400000, guid: d65de071971a0a443b68a75674952e1b, type: 2}
+            Transitions: []

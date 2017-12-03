@@ -30,19 +30,5 @@ namespace Assets.Narrative.Goals
 				HandleProductupdate(result.ProductId, result.Quantity);
 			}
 		}
-
-		// not bothering extracting, probably temporary
-		public string DisplayString
-		{
-			get
-			{
-				// rafactor to actually use the builder
-				var builder = new StringBuilder();
-				builder.Append(Goals.Aggregate("",
-					(current, goal) => current + "  " + goal.ProductName + " " + goal.ElapsedAmount + "/" + goal.TotalAmount));
-
-				return builder.ToString();
-			}
-		}
 	}
 }

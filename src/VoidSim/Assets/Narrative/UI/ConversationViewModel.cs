@@ -71,7 +71,7 @@ namespace Assets.Narrative.UI
 			SetValuesFromNode(_currentNode.Node);
 
 			if (!entry.Transitions.Any())
-				CreateButton("Accept", null);
+				CreateButton("Finish", null);
 			else
 			{
 				entry.Transitions.ForEach(i => CreateButton(i.ButtonText, i.Next));

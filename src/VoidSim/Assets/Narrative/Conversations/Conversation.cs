@@ -43,10 +43,7 @@ namespace Assets.Narrative.Conversations
 	public class Conversation : ScriptableObject
 	{
 		public string Title;
-
-		public List<MissionGroupSO> Missions;
 		public ConversationEntry InitialEntry;
-
 		public Action<Conversation> OnComplete;
 
 		public void Complete()

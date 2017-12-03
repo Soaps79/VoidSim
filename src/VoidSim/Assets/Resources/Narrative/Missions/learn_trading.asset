@@ -12,12 +12,16 @@ MonoBehaviour:
   m_Name: learn_trading
   m_EditorClassIdentifier: 
   DisplayName: Trade Some Things
-  FlavorText: 'Traders need a place to land to conduct business. Grab a block of ship
-    bays from the toolbox, and place it on the station. Ships will automatically start
-    bringing the goods the factory ordered. To sell your goods, click on Consumer
-    Goods in your inventory, and set them to sell (the - button). '
-  PrereqMissionName: learn_crafting
+  FlavorText: 'Grab a block of ship bays from the toolbox, and place it on the station.
+    To sell your goods, click on any product in your inventory, and set it to sell
+    (the - button). '
+  PrereqMissionName: 
   Goals:
+  - Type: 3
+    ProductName: Small Bays
+    TotalAmount: 1
+    NeedsPlacement: 1
+    ProductId: 0
   - Type: 2
     ProductName: Consumer Goods
     TotalAmount: 100

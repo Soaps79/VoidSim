@@ -8,7 +8,6 @@ namespace Assets.Narrative.Goals
 	public interface IGoalTracker
 	{
 		GoalType GoalType { get; }
-		string DisplayString { get; }
 		void AddGoal(ProductGoal goal);
 		void Prune();
 	}
@@ -61,19 +60,6 @@ namespace Assets.Narrative.Goals
 		public void Prune()
 		{
 			Goals.RemoveAll(i => !i.IsActive);
-		}
-
-		public string DisplayString
-		{
-			get
-			{
-				// rafactor to actually use the builder
-				var builder = new StringBuilder();
-				builder.Append(Goals.Aggregate("",
-					(current, goal) => current + "  " + goal.ProductName + " " + goal.ElapsedAmount + "/" + goal.TotalAmount));
-
-				return builder.ToString();
-			}
 		}
 	}
 }

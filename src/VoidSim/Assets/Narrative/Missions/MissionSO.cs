@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Assets.Narrative.Goals;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Assets.Narrative.Missions
@@ -22,6 +23,9 @@ namespace Assets.Narrative.Missions
 	public class MissionSO : ScriptableObject
 	{
 		public string DisplayName;
+		[Title("Tooltip Text", bold: false)]
+		[HideLabel]
+		[MultiLineProperty(6)]
 		public string FlavorText;
 		public string PrereqMissionName;
 		public List<ProductGoalInfo> Goals;
