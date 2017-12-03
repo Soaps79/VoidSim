@@ -9,6 +9,8 @@ using UnityEngine;
 
 namespace Assets.Narrative.Missions
 {
+	// Object to manage the queue of missions available. 
+	// Initializes missions when they start, and also handles their completion
 	public class MissionsMonitor : QScript
 	{
 		private readonly List<IGoalTracker> _trackers = new List<IGoalTracker>();
@@ -76,9 +78,9 @@ namespace Assets.Narrative.Missions
 			_activeMissions.Remove(mission);
 			_trackers.ForEach(i => i.Prune());
 
-			var next = _unstartedMissions.Where(i => i.PrereqMissionName == mission.Name).ToList();
-			if (next.Any())
-				next.ForEach(BeginMission);
+			var toStart = _unstartedMissions.Where(i => i.PrereqMissionName == mission.Name).ToList();
+			if (toStart.Any())
+				toStart.ForEach(BeginMission);
 		}
 
 		// create mission with its static content

@@ -149,8 +149,6 @@ namespace Assets.Logistics
 			go.name = "transit_monitor_viewmodel";
 			var viewmodel = go.GetOrAddComponent<TransitMonitorViewModel>();
 			viewmodel.Initialize(this, _transitControl);
-
-			KeyValueDisplay.Instance.Add("Manifest Backlog", () => _manifestsBacklog.Count);
 		}
 
 		public string Name { get { return "TransitMonitor"; } }

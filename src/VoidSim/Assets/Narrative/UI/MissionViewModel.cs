@@ -15,6 +15,7 @@ namespace Assets.Narrative.UI
 		[SerializeField] private RectTransform _goalList;
 		[SerializeField] private TMP_Text _nameText;
 		[SerializeField] private Image _infoIcon;
+		[SerializeField] private CanvasGroup _canvasGroup;
 		private string _flavorText;
 
 		public void Initialize(Mission mission)
@@ -34,6 +35,9 @@ namespace Assets.Narrative.UI
 			}
 
 			_nameText.text = mission.DisplayName;
+			var canvasGroup = gameObject.GetComponent<CanvasGroup>();
+			canvasGroup.alpha = 0;
+			canvasGroup.DOFade(1, .5f);
 		}
 
 		private void HandleUpdateComplete(Mission mission)
