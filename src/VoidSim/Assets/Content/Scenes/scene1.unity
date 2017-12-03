@@ -918,8 +918,8 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 222257357}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 529.5, y: 298, z: 0}
-  m_LocalScale: {x: 1.32375, y: 1.32375, z: 1.32375}
+  m_LocalPosition: {x: 529, y: 297.5, z: 0}
+  m_LocalScale: {x: 1.3225, y: 1.3225, z: 1.3225}
   m_Children:
   - {fileID: 831776412}
   - {fileID: 97127703}
@@ -1937,8 +1937,8 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 499680534}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 529.5, y: 298, z: 0}
-  m_LocalScale: {x: 0.5515625, y: 0.5515625, z: 0.5515625}
+  m_LocalPosition: {x: 529, y: 297.5, z: 0}
+  m_LocalScale: {x: 0.55104166, y: 0.55104166, z: 0.55104166}
   m_Children:
   - {fileID: 493648863}
   - {fileID: 35110234}
@@ -4682,8 +4682,8 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1028946708}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 529.5, y: 298, z: 0}
-  m_LocalScale: {x: 0.5515625, y: 0.5515625, z: 0.5515625}
+  m_LocalPosition: {x: 529, y: 297.5, z: 0}
+  m_LocalScale: {x: 0.55104166, y: 0.55104166, z: 0.55104166}
   m_Children:
   - {fileID: 1449580576}
   - {fileID: 2115866798}
@@ -6729,6 +6729,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1758674482}
   - component: {fileID: 1758674483}
+  - component: {fileID: 1758674484}
   m_Layer: 0
   m_Name: NarrativeMonitor
   m_TagString: Untagged
@@ -6760,11 +6761,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52e124cfb8372a44bb3a7c6fce8f67e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _activeMissions: []
   _initialConversation: {fileID: 11400000, guid: 98d930ac009f0f54993233504fd92cfc,
     type: 2}
   _conversationViewModelPrefab: {fileID: 114576317038540990, guid: 72399f6c572a908479dee1d6b321ddf0,
     type: 2}
+--- !u!114 &1758674484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1758674481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0c3745d413ee814c917b3193c2abf42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _activeMissions: []
   _missionViewModelPrefab: {fileID: 114278785223545404, guid: 7580feb122e119045b7b12321dbcdc2a,
     type: 2}
 --- !u!1 &1797063556

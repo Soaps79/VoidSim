@@ -9,7 +9,7 @@ namespace Assets.Narrative.UI
 		[SerializeField] private MissionViewModel _missionPrefab;
 		[SerializeField] private RectTransform _missionList;
 
-		public void Initialize(NarrativeMonitor monitor)
+		public void Initialize(MissionsMonitor monitor)
 		{
 			monitor.OnMissionBegin += HandleMissionBegin;
 		}
