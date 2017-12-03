@@ -27,9 +27,9 @@ namespace Assets.Narrative
 	{
 		// this is so ugly, extract an interface pls
 		private readonly List<IGoalTracker> _trackers = new List<IGoalTracker>();
-		[SerializeField] private MissionGroupSO _missionGroupSO;
 		[SerializeField] private List<Mission> _activeMissions;
 		private readonly List<string> _completedMissionNames = new List<string>();
+		private readonly List<MissionSO> _unstartedMissions = new List<MissionSO>();
 
 		[SerializeField] private Conversation _initialConversation;
 		[SerializeField] private ConversationViewModel _conversationViewModelPrefab;
@@ -53,10 +53,6 @@ namespace Assets.Narrative
 			_canvas = GameObject.Find("InfoCanvas");
 			InitializeConversations();
 			InitializeMissionsUI();
-
-			// loads necessary static data
-			// this is bad form, writing to a SO, fix it
-			InitializeProducts();
 			
 			// trackers will be given goals as the missions are begun
 			InitializeCraftProductTracker();
@@ -67,26 +63,13 @@ namespace Assets.Narrative
 			// if there is loading data, bring missions up to date
 			if (_serializer.HasDataFor(this, "Narrative"))
 				LoadMissions();
-			else
-				CreateStartingMissions();
 		}
 
 		private void InitializeConversations()
 		{
 			_conversationViewModel = Instantiate(_conversationViewModelPrefab, _canvas.transform, false);
 			_conversationViewModel.BeginConversation(_initialConversation);
-			_initialConversation.OnComplete += HandleConversationComplete;
-		}
-
-		private void HandleConversationComplete(Conversation conversation)
-		{
-			if (!conversation.Missions.Any())
-				return;
-
-			foreach (var missionGroup in conversation.Missions)
-			{
-				missionGroup.Missions.ForEach(i => BeginMission(i));
-			}
+			_conversationViewModel.OnMissionsNeedStart += ActivateMissionGroup;
 		}
 
 		// instantiate and wire up the mission view model
@@ -99,35 +82,39 @@ namespace Assets.Narrative
 		// match progress data with static content
 		private void LoadMissions()
 		{
-			var data = _serializer.DeserializeData();
-			if(data.Name != _missionGroupSO.name)
-				throw new UnityException("Mission group progress data does not match Scriptable");
+			//var data = _serializer.DeserializeData();
+			//if(data.Name != _missionGroupSO.name)
+			//	throw new UnityException("Mission group progress data does not match Scriptable");
 
-			_completedMissionNames.AddRange(data.CompletedMissions);
-			foreach (var missionData in data.ActiveMissions)
-			{
-				// create the mission from the SO
-				var content = _missionGroupSO.Missions.FirstOrDefault(i => i.name == missionData.Name);
-				if(content == null)
-					throw new UnityException("In-progress mission not found in scriptable");
-				var mission = BeginMission(content);
-				// progress it to where it was saved
-				mission.SetProgress(missionData);
-			}
+			//_completedMissionNames.AddRange(data.CompletedMissions);
+			//foreach (var missionData in data.ActiveMissions)
+			//{
+			//	// create the mission from the SO
+			//	var content = _missionGroupSO.Missions.FirstOrDefault(i => i.name == missionData.Name);
+			//	if(content == null)
+			//		throw new UnityException("In-progress mission not found in scriptable");
+			//	var mission = BeginMission(content);
+			//	// progress it to where it was saved
+			//	mission.SetProgress(missionData);
+			//}
 		}
 
 		// start the mission group fresh
-		private void CreateStartingMissions()
+		public void ActivateMissionGroup(MissionGroupSO group)
 		{
-			_activeMissions = new List<Mission>();
-			foreach (var missionSO in _missionGroupSO.Missions.Where(i => string.IsNullOrEmpty(i.PrereqMissionName)))
+			InitializeMissionGroupProducts(group);
+			var toStart = group.Missions.Where(
+				i => string.IsNullOrEmpty(i.PrereqMissionName) 
+					|| _completedMissionNames.Contains(i.PrereqMissionName)).ToList();
+			foreach (var missionSO in toStart)
 			{
 				BeginMission(missionSO);
 			}
+			_unstartedMissions.AddRange(group.Missions.Except(toStart));
 		}
 
 		// create mission with its static content
-		private Mission BeginMission(MissionSO missionSO)
+		private void BeginMission(MissionSO missionSO)
 		{
 			var mission = new Mission
 			{
@@ -144,7 +131,6 @@ namespace Assets.Narrative
 			_activeMissions.Add(mission);
 			if (OnMissionBegin != null)
 				OnMissionBegin(mission);
-			return mission;
 		}
 
 		// complete mission, see if any new ones are triggered
@@ -154,16 +140,17 @@ namespace Assets.Narrative
 			_activeMissions.Remove(mission);
 			_trackers.ForEach(i => i.Prune());
 
-			var next = _missionGroupSO.Missions.Where(i => i.PrereqMissionName == mission.Name).ToList();
+			var next = _unstartedMissions.Where(i => i.PrereqMissionName == mission.Name).ToList();
 			if (next.Any())
 				next.ForEach(i => BeginMission(i));
 		}
 
 		// get static Product data
-		private void InitializeProducts()
+		// this is bad form, writing to a SO, fix it
+		private void InitializeMissionGroupProducts(MissionGroupSO group)
 		{
 			var allProducts = ProductLookup.Instance.GetProducts();
-			foreach (var mission in _missionGroupSO.Missions)
+			foreach (var mission in group.Missions)
 			{
 				foreach (var productGoal in mission.Goals)
 				{
@@ -212,14 +199,14 @@ namespace Assets.Narrative
 
 		public MissionGroupProgressData GetData()
 		{
-			var data = new MissionGroupProgressData
-			{
-				Name = _missionGroupSO.name,
-				ActiveMissions = _activeMissions.Select(i => i.GetData()).ToList(),
-				CompletedMissions = _completedMissionNames.ToList()
-			};
+			//var data = new MissionGroupProgressData
+			//{
+			//	Name = _missionGroupSO.name,
+			//	ActiveMissions = _activeMissions.Select(i => i.GetData()).ToList(),
+			//	CompletedMissions = _completedMissionNames.ToList()
+			//};
 
-			return data;
+			return new MissionGroupProgressData();
 		}
 	}
 }

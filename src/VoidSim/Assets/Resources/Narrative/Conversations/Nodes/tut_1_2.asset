@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbd41b88eb4fc66408f0c833b9504c93, type: 3}
+  m_Name: tut_1_2
+  m_EditorClassIdentifier: 
+  Actor: {fileID: 11400000, guid: 7c1f78a46bb4da243b895bdaba401c16, type: 2}
+  Text: Try building a factory
+  HasDecision: 0
+  Missions: {fileID: 11400000, guid: 99b8f15b05cd1194aa22f2db821ceba1, type: 2}

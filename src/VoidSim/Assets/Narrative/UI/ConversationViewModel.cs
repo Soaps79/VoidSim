@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Assets.Narrative.Conversations;
+using Assets.Narrative.Missions;
 using DG.Tweening;
 using QGame;
 using TMPro;
@@ -11,6 +13,12 @@ namespace Assets.Narrative.UI
 {
 	public class ConversationViewModel : QScript
 	{
+		private class ButtonEntry
+		{
+			public Button Button;
+			
+		}
+
 		[SerializeField] private TMP_Text _conversationNameLabel;
 		[SerializeField] private Image _actorPortrait;
 		[SerializeField] private TMP_Text _actorNameLabel;
@@ -18,12 +26,11 @@ namespace Assets.Narrative.UI
 		[SerializeField] private RectTransform _buttonArray;
 		[SerializeField] private Button _buttonPrefab;
 		[SerializeField] private CanvasGroup _canvasGroup;
-		private readonly List<Button> _activeButtons = new List<Button>();
-
-		// most of the logic in here is based on this index being maintained
-		private int _nodeIndex;
-
+		
 		private Conversation _conversation;
+		private readonly List<Button> _activeButtons = new List<Button>();
+		private ConversationEntry _currentNode;
+		public Action<MissionGroupSO> OnMissionsNeedStart { get; set; }
 
 		public void BeginConversation(Conversation conversation)
 		{
@@ -35,19 +42,18 @@ namespace Assets.Narrative.UI
 				gameObject.SetActive(true);
 				_canvasGroup.DOFade(1f, .5f);
 			}
-			BindCurrentNode();
+			BindEntry(conversation.InitialEntry);
 		}
 
-		private bool IsLastNode()
+		// load the next message if there is one, otherwise fade out
+		private void IncrementMessage(ConversationEntry entry)
 		{
-			return _conversation.Nodes.Count == _nodeIndex + 1;
-		}
+			if (_currentNode.Node.Missions != null)
+				OnMissionsNeedStart(_currentNode.Node.Missions);
 
-		private void IncrementMessage()
-		{
 			ClearButtons();
 
-			if (IsLastNode())
+			if (entry == null)
 			{
 				_conversation.Complete();
 				_canvasGroup.DOFade(0, .5f)
@@ -55,29 +61,38 @@ namespace Assets.Narrative.UI
 				return;
 			}
 
-			_nodeIndex++;
-			BindCurrentNode();
+			BindEntry(entry);
 		}
 
-		private void BindCurrentNode()
+		// Refreshes the UI to represent a conversation node
+		private void BindEntry(ConversationEntry entry)
 		{
-			if(_nodeIndex + 1 > _conversation.Nodes.Count)
-				throw new IndexOutOfRangeException("Tried to bind Conversation node that doesn't exist");
+			_currentNode = entry;
+			SetValuesFromNode(_currentNode.Node);
 
-			var node = _conversation.Nodes[_nodeIndex];
-			SetValuesFromNode(node);
+			if (!entry.Transitions.Any())
+				CreateButton("Accept", null);
+			else
+			{
+				entry.Transitions.ForEach(i => CreateButton(i.ButtonText, i.Next));
+			}
+		}
 
+		// create a button, and give it the entry it will trigger to load
+		private void CreateButton(string text, ConversationEntry entry)
+		{
 			var button = Instantiate(_buttonPrefab, _buttonArray, false);
 			var buttonLabel = button.transform.Find("button_text").GetComponent<TMP_Text>();
-			if (IsLastNode())
-				buttonLabel.text = "Accept";
-			else
-				buttonLabel.text = "Next";
+			buttonLabel.text = text;
 
-			button.onClick.AddListener(IncrementMessage);
+			button.onClick.AddListener(() =>
+			{
+				IncrementMessage(entry);
+			});
 			_activeButtons.Add(button);
 		}
 
+		// maps node data to the ui
 		private void SetValuesFromNode(ConversationNode node)
 		{
 			_actorNameLabel.text = node.Actor.DisplayName;

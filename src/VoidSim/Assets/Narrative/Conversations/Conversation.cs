@@ -6,11 +6,10 @@ using UnityEngine;
 namespace Assets.Narrative.Conversations
 {
 	[Serializable]
-	public class ConversationNode
+	public class ConversationNodeTransition
 	{
-		public NarrativeActorSO Actor;
-		public string Text;
-		public bool HasDecision;
+		public string ButtonText;
+		public ConversationEntry Next;
 	}
 
 	[Serializable]
@@ -34,12 +33,19 @@ namespace Assets.Narrative.Conversations
 	}
 
 	[Serializable]
+	public class ConversationEntry
+	{
+		public ConversationNode Node;
+		public List<ConversationNodeTransition> Transitions;
+	}
+
+	[Serializable]
 	public class Conversation : ScriptableObject
 	{
 		public string Title;
 
 		public List<MissionGroupSO> Missions;
-		public List<ConversationNode> Nodes;
+		public ConversationEntry InitialEntry;
 
 		public Action<Conversation> OnComplete;
 
