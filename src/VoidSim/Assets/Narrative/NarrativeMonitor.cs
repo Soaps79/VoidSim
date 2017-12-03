@@ -29,6 +29,9 @@ namespace Assets.Narrative
 		[SerializeField] private ConversationViewModel _conversationViewModelPrefab;
 		private ConversationViewModel _conversationViewModel;
 
+		[SerializeField] private NotificationListViewModel _notificationPrefab;
+		private NotificationListViewModel _notificationsViewModel;
+
 		private readonly CollectionSerializer<MissionGroupProgressData> _serializer
 			= new CollectionSerializer<MissionGroupProgressData>();
 
@@ -49,6 +52,8 @@ namespace Assets.Narrative
 			_missionsMonitor.Initialize();
 
 			InitializeConversations();
+			InitializeNotifications();
+
 
 			// if there is loading data, bring missions up to date
 			if (_serializer.HasDataFor(this, "Narrative"))
@@ -58,11 +63,16 @@ namespace Assets.Narrative
 		private void InitializeConversations()
 		{
 			_conversationViewModel = Instantiate(_conversationViewModelPrefab, _canvas.transform, false);
-			_conversationViewModel.BeginConversation(_initialConversation);
 			_conversationViewModel.OnMissionsNeedStart += _missionsMonitor.ActivateMissionGroup;
+			_conversationViewModel.gameObject.SetActive(false);
 		}
 
-		
+		private void InitializeNotifications()
+		{
+			_notificationsViewModel = Instantiate(_notificationPrefab, _canvas.transform, false);
+			_notificationsViewModel.Initialize(_conversationViewModel);
+			_notificationsViewModel.AddConversationNotification(_initialConversation);
+		}
 
 		// match progress data with static content
 		private void LoadMissions()
