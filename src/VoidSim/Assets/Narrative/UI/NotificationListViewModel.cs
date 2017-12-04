@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using Assets.Narrative.Conversations;
-using Assets.Narrative.Missions;
-using QGame;
+using Assets.Narrative.Notifications;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Assets.Narrative.UI
 {
+	// handles showing notifications to the player in a list
+	// there's not much to maintaining the list, buttons clear themselves when they should
 	public class NotificationListViewModel : SerializedMonoBehaviour
 	{
 		[SerializeField] private NotificationViewModel _buttonPrefab;
@@ -22,6 +23,8 @@ namespace Assets.Narrative.UI
 			_conversationViewModel = conversation;
 		}
 
+		// this could remain the preferred method; a function per type
+		// or it could be better worked into the architecture
 		public void AddConversationNotification(Conversation convo)
 		{
 			var viewModel = Instantiate(_buttonPrefab, _contentHolder.transform, false);

@@ -14,4 +14,9 @@ MonoBehaviour:
   Conversations:
   - Conversation: {fileID: 11400000, guid: 98d930ac009f0f54993233504fd92cfc, type: 2}
     Type: 0
-    Value: 
+    Values: []
+  - Conversation: {fileID: 11400000, guid: 98557d81cfa1041469aeaf77909842a3, type: 2}
+    Type: 1
+    Values:
+    - learn_crafting
+    - learn_trading

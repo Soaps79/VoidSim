@@ -1593,12 +1593,12 @@ Prefab:
     - target: {fileID: 224337550640712236, guid: 7580feb122e119045b7b12321dbcdc2a,
         type: 2}
       propertyPath: m_LocalPosition.x
-      value: 127.81999
+      value: 127.819984
       objectReference: {fileID: 0}
     - target: {fileID: 224337550640712236, guid: 7580feb122e119045b7b12321dbcdc2a,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 2.4699936
+      value: 2.469986
       objectReference: {fileID: 0}
     - target: {fileID: 1887455403154080, guid: 7580feb122e119045b7b12321dbcdc2a, type: 2}
       propertyPath: m_IsActive
@@ -6504,12 +6504,12 @@ Prefab:
     - target: {fileID: 224156052781830228, guid: 1fc7c3453a85b9d41b9b164fa3294e1e,
         type: 2}
       propertyPath: m_LocalPosition.x
-      value: 127.81999
+      value: 127.819984
       objectReference: {fileID: 0}
     - target: {fileID: 224156052781830228, guid: 1fc7c3453a85b9d41b9b164fa3294e1e,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 2.4699936
+      value: 2.469986
       objectReference: {fileID: 0}
     - target: {fileID: 1364436687230358, guid: 1fc7c3453a85b9d41b9b164fa3294e1e, type: 2}
       propertyPath: m_IsActive
@@ -7100,6 +7100,7 @@ GameObject:
   - component: {fileID: 1758674482}
   - component: {fileID: 1758674483}
   - component: {fileID: 1758674484}
+  - component: {fileID: 1758674485}
   m_Layer: 0
   m_Name: NarrativeMonitor
   m_TagString: Untagged
@@ -7137,6 +7138,7 @@ MonoBehaviour:
     type: 2}
   _notificationPrefab: {fileID: 114608451140577576, guid: 1fc7c3453a85b9d41b9b164fa3294e1e,
     type: 2}
+  _initialPackage: {fileID: 11400000, guid: 4aada836c2fb7114b9950a99fb26a026, type: 2}
 --- !u!114 &1758674484
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7151,6 +7153,17 @@ MonoBehaviour:
   _activeMissions: []
   _missionViewModelPrefab: {fileID: 114278785223545404, guid: 7580feb122e119045b7b12321dbcdc2a,
     type: 2}
+--- !u!114 &1758674485
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1758674481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cc496f00db942243adbbebc9949cc19, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1797063556
 GameObject:
   m_ObjectHideFlags: 0

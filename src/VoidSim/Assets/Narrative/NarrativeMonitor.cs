@@ -4,7 +4,9 @@ using System.Linq;
 using Assets.Narrative.Conversations;
 using Assets.Narrative.Goals;
 using Assets.Narrative.Missions;
+using Assets.Narrative.Notifications;
 using Assets.Narrative.UI;
+using Assets.Scripts.Initialization;
 using Assets.Scripts.Serialization;
 using Assets.WorldMaterials.Products;
 using QGame;
@@ -21,7 +23,7 @@ namespace Assets.Narrative
 	}
 
 	/// <summary>
-	/// Orchestrate the Narrative. Will probably end up handling too many duties, and jobs will be broken out.
+	/// Orchestrate the Narrative by handing objects off to a number of specialized subsytems
 	/// </summary>
 	public class NarrativeMonitor : QScript, ISerializeData<MissionGroupProgressData>
 	{
@@ -32,11 +34,14 @@ namespace Assets.Narrative
 		[SerializeField] private NotificationListViewModel _notificationPrefab;
 		private NotificationListViewModel _notificationsViewModel;
 
+		[SerializeField] private LevelPackage _initialPackage;
+
 		private readonly CollectionSerializer<MissionGroupProgressData> _serializer
 			= new CollectionSerializer<MissionGroupProgressData>();
 
 		private GameObject _canvas;
 		private MissionsMonitor _missionsMonitor;
+		private NotificationsMonitor _notificationsMonitor;
 
 
 		void Start()
@@ -44,6 +49,7 @@ namespace Assets.Narrative
 			// delay to let the game objects get set up
 			OnNextUpdate += Initialize;
 			_missionsMonitor = gameObject.GetComponent<MissionsMonitor>();
+			_notificationsMonitor = gameObject.GetComponent<NotificationsMonitor>();
 		}
 
 		private void Initialize(float obj)
@@ -71,7 +77,9 @@ namespace Assets.Narrative
 		{
 			_notificationsViewModel = Instantiate(_notificationPrefab, _canvas.transform, false);
 			_notificationsViewModel.Initialize(_conversationViewModel);
-			_notificationsViewModel.AddConversationNotification(_initialConversation);
+			
+			_notificationsMonitor.Initialize(_notificationsViewModel);
+			_notificationsMonitor.HandleLevelPackage(_initialPackage);
 		}
 
 		// match progress data with static content

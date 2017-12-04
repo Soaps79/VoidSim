@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using Assets.Narrative.Notifications;
+using DG.Tweening;
 using QGame;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,8 @@ namespace Assets.Narrative.UI
 	[RequireComponent(typeof(CanvasGroup))]
 	[RequireComponent(typeof(Button))]
 	[RequireComponent(typeof(BoundTooltipTrigger))]
+	// currently a pretty simple class wiring up some UI fields
+	// mainly driven by its parent list view model
 	public class NotificationViewModel : QScript
 	{
 		[SerializeField] private Image _icon;
@@ -23,6 +26,7 @@ namespace Assets.Narrative.UI
 			Button = GetComponent<Button>();
 		}
 
+		// setup sprite and tooltip if they are provided
 		public void Initialize(Notification notification)
 		{
 			if (notification.IconSprite != null)

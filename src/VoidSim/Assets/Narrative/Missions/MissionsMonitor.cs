@@ -22,6 +22,8 @@ namespace Assets.Narrative.Missions
 		public Action<Mission> OnMissionBegin;
 		private GameObject _canvas;
 
+		public Action<Mission> OnMissionComplete;
+
 		public void Initialize()
 		{
 			_canvas = GameObject.Find("InfoCanvas");
@@ -81,6 +83,9 @@ namespace Assets.Narrative.Missions
 			var toStart = _unstartedMissions.Where(i => i.PrereqMissionName == mission.Name).ToList();
 			if (toStart.Any())
 				toStart.ForEach(BeginMission);
+
+			if (OnMissionComplete != null)
+				OnMissionComplete(mission);
 		}
 
 		// create mission with its static content

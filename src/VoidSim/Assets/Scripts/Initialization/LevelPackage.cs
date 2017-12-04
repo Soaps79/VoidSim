@@ -15,7 +15,7 @@ namespace Assets.Scripts.Initialization
 	{
 		public Conversation Conversation;
 		public ConversationTriggerType Type;
-		public string Value;
+		public List<string> Values;
 	}
 
 	public class LevelPackage : ScriptableObject

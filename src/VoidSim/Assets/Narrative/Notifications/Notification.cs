@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Assets.Narrative
+namespace Assets.Narrative.Notifications
 {
 	[Serializable]
 	public enum NotificationType
@@ -9,6 +9,7 @@ namespace Assets.Narrative
 		ConversationStart
 	}
 
+	// represents a small data package used by notification buttons
 	[Serializable]
 	public class Notification
 	{
