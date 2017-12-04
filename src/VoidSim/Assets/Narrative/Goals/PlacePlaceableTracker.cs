@@ -19,6 +19,7 @@ namespace Assets.Narrative.Goals
 		public GoalType GoalType { get { return GoalType.PlacePlaceable; } }
 
 		private readonly List<ProductGoal> _goals = new List<ProductGoal>();
+		private bool _isHandling;
 
 		public PlacePlaceableTracker()
 		{
@@ -32,6 +33,7 @@ namespace Assets.Narrative.Goals
 			if (state != PlaceablePlacementState.Placed)
 				return;
 
+			_isHandling = true;
 			foreach (var goal in _goals)
 			{
 				if (goal.ProductName == placeable.PlaceableName)
@@ -42,12 +44,15 @@ namespace Assets.Narrative.Goals
 					goal.TriggerComplete(true);
 				}
 			}
-
-			_goals.RemoveAll(i => !i.IsActive);
+			_isHandling = false;
+			Prune();
 		}
 
 		public void Prune()
 		{
+			if (_isHandling)
+				return;
+
 			_goals.RemoveAll(i => !i.IsActive);
 		}
 
