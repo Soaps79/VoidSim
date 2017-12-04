@@ -15,6 +15,7 @@ namespace Assets.Narrative.UI
 	public class NotificationViewModel : QScript
 	{
 		[SerializeField] private Image _icon;
+		[SerializeField] private Image _highlight;
 		public Button Button;
 		private CanvasGroup _canvasgroup;
 
@@ -24,6 +25,14 @@ namespace Assets.Narrative.UI
 			_canvasgroup.alpha = 0;
 			_canvasgroup.DOFade(1, .5f);
 			Button = GetComponent<Button>();
+
+			var color = _highlight.color;
+			var sequence = DOTween.Sequence();
+			sequence.PrependInterval(.5f);
+			sequence.Append(_highlight.DOFade(.5f, .5f));
+			sequence.Append(_highlight.DOFade(0, .5f));
+			sequence.SetLoops(5);
+			sequence.OnComplete(() => _highlight.color = color);
 		}
 
 		// setup sprite and tooltip if they are provided
