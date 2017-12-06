@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Narrative.Goals;
 using Assets.Scripts.Serialization;
+using Messaging;
 using UnityEngine;
 
 namespace Assets.Narrative.Missions
@@ -18,18 +19,28 @@ namespace Assets.Narrative.Missions
 		public List<ProductGoalProgressData> Goals;
 	}
 
+	public enum MissionUpdateStatus { Begin, Complete }
+
+	public class MissionUpdateMessageArgs : MessageArgs
+	{
+		public MissionUpdateStatus Status;
+		public Mission Mission;
+	}
+
 	/// <summary>
 	/// This object represents a mission instance in progress, and should have whatever hooks are needed for in-game use.
 	/// </summary>
 	[Serializable]
 	public class Mission : ISerializeData<MissionProgressData>
 	{
+		public const string MessageName = "MissionUpdate";
 		public string Name;
 		public string DisplayName;
 		public string FlavorText;
 		public bool IsComplete;
 		public List<ProductGoal> Goals;
 		public Action<Mission> OnComplete;
+		public MissionSO Scriptable;
 
 		public void AddAndActivateGoal(ProductGoal goal)
 		{

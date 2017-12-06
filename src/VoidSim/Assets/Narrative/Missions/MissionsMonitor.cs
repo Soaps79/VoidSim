@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Narrative.Goals;
 using Assets.Narrative.UI;
+using Assets.Scripts;
 using Assets.WorldMaterials.Products;
 using QGame;
 using UnityEngine;
@@ -86,6 +87,13 @@ namespace Assets.Narrative.Missions
 
 			if (OnMissionComplete != null)
 				OnMissionComplete(mission);
+
+			Locator.MessageHub.QueueMessage(Mission.MessageName,
+				new MissionUpdateMessageArgs
+				{
+					Mission = mission,
+					Status = MissionUpdateStatus.Complete
+				});
 		}
 
 		// create mission with its static content
@@ -95,7 +103,8 @@ namespace Assets.Narrative.Missions
 			{
 				Name = missionSO.name,
 				DisplayName = missionSO.DisplayName,
-				FlavorText = missionSO.FlavorText
+				FlavorText = missionSO.FlavorText,
+				Scriptable = missionSO
 			};
 			foreach (var goalInfo in missionSO.Goals)
 			{
@@ -106,6 +115,13 @@ namespace Assets.Narrative.Missions
 			_activeMissions.Add(mission);
 			if (OnMissionBegin != null)
 				OnMissionBegin(mission);
+
+			Locator.MessageHub.QueueMessage(Mission.MessageName, 
+				new MissionUpdateMessageArgs
+				{
+					Mission = mission,
+					Status = MissionUpdateStatus.Begin
+				});
 		}
 
 		private void InitializeCraftProductTracker()

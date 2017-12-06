@@ -16,6 +16,13 @@ namespace Assets.Narrative.Missions
 		[HideInInspector] public int ProductId;
 	}
 
+	[Serializable]
+	public class MissionRewardAmount
+	{
+		public string Name;
+		public int Amount;
+	}
+
 	/// <summary>
 	/// Static representation of mission data for content creation in the editor.
 	/// </summary>
@@ -29,5 +36,6 @@ namespace Assets.Narrative.Missions
 		public string FlavorText;
 		public string PrereqMissionName;
 		public List<ProductGoalInfo> Goals;
+		public List<MissionRewardAmount> Rewards;
 	}
 }

@@ -6,13 +6,6 @@ using UnityEngine;
 namespace Assets.Narrative.Conversations
 {
 	[Serializable]
-	public class ConversationNodeTransition
-	{
-		public string ButtonText;
-		public ConversationEntry Next;
-	}
-
-	[Serializable]
 	public class ConversationResultGroup
 	{
 		
@@ -37,6 +30,13 @@ namespace Assets.Narrative.Conversations
 	{
 		public ConversationNode Node;
 		public List<ConversationNodeTransition> Transitions;
+	}
+
+	[Serializable]
+	public class ConversationNodeTransition
+	{
+		public string ButtonText;
+		public ConversationEntry Next;
 	}
 
 	[Serializable]

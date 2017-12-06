@@ -16,7 +16,6 @@ using QGame;
 using UnityEngine;
 using Zenject;
 using TimeUnit = Assets.Scripts.TimeUnit;
-using TimeLength = Assets.Scripts.TimeLength;
 using WorldClock = Assets.Scripts.WorldClock;
 
 
@@ -254,6 +253,9 @@ namespace Assets.Station
 
             _inventoryReserve = new InventoryReserve();
             _inventoryReserve.Initialize(_inventory);
+
+	        var stationInventory = go.AddComponent<StationInventory>();
+			stationInventory.Initialize(_inventory);
         }
 
         private void InstantiateTrader()

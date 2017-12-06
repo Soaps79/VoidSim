@@ -27,3 +27,6 @@ MonoBehaviour:
     TotalAmount: 100
     NeedsPlacement: 0
     ProductId: 5
+  Rewards:
+  - Name: Credits
+    Amount: 5000
