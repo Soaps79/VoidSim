@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Narrative.Conversations;
 using Assets.Narrative.Goals;
 using Assets.Narrative.UI;
 using Assets.Scripts;
+using Assets.Scripts.Initialization;
 using Assets.WorldMaterials.Products;
 using QGame;
 using UnityEngine;
@@ -18,6 +20,7 @@ namespace Assets.Narrative.Missions
 		[SerializeField] private List<Mission> _activeMissions;
 		private readonly List<string> _completedMissionNames = new List<string>();
 		private readonly List<MissionSO> _unstartedMissions = new List<MissionSO>();
+		private readonly Dictionary<string, MissionSO> _levelMissions = new Dictionary<string, MissionSO>();
 
 		[SerializeField] private MissionListViewModel _missionViewModelPrefab;
 		public Action<Mission> OnMissionBegin;
@@ -25,9 +28,10 @@ namespace Assets.Narrative.Missions
 
 		public Action<Mission> OnMissionComplete;
 
-		public void Initialize()
+		public void Initialize(LevelPackage package)
 		{
 			_canvas = GameObject.Find("InfoCanvas");
+			FindMissionsInLevelPackage(package);
 			InitializeMissionsUI();
 
 			// trackers will be given goals as the missions are begun
@@ -35,6 +39,29 @@ namespace Assets.Narrative.Missions
 			InitializeAccumulateProductTracker();
 			InitializeSellProductTracker();
 			InitializePlacePlaceableTracker();
+		}
+
+		// uses the Extract function below to walk the conversation trees and grab all of their possible missions
+		private void FindMissionsInLevelPackage(LevelPackage package)
+		{
+			foreach (var conversation in package.Conversations)
+			{
+				ExtractMissionsFromConversations(conversation.Conversation.InitialEntry);
+			}
+		}
+
+		private void ExtractMissionsFromConversations(ConversationEntry conversationEntry)
+		{
+			foreach (var mission in conversationEntry.Node.Missions)
+			{
+				if(!_levelMissions.ContainsKey(mission.name))
+					_levelMissions.Add(mission.name, mission);
+			}
+
+			foreach (var nodeTransition in conversationEntry.Transitions)
+			{
+				ExtractMissionsFromConversations(nodeTransition.Next);
+			}
 		}
 
 		// instantiate and wire up the mission view model

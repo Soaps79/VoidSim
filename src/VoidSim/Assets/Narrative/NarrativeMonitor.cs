@@ -55,7 +55,7 @@ namespace Assets.Narrative
 		private void Initialize(float obj)
 		{
 			_canvas = GameObject.Find("InfoCanvas");
-			_missionsMonitor.Initialize();
+			_missionsMonitor.Initialize(_initialPackage);
 
 			InitializeConversations();
 			InitializeNotifications();
