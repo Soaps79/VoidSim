@@ -1,31 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Assets.Narrative.Conversations;
-using Assets.Narrative.Goals;
+﻿using Assets.Narrative.Conversations;
 using Assets.Narrative.Missions;
 using Assets.Narrative.Notifications;
 using Assets.Narrative.UI;
 using Assets.Scripts.Initialization;
 using Assets.Scripts.Serialization;
-using Assets.WorldMaterials.Products;
 using QGame;
 using UnityEngine;
 
 namespace Assets.Narrative
 {
-	// Saves only what is needed for mission group progress
-	public class MissionGroupProgressData
+	public class NarrativeProgressData
 	{
-		public string Name;
-		public List<MissionProgressData> ActiveMissions;
-		public List<string> CompletedMissions;
+		public MissionsProgressData Missions;
 	}
 
 	/// <summary>
 	/// Orchestrate the Narrative by handing objects off to a number of specialized subsytems
 	/// </summary>
-	public class NarrativeMonitor : QScript, ISerializeData<MissionGroupProgressData>
+	public class NarrativeMonitor : QScript, ISerializeData<NarrativeProgressData>
 	{
 		[SerializeField] private Conversation _initialConversation;
 		[SerializeField] private ConversationViewModel _conversationViewModelPrefab;
@@ -36,12 +28,13 @@ namespace Assets.Narrative
 
 		[SerializeField] private LevelPackage _initialPackage;
 
-		private readonly CollectionSerializer<MissionGroupProgressData> _serializer
-			= new CollectionSerializer<MissionGroupProgressData>();
+		private readonly CollectionSerializer<NarrativeProgressData> _serializer
+			= new CollectionSerializer<NarrativeProgressData>();
 
 		private GameObject _canvas;
 		private MissionsMonitor _missionsMonitor;
 		private NotificationsMonitor _notificationsMonitor;
+		private MissionsProgressData _deserializedMissionData;
 
 
 		void Start()
@@ -55,15 +48,24 @@ namespace Assets.Narrative
 		private void Initialize(float obj)
 		{
 			_canvas = GameObject.Find("InfoCanvas");
-			_missionsMonitor.Initialize(_initialPackage);
-
-			InitializeConversations();
-			InitializeNotifications();
-
 
 			// if there is loading data, bring missions up to date
 			if (_serializer.HasDataFor(this, "Narrative"))
-				LoadMissions();
+				HandleDataLoad();
+
+			_missionsMonitor.Initialize(_initialPackage, _deserializedMissionData);
+
+			InitializeConversations();
+			InitializeNotifications();
+		}
+
+		private void HandleDataLoad()
+		{
+			var data = _serializer.DeserializeData();
+			if (data != null)
+			{
+				_deserializedMissionData = data.Missions;
+			}
 		}
 
 		private void InitializeConversations()
@@ -82,36 +84,15 @@ namespace Assets.Narrative
 			_notificationsMonitor.HandleLevelPackage(_initialPackage);
 		}
 
-		// match progress data with static content
-		private void LoadMissions()
+		
+
+		public NarrativeProgressData GetData()
 		{
-			//var data = _serializer.DeserializeData();
-			//if(data.Name != _missionGroupSO.name)
-			//	throw new UnityException("Mission group progress data does not match Scriptable");
-
-			//_completedMissionNames.AddRange(data.CompletedMissions);
-			//foreach (var missionData in data.ActiveMissions)
-			//{
-			//	// create the mission from the SO
-			//	var content = _missionGroupSO.Missions.FirstOrDefault(i => i.name == missionData.Name);
-			//	if(content == null)
-			//		throw new UnityException("In-progress mission not found in scriptable");
-			//	var mission = BeginMission(content);
-			//	// progress it to where it was saved
-			//	mission.SetProgress(missionData);
-			//}
-		}
-
-		public MissionGroupProgressData GetData()
-		{
-			//var data = new MissionGroupProgressData
-			//{
-			//	Name = _missionGroupSO.name,
-			//	ActiveMissions = _activeMissions.Select(i => i.GetData()).ToList(),
-			//	CompletedMissions = _completedMissionNames.ToList()
-			//};
-
-			return new MissionGroupProgressData();
+			var data = new NarrativeProgressData
+			{
+				Missions = _missionsMonitor.GetData()
+			};
+			return data;
 		}
 	}
 }

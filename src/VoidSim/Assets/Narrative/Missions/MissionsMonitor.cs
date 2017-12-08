@@ -6,15 +6,25 @@ using Assets.Narrative.Goals;
 using Assets.Narrative.UI;
 using Assets.Scripts;
 using Assets.Scripts.Initialization;
+using Assets.Scripts.Serialization;
 using Assets.WorldMaterials.Products;
+using NUnit.Framework;
 using QGame;
 using UnityEngine;
 
 namespace Assets.Narrative.Missions
 {
+	// Saves only what is needed for mission group progress
+	public class MissionsProgressData
+	{
+		public List<MissionProgressData> ActiveMissions;
+		public List<string> CompletedMissions;
+		public List<string> UnstartedMissions;
+	}
+
 	// Object to manage the queue of missions available. 
 	// Initializes missions when they start, and also handles their completion
-	public class MissionsMonitor : QScript
+	public class MissionsMonitor : QScript, ISerializeData<MissionsProgressData>
 	{
 		private readonly List<IGoalTracker> _trackers = new List<IGoalTracker>();
 		[SerializeField] private List<Mission> _activeMissions;
@@ -28,11 +38,14 @@ namespace Assets.Narrative.Missions
 
 		public Action<Mission> OnMissionComplete;
 
-		public void Initialize(LevelPackage package)
+		public void Initialize(LevelPackage package, MissionsProgressData data)
 		{
 			_canvas = GameObject.Find("InfoCanvas");
 			FindMissionsInLevelPackage(package);
 			InitializeMissionsUI();
+
+			if(data != null)
+				SetFromData(data);
 
 			// trackers will be given goals as the missions are begun
 			InitializeCraftProductTracker();
@@ -54,8 +67,7 @@ namespace Assets.Narrative.Missions
 		{
 			foreach (var mission in conversationEntry.Node.Missions)
 			{
-				if(!_levelMissions.ContainsKey(mission.name))
-					_levelMissions.Add(mission.name, mission);
+				_levelMissions.Add(mission.name, mission);
 			}
 
 			foreach (var nodeTransition in conversationEntry.Transitions)
@@ -126,6 +138,18 @@ namespace Assets.Narrative.Missions
 		// create mission with its static content
 		private void BeginMission(MissionSO missionSO)
 		{
+			var mission = ActivateMission(missionSO);
+
+			Locator.MessageHub.QueueMessage(Mission.MessageName, 
+				new MissionUpdateMessageArgs
+				{
+					Mission = mission,
+					Status = MissionUpdateStatus.Begin
+				});
+		}
+
+		private Mission ActivateMission(MissionSO missionSO)
+		{
 			var mission = new Mission
 			{
 				Name = missionSO.name,
@@ -142,13 +166,7 @@ namespace Assets.Narrative.Missions
 			_activeMissions.Add(mission);
 			if (OnMissionBegin != null)
 				OnMissionBegin(mission);
-
-			Locator.MessageHub.QueueMessage(Mission.MessageName, 
-				new MissionUpdateMessageArgs
-				{
-					Mission = mission,
-					Status = MissionUpdateStatus.Begin
-				});
+			return mission;
 		}
 
 		private void InitializeCraftProductTracker()
@@ -181,6 +199,59 @@ namespace Assets.Narrative.Missions
 			var goals = mission.Goals.Where(i => i.Type == tracker.GoalType).ToList();
 			if (goals.Any())
 				goals.ForEach(tracker.AddGoal);
+		}
+
+		// match progress data with static content
+		private void SetFromData(MissionsProgressData data)
+		{
+			_completedMissionNames.AddRange(data.CompletedMissions);
+			
+			foreach (var missionData in data.ActiveMissions)
+			{
+				// create the mission from the SO
+				if(!_levelMissions.ContainsKey(missionData.Name))
+					throw new UnityException("In-progress mission not found in scriptable");
+				var content = _levelMissions[missionData.Name];
+				
+				var mission = ResumeMission(content);
+				// progress it to where it was saved
+				mission.SetProgress(missionData);
+			}
+
+			if (data.UnstartedMissions != null)
+			{
+				foreach (var missionName in data.UnstartedMissions)
+				{
+					if (!_levelMissions.ContainsKey(missionName))
+						throw new UnityException("Unstarted mission not found in scriptable");
+
+					_unstartedMissions.Add(_levelMissions[missionName]);
+				}
+			}
+
+		}
+
+		private Mission ResumeMission(MissionSO content)
+		{
+			var mission = ActivateMission(content);
+			Locator.MessageHub.QueueMessage(Mission.MessageName,
+				new MissionUpdateMessageArgs
+				{
+					Mission = mission,
+					Status = MissionUpdateStatus.Resume
+				});
+			return mission;
+		}
+
+		public MissionsProgressData GetData()
+		{
+			var data = new MissionsProgressData
+			{
+				ActiveMissions = _activeMissions.Select(i => i.GetData()).ToList(),
+				CompletedMissions = _completedMissionNames.ToList(),
+				UnstartedMissions = _unstartedMissions.Select(i => i.name).ToList()
+			};
+			return data;
 		}
 	}
 }

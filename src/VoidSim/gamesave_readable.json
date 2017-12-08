@@ -7,11 +7,7 @@
     },
     {
       "Name": "transit_entry",
-      "LastId": 1
-    },
-    {
-      "Name": "ship_bay",
-      "LastId": 1
+      "LastId": 4
     },
     {
       "Name": "product_factory",
@@ -19,111 +15,94 @@
     },
     {
       "Name": "crafting_container_unnamed_placeable",
-      "LastId": 1
+      "LastId": 14
     }
   ]
 },
   "ShipGenerator": {
   "Ships": [
     {
-      "ShipName": "ship_2",
-      "SOName": "sm_cargo_2",
-      "TimeRemaining": 6.221801
-    },
-    {
-      "ShipName": "ship_3",
-      "SOName": "sm_cargo_1",
-      "TimeRemaining": 28.2218018
-    },
-    {
       "ShipName": "ship_4",
       "SOName": "sm_cargo_1",
-      "TimeRemaining": 56.2218
+      "TimeRemaining": 16.9273453
     },
     {
       "ShipName": "ship_5",
       "SOName": "sm_cargo_3",
-      "TimeRemaining": 72.2218
+      "TimeRemaining": 32.9273453
     },
     {
       "ShipName": "ship_6",
       "SOName": "sm_cargo_1",
-      "TimeRemaining": 90.2218
+      "TimeRemaining": 50.9273453
     },
     {
       "ShipName": "ship_7",
       "SOName": "sm_cargo_2",
-      "TimeRemaining": 134.2218
+      "TimeRemaining": 94.9273453
     },
     {
       "ShipName": "ship_8",
       "SOName": "sm_cargo_1",
-      "TimeRemaining": 156.2218
+      "TimeRemaining": 116.927345
     }
   ],
   "LastId": 8
 },
   "TrafficControl": {
-  "Berths": [
-    {
-      "ShipSize": "Corvette",
-      "State": "Empty",
-      "IsInUse": false,
-      "Name": "ship_bay_1_1"
-    },
-    {
-      "ShipSize": "Corvette",
-      "State": "Empty",
-      "IsInUse": false,
-      "Name": "ship_bay_1_2"
-    },
-    {
-      "ShipSize": "Corvette",
-      "State": "Empty",
-      "IsInUse": false,
-      "Name": "ship_bay_1_3"
-    },
-    {
-      "ShipSize": "Corvette",
-      "State": "Empty",
-      "IsInUse": false,
-      "Name": "ship_bay_1_4"
-    },
-    {
-      "ShipSize": "Corvette",
-      "State": "Empty",
-      "IsInUse": false,
-      "Name": "ship_bay_1_5"
-    },
-    {
-      "ShipSize": "Corvette",
-      "State": "Empty",
-      "IsInUse": false,
-      "Name": "ship_bay_1_6"
-    },
-    {
-      "ShipSize": "Corvette",
-      "State": "Empty",
-      "IsInUse": false,
-      "Name": "ship_bay_1_7"
-    },
-    {
-      "ShipSize": "Corvette",
-      "State": "Empty",
-      "IsInUse": false,
-      "Name": "ship_bay_1_8"
-    }
-  ]
+  "Berths": []
 },
   "ShipMonitor": {
   "Ships": [
     {
       "Name": "ship_1",
       "SOName": "sm_cargo_1",
+      "Status": "Hold",
+      "Ticker": {
+        "TotalTicks": 14.4000006,
+        "ElapsedTicks": 2.54783
+      },
+      "Navigation": {
+        "Locations": [
+          "Void",
+          "Station"
+        ],
+        "LastDeparted": "Station",
+        "CurrentDestination": "Void"
+      },
+      "ManifestBook": {
+        "Manifests": []
+      },
+      "TrafficShipData": null
+    },
+    {
+      "Name": "ship_2",
+      "SOName": "sm_cargo_2",
+      "Status": "Hold",
+      "Ticker": {
+        "TotalTicks": 21.6,
+        "ElapsedTicks": 16.7577515
+      },
+      "Navigation": {
+        "Locations": [
+          "Station",
+          "Void"
+        ],
+        "LastDeparted": "Void",
+        "CurrentDestination": "Station"
+      },
+      "ManifestBook": {
+        "Manifests": []
+      },
+      "TrafficShipData": null
+    },
+    {
+      "Name": "ship_3",
+      "SOName": "sm_cargo_1",
       "Status": "Transit",
       "Ticker": {
         "TotalTicks": 14.4000006,
-        "ElapsedTicks": 12.7497845
+        "ElapsedTicks": 8.715845
       },
       "Navigation": {
         "Locations": [
@@ -167,7 +146,7 @@
     },
     {
       "ProductName": "Consumer Goods",
-      "Amount": 30,
+      "Amount": 56,
       "MaxAmount": 10000
     },
     {
@@ -177,7 +156,7 @@
     },
     {
       "ProductName": "Energy",
-      "Amount": 499,
+      "Amount": 494,
       "MaxAmount": 1000000
     },
     {
@@ -192,12 +171,12 @@
     },
     {
       "ProductName": "Food",
-      "Amount": 196,
+      "Amount": 185,
       "MaxAmount": 10000
     },
     {
       "ProductName": "Water",
-      "Amount": 196,
+      "Amount": 185,
       "MaxAmount": 10000
     }
   ],
@@ -207,12 +186,16 @@
       "PlaceableName": "Small Power Plant"
     },
     {
-      "Id": 2,
+      "Id": 3,
       "PlaceableName": "Small Factory"
     },
     {
       "Id": 4,
       "PlaceableName": "Small Housing"
+    },
+    {
+      "Id": 5,
+      "PlaceableName": "Small Bays"
     },
     {
       "Id": 6,
@@ -230,15 +213,11 @@
   "Capacity": 0,
   "InboundPopulation": -20,
   "EmployerControlData": {
-    "CurrentUnemployed": 12,
+    "CurrentUnemployed": 10,
     "Employers": [
       {
-        "EmployerName": "ship_bay_1",
-        "Count": 3
-      },
-      {
         "EmployerName": "product_factory_1",
-        "Count": 5
+        "Count": 10
       }
     ]
   }
@@ -302,37 +281,13 @@
       "Name": "product_factory_1",
       "IsCrafting": true,
       "CurrentlyCraftingRecipeId": 3,
-      "RemainingCraftTime": 0.876112938,
+      "RemainingCraftTime": 0.734368265,
       "IsBuying": true
     }
   ]
 },
   "Placeables": {
   "Placeables": [
-    {
-      "PlaceableName": "Small Bays",
-      "InstanceName": "ship_bay_1",
-      "HardPointName": "hardpoint_bot_2",
-      "Position": {
-        "X": 9.648462,
-        "Y": -17.2960262,
-        "Z": 1.0
-      },
-      "Nodes": [
-        {
-          "NodeName": "ShipBay",
-          "InstanceName": "ship_bay_1"
-        },
-        {
-          "NodeName": "efficency",
-          "InstanceName": "ship_bay_1"
-        },
-        {
-          "NodeName": "PopEmployer",
-          "InstanceName": "ship_bay_1"
-        }
-      ]
-    },
     {
       "PlaceableName": "Small Factory",
       "InstanceName": "product_factory_1",
@@ -364,43 +319,53 @@
   ]
 },
   "Narrative": {
-  "Name": "group_tutorial",
-  "ActiveMissions": [
-    {
-      "Name": "learn_crafting",
-      "Goals": [
-        {
-          "Type": 3,
-          "ProductName": "Small Factory",
-          "IsComplete": true,
-          "IsActive": true,
-          "NeedsPlacement": false,
-          "ElapsedAmount": 1
-        },
-        {
-          "Type": 0,
-          "ProductName": "Consumer Goods",
-          "IsComplete": false,
-          "IsActive": true,
-          "NeedsPlacement": false,
-          "ElapsedAmount": 0
-        }
-      ]
-    },
-    {
-      "Name": "craft_steel",
-      "Goals": [
-        {
-          "Type": 1,
-          "ProductName": "Steel",
-          "IsComplete": false,
-          "IsActive": true,
-          "NeedsPlacement": false,
-          "ElapsedAmount": 50
-        }
-      ]
-    }
-  ],
-  "CompletedMissions": []
+  "Missions": {
+    "ActiveMissions": [
+      {
+        "Name": "learn_crafting",
+        "Goals": [
+          {
+            "Type": 3,
+            "ProductName": "Small Factory",
+            "IsComplete": true,
+            "IsActive": true,
+            "NeedsPlacement": false,
+            "ElapsedAmount": 1
+          },
+          {
+            "Type": 0,
+            "ProductName": "Consumer Goods",
+            "IsComplete": false,
+            "IsActive": true,
+            "NeedsPlacement": false,
+            "ElapsedAmount": 26
+          }
+        ]
+      },
+      {
+        "Name": "learn_trading",
+        "Goals": [
+          {
+            "Type": 3,
+            "ProductName": "Small Bays",
+            "IsComplete": false,
+            "IsActive": true,
+            "NeedsPlacement": true,
+            "ElapsedAmount": 0
+          },
+          {
+            "Type": 2,
+            "ProductName": "Consumer Goods",
+            "IsComplete": false,
+            "IsActive": true,
+            "NeedsPlacement": false,
+            "ElapsedAmount": 0
+          }
+        ]
+      }
+    ],
+    "CompletedMissions": [],
+    "UnstartedMissions": []
+  }
 }
 }
