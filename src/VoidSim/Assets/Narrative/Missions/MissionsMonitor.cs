@@ -38,16 +38,13 @@ namespace Assets.Narrative.Missions
 
 		public Action<Mission> OnMissionComplete;
 
-		public void Initialize(LevelPackage package, MissionsProgressData data)
+		public void Initialize(LevelPackage package)
 		{
 			_canvas = GameObject.Find("InfoCanvas");
 			InitializeTrackers();
 
 			FindMissionsInLevelPackage(package);
 			InitializeMissionsUI();
-
-			if(data != null)
-				SetFromData(data);
 		}
 
 		private void InitializeTrackers()
@@ -207,7 +204,7 @@ namespace Assets.Narrative.Missions
 		}
 
 		// match progress data with static content
-		private void SetFromData(MissionsProgressData data)
+		public void SetFromData(MissionsProgressData data)
 		{
 			_completedMissionNames.AddRange(data.CompletedMissions);
 			

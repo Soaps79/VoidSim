@@ -1425,7 +1425,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _filename: gamesave
-  LoadOnStart: 0
+  LoadOnStart: 1
 --- !u!1 &416572257
 GameObject:
   m_ObjectHideFlags: 0
@@ -6344,7 +6344,7 @@ Prefab:
     - target: {fileID: 224924755370121188, guid: 01a26998e2e905e4f963ae8d6a8cdb86,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: -50.74
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 01a26998e2e905e4f963ae8d6a8cdb86, type: 2}

@@ -1,4 +1,5 @@
-﻿using Assets.Narrative.Conversations;
+﻿using System.Collections.Generic;
+using Assets.Narrative.Conversations;
 using Assets.Narrative.Missions;
 using Assets.Narrative.Notifications;
 using Assets.Narrative.UI;
@@ -12,6 +13,7 @@ namespace Assets.Narrative
 	public class NarrativeProgressData
 	{
 		public MissionsProgressData Missions;
+		public ConversationsProgressData Conversations;
 	}
 
 	/// <summary>
@@ -34,7 +36,7 @@ namespace Assets.Narrative
 		private GameObject _canvas;
 		private MissionsMonitor _missionsMonitor;
 		private ConversationsMonitor _conversationsMonitor;
-		private MissionsProgressData _deserializedMissionData;
+		private NarrativeProgressData _data;
 
 
 		void Start()
@@ -51,23 +53,21 @@ namespace Assets.Narrative
 
 			// if there is loading data, bring missions up to date
 			if (_serializer.HasDataFor(this, "Narrative"))
-				HandleDataLoad();
+				_data = _serializer.DeserializeData();
 
-			_missionsMonitor.Initialize(_initialPackage, _deserializedMissionData);
-
+			InitializeMissions();
 			InitializeConversations();
 			InitializeNotifications();
+			InitializeConversationsMonitor();
 		}
 
-		private void HandleDataLoad()
+		private void InitializeMissions()
 		{
-			var data = _serializer.DeserializeData();
-			if (data != null)
-			{
-				_deserializedMissionData = data.Missions;
-			}
+			_missionsMonitor.Initialize(_initialPackage);
+			if(_data != null)
+				_missionsMonitor.SetFromData(_data.Missions);
 		}
-
+		
 		private void InitializeConversations()
 		{
 			_conversationViewModel = Instantiate(_conversationViewModelPrefab, _canvas.transform, false);
@@ -75,22 +75,30 @@ namespace Assets.Narrative
 			_conversationViewModel.gameObject.SetActive(false);
 		}
 
+		private void InitializeConversationsMonitor()
+		{
+			// initialize the conversation monitor
+			// it needs convo data to start, but missions data when handling the package
+			// this could probably be refactored
+			if (_data != null)
+				_conversationsMonitor.SetFromData(_data.Conversations);
+			_conversationsMonitor.HandleLevelPackage(
+				_initialPackage, _data != null ? _data.Missions.CompletedMissions : new List<string>());
+		}
+
 		private void InitializeNotifications()
 		{
 			_notificationsViewModel = Instantiate(_notificationPrefab, _canvas.transform, false);
 			_notificationsViewModel.Initialize(_conversationViewModel);
-			
 			_conversationsMonitor.InitializeUi(_notificationsViewModel);
-			_conversationsMonitor.HandleLevelPackage(_initialPackage);
 		}
-
-		
 
 		public NarrativeProgressData GetData()
 		{
 			var data = new NarrativeProgressData
 			{
-				Missions = _missionsMonitor.GetData()
+				Missions = _missionsMonitor.GetData(),
+				Conversations = _conversationsMonitor.GetData()
 			};
 			return data;
 		}
