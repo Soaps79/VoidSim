@@ -10,7 +10,7 @@ using UnityEngine;
 namespace Assets.Narrative.Notifications
 {
 	[RequireComponent(typeof(MissionsMonitor))]
-	public class NotificationsMonitor : QScript
+	public class ConversationsMonitor : QScript
 	{
 		private class MissionStartTriggers
 		{
@@ -21,20 +21,20 @@ namespace Assets.Narrative.Notifications
 		private readonly List<MissionStartTriggers> _unstartedMissionTriggers = new List<MissionStartTriggers>();
 		private NotificationListViewModel _viewModel;
 
-		public void Initialize(NotificationListViewModel notificationsViewModel)
+		public void InitializeUi(NotificationListViewModel notificationsViewModel)
 		{
 			_viewModel = notificationsViewModel;
 			var missions = GetComponent<MissionsMonitor>();
 			missions.OnMissionComplete += CheckTriggersOnMissionComplete;
 		}
 
-		private void CheckTriggersOnMissionComplete(Mission obj)
+		private void CheckTriggersOnMissionComplete(Mission mission)
 		{
 			// tell all triggers the mission has completed
 			foreach (var missionTrigger in _unstartedMissionTriggers)
 			{
-				if (missionTrigger.MissionNames.ContainsKey(obj.Name))
-					missionTrigger.MissionNames[obj.Name] = true;
+				if (missionTrigger.MissionNames.ContainsKey(mission.Name))
+					missionTrigger.MissionNames[mission.Name] = true;
 			}
 
 			// if it finishing completed the trigger, start it

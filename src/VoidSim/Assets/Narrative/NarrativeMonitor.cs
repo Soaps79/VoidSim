@@ -33,7 +33,7 @@ namespace Assets.Narrative
 
 		private GameObject _canvas;
 		private MissionsMonitor _missionsMonitor;
-		private NotificationsMonitor _notificationsMonitor;
+		private ConversationsMonitor _conversationsMonitor;
 		private MissionsProgressData _deserializedMissionData;
 
 
@@ -42,7 +42,7 @@ namespace Assets.Narrative
 			// delay to let the game objects get set up
 			OnNextUpdate += Initialize;
 			_missionsMonitor = gameObject.GetComponent<MissionsMonitor>();
-			_notificationsMonitor = gameObject.GetComponent<NotificationsMonitor>();
+			_conversationsMonitor = gameObject.GetComponent<ConversationsMonitor>();
 		}
 
 		private void Initialize(float obj)
@@ -80,8 +80,8 @@ namespace Assets.Narrative
 			_notificationsViewModel = Instantiate(_notificationPrefab, _canvas.transform, false);
 			_notificationsViewModel.Initialize(_conversationViewModel);
 			
-			_notificationsMonitor.Initialize(_notificationsViewModel);
-			_notificationsMonitor.HandleLevelPackage(_initialPackage);
+			_conversationsMonitor.InitializeUi(_notificationsViewModel);
+			_conversationsMonitor.HandleLevelPackage(_initialPackage);
 		}
 
 		

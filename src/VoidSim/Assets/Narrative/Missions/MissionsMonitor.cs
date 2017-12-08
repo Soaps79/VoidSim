@@ -41,12 +41,17 @@ namespace Assets.Narrative.Missions
 		public void Initialize(LevelPackage package, MissionsProgressData data)
 		{
 			_canvas = GameObject.Find("InfoCanvas");
+			InitializeTrackers();
+
 			FindMissionsInLevelPackage(package);
 			InitializeMissionsUI();
 
 			if(data != null)
 				SetFromData(data);
+		}
 
+		private void InitializeTrackers()
+		{
 			// trackers will be given goals as the missions are begun
 			InitializeCraftProductTracker();
 			InitializeAccumulateProductTracker();
