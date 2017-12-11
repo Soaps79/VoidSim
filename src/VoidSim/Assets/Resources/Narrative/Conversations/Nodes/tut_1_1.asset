@@ -15,4 +15,4 @@ MonoBehaviour:
   Text: "I love watching someone walk into their first day on THIS job. People spend
     their entire lives learning what it takes to run a station! So you can imagine
     why YOU, stepping in straight out of school would require an advisor of my caliber.\r"
-  Missions: {fileID: 0}
+  Missions: []
