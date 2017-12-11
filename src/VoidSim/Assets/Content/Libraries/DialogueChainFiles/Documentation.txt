@@ -1,0 +1,791 @@
+
+Contents:
+-Classes
+	0) ChainAdditions - added in v1.1
+		i) Variables
+			a) dialogueChain
+			b) interactable
+			c) oneShot
+		ii) Methods
+			a) ChainMessage
+			b) RunChain
+			c) OnChainEnd
+	I) ChainAudioController
+		i) Methods
+			a) AddTempSource
+			b) CrossFade	
+	II) ChainEvent
+		i) Variables
+			a) audio
+			b) audioVolume
+			c) cEventType
+			d) chainIntAdjustments
+			e) chainIntChecks
+			f) dialogue
+			g) dialogueContainer
+			h) dialogueDelay
+			i) dialogueFadeTime
+			j) eventID
+			k) experienceGiven
+			l) fadeTime
+			m) flipImage
+			n) inputButtons
+			o) itemChecks
+			p) itemChecksString
+			q) itemsGiven
+			r) itemsGivenString
+			s) itemsTaken
+			t) itemsTakenString
+			u) leftSide
+			v) loop
+			w) nextEventIDs
+			x) noSpeaker
+			y) originalFadeTime
+			z) overlay
+			aa) playerImageIndex
+			ab) playOriginalAfter
+			ac) previousEventIDs
+			ad) rank
+			ae) showImage
+			af) speaker
+			ag) speakerImage
+			ah) subDialogue
+			ai) textDelay
+			aj) triggerBools
+			ak) triggerChecks
+			al) triggerCheckBools
+			am) triggers
+			an) useCustomPlayerImage
+			ao) secondaryInputButtons - v1.1
+			ap) messageFloat, messageString, messageBool - v1.1
+	III) ChainTrigger
+		i) Variables
+			a) triggered
+	IV) Dialogue
+		i) Methods
+			a) DialogueSyntaxFix
+	V) DialogueChain
+		i) Variables
+			a) beforeSubDialogue
+			b) chainEvents
+			c) currentEvent
+			d) defaultBoxImage
+			e) defaultContainerType
+			f) defaultShowImages
+			g) defaultShowNames		
+			h) defaultSpeaker
+			i) defaultSprite
+			j) defaultTextDelay
+			k) nodeIDCount
+			l) haltMovement
+			m) hasEnded
+			n) isSubDialogueChain
+			o) paused
+			p) speakers
+			q) startEvent
+			r) waitForConfirm
+			s) additions - v1.1
+		ii) Methods
+			a) ChainEnded	
+			b) GetNextEvent
+			c) GetNextEventFromInput		
+			d) RunEvent
+			e) StartChain
+	VI) DialogueChainPreferences
+		i) Variables
+			a) defaultContainerType
+			b) defaultShowSpeakerImage
+			c) defaultShowSpeakerNameBox
+			d) defaultSpeakerList
+			e) inputsToAdvanceDialogue
+			f) inputsToAdvanceDialogueQuickly
+			g) itemsAreScriptableObjects
+			h) triggerAssetPathway
+			i) maxCharCount - v1.1
+			j) experienceString - v1.1
+			k) characterBeforeInputText - v1.1
+		ii) Methods
+			a) AddToInventory
+			b) AddToPlayerExperience
+			c) GetChainInt
+			d) GetHaltMovement
+			e) GetPlayerName
+			f) InventoryContains
+			g) InventoryContainsString
+			h) IsPlayerGenderMale
+			i) RemoveFromInventory
+			j) SetChainInt
+			k) SetHaltMovement	
+	VII) DialogueController
+		i) Variables
+			a) boxImages
+			b) chainDataReset
+			c) containers
+			d) currentDialogueChain
+			e) dialogueCanvas
+			f) finishWriting
+			g) isFading
+			h) isRunning
+			i) isWaiting
+			j) isWriting
+			k) speakerBoxImages
+			l) tempTextDelay
+		ii) Methods
+			a) AdvanceButtonPressed
+			b) CloseDialogue
+			c) FinishTextButtonPressed
+			d) RunNextEventAfterUserConfirms
+			e) ShowDialogue
+	VIII) Item
+	IX) OneDialogueBox
+	X) SaveChainData
+		i) Methods
+			a) Load
+			b) Save
+	XI) StartChainOnInteraction
+		i) Variables
+			a) dialogueChain
+			b) additions - v1.1
+		ii) Methods
+			a) CheckForPress
+	
+- Enums
+	I) BoxImage
+	II) ChainEventType
+	III) ChainIntType	
+	IV) ContainerType
+	V) DialogueContainer
+
+
+
+
+
+
+
+
+
+- Classes
+	0) ChainAdditions
+
+		i) Variables
+			
+			a) dialogueChain
+
+				DialogueChain -	This it the dialogue chain that will run when calling RunChain method. It will be overridden if using StartChainOnInteraction.
+
+			b) interactable
+				
+				bool - The dialogue chain will not run if this is not set to interactable.
+
+			c) oneShot
+
+				bool - If this is set to true, then when the dialogue chain ends, it will set interactable to false and the chain will no longer be able to start until interactable is true again.
+
+		ii) Methods
+
+			a) virtual ChainMessage(float messageFloat) or (string messageString) or (bool messageBool)
+
+				Use any of these three methods with a Send Message Node. The node will send the ChainAdditions script a float, string, and/or a bool, and you can make new classes that inherrit from this class
+				to use those variables in your own methods.
+
+			b) RunChain()
+				
+				Starts the dialogue chain assigned to the variable only if interactable is true.
+
+			c) virtual OnChainEnd()
+
+				This method is called when a dialogue chain ends.
+			
+
+	I) ChainAudioController
+
+		i) Methods
+			
+			a) AddTempSource(AudioClip clip, float fadeTime, float volume)
+				
+				This method will add a temporary audio source with the audioclip clip to the gameObject the script is attached to. It will fade into it using fadeTime up to a maximum volume of volume.
+				The source will be destroyed after the clip has finished playing.
+
+			b) CrossFade(AudioClip clip, float fadeTime, bool loop, bool playOriginalAfter, float originalClipFadeTime, float volume)	
+
+				This method will add a new audio source to the gameObject the script is attached to. It will use fadeTime to both fade out the original audio source volume and fade in the new audio source
+				with the audioclip clip. The new clip will be faded up to a maximum volume of volume. The new clip's loop will be set to the bool loop. If playOriginalAfter is true, then when the new clip has
+				finished, the original clip	will fade in to its original volume over a time of originalFadeTime seconds at the same point in the clip at which it left off.
+
+	II) ChainEvent
+
+		i) Variables
+			
+			a) audio - Audio Nodes
+				
+				AudioClip - the clip the event will load to AudioController.
+			
+			b) audioVolume - Audio Nodes
+				
+				float - the volume of the newly loaded audio clip.
+			
+			c) cEventType - All Nodes
+			
+				ChainEventType - The type of node this event is.
+
+			d) chainIntAdjustments - Integer Adjustment Nodes
+
+				List<IntAdjustment> - Each IntAdjustment contains a ChainIntType and an int for a value to be adjusted.
+
+			e) chainIntChecks - Check Nodes
+			
+				List<IntCheck> - Each IntCheck contains a ChainIntType, a bool for below or above, and an int for a value to be checked.
+			
+			f) dialogue - Dialogue and User Input Nodes
+
+				string - the text you want on the dialogue box.			
+			
+			g) dialogueContainer - Dialogue and User Input Nodes
+
+				ContainerType - The container you want to use to show the dialogue, speaker name, and avatar.			
+
+			h) dialogueFadeTime - Dialogue and User Input Nodes
+
+				float - The amount of time in seconds taken to fade the dialogue box onto the screen.
+
+			i) dialogueWaitTime - Dialogue and User Input Nodes
+
+				float - The amount of time in seconds that the dialogue will wait before appearing on screen.
+
+			j) eventID - All Nodes
+
+				The ID for this event. Used to reference nodes to connect them to each other. Can be used for debugging purposes.
+			
+			k) experienceGiven - Item/Experience Node
+
+				int - the amount of experience added to your player's experience.			
+			
+			l) fadeTime - Audio Node
+			
+				float - Time in seconds to crossfade the old audio source with the new clip. Only used if overlay is set to false.
+			
+			m) flipImage - Dialogue and User Input Nodes
+
+				bool - flips the avatar image for the speaker in dialogue.			
+			
+			n) inputButtons - User Input Nodes
+			
+				List<DialogueEventInputButton> - Each DialogueEventInputButton contains a string for the button's text, and a List<int> which holds all the eventIDs of the nodes this button is attached to.
+			
+			o) itemChecks - Check Nodes
+			
+				List<Item> - The node will check to see if all of these items exist in the player's inventory. (For projects that use scriptable objects for items).
+			
+			p) itemChecksString - Check Nodes
+			
+				List<string> - The node will check to see if all of these items exist in the player's inventory. (For non-scriptable object items).
+			
+			q) itemsGiven - Item/Experience Nodes
+			
+				List<Item> - The node will add these items to the player's inventory. (For projects that use scriptable objects for items).
+		
+			r) itemsGivenString - Item/Experience Nodes
+			
+				List<string> - The node will add these items to the player's inventory. (For non-scriptable object items).
+
+			s) itemsTaken - Item/Experience Nodes
+			
+				List<Item> - The node will remove these items from the player's inventory. (For projects that use scriptable objects for items).
+							
+			t) itemsTakenString - Item/Experience Nodes
+			
+				List<string> - The node will remove these items from the player's inventory. (For non-scriptable object items).
+
+			u) leftSide - Dialogue and User Input Nodes
+			
+				bool - if the avatar and boxes appear on the left or right side of the screen for this event.
+			
+			v) loop - Audio Nodes
+			
+				bool - if the new clip will loop
+
+			w) nextEventIDs - All Nodes except User Input Nodes
+			
+				List<int> - Each node has their own list which contains all eventIDs for the possible next events.
+			
+			x) noSpeaker - Dialogue and User Input Nodes
+			
+				bool - If the dialogue controller should show the speaker's name box with your dialogue.
+
+			y) originalFadeTime - Audio Nodes
+
+				float - If you're playing the original audio clip after the new one, this is the fade time for the original audio clip.
+			
+			z) overlay - Audio Nodes
+			
+				bool - If you want the new audio clip to be played over the existing audio, or if you want the existing audio to stop.
+
+			aa) playerImageIndex - Dialogue and User Input Nodes
+
+				int - This is the integer used to refer to your own list or array of player avatars. Setup your list, and set useCustomPlayerImage to true to pull the avatar from this variable when displaying dialogue.
+			
+			ab) playOriginalAfter - Audio Node
+			
+				bool - If the new clip does not loop or overlay, you can set this bool to decide if the original clip continues playing when this clip has finished. This is used for sound effects that you want
+				your music to stop during, but then continue after.
+
+			ac) previousEventIDs - All Nodes
+
+				List<int> - Each node has their own list which contains all eventIDs that could come directly before it.
+			
+			ad) rank - All Nodes
+			
+				int - If a node exists in another node's nextEventIDs list, and that list contains more than one node, then each node's rank will be used to determine the order in which the dialogue chain tries to run each
+				event.
+			
+			ae) showImage - Dialogue and User Input Nodes
+			
+				bool - Whether or not to display the speaker's avatar image with your dialogue.
+
+			af) speaker - Dialogue and User Input Nodes
+			
+				string - The speaker's name.
+			
+			ag) speakerImage - Dialogue and User Input Nodes
+
+				Sprite - The speaker's avatar image.
+			
+			ah) subDialogue - Sub Dialogue Nodes
+			
+				DialogueChain - When the dialogue chain reaches this event, it will pause itself and set this dialogue chain to run. When the sub dialogue chain has ended, the original will pick up where it left off.
+			
+			ai) textDelay - Dialgue and User Input Nodes
+
+				float - the amount of seconds waited to write each character to the dialogue boxes in this chain specifically.
+			
+			aj) triggerBools - Trigger Nodes
+			
+				List<bool> - A list containing whether each trigger will be set to true or false when the chain reaches this node. The index of this list corresponds to the triggers variable.
+			
+			ak) triggerChecks - Check Nodes
+			
+				List<ChainTrigger> - A list containing each trigger that will be checked when the chain attempts to access this check node. The index of this list corresponds to the triggerCheckbools variable.
+
+			al) triggerCheckBools - Check Nodes
+			
+				List<ChainTrigger> - A list containing the bools that each trigger must be set to in order for this check node to be accepted by the chain. The index of this list corresponds to the triggerChecks variable.
+
+			am) triggers - Trigger Nodes
+
+				List<ChainTrigger> - A list containing each trigger that will be changed when the chain reaches this node. The index of this list corresponds to the triggerBools variable.
+			
+			an) useCustomPlayerImage - Dialogue and User Input Nodes
+
+				bool - This decides if you use a specific sprite for the avatar image of this event, or if you use an integer to refer to the index of a list you specified to hold Sprite variables.
+
+			ao) secondaryInputButtons - v1.1
+
+				List<DialogueEventInputButton> - Each DialogueEventInputButton contains a string for the button's text, and a List<int> which holds all the eventIDs of the nodes this button is attached to.
+				This list is associated with secondary input nodes.
+			
+			ap) messageFloat, messageString, messageBool - v1.1
+
+				float/string/bool - These are the variables sent to the ChainAdditions attached to the chain.
+	
+	III) ChainTrigger - Scriptable Object
+
+		i) Variables
+			
+			a) triggered
+
+				bool - Whether or not this Chain Trigger has been set to true or false.
+
+	IV) Dialogue
+		
+		i) Methods
+
+			a) DialogueSyntaxFix(string text)
+
+				This method is called before writing dialogue to the dialogue boxes. It is used to replace parts of the string that were written in the dialogue and user input nodes. You should customize this
+				to be helpful for your project. Currently it looks through the string passed to it and replaces any pre-determined characters with new ones.
+				Example: Writing in your dialogue node: "/playerName is a great /guy", DialogueSyntaxFix will replace the "/playerName" with your player's name, and "/guy" with the appropriate word for the player's gender.
+				Then it will return the new string.
+
+	V) DialogueChain - Scriptable Object
+	
+		i) Variables
+			
+			a) beforeSubDialogue
+
+				DialogueChain - The chain to return to at the end of this chain, if subDialogueChain is true.
+
+			b) chainEvents
+
+				List<ChainEvent> - All of the Chain Events in this chain.
+
+			c) currentEvent
+
+				ChainEvent - The current event (node) that is running on the chain.
+
+			d) defaultBoxImage
+
+				BoxImage - The default box image that every dialogue or user input node will start with when you create it. Changing this does not change already created nodes.
+
+			e) defaultContainerType
+
+				ContainerType - The default container that every dialogue node will start with when you create it. Changing this does not change already created nodes.
+
+			f) defaultShowImages
+
+				bool - Whether or not newly created Dialogue and User Input nodes will start off with an avatar.
+
+			g) defaultShowNames
+			
+				bool - Whether or not newly created Dialogue and User Input nodes will start off showing a speaker name.
+
+			h) defaultSpeaker
+
+				string - The default name that Dialogue and User Input Nodes will start with when they are created.
+
+			i) defaultSprite
+
+				Sprite - The default avatar that Dialogue and User Input Nodes will start with when they are created.
+
+			j) defaultTextDelay
+
+				float - The default text delay that Dialogue and User Input Nodes will start with when they are created.
+
+			k) nodeIDCount
+
+				int - Every created node gets a unique eventID within each chain. This is the count that keeps track of that starting with zero and adding one for every node created.
+
+			l) haltMovement
+
+				bool - When a chain is started, DialogueChainPreferences.SetHaltMovement(haltMovement) will be called. If customized properly, this will set your project's haltMovement.
+
+			m) hasEnded
+
+				bool - When a chain has started, hasEnded is set to false. When it has ended, it is set to true. Before running each event, the chain will check to see if hasEnded is true.
+				If it is, it will call ChainEnded() instead of running the event. This can be set to true if you wish to prematurely end a dialogue chain.
+
+			n) isSubDialogueChain
+
+				bool - If another chain calls this chain using a sub dialogue node, this will be set to true and beforeSubDialogue will be set to the original chain. At the end of a chain, if
+				this bool is true, it will call beforeSubDialogue.StartChain().
+
+			o) paused
+
+				bool - A pause event or a sub dialogue event will set this value to true. If StartChain() is called while paused is true, it will not start with the starting event, but continue
+				from the last current event on which it left off. paused is set to false in the Awake() function. If you want paused to retain its value when you enter playmode, you should delete the
+				line that sets it to false in the Awake() function. Paused is also saved in the SaveChainData class. It saves the value of paused for each chain as well
+				as the current event.
+
+			p) speakers
+
+				List<string> - The list of speakers that you can choose from in each Dialogue or User Input Node in this chain.
+
+			q) startEvent
+
+				ChainEvent - The ChainEvent that is the starting node for the chain.
+
+			r) waitForConfirm
+
+				private bool - This bool is set to true on nodes that require the user to push the advance dialogue button before going to the next event. Currently this only for dialogue nodes.
+				Note: not used with User Input nodes.
+
+			a) additions - v1.1
+
+				ChainAddition - This variable will be assigned when the class ChainAdditions is used to run the chain.
+
+		ii) Methods
+		
+			a) ChainEnded() - private
+				
+				Though this method is private, it's good to know it exists because this is the method called at the end of the chain. If there's something in your project that should happen at the end
+				of every dialogue chain, you can add your own code to this method.
+
+			b) GetNextEvent()
+
+				If the current event is not a User Input Event, this method is called immediately after it has been completed. It will look in order of rank at each of the nodes in the current event's nextEventIDs list. 
+				If the node it looks at is not a check node, or if that check node passes its requirements, the ChainEvent variable nextEvent is set to that node. If the current event does not need to wait for input 
+				(waitForConfirm == false) it will call RunEvent(nextEvent). Otherwise it starts the coroutine DialogueController.RunNextEventAfterUserConfirms(this, nextEvent) which will run the next event after
+				the advance input button has been pressed.
+				
+			c) GetNextEventFromInput()
+			
+				This method is called when a user chooses an input from the User Input event. Each input has a list of type DialogueEventInputButton which contains a list of integers called nextEventIDsForInput.
+				Instead of using the current event's nextEventIDs list to get the next event like GetNextEvent, this method uses the input button's nextEventIDsForInput list to get the next event in the same way.
+				It will look in order of rank at each of the nodes in the list. If it is not a check node, or if that check node passes its requirements, that event is run and becomes the current event.
+
+			d) RunEvent(ChainEvent cEvent)
+
+				This method is called after one of the GetNextEvent methods has found the next event. It will call the private method associated with cEvent.cEventType. If you want to customize Dialogue Chains
+				to do something specific when a certain node is reached, find the private method that is called for that ChainEventType. Add your code to that private method.
+
+			e) StartChain()
+		 
+				This method should be called to initiate the chain. If the chain is not currently paused, it will call RunEvent(startEvent) which will run the first event. If the chain is paused, it will continue
+				from after the pause node.
+
+	VI) DialogueChainPreferences
+		
+		i) Variables
+
+			a) defaultContainerType
+				
+				ContainerType - when a new dialogue chain is created its default container type will equal this. The chain's default container type is not linked to this,
+				but only starts equal to it.
+
+			b) defaultShowSpeakerImage
+
+				bool - when a new dialogue chain is created its default bool for showing an avatar will equal this. The bool is not linked to this, but only starts equal to it.
+
+			c) defaultShowSpeakerNameBox
+
+				bool - when a new dialogue chain is created its default bool for showing the speaker's name will equal this. The bool is not linked to this, but only starts equal to it.
+
+			
+			d) defaultSpeakerList
+
+				string[] - an array that holds all speakers you wish to consistenly be in your list of speakers. A new dialogue chain will only start with this list of speakers.
+			
+			e) inputsToAdvanceDialogue
+
+				string[] - an array that contains all the strings for any of Unity's "Edit/Project Settings/Input" commands that will advance dialogue once the text is completed.
+
+			f) inputsToAdvanceDialogueQuickly
+
+				string[] - an array that contains all the strings for any of Unity's "Edit/Project Settings/Input" commands that will complete the text filling a dialogue box.
+
+			g) itemsAreScriptableObjects
+
+				bool - Dialogue Chains uses scriptable objects for Items by default. If your project doesn't use scriptable objects for items, change itemsAreScriptableObjects to false.
+					Note: If your items are scriptable objects they need to inherit from, or have their base class named, "Item".
+
+			h) triggerAssetPathway
+
+				string - the pathway to your chain triggers in your assets folder. This pathway should not include "Assets/Resources/" as that is assumed.
+
+			i) maxCharCount - v1.1
+
+				int - maximum character count for dialogue boxes. Once this limit is reached, the dialogue box will turn red as a warning, but will still function normally.
+
+			j) experienceString - v1.1
+
+				string - the string used to display the value you change it item nodes. The default is experience, but you can name it what suits your project.
+
+			k) characterBeforeInputText - v1.1
+
+				string[] - an array of strings that are written before the input box options in dialogue. Each string will be assigned to an input box option and when the options run out, it will
+				continue to only use the first index of the array. Default is numbering your input box options 1 through 9.
+
+		ii) Methods
+
+			a) AddToInventory(Item item)
+			   AddToInventory(string itemString)
+
+				If the inventory Dictionary<Item, int> already contains the key "item", this adds one to the value. Otherwise it creates the key with a value of one.
+				If the inventoryNotScriptable Dictionary<string, int> already contains the key "itemString", this adds one to the value. Otherwise it creates the key with a value of one.
+
+			b) AddToPlayerExperience(int amount)
+				
+				Adds "amount" to the variable that holds the player's experience.
+
+			c) GetChainInt(ChainIntType chainInt)
+
+				int - Returns the integer value of the variable associated with "chainInt"
+
+			d) GetHaltMovement()
+				
+				bool - Returns the value of the bool that, if true, means the player's movement is halted
+			
+			e) GetPlayerName()
+				
+				string - Returns the value of the variable that stores the player's name
+
+			f) InventoryContains(Item item)
+
+				bool - returns true if the inventory Dictionary<Item, int> contains the key "item"
+
+			g) InventoryContainsString(string itemString)
+
+				bool - returns true if the inventoryNotScriptable Dictionary<string, int> contains the key "itemString"
+
+			h) IsPlayerGenderMale()
+
+				bool - Returns true if the player's gender is male, false if female.
+
+			i) RemoveFromInventory(Item item)
+			   RemoveFromInventory(string itemString)
+
+				If the inventory Dictionary<Item, int> already contains the key "item", this will remove one from the value and delete the key if there is none left.
+				If the inventoryNotScriptable Dictionary<string, int> already contains the key "itemString", this will remove one from the value and delete the key if there is none left.
+
+			j) SetChainInt(ChainIntType chainInt, int amount)
+
+				Adds "amount" to the variable that is associated with "chainInt".
+
+			k) SetHaltMovement(bool setTo)
+				
+				Sets the bool that halts player's movement.
+
+	VII) DialogueController
+
+		i) Variables
+
+			a) boxImages
+
+				List<Sprite> - List of dialogue box sprites. Each BoxImage enumerator is assigned a sprite for the dialogue box in the inspector which creates this list.
+			
+			b) chainDataReset
+
+				bool - Chains and the triggers used with them are scriptable objects. Since changes to scriptable objects in unity remain after exiting playmode,
+				I've added an option to save all triggers and paused states at playmode start, and load the initial states when leaving playmode. Set this option to false
+				to keep your playmode changes to the triggers and paused state after exiting playmode. See the class "SaveChainData" for information on how chain data is saved.
+				Each Chain sets its paused value to false in the OnEnable() function. If you want changes to paused states to remain after exiting playmode, you'll have to
+				set this bool to false, AND delete the line that sets paused = false in the DialogueChain.OnEnable() function.
+			
+			c) containers
+
+				List<GameObject> - Each ContainerType enumerator is assigned a prefab in the inspector which creates this list. The prefabs act as the container in the enum
+				DialogueContainer. The container should have a child to represent each varaible in the enum DialogueContainer.
+			
+			d) currentDialogueChain
+
+				DialogueChain - the current chain being run with DialogueController.
+
+			e) dialogueCanvas
+
+				Canvas - The canvas is instantiated everytime you show dialogue, the Dialogue UI elements are set as children to this canvas when they are loaded. Set a prefab
+				to this in the inspector.
+				
+			f) finishWriting
+				
+				bool - Set to true while (isWriting == true) to immediately write all dialogue text to the dialogue box.
+
+			g) isFading
+
+				bool - Should be true if the dialogue controller is fading dialogue onto the screen. It should change to false when the dialogue has stopped fading.
+
+			h) isRunning
+
+				bool - Should be true if the dialogue controller is running a dialogue chain. Should change to false when the chain has ended or paused.
+
+			i) isWaiting
+
+				bool - Should be true if the dialogue controller is waiting to put the dialogue onto the screen. The wait time is set in ChainEvent dialogueDelay.
+
+			j) isWriting
+
+				bool - Should be true if the text is still being written to the scree. Should change to false once the entire dialogue text appears in the dialogue box.
+
+			k) speakerBoxImages
+
+				List<Sprite> - List of speaker name box sprites. Each BoxImage enumerator is assigned a sprite for the speaker name box in the inspector which creates this list.
+
+			l) tempTextDelay
+				
+				float - The number of seconds to wait between each character while writing to the dialogue box.
+
+		ii) Methods
+
+			a) AdvanceButtonPressed()
+
+				string - Returns the string of the button pressed if the button corresponds to one of the strings in the array: inputsToAdvanceDialogue.
+
+			b) CloseDialogue()
+
+				Destroys the loaded DialogueCanvas and loaded container. Basically destroys All UI related to the dialogue. This is called after every ChainEvent that shows dialogue.
+
+			c) FinishTextButtonPressed()
+
+				string - Returns the string of the button pressed if the button corresponds to one of the strings in the array: inputsToAdvanceDialogueQuickly.
+			
+			d) RunNextEventAfterUserConfirms(DialogueChain chain, ChainEvent cEvent) - IEnumerator
+
+				This is called when the dialogue chain gets to a point that it has to wait for the user to advance. If isWriting == true, the user must push one of the inputs from the
+				string[] inputsToAdvanceDialogueQuickly. If the isWriting == false, the user must push one of the inputs from the string[] inputsToAdvanceDialogue to advance to the
+				next ChainEvent. To advance the dialogue controller calls chain.RunEvent(cEvent). This method is currently only called with dialogue, not user inputs or other nodes.
+				The inputs are specified in the DialogueChainPreferences.			
+			
+			e) ShowDialogue(ChainEvent cEvent)
+
+				This method is called with dialogue nodes and user input nodes. It is passed a ChainEvent which is what the nodes are. The ChainEvent has all of the dialogue
+				information, and this method writes it to the containers. If you want to make your own method for writing dialogue, delete this method and make your own
+				ShowDialogue(ChainEvent) method using any of the variables from ChainEvent that you'd need.
+
+
+	VIII) Item
+
+		This class has no variables or methods. Your items should inherit from a class that's called Item, or their base class should be called Item. The Item class is provided in this package, but it is empty.
+
+	IX) OneDialogueBox
+
+		- This class has variables that are identical to those in ChainEvent and DialogueChain classes. This class basically is making a new fake dialogue chain with one dialogue node in it. When you interact with
+		the object that has this class attached, it calls DialogueController.ShowDialogue() and passes the one dialogue event to it.
+
+	X) SaveChainData
+
+		i) Methods
+
+			a) Load(string fileName)
+
+				Loads the saved data from fileName to all the Chain Triggers and Chains. fileName should end in ".dat"
+
+			b) Save(string fileName)
+
+				Saves all the triggered states of each Chain Trigger and all of the paused states of each Chain to fileName. fileName should end in ".dat"
+				If DialogueController.triggerAssetsReset is true, then Save("tempChainData.dat") is called during DialogueController.Start() and Load("tempChainData.dat") is called during DialogueController.OnDisable().
+				This is done because scriptable objects retain any changes made during playmode, but the feature is often unwanted.
+
+	XI) StartChainOnInteraction
+		
+		i) Variables
+		
+			a) dialogueChain
+		
+				DialogueChain - The chain that you want to start on interaction with the object.
+
+		ii) Methods
+		
+			a) CheckForPress() - IEnumerator
+
+				This method is called when a game object with tag "Player" triggers the OnTriggerEnter or OnTriggerEnter2D methods of the gameobject this script is attached to. The couroutine is
+				stopped when the player triggers the OnTriggerExit or OnTriggerExit2D methods. The method waits for the Advance Dialogue button to be pressed which is set in the DialogueChainPreferences.
+				Once pushed, it calls dialogueChain.StartChain();
+
+				
+
+- Enums
+	
+	I) BoxImage
+
+		The names you give your box images that you can choose from when making dialogue. You set a sprite to a dialogue box and speaker name box
+		for each one on the dialogue controller. The index number is what's used in the chains, so if you swap the index number you'll change anything using that index number.
+		Stored in DialogueChainPreferences script.
+
+	II) ChainEventType
+
+		The types of different events/nodes you can have in a chain.
+		Stored in ChainEvent script.
+
+	III) ChainIntType
+
+		The names you give to each variable that you can either adjust or use as a requirement in your dialogue chains.
+		The index number is what's used in the chains, so if you swap the index number you'll change anything using that index number.
+		Stored in DialogueChainPreferences script. 
+	
+	IV) ContainerType
+		
+		The names you give to the containers you can choose from when making dialogue. You set a prefab equal to each one on the dialogue controller.
+		The index number is what's used in the chains, so if you swap the index number you'll change anything using that index number.
+		Stored in DialogueChainPreferences script. 
+		
+	V) DialogueContainer
+
+		Used to assign gameobjects that will be accessed often when showing dialogue. There are prefabs for this purpose.
+		The prefabs contain:
+			- A GameObject which is a parent to everything listed below. Referred to as a container.
+			- An Image for the speaker's avatar.
+			- A Panel with an image for the dialogue box with a Text as its child for the dialogue text.
+			- A Panel with an image for the speaker's name with an Text as its child for the speaker's name text. 
+			- A Panel for User Input buttons which load a prefab button when told to do so.
+		Stored in DialogueController script.
+
+		
+			

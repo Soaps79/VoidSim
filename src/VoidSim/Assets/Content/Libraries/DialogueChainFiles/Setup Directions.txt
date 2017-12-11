@@ -1,0 +1,218 @@
+Thank you for purchasing Dialogue Chains! There are tutorials online to get get you started and to get deeper into the customizations options.
+
+https://www.youtube.com/channel/UC90oJE2eLYLbt7znn6eyFVQ
+
+Contents:
+I) Getting Started
+	i) Folder Arrangement
+	ii) The Dialogue Controller
+	iii) Creating and Running a Dialogue Chain
+II) Using the Dialogue Chain Editor
+	i) Editing the Chain
+	ii) Regular Node Summary
+	iii) Check Node Summary
+	iv) Rank and Color
+III) Customization
+	i) Preferences
+	ii) Dialogue Parser
+	iii) Saving Data
+
+
+
+I) Getting Started:
+
+	i) Folder Arrangement
+
+		1) Place the "ChainResources" folder into your own "Resources" folder. If you don't have one, keep it in the Resources Folder it comes in, but move it to be a direct sub folder
+		of your assets folder, and ChainResources must be a direct sub folder to your Resources folder. Do not reorganize folders in the ChainResources folder.
+
+		2) Place the "ChainEditorScripts" folder into your own "Editor" folder. If you don't have one, keep it in the Editor folder it comes in, but move it to be a direct sub folder
+		of your assets folder.
+
+		3) Any folder not mentioned yet can be renamed. Anything in the DialogueChainFiles folder can be reorganized and moved to your liking,
+		though deleting anything could result in errors. You should have at least the following in your project assets:
+
+			>Assets (this folder not shown in your project window)
+				>>DialogueChainFiles
+				>>Editor
+					>>>ChainEditorScripts
+				>>Resources
+					>>>ChainResources
+
+	ii) The Dialogue Controller
+
+		1) One of the game objects in your scene must attach the script "DialogueController". I usually make an empty object and call it DialogueController.
+		It is a singleton, and should only have one instance at a time. Any new instance created will destroy itself if another already exists.
+
+		2) Once the script is attached to the object, make sure the variables are set:
+			
+			a) The Canvas Prefab is the canvas you want to use for the dialogue boxes.
+			The default is DialogueCanvas and it is found in ChainResources/Prefabs/UI/CanvasAndButton/DialogueCanvas
+			
+			b) Reset Triggers after Playmode - The triggers used are scriptable objects. Since changes to scriptable objects in unity remain after exiting playmode,
+			I've added an option to save all triggers at playmode start, and load their initial states when leaving playmode. Uncheck this option to keep your changes to
+			triggers during playmode.
+
+			c) Trigger Assets - This will list the state of all of the triggers you've created for your dialogue chains.
+
+			d) Containers - Dialogue Chains comes with prefabs that are used as dialogue boxes. They are in ChainResources/Prefabs/UI/Containers. Make sure each is attached
+			to the Dialogue Controller in the inspector under "Containers". You can duplicate and rename these if you want more options to chose from in your dialogues.
+			To add more options, see the customization section at the end of this file.
+
+			e) There are also generic box images that you should attach to the Dialogue Controller under the fold out "Box Images". You can create your own and add to 
+			your box image choices. See the customization section to do this.
+
+		3) Each container's size, font, position, and more are editable from the Dialgoue Controller by choosing which container you want to edit, and pressing the edit button.
+		The changes can be saved or deleted and any unsaved changes are automatically deleted once your inspector changes focus.
+
+	iii) Creating and Running a Dialogue Chain
+
+		1) Right click on your ChainResources/Chains folder in Unity, click Create, and choose Dialogue Chain from the top of the menu. Name it whatever you'd like.
+
+		2) ChainResources/Chains is the folder that should hold all of your dialogue chains. The reason it must remain here is because the built in saving function
+		uses this folder. If you are going write your own saving/loading methods you can put your created dialogue chains wherever you'd like.
+
+
+		Additional Information only important once you have completed your first dialogue chain:
+
+		3) There is a script that comes with this package called "StartChainOnInteraction" which will allow you to easily start dialouge chains in playmode. Attach it
+		to any gameobject you want to interact with. If a game object with tag "Player" has triggered the script's OnTriggerEnter() function and the player presses
+		the "Submit" button it will start the dialogue chain. The submit button can be customized, see the customization section.
+
+		4) You can make your own script to start your dialogue chains. Make a public variable of type DialogueChain, let's call it "myChain". Assign your newly created chain
+		to that variable in the inspector, and start it by calling myChain.StartChain(); Check to see if DialogueController.instance.isRunning == false to know when
+		the chain has completed or has been paused.
+
+
+
+II) Using the Dialogue Chain Editor:
+
+	i) Editing the Dialogue Chain
+
+		1) When you click on your newly created Chain, the inspector will have some variables:
+			
+			a) Halt Movement - If true, this will halt the player's movement while running this dialogue chain. See the customization section to set this variable.
+
+			b) Text Delay - This is the number of seconds waited before typing each character in a dialogue box. Set to zero if you want the text to immediately appear.
+
+			c) Defaults - These are all the values you wish a newly created dialogue box to have. For example, if this dialogue box is primarily going to have a speaker
+			of the name "Chuck", you'd put Chuck as the default speaker, as well as his avatar as the default sprite (if you are using avatars).
+
+		2) Click on the "Open Node Editor" button. In the new window:
+
+			a) Right click on empty space to create nodes. Left click the empty space and drag to move the screen. Nodes can be dragged individually.
+
+			b) Right click the nodes to choose from making a connection, destroying a connection, or destroying the node.
+
+			c) When making a connection, left click the second node to connect it to the first. The order you choose them matters as the flow of the chain will go
+			from the first node to the second. This can be seen as the connection will start on the right side of one node, and go to the left of the other.
+
+			d) When destroying a connection, left click on the second node to destroy the connection from the initial node you chose.
+			
+			e) When making or destroying a connection, left click on empty space to cancel the action.
+
+	ii) Regular Nodes Summary
+
+		1) Below is a list of regular nodes. They have no requirements and the chain will easily flow from one to the other.
+
+			a) Starting Node - This is where the chain will start every time it is run.
+
+			b) Dialogue - A normal dialogue box. Player must push the action button customized in the preferences section to proceed.
+
+			c) User Input - A dialogue box with options for the player to choose from. To add inputs, click the add input button, and to connect or delete connection
+			for those inputs click on the "+" or "-" buttons next to each one. Player must click on one of the buttons to proceed.
+
+			d) Trigger - When the chain gets to this node, it will set a trigger to either true or false, this can be used by other chains to decide the path to take.
+			You can create triggers by naming a new one and clicking the add new button.
+
+			e) Integer Adjustment - You can customize an enum to reflect the integers you wish to adjust or use as a requirement with Dialogue Chains.
+			(See the preferences section to find out how)
+
+			f) Pause Dialogue - Leaves the dialogue chain, when it's restarted it will continue from this point. Once the chain is finished, if restarted 
+			it will go back to the start.
+
+			g) Sub Dialogue - You can attach another dialogue chain here which will start immediately when this node is reached. Then the chain will
+			pick up from where it left off when the sub dialogue has ended.
+
+			h) Item-Experience - An easy way to give a player experience points or items. (This must be customized to fit with your project, see preferences to find out how)
+
+			i) Audio - Can play sound effects or change the music. Must add ChainAudioController script to your GameObject with an audio source.
+			ChainAudioController is a singleton and can only have one instance. I usually put it on the game object that has other controller scripts attached.
+
+			j) Secondary Input - v1.1 - Can add input buttons to a regular User Input Node based on trigger, item, or integer checks. Must be attached with secondary connections.
+			Use the plus and minus sign next to the input text to connect options.
+
+			k) Send Holder Message - v1.1 - Used to send a float, string, and/or bool to a ChainAdditions script associated with the dialogue chain. New scripts can be created and inherrit
+			from ChainAdditions to write custom methods.
+
+	iii) The Check Node
+
+		1) The check node is something that checks to see if a value is true before the chain decides to go down that path. On one node you can have multiple checks of up to
+		three different types.
+	
+			a) Trigger Check - Checks if a trigger is true or false
+			
+			b) Item Check - Checks if the inventory contains a specific item (To use items you must customize your project further. See elsewhere for a description)
+			
+			c) Integer Check - Checks if a specified variable is above or below a certain value (You must first customize your project further. See the preferences section.)
+
+		2) All checks must return true for the chain to go down that path.
+
+	iv) Rank and Colors
+
+		1) Dialogue Chains can branch into many paths. If one node branches to multiple nodes, or if one input on a user input node branches to multiple nodes,
+		the connected nodes will get a new variable called rank.
+
+		2) When the chain reaches this branch, it will look in ascending order to see if each node is acceptable. An acceptable node is any regular node, 
+		or any check node that passes. Once it finds an acceptable node, it will not look at higher ranked nodes, and continue down the path of the acceptable node.
+
+		3) Because of this, any node ranked higher than a regular node will never be reached since the chain will always choose the lowest ranked acceptable path
+		and regular nodes are always acceptable. Nodes in this situation will have a red line showing you that they can never be used.
+
+		4) Since it can be easy to forget to add a trigger to the trigger nodes, any trigger node added that has a null reference (no trigger attached)
+		will also have a red connection line.
+
+		4) When a node is only connected to check nodes, the connections will be yellow. This is a warning showing you that if these check nodes don't pass, the chain 
+		will end there.
+
+		5) Green lines are for nodes connecting to regular nodes. And Blue lines are for nodes connecting to check nodes.
+
+		6) Basically, you always want green or blue lines. Yellow lines are okay if you accept that the chain could stop there, and red lines mean something
+		is there that is pointless.
+
+
+
+III) Customizing to fit your project:
+
+	i) Preferences
+
+		1) Open the script "DialogueChainPreferences" and follow the commented code to customize dialogue chains to fit your project. In this script you can:
+
+			a) Set default variables such as showing an image in dialogue or showing the speaker's name. Once these are set, when new dialogue nodes are created they'll
+			start with these default values. The default values can be overriden by each dialogue chain which can have their own default values.
+	
+			b) Tell Dialogue Chains your own variables to use such as the player's name or dialogue avatar.
+
+			c) Give Dialogue Chains your own method for adding to your inventory or using your inventory as a requirement
+	
+			d) Customize an enum to reflect all the integer variables you want to change or use as a requirement.
+
+			d) Add to the list of dialogue containers or dialogue box images to choose from.
+
+			e) Give Dialogue Chains your variable to halt player movement so that dialogue chains can stop movement while reading. This is a bool chosen with each
+			dialogue chain,	but dialogue chains must be told where your actual haltMovement variable is.
+
+	ii) Dialogue Parser
+
+		1) Open the script "Dialogue" and add or change anything that would fit your project. This script contains a method that your dialogue chains use every time
+		they show dialogue.	This method will take your dialogue text as an argument, and return to the dialogue controller a new string.
+		Anything you want to be able to replace in dialogue based on a variable can be placed in this method.
+	
+			Example: - Your player has chosen the name "Jen" and the female gender. In a dialogue box you've typed:
+							"I don't think /playerName can kill that Ogre. /He's not /man enough."
+					 - In game, the player will see the dialogue:
+							"I don't think Jen can kill that Ogre. She's not woman enough."
+
+	iii) Saving Data
+
+		1) Chain Triggers and what node a chain has been paused on can be saved and loaded. Check out the SaveChainData script to see the code, or look in the Documents for more.
