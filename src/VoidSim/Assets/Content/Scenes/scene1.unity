@@ -709,7 +709,7 @@ Prefab:
     - target: {fileID: 224332157583850816, guid: dffcefe5fe2fb9c43a81ad2cab045037,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: -405.86584
+      value: -540.06104
       objectReference: {fileID: 0}
     - target: {fileID: 224332157583850816, guid: dffcefe5fe2fb9c43a81ad2cab045037,
         type: 2}
@@ -4581,6 +4581,70 @@ Transform:
   - {fileID: 929717289}
   m_Father: {fileID: 0}
   m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &916369621
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 916369623}
+  - component: {fileID: 916369622}
+  m_Layer: 0
+  m_Name: DialogueController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &916369622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 916369621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5442f09bd731e44886e22cae7547ee1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogueCanvas: {fileID: 223832190261396824, guid: 0c80d9f0589a0014cb760ce53a93e224,
+    type: 2}
+  containers:
+  - {fileID: 1768111171211514, guid: 7d67200e2f51c4446a93f626d1fb2972, type: 2}
+  - {fileID: 1768111171211514, guid: 2bd36082ea88c9e4cb25583593592592, type: 2}
+  - {fileID: 1768111171211514, guid: a148105d9ec10e345afd3b45416a585a, type: 2}
+  - {fileID: 1768111171211514, guid: 5862921baea91c24f959af0226e85c0b, type: 2}
+  - {fileID: 1768111171211514, guid: 3f70554cd4e66ee4a8e6453e46a20878, type: 2}
+  boxImages:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  speakerBoxImages:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  chainDataReset: 0
+  currentDialogueChain: {fileID: 0}
+  isRunning: 0
+  isWriting: 0
+  isFading: 0
+  isWaiting: 0
+  finishWriting: 0
+  tempTextDelay: 0
+--- !u!4 &916369623
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 916369621}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 968.8345, y: 218.83716, z: -0.037421256}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &920344901
 GameObject:
@@ -8893,6 +8957,7 @@ MonoBehaviour:
     type: 2}
   _notificationPrefab: {fileID: 114608451140577576, guid: 1fc7c3453a85b9d41b9b164fa3294e1e,
     type: 2}
+  _chain: {fileID: 11400000, guid: ea34bf454aec1444ab026f9a542972b3, type: 2}
   _initialPackage: {fileID: 11400000, guid: 4aada836c2fb7114b9950a99fb26a026, type: 2}
 --- !u!114 &1758674484
 MonoBehaviour:

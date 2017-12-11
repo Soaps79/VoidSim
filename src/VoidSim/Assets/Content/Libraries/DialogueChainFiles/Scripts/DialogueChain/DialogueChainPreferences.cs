@@ -60,12 +60,13 @@ public static class DialogueChainPreferences
     //return your project's bool that halts character movement so when set to true the player can't control their characte.
     public static bool GetHaltMovement()
     {
-        return TempGameController.instance.haltMovement;
+	    return false;
+	    //return TempGameController.instance.haltMovement;
     }
     //change the variable to your project's haltmovent bool. This allows the dialogue chain to control the halt movement variable.
     public static void SetHaltMovement(bool setTo)
     {
-         TempGameController.instance.haltMovement = setTo;
+         //TempGameController.instance.haltMovement = setTo;
     }
 
 
@@ -75,7 +76,8 @@ public static class DialogueChainPreferences
         //That way if you decide to change the player's name halfway through your game, your dialogue will update if you return the new name here.
     public static string GetPlayerName()
     {
-        return TempGameController.instance.player.GetComponent<TempPlayerInfo>().playerName;
+	    return "Daniel";
+        //return TempGameController.instance.player.GetComponent<TempPlayerInfo>().playerName;
     }
 
     //New feature allows you to change the string from "experience" to whatever you want. It's still called experience here, but you can make it add to whatever variable you want. See the top of this script.
@@ -83,7 +85,7 @@ public static class DialogueChainPreferences
         //If you're not going to use experience changing nodes, you should leave the method but delete its contents.
     public static void AddToPlayerExperience(int amount)
     {
-        TempGameController.instance.player.GetComponent<TempPlayerInfo>().experience += amount;
+        //TempGameController.instance.player.GetComponent<TempPlayerInfo>().experience += amount;
     }
 
     //If player's gender is a bool in your game, return the player's variable for the gender here. This is only used in dialogue so that it will use the proper grammar.
@@ -91,7 +93,8 @@ public static class DialogueChainPreferences
         //This is only used in the Dialogue script, so if you customize that script you can delete this method.
     public static bool IsPlayerGenderMale()
     {
-       return TempGameController.instance.player.GetComponent<TempPlayerInfo>().isMale;
+	    return true;
+	    //return TempGameController.instance.player.GetComponent<TempPlayerInfo>().isMale;
     }
 
     //If you are using variables to display your player's avatar during dialogue. I suggest making a list so that you can easily choose different expressions.
@@ -145,40 +148,41 @@ public static class DialogueChainPreferences
         //The methods must only have an Item passed to them.
     public static void AddToInventory(Item item)
     {
-        Dictionary<Item, int> inventory = TempGameController.instance.inventory;
+        //Dictionary<Item, int> inventory = TempGameController.instance.inventory;
 
-        if (inventory.ContainsKey(item))
-        {
-            inventory[item]++;
-        }
-        else
-        {
-            inventory.Add(item, 1);
-        }
+        //if (inventory.ContainsKey(item))
+        //{
+        //    inventory[item]++;
+        //}
+        //else
+        //{
+        //    inventory.Add(item, 1);
+        //}
     }
     public static void RemoveFromInventory(Item item)
     {
-        Dictionary<Item, int> inventory = TempGameController.instance.inventory;
+        //Dictionary<Item, int> inventory = TempGameController.instance.inventory;
 
-        if (inventory.ContainsKey(item))
-        {
-            inventory[item]--;
-            if (inventory[item] <= 0)
-            {
-                inventory.Remove(item);
-            }
-        }
+        //if (inventory.ContainsKey(item))
+        //{
+        //    inventory[item]--;
+        //    if (inventory[item] <= 0)
+        //    {
+        //        inventory.Remove(item);
+        //    }
+        //}
     }
     public static bool InventoryContains(Item item)
     {
-        if (itemsAreScriptableObjects)
-        {
-            return TempGameController.instance.inventory.ContainsKey(item);
-        }
-        else
-        {
-            return false;
-        }
+        //if (itemsAreScriptableObjects)
+        //{
+        //    return TempGameController.instance.inventory.ContainsKey(item);
+        //}
+        //else
+        //{
+        //    return false;
+        //}
+	    return true;
     }
 
 
@@ -186,42 +190,43 @@ public static class DialogueChainPreferences
         //the methods must only have a string passed to them.
     public static void AddToInventory(string itemString)
     {
-        Dictionary<string, int> inventoryNotScriptable = TempGameController.instance.inventoryNotScriptable;
+        //Dictionary<string, int> inventoryNotScriptable = TempGameController.instance.inventoryNotScriptable;
 
-        if (inventoryNotScriptable.ContainsKey(itemString))
-        {
-            inventoryNotScriptable[itemString]++;
-        }
-        else
-        {
-            inventoryNotScriptable.Add(itemString, 1);
-        }
-        return;
+        //if (inventoryNotScriptable.ContainsKey(itemString))
+        //{
+        //    inventoryNotScriptable[itemString]++;
+        //}
+        //else
+        //{
+        //    inventoryNotScriptable.Add(itemString, 1);
+        //}
+        //return;
     }
     public static void RemoveFromInventory(string itemString)
     {
-        Dictionary<string, int> inventoryNotScriptable = TempGameController.instance.inventoryNotScriptable;
+        //Dictionary<string, int> inventoryNotScriptable = TempGameController.instance.inventoryNotScriptable;
     
-        if (inventoryNotScriptable.ContainsKey(itemString))
-        {
-            inventoryNotScriptable[itemString]--;
-            if (inventoryNotScriptable[itemString] <= 0)
-            {
-                inventoryNotScriptable.Remove(itemString);
-            }
-        }
-        return;
+        //if (inventoryNotScriptable.ContainsKey(itemString))
+        //{
+        //    inventoryNotScriptable[itemString]--;
+        //    if (inventoryNotScriptable[itemString] <= 0)
+        //    {
+        //        inventoryNotScriptable.Remove(itemString);
+        //    }
+        //}
+        //return;
     }
     public static bool InventoryContainsString(string itemString)
     {
-        if (!itemsAreScriptableObjects)
-        {
-            return TempGameController.instance.inventoryNotScriptable.ContainsKey(itemString);
-        }
-        else
-        {
-            return false;
-        }
+	    return true;
+	    //if (!itemsAreScriptableObjects)
+	    //{
+	    //    return TempGameController.instance.inventoryNotScriptable.ContainsKey(itemString);
+	    //}
+	    //else
+	    //{
+	    //    return false;
+	    //}
     }
 }
 

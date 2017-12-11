@@ -28,6 +28,8 @@ namespace Assets.Narrative
 		[SerializeField] private NotificationListViewModel _notificationPrefab;
 		private NotificationListViewModel _notificationsViewModel;
 
+		[SerializeField] private DialogueChain _chain;
+
 		[SerializeField] private LevelPackage _initialPackage;
 
 		private readonly CollectionSerializer<NarrativeProgressData> _serializer
@@ -55,10 +57,11 @@ namespace Assets.Narrative
 			if (_serializer.HasDataFor(this, "Narrative"))
 				_data = _serializer.DeserializeData();
 
-			InitializeMissions();
-			InitializeConversations();
-			InitializeNotifications();
-			InitializeConversationsMonitor();
+			//InitializeMissions();
+			//InitializeConversations();
+			//InitializeNotifications();
+			//InitializeConversationsMonitor();
+			_chain.StartChain();
 		}
 
 		private void InitializeMissions()

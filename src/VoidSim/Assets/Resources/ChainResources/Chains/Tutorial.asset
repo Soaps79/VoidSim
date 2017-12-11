@@ -1,0 +1,240 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 004b62aa201c66a429573593b747c518, type: 3}
+  m_Name: Tutorial
+  m_EditorClassIdentifier: 
+  nodeIDCount: 2
+  paused: 0
+  hasEnded: 1
+  haltMovement: 1
+  defaultShowImages: 1
+  defaultShowNames: 1
+  defaultSprite: {fileID: 21300000, guid: 1c62aa0f66d4b2c4a85532b5464366dd, type: 3}
+  defaultSpeaker: Reginald
+  defaultContainerType: 0
+  defaultTextDelay: 0.02
+  beforeSubDialogue: {fileID: 0}
+  isSubDialogueChain: 0
+  speakers:
+  - Player
+  - Reginald
+  startEvent:
+    cEventType: 0
+    eventID: 0
+    nextEventIDs: 01000000
+    previousEventIDs: 
+    lateralConnections: 
+    windowRect:
+      serializedVersion: 2
+      x: 50
+      y: 314
+      width: 165
+      height: 40
+    rank: 0
+    dialogue: 
+    dialogueContainer: 0
+    speakerImage: {fileID: 0}
+    playerImageIndex: 0
+    useCustomPlayerImage: 0
+    flipImage: 0
+    leftSide: 1
+    showImage: 0
+    speaker: 
+    noSpeaker: 0
+    textDelay: 0.02
+    dialogueWaitTime: 0
+    dialoguefadeTime: 0
+    inputButtons: []
+    triggers: []
+    triggerBools: 
+    itemsGiven: []
+    itemsGivenString: []
+    itemsTaken: []
+    itemsTakenString: []
+    experienceGiven: 0
+    subDialogue: {fileID: 0}
+    audio: {fileID: 0}
+    loop: 0
+    overlay: 1
+    fadeTime: 0
+    playOriginalAfter: 1
+    originalFadeTime: 1.25
+    audioVolume: 1
+    chainIntAdjustments: []
+    triggerChecks: []
+    triggerCheckBools: 
+    itemChecks: []
+    itemChecksString: []
+    chainIntChecks: []
+    secondaryInputButtons: []
+    sendMessage: 000000
+    messageFloat: 0
+    messageString: 
+    messageBool: 0
+  currentEvent:
+    cEventType: 1
+    eventID: 1
+    nextEventIDs: 
+    previousEventIDs: 00000000
+    lateralConnections: 
+    windowRect:
+      serializedVersion: 2
+      x: 271
+      y: 196
+      width: 377
+      height: 247
+    rank: 0
+    dialogue: Welcome to your station!
+    dialogueContainer: 0
+    speakerImage: {fileID: 21300000, guid: 1c62aa0f66d4b2c4a85532b5464366dd, type: 3}
+    playerImageIndex: 0
+    useCustomPlayerImage: 0
+    flipImage: 0
+    leftSide: 1
+    showImage: 1
+    speaker: Reginald
+    noSpeaker: 0
+    textDelay: 0.02
+    dialogueWaitTime: 0
+    dialoguefadeTime: 0
+    inputButtons: []
+    triggers: []
+    triggerBools: 
+    itemsGiven: []
+    itemsGivenString: []
+    itemsTaken: []
+    itemsTakenString: []
+    experienceGiven: 0
+    subDialogue: {fileID: 0}
+    audio: {fileID: 0}
+    loop: 0
+    overlay: 1
+    fadeTime: 0
+    playOriginalAfter: 1
+    originalFadeTime: 1.25
+    audioVolume: 1
+    chainIntAdjustments: []
+    triggerChecks: []
+    triggerCheckBools: 
+    itemChecks: []
+    itemChecksString: []
+    chainIntChecks: []
+    secondaryInputButtons: []
+    sendMessage: 000000
+    messageFloat: 0
+    messageString: 
+    messageBool: 0
+  chainEvents:
+  - cEventType: 0
+    eventID: 0
+    nextEventIDs: 01000000
+    previousEventIDs: 
+    lateralConnections: 
+    windowRect:
+      serializedVersion: 2
+      x: 50
+      y: 314
+      width: 165
+      height: 40
+    rank: 0
+    dialogue: 
+    dialogueContainer: 0
+    speakerImage: {fileID: 0}
+    playerImageIndex: 0
+    useCustomPlayerImage: 0
+    flipImage: 0
+    leftSide: 1
+    showImage: 0
+    speaker: 
+    noSpeaker: 0
+    textDelay: 0.02
+    dialogueWaitTime: 0
+    dialoguefadeTime: 0
+    inputButtons: []
+    triggers: []
+    triggerBools: 
+    itemsGiven: []
+    itemsGivenString: []
+    itemsTaken: []
+    itemsTakenString: []
+    experienceGiven: 0
+    subDialogue: {fileID: 0}
+    audio: {fileID: 0}
+    loop: 0
+    overlay: 1
+    fadeTime: 0
+    playOriginalAfter: 1
+    originalFadeTime: 1.25
+    audioVolume: 1
+    chainIntAdjustments: []
+    triggerChecks: []
+    triggerCheckBools: 
+    itemChecks: []
+    itemChecksString: []
+    chainIntChecks: []
+    secondaryInputButtons: []
+    sendMessage: 000000
+    messageFloat: 0
+    messageString: 
+    messageBool: 0
+  - cEventType: 1
+    eventID: 1
+    nextEventIDs: 
+    previousEventIDs: 00000000
+    lateralConnections: 
+    windowRect:
+      serializedVersion: 2
+      x: 271
+      y: 196
+      width: 377
+      height: 247
+    rank: 0
+    dialogue: Welcome to your station!
+    dialogueContainer: 0
+    speakerImage: {fileID: 21300000, guid: 1c62aa0f66d4b2c4a85532b5464366dd, type: 3}
+    playerImageIndex: 0
+    useCustomPlayerImage: 0
+    flipImage: 0
+    leftSide: 1
+    showImage: 1
+    speaker: Reginald
+    noSpeaker: 0
+    textDelay: 0.02
+    dialogueWaitTime: 0
+    dialoguefadeTime: 0
+    inputButtons: []
+    triggers: []
+    triggerBools: 
+    itemsGiven: []
+    itemsGivenString: []
+    itemsTaken: []
+    itemsTakenString: []
+    experienceGiven: 0
+    subDialogue: {fileID: 0}
+    audio: {fileID: 0}
+    loop: 0
+    overlay: 1
+    fadeTime: 0
+    playOriginalAfter: 1
+    originalFadeTime: 1.25
+    audioVolume: 1
+    chainIntAdjustments: []
+    triggerChecks: []
+    triggerCheckBools: 
+    itemChecks: []
+    itemChecksString: []
+    chainIntChecks: []
+    secondaryInputButtons: []
+    sendMessage: 000000
+    messageFloat: 0
+    messageString: 
+    messageBool: 0
+  additions: {fileID: 0}
