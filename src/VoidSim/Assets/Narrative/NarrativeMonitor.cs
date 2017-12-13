@@ -60,10 +60,10 @@ namespace Assets.Narrative
 
             InitializeMissions();
             //InitializeConversations();
-            //InitializeNotifications();
-            //InitializeConversationsMonitor();
-            _chain.StartChain();
-		}
+            InitializeNotifications();
+            InitializeConversationsMonitor();
+            //_chain.StartChain();
+        }
 
 		private void InitializeMissions()
 		{
@@ -93,7 +93,7 @@ namespace Assets.Narrative
 		private void InitializeNotifications()
 		{
 			_notificationsViewModel = Instantiate(_notificationPrefab, _canvas.transform, false);
-			_notificationsViewModel.Initialize(_conversationViewModel);
+			_notificationsViewModel.Initialize(_conversationsMonitor);
 			_conversationsMonitor.InitializeUi(_notificationsViewModel);
 		}
 

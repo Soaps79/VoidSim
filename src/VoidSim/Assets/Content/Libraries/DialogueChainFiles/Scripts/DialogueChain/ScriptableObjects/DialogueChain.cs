@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Assets.Narrative.Missions;
 using Assets.Scripts;
@@ -194,6 +195,7 @@ public class DialogueChain : ScriptableObject
                 Status = MissionUpdateStatus.RequestBegin
             });
         }
+        GetNextEvent();
     }
     private void Pause()
     {
@@ -547,8 +549,9 @@ public class DialogueChain : ScriptableObject
         Debug.Log("Couldn't Get next Quest event from user input");
         return null;
     }    
-    #endregion  
-    
+    #endregion
+
+    public Action<DialogueChain> OnComplete;
 
     void ChainEnded()
     {
@@ -560,6 +563,8 @@ public class DialogueChain : ScriptableObject
             {
                 additions.OnChainEnd();
             }
+            if (OnComplete != null)
+                OnComplete(this);
         }
         else
         {

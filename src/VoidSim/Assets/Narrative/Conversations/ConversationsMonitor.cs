@@ -28,7 +28,7 @@ namespace Assets.Narrative.Notifications
 	{
 		private class MissionStartTriggers
 		{
-			public Conversation Conversation;
+			public DialogueChain Conversation;
 			public Dictionary<string, bool> MissionNames = new Dictionary<string, bool>();
 		}
 
@@ -71,15 +71,16 @@ namespace Assets.Narrative.Notifications
 		}
 
 		// create a conversation's UI entry, update serialization lists, hook into OnComplete
-		private void ActivateConversation(Conversation conversation)
+		public void ActivateConversation(DialogueChain conversation)
 		{
-			_viewModel.AddConversationNotification(conversation);
+            _viewModel.AddConversationNotification(conversation);
 			_queuedConversationNames.Add(conversation.name);
 			conversation.OnComplete += HandleConversationComplete;
-		}
+		    //conversation.StartChain();
+        }
 
-		// convo complete, update serialization lists
-		private void HandleConversationComplete(Conversation conversation)
+        // convo complete, update serialization lists
+        private void HandleConversationComplete(DialogueChain conversation)
 		{
 			_queuedConversationNames.RemoveAll(i => i == conversation.name);
 			_completedConversationNames.Add(conversation.name);

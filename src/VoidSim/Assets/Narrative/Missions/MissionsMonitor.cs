@@ -62,10 +62,10 @@ namespace Assets.Narrative.Missions
 		// uses the Extract function below to walk the conversation trees and grab all of their possible missions
 		private void FindMissionsInLevelPackage(LevelPackage package)
 		{
-			foreach (var conversation in package.Conversations)
-			{
-				ExtractMissionsFromConversations(conversation.Conversation.InitialEntry);
-			}
+			//foreach (var conversation in package.Conversations)
+			//{
+			//	ExtractMissionsFromConversations(conversation.Conversation.InitialEntry);
+			//}
 		}
 
 		private void ExtractMissionsFromConversations(ConversationEntry conversationEntry)

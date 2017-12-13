@@ -13,7 +13,7 @@ namespace Assets.Scripts.Initialization
 	[Serializable]
 	public class ConversationTrigger
 	{
-		public Conversation Conversation;
+		public DialogueChain Conversation;
 		public ConversationTriggerType Type;
 		public List<string> Values;
 	}

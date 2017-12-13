@@ -16,16 +16,16 @@ namespace Assets.Narrative.UI
 		[DictionaryDrawerSettings(DisplayMode = DictionaryDisplayOptions.Foldout)]
 		public Dictionary<NotificationType, Sprite> _sprites;
 
-		private ConversationViewModel _conversationViewModel;
+		private ConversationsMonitor _conversationMonitor;
 
-		public void Initialize(ConversationViewModel conversation)
+		public void Initialize(ConversationsMonitor conversationMonitor)
 		{
-			_conversationViewModel = conversation;
+			_conversationMonitor = conversationMonitor;
 		}
 
 		// this could remain the preferred method; a function per type
 		// or it could be better worked into the architecture
-		public void AddConversationNotification(Conversation convo)
+		public void AddConversationNotification(DialogueChain convo)
 		{
 			var viewModel = Instantiate(_buttonPrefab, _contentHolder.transform, false);
 			const NotificationType type = NotificationType.ConversationStart;
@@ -33,11 +33,14 @@ namespace Assets.Narrative.UI
 			{
 				Type = type,
 				IconSprite = _sprites.ContainsKey(type) ? _sprites[type] : null,
-				TooltipText = convo.Title
+				TooltipText = convo.name
 			};
 			viewModel.Initialize(notification);
-			viewModel.Button.onClick.AddListener(() => _conversationViewModel.BeginConversation(convo));
-			convo.OnComplete += conversation => { viewModel.Die(); };
+			viewModel.Button.onClick.AddListener(convo.StartChain);
+			convo.OnComplete += conversation =>
+			{
+			    viewModel.Die();
+			};
 		}
 	}
 }
