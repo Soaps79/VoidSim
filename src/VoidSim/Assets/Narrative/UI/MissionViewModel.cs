@@ -35,15 +35,13 @@ namespace Assets.Narrative.UI
 			}
 
 			_nameText.text = mission.DisplayName;
-			var canvasGroup = gameObject.GetComponent<CanvasGroup>();
-			canvasGroup.alpha = 0;
-			canvasGroup.DOFade(1, .5f);
-		}
+            //_canvasGroup.alpha = 0;
+            //_canvasGroup.DOFade(1.0f, .5f);
+        }
 
 		private void HandleUpdateComplete(Mission mission)
 		{
-			var image = GetComponent<Image>();
-			image.DOFade(0, .75f).OnComplete(() => Destroy(gameObject));
+			_canvasGroup.DOFade(0, .75f).OnComplete(() => Destroy(gameObject));
 		}
 	}
 }

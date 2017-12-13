@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Assets.Narrative.Missions;
+using Assets.Scripts;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewDialogueChain", menuName = "Dialogue Chains/Chain")]
@@ -92,6 +95,10 @@ public class DialogueChain : ScriptableObject
         {
             ItemManagement();
         }
+        else if (cEvent.cEventType == ChainEventType.Mission)
+        {
+            StartMission(currentEvent);
+        }
         else if (cEvent.cEventType == ChainEventType.Pause)
         {
             Pause();
@@ -172,6 +179,21 @@ public class DialogueChain : ScriptableObject
         DialogueChainPreferences.AddToPlayerExperience(currentEvent.experienceGiven);
 
         GetNextEvent();
+    }
+
+    private void StartMission(ChainEvent missionEvent)
+    {
+        if (missionEvent.missions == null)
+            return;
+
+        foreach (var missionEventMission in missionEvent.missions)
+        {
+            Locator.MessageHub.QueueMessage(Mission.MessageName, new MissionUpdateMessageArgs
+            {
+                MissionSO = missionEventMission,
+                Status = MissionUpdateStatus.RequestBegin
+            });
+        }
     }
     private void Pause()
     {

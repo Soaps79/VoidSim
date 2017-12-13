@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Assets.Narrative.Missions;
 using UnityEngine;
 
 [System.Serializable]
@@ -49,6 +50,7 @@ public class ChainEvent
     public List<Item> itemsTaken = new List<Item>();
     public List<string> itemsTakenString = new List<string>();
     public int experienceGiven;
+    public List<MissionSO> missions = new List<MissionSO>();
     #endregion
 
     #region Sub Dialogue
@@ -132,5 +134,6 @@ public enum ChainEventType
     SubDialogue,
     Check,
     Message,
-    SecondaryInput
+    SecondaryInput,
+    Mission
 }

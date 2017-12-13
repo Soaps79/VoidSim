@@ -8,6 +8,7 @@ using Assets.Scripts;
 using Assets.Scripts.Initialization;
 using Assets.Scripts.Serialization;
 using Assets.WorldMaterials.Products;
+using Messaging;
 using NUnit.Framework;
 using QGame;
 using UnityEngine;
@@ -24,7 +25,7 @@ namespace Assets.Narrative.Missions
 
 	// Object to manage the queue of missions available. 
 	// Initializes missions when they start, and also handles their completion
-	public class MissionsMonitor : QScript, ISerializeData<MissionsProgressData>
+	public class MissionsMonitor : QScript, ISerializeData<MissionsProgressData>, IMessageListener
 	{
 		private readonly List<IGoalTracker> _trackers = new List<IGoalTracker>();
 		[SerializeField] private List<Mission> _activeMissions;
@@ -45,6 +46,8 @@ namespace Assets.Narrative.Missions
 
 			FindMissionsInLevelPackage(package);
 			InitializeMissionsUI();
+
+            Locator.MessageHub.AddListener(this, Mission.MessageName);
 		}
 
 		private void InitializeTrackers()
@@ -91,7 +94,7 @@ namespace Assets.Narrative.Missions
 			InitializeMissionGroupProducts(group);
 			var toStart = group.Where(
 				i => string.IsNullOrEmpty(i.PrereqMissionName)
-				     || _completedMissionNames.Contains(i.PrereqMissionName)).ToList();
+					 || _completedMissionNames.Contains(i.PrereqMissionName)).ToList();
 			foreach (var missionSO in toStart)
 			{
 				BeginMission(missionSO);
@@ -230,7 +233,6 @@ namespace Assets.Narrative.Missions
 					_unstartedMissions.Add(_levelMissions[missionName]);
 				}
 			}
-
 		}
 
 		private Mission ResumeMission(MissionSO content)
@@ -255,5 +257,19 @@ namespace Assets.Narrative.Missions
 			};
 			return data;
 		}
+
+		public void HandleMessage(string type, MessageArgs args)
+		{
+			if (type == Mission.MessageName && args != null)
+				HandleMissionUpdate(args as MissionUpdateMessageArgs);
+		}
+
+		private void HandleMissionUpdate(MissionUpdateMessageArgs args)
+		{
+			if(args != null && args.Status == MissionUpdateStatus.RequestBegin && args.MissionSO != null)
+				BeginMission(args.MissionSO);
+		}
+
+		public string Name { get { return "MissionsMonitor"; } }
 	}
 }

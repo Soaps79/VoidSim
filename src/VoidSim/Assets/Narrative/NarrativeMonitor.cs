@@ -29,6 +29,7 @@ namespace Assets.Narrative
 		private NotificationListViewModel _notificationsViewModel;
 
 		[SerializeField] private DialogueChain _chain;
+	    [SerializeField] private DialogueController _dialogueController;
 
 		[SerializeField] private LevelPackage _initialPackage;
 
@@ -57,11 +58,11 @@ namespace Assets.Narrative
 			if (_serializer.HasDataFor(this, "Narrative"))
 				_data = _serializer.DeserializeData();
 
-			//InitializeMissions();
-			//InitializeConversations();
-			//InitializeNotifications();
-			//InitializeConversationsMonitor();
-			_chain.StartChain();
+            InitializeMissions();
+            //InitializeConversations();
+            //InitializeNotifications();
+            //InitializeConversationsMonitor();
+            _chain.StartChain();
 		}
 
 		private void InitializeMissions()

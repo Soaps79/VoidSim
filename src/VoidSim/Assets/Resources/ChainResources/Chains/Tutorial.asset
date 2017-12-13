@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 004b62aa201c66a429573593b747c518, type: 3}
   m_Name: Tutorial
   m_EditorClassIdentifier: 
-  nodeIDCount: 2
+  nodeIDCount: 11
   paused: 0
   hasEnded: 1
   haltMovement: 1
@@ -26,6 +26,7 @@ MonoBehaviour:
   speakers:
   - Player
   - Reginald
+  - Player
   startEvent:
     cEventType: 0
     eventID: 0
@@ -34,8 +35,8 @@ MonoBehaviour:
     lateralConnections: 
     windowRect:
       serializedVersion: 2
-      x: 50
-      y: 314
+      x: -9
+      y: 282
       width: 165
       height: 40
     rank: 0
@@ -60,6 +61,7 @@ MonoBehaviour:
     itemsTaken: []
     itemsTakenString: []
     experienceGiven: 0
+    missions: []
     subDialogue: {fileID: 0}
     audio: {fileID: 0}
     loop: 0
@@ -113,6 +115,7 @@ MonoBehaviour:
     itemsTaken: []
     itemsTakenString: []
     experienceGiven: 0
+    missions: []
     subDialogue: {fileID: 0}
     audio: {fileID: 0}
     loop: 0
@@ -140,8 +143,8 @@ MonoBehaviour:
     lateralConnections: 
     windowRect:
       serializedVersion: 2
-      x: 50
-      y: 314
+      x: -9
+      y: 282
       width: 165
       height: 40
     rank: 0
@@ -166,6 +169,7 @@ MonoBehaviour:
     itemsTaken: []
     itemsTakenString: []
     experienceGiven: 0
+    missions: []
     subDialogue: {fileID: 0}
     audio: {fileID: 0}
     loop: 0
@@ -187,17 +191,77 @@ MonoBehaviour:
     messageBool: 0
   - cEventType: 1
     eventID: 1
-    nextEventIDs: 
+    nextEventIDs: 02000000
     previousEventIDs: 00000000
     lateralConnections: 
     windowRect:
       serializedVersion: 2
-      x: 271
-      y: 196
+      x: 212
+      y: 164
       width: 377
       height: 247
     rank: 0
-    dialogue: Welcome to your station!
+    dialogue: "I love watching someone walk into their first day on THIS job. People
+      spend their entire lives learning what it takes to run a station! So you can
+      imagine why YOU, stepping in straight out of school would require an advisor
+      of my caliber.\r"
+    dialogueContainer: 0
+    speakerImage: {fileID: 21300000, guid: 1c62aa0f66d4b2c4a85532b5464366dd, type: 3}
+    playerImageIndex: 0
+    useCustomPlayerImage: 0
+    flipImage: 0
+    leftSide: 1
+    showImage: 1
+    speaker: Reginald
+    noSpeaker: 0
+    textDelay: 0
+    dialogueWaitTime: 0
+    dialoguefadeTime: 0
+    inputButtons: []
+    triggers: []
+    triggerBools: 
+    itemsGiven: []
+    itemsGivenString: []
+    itemsTaken: []
+    itemsTakenString: []
+    experienceGiven: 0
+    missions: []
+    subDialogue: {fileID: 0}
+    audio: {fileID: 0}
+    loop: 0
+    overlay: 1
+    fadeTime: 0
+    playOriginalAfter: 1
+    originalFadeTime: 1.25
+    audioVolume: 1
+    chainIntAdjustments: []
+    triggerChecks: []
+    triggerCheckBools: 
+    itemChecks: []
+    itemChecksString: []
+    chainIntChecks: []
+    secondaryInputButtons: []
+    sendMessage: 000000
+    messageFloat: 0
+    messageString: 
+    messageBool: 0
+  - cEventType: 1
+    eventID: 2
+    nextEventIDs: 0a000000
+    previousEventIDs: 01000000
+    lateralConnections: 
+    windowRect:
+      serializedVersion: 2
+      x: 643
+      y: 163
+      width: 377
+      height: 247
+    rank: 0
+    dialogue: "Let\u2019s start with the basics. These skills will serve you on any
+      station dad decides to give you.\r\n\r\nBuild a factory on the station\u2019s
+      upper layer. Factories will turn your plain boring goods into something that\u2019s
+      actually worth money, or we can use to improve the station. Tell your factory
+      to produce some Consumer Goods, that we can then sell out into the galaxy.\r"
     dialogueContainer: 0
     speakerImage: {fileID: 21300000, guid: 1c62aa0f66d4b2c4a85532b5464366dd, type: 3}
     playerImageIndex: 0
@@ -218,6 +282,62 @@ MonoBehaviour:
     itemsTaken: []
     itemsTakenString: []
     experienceGiven: 0
+    missions: []
+    subDialogue: {fileID: 0}
+    audio: {fileID: 0}
+    loop: 0
+    overlay: 1
+    fadeTime: 0
+    playOriginalAfter: 1
+    originalFadeTime: 1.25
+    audioVolume: 1
+    chainIntAdjustments: []
+    triggerChecks: []
+    triggerCheckBools: 
+    itemChecks: []
+    itemChecksString: []
+    chainIntChecks: []
+    secondaryInputButtons: []
+    sendMessage: 000000
+    messageFloat: 0
+    messageString: 
+    messageBool: 0
+  - cEventType: 12
+    eventID: 10
+    nextEventIDs: 
+    previousEventIDs: 02000000
+    lateralConnections: 
+    windowRect:
+      serializedVersion: 2
+      x: 1050
+      y: 223
+      width: 200
+      height: 119
+    rank: 0
+    dialogue: 
+    dialogueContainer: 0
+    speakerImage: {fileID: 0}
+    playerImageIndex: 0
+    useCustomPlayerImage: 0
+    flipImage: 0
+    leftSide: 1
+    showImage: 0
+    speaker: 
+    noSpeaker: 0
+    textDelay: 0.02
+    dialogueWaitTime: 0
+    dialoguefadeTime: 0
+    inputButtons: []
+    triggers: []
+    triggerBools: 
+    itemsGiven: []
+    itemsGivenString: []
+    itemsTaken: []
+    itemsTakenString: []
+    experienceGiven: 0
+    missions:
+    - {fileID: 11400000, guid: 56c5140a1cc9f0243babb8e1ed800edb, type: 2}
+    - {fileID: 11400000, guid: 14bf6f4cd24306f4b8227ea11ae6073f, type: 2}
     subDialogue: {fileID: 0}
     audio: {fileID: 0}
     loop: 0

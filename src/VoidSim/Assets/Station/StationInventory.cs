@@ -26,22 +26,22 @@ namespace Assets.Station
 		public void HandleMessage(string type, MessageArgs args)
 		{
 			if (type == Mission.MessageName && args != null)
-				HandleMissionComplete(args as MissionUpdateMessageArgs);
+				HandleMissionUpdate(args as MissionUpdateMessageArgs);
 		}
 
-		private void HandleMissionComplete(MissionUpdateMessageArgs args)
+		private void HandleMissionUpdate(MissionUpdateMessageArgs args)
 		{
-			if( args == null || args.Mission == null)
+			if( args == null)
 				throw new UnityException("StationInventory given bad mission reward args");
 
-			if (args.Status == MissionUpdateStatus.Begin)
-				return;
-
-			foreach (var missionRewardAmount in args.Mission.Scriptable.Rewards)
-			{
-				if (_products.ContainsKey(missionRewardAmount.Name))
-					_inventory.TryAddProduct(_products[missionRewardAmount.Name].ID, missionRewardAmount.Amount);
-			}
+		    if (args.Status == MissionUpdateStatus.Complete && args.Mission == null)
+		    {
+		        foreach (var missionRewardAmount in args.Mission.Scriptable.Rewards)
+		        {
+		            if (_products.ContainsKey(missionRewardAmount.Name))
+		                _inventory.TryAddProduct(_products[missionRewardAmount.Name].ID, missionRewardAmount.Amount);
+		        }
+		    }
 		}
 
 		public string Name { get { return "StationInventory"; } }

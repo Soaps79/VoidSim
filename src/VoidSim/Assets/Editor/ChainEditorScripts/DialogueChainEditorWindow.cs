@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Assets.Editor.ChainEditorScripts.DialogueNodeEditors;
 using UnityEngine;
 using UnityEditor;
 
@@ -238,6 +239,11 @@ public class DialogueChainEditorWindow : EditorWindow
                 ItemNode newNode = CreateInstance("ItemNode") as ItemNode;
                 AssignEventToNode(newNode, qEvent);
             }
+            else if (qEvent.cEventType == ChainEventType.Mission)
+            {
+                var newNode = CreateInstance("MissionNode") as MissionNode;
+                AssignEventToNode(newNode, qEvent);
+            }
             else if (qEvent.cEventType == ChainEventType.Pause)
             {
                 PauseNode newNode = CreateInstance("PauseNode") as PauseNode;
@@ -378,7 +384,7 @@ public class DialogueChainEditorWindow : EditorWindow
             menu.AddItem(new GUIContent("Dialogue/Dialogue"), false, CallBack, "dialogueNode");
             menu.AddItem(new GUIContent("Dialogue/User Input"), false, CallBack, "userInput");
             menu.AddItem(new GUIContent("Dialogue/Secondary Input"), false, CallBack, "secondInput");
-
+            
             menu.AddItem(new GUIContent("Set/Set Trigger"), false, CallBack, "setTrigger");
             menu.AddItem(new GUIContent("Set/Integer Adjustment"), false, CallBack, "iAdjust");
 
@@ -386,6 +392,7 @@ public class DialogueChainEditorWindow : EditorWindow
             menu.AddItem(new GUIContent("Scene/Sub Dialogue"), false, CallBack, "subQuest");
             menu.AddItem(new GUIContent("Scene/Send Holder Message"), false, CallBack, "message");
 
+            menu.AddItem(new GUIContent("Mission"), false, CallBack, "mission");
             menu.AddItem(new GUIContent("Item-" + DialogueChainPreferences.experienceString), false, CallBack, "item");
 
             menu.AddItem(new GUIContent("Audio"), false, CallBack, "audio");
@@ -738,6 +745,11 @@ public class DialogueChainEditorWindow : EditorWindow
         {
             ItemNode newNode = CreateInstance("ItemNode") as ItemNode;
             MakeNewNode(newNode, ChainEventType.ItemManagement);
+        }
+        else if (callBackString == "mission")
+        {
+            var newNode = CreateInstance("MissionNode") as MissionNode;
+            MakeNewNode(newNode, ChainEventType.Mission);
         }
         else if (callBackString == "subQuest")
         {

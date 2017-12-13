@@ -19,12 +19,13 @@ namespace Assets.Narrative.Missions
 		public List<ProductGoalProgressData> Goals;
 	}
 
-	public enum MissionUpdateStatus { Begin, Resume, Complete }
+	public enum MissionUpdateStatus { RequestBegin, Begin, Resume, Complete }
 
 	public class MissionUpdateMessageArgs : MessageArgs
 	{
 		public MissionUpdateStatus Status;
 		public Mission Mission;
+	    public MissionSO MissionSO;
 	}
 
 	/// <summary>
