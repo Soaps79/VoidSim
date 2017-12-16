@@ -35,8 +35,8 @@ namespace Assets.Narrative.UI
 			}
 
 			_nameText.text = mission.DisplayName;
-            //_canvasGroup.alpha = 0;
-            //_canvasGroup.DOFade(1.0f, .5f);
+            _canvasGroup.alpha = 0;
+            _canvasGroup.DOFade(1.0f, .5f);
         }
 
 		private void HandleUpdateComplete(Mission mission)
