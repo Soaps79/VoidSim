@@ -44,7 +44,7 @@ namespace Assets.Narrative.Missions
 			_canvas = GameObject.Find("InfoCanvas");
 			InitializeTrackers();
 
-			FindMissionsInLevelPackage(package);
+			FindLevelMissions();
 			InitializeMissionsUI();
 
             Locator.MessageHub.AddListener(this, Mission.MessageName);
@@ -59,26 +59,15 @@ namespace Assets.Narrative.Missions
 			InitializePlacePlaceableTracker();
 		}
 
-		// uses the Extract function below to walk the conversation trees and grab all of their possible missions
-		private void FindMissionsInLevelPackage(LevelPackage package)
+		// currently loads all missions
+        // can be made smarter to load only certain ones in the future
+		private void FindLevelMissions()
 		{
-			//foreach (var conversation in package.Conversations)
-			//{
-			//	ExtractMissionsFromConversations(conversation.Conversation.InitialEntry);
-			//}
-		}
-
-		private void ExtractMissionsFromConversations(ConversationEntry conversationEntry)
-		{
-			foreach (var mission in conversationEntry.Node.Missions)
-			{
-				_levelMissions.Add(mission.name, mission);
-			}
-
-			foreach (var nodeTransition in conversationEntry.Transitions)
-			{
-				ExtractMissionsFromConversations(nodeTransition.Next);
-			}
+		    var missions = Resources.LoadAll<MissionSO>("Narrative/Missions");
+		    foreach (var missionSO in missions)
+		    {
+		        _levelMissions.Add(missionSO.name, missionSO);
+		    }
 		}
 
 		// instantiate and wire up the mission view model

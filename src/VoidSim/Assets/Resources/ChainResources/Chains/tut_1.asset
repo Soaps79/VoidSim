@@ -27,6 +27,7 @@ MonoBehaviour:
   - Player
   - Reginald
   - Player
+  - Player
   startEvent:
     cEventType: 0
     eventID: 0
@@ -35,8 +36,8 @@ MonoBehaviour:
     lateralConnections: 
     windowRect:
       serializedVersion: 2
-      x: -850
-      y: 180
+      x: -360
+      y: 168
       width: 165
       height: 40
     rank: 0
@@ -89,8 +90,8 @@ MonoBehaviour:
     lateralConnections: 
     windowRect:
       serializedVersion: 2
-      x: 950
-      y: 228
+      x: 1440
+      y: 216
       width: 200
       height: 78
     rank: 0
@@ -144,8 +145,8 @@ MonoBehaviour:
     lateralConnections: 
     windowRect:
       serializedVersion: 2
-      x: -850
-      y: 180
+      x: -360
+      y: 168
       width: 165
       height: 40
     rank: 0
@@ -197,8 +198,8 @@ MonoBehaviour:
     lateralConnections: 
     windowRect:
       serializedVersion: 2
-      x: -604
-      y: 108
+      x: -114
+      y: 96
       width: 375
       height: 285
     rank: 0
@@ -255,8 +256,8 @@ MonoBehaviour:
     lateralConnections: 
     windowRect:
       serializedVersion: 2
-      x: -141
-      y: 117
+      x: 349
+      y: 105
       width: 375
       height: 285
     rank: 0
@@ -278,7 +279,7 @@ MonoBehaviour:
     dialogueWaitTime: 0
     dialoguefadeTime: 0
     inputButtons:
-    - buttonText: Done
+    - buttonText: Next
       nextEventIDsForInputs: 0f000000
     triggers: []
     triggerBools: 
@@ -314,8 +315,8 @@ MonoBehaviour:
     lateralConnections: 
     windowRect:
       serializedVersion: 2
-      x: 535
-      y: 114
+      x: 1025
+      y: 102
       width: 375
       height: 285
     rank: 1
@@ -372,8 +373,8 @@ MonoBehaviour:
     lateralConnections: 
     windowRect:
       serializedVersion: 2
-      x: 950
-      y: 228
+      x: 1440
+      y: 216
       width: 200
       height: 78
     rank: 0
@@ -426,8 +427,8 @@ MonoBehaviour:
     lateralConnections: 
     windowRect:
       serializedVersion: 2
-      x: 276
-      y: 190
+      x: 766
+      y: 178
       width: 200
       height: 78
     rank: 0

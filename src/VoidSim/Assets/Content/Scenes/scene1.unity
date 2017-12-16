@@ -910,8 +910,8 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 222257357}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 430.5, y: 242, z: 0}
-  m_LocalScale: {x: 1.07625, y: 1.07625, z: 1.07625}
+  m_LocalPosition: {x: 445, y: 250.5, z: 0}
+  m_LocalScale: {x: 1.1125, y: 1.1125, z: 1.1125}
   m_Children:
   - {fileID: 831776412}
   - {fileID: 97127703}
@@ -1405,7 +1405,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _filename: gamesave
-  LoadOnStart: 0
+  LoadOnStart: 1
 --- !u!1 &416572257
 GameObject:
   m_ObjectHideFlags: 0
@@ -1573,12 +1573,12 @@ Prefab:
     - target: {fileID: 224337550640712236, guid: 7580feb122e119045b7b12321dbcdc2a,
         type: 2}
       propertyPath: m_LocalPosition.x
-      value: 127.81999
+      value: 127.819984
       objectReference: {fileID: 0}
     - target: {fileID: 224337550640712236, guid: 7580feb122e119045b7b12321dbcdc2a,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 2.4699936
+      value: 2.469986
       objectReference: {fileID: 0}
     - target: {fileID: 1887455403154080, guid: 7580feb122e119045b7b12321dbcdc2a, type: 2}
       propertyPath: m_IsActive
@@ -2053,8 +2053,8 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 499680534}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 430.5, y: 242, z: 0}
-  m_LocalScale: {x: 0.4484375, y: 0.4484375, z: 0.4484375}
+  m_LocalPosition: {x: 445, y: 250.5, z: 0}
+  m_LocalScale: {x: 0.46354166, y: 0.46354166, z: 0.46354166}
   m_Children:
   - {fileID: 1547551479}
   - {fileID: 585482045}
@@ -4954,8 +4954,8 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1028946708}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 430.5, y: 242, z: 0}
-  m_LocalScale: {x: 0.4484375, y: 0.4484375, z: 0.4484375}
+  m_LocalPosition: {x: 445, y: 250.5, z: 0}
+  m_LocalScale: {x: 0.46354166, y: 0.46354166, z: 0.46354166}
   m_Children:
   - {fileID: 1449580576}
   - {fileID: 2115866798}
@@ -6558,12 +6558,12 @@ Prefab:
     - target: {fileID: 224156052781830228, guid: 1fc7c3453a85b9d41b9b164fa3294e1e,
         type: 2}
       propertyPath: m_LocalPosition.x
-      value: 127.81999
+      value: 127.819984
       objectReference: {fileID: 0}
     - target: {fileID: 224156052781830228, guid: 1fc7c3453a85b9d41b9b164fa3294e1e,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 2.4699936
+      value: 2.469986
       objectReference: {fileID: 0}
     - target: {fileID: 1364436687230358, guid: 1fc7c3453a85b9d41b9b164fa3294e1e, type: 2}
       propertyPath: m_IsActive
