@@ -21,10 +21,6 @@ namespace Assets.Narrative
 	/// </summary>
 	public class NarrativeMonitor : QScript, ISerializeData<NarrativeProgressData>
 	{
-		[SerializeField] private Conversation _initialConversation;
-		[SerializeField] private ConversationViewModel _conversationViewModelPrefab;
-		private ConversationViewModel _conversationViewModel;
-
 		[SerializeField] private NotificationListViewModel _notificationPrefab;
 		private NotificationListViewModel _notificationsViewModel;
 
@@ -70,13 +66,6 @@ namespace Assets.Narrative
 			_missionsMonitor.Initialize(_initialPackage);
 			if(_data != null)
 				_missionsMonitor.SetFromData(_data.Missions);
-		}
-		
-		private void InitializeConversations()
-		{
-			_conversationViewModel = Instantiate(_conversationViewModelPrefab, _canvas.transform, false);
-			_conversationViewModel.OnMissionsNeedStart += _missionsMonitor.ActivateMissionGroup;
-			_conversationViewModel.gameObject.SetActive(false);
 		}
 
 		private void InitializeConversationsMonitor()
