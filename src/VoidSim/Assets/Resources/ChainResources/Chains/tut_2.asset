@@ -11,9 +11,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 004b62aa201c66a429573593b747c518, type: 3}
   m_Name: tut_2
   m_EditorClassIdentifier: 
-  nodeIDCount: 10
+  nodeIDCount: 13
   paused: 0
-  hasEnded: 1
+  hasEnded: 0
   haltMovement: 1
   defaultShowImages: 1
   defaultShowNames: 1
@@ -24,8 +24,10 @@ MonoBehaviour:
   beforeSubDialogue: {fileID: 0}
   isSubDialogueChain: 0
   speakers:
+  - Evie
   - Player
   - Reginald
+  - Player
   startEvent:
     cEventType: 0
     eventID: 0
@@ -34,8 +36,8 @@ MonoBehaviour:
     lateralConnections: 
     windowRect:
       serializedVersion: 2
-      x: -18
-      y: 151
+      x: -292
+      y: 163
       width: 165
       height: 40
     rank: 0
@@ -81,32 +83,37 @@ MonoBehaviour:
     messageString: 
     messageBool: 0
   currentEvent:
-    cEventType: 12
-    eventID: 9
+    cEventType: 3
+    eventID: 10
     nextEventIDs: 
     previousEventIDs: 08000000
     lateralConnections: 
     windowRect:
       serializedVersion: 2
-      x: 1136
-      y: 176
-      width: 200
-      height: 78
+      x: 890
+      y: 76
+      width: 375
+      height: 285
     rank: 0
-    dialogue: 
-    dialogueContainer: 0
-    speakerImage: {fileID: 0}
+    dialogue: "When these complaints come from Accounting, you can usually ignore
+      them, those guys are half blind from all those numbers. But Eddie? He knows
+      our inventory, which means he knows we only have a limited supply of power left,
+      and that when it runs out we all die.\r"
+    dialogueContainer: 3
+    speakerImage: {fileID: 21300004, guid: 1c62aa0f66d4b2c4a85532b5464366dd, type: 3}
     playerImageIndex: 0
     useCustomPlayerImage: 0
     flipImage: 0
-    leftSide: 1
-    showImage: 0
-    speaker: 
+    leftSide: 0
+    showImage: 1
+    speaker: Evie
     noSpeaker: 0
     textDelay: 0.02
     dialogueWaitTime: 0
     dialoguefadeTime: 0
-    inputButtons: []
+    inputButtons:
+    - buttonText: Next
+      nextEventIDsForInputs: 0b000000
     triggers: []
     triggerBools: 
     itemsGiven: []
@@ -114,8 +121,7 @@ MonoBehaviour:
     itemsTaken: []
     itemsTakenString: []
     experienceGiven: 0
-    missions:
-    - {fileID: 11400000, guid: a4973a6bbc876094e8ebc6ea44bd5599, type: 2}
+    missions: []
     subDialogue: {fileID: 0}
     audio: {fileID: 0}
     loop: 0
@@ -143,8 +149,8 @@ MonoBehaviour:
     lateralConnections: 
     windowRect:
       serializedVersion: 2
-      x: -18
-      y: 151
+      x: -292
+      y: 163
       width: 165
       height: 40
     rank: 0
@@ -189,60 +195,6 @@ MonoBehaviour:
     messageFloat: 0
     messageString: 
     messageBool: 0
-  - cEventType: 12
-    eventID: 4
-    nextEventIDs: 
-    previousEventIDs: 
-    lateralConnections: 
-    windowRect:
-      serializedVersion: 2
-      x: 1576
-      y: 209
-      width: 200
-      height: 78
-    rank: 0
-    dialogue: 
-    dialogueContainer: 0
-    speakerImage: {fileID: 0}
-    playerImageIndex: 0
-    useCustomPlayerImage: 0
-    flipImage: 0
-    leftSide: 1
-    showImage: 0
-    speaker: 
-    noSpeaker: 0
-    textDelay: 0.02
-    dialogueWaitTime: 0
-    dialoguefadeTime: 0
-    inputButtons: []
-    triggers: []
-    triggerBools: 
-    itemsGiven: []
-    itemsGivenString: []
-    itemsTaken: []
-    itemsTakenString: []
-    experienceGiven: 0
-    missions:
-    - {fileID: 11400000, guid: a4973a6bbc876094e8ebc6ea44bd5599, type: 2}
-    subDialogue: {fileID: 0}
-    audio: {fileID: 0}
-    loop: 0
-    overlay: 1
-    fadeTime: 0
-    playOriginalAfter: 1
-    originalFadeTime: 1.25
-    audioVolume: 1
-    chainIntAdjustments: []
-    triggerChecks: []
-    triggerCheckBools: 
-    itemChecks: []
-    itemChecksString: []
-    chainIntChecks: []
-    secondaryInputButtons: []
-    sendMessage: 000000
-    messageFloat: 0
-    messageString: 
-    messageBool: 0
   - cEventType: 3
     eventID: 5
     nextEventIDs: 
@@ -250,15 +202,15 @@ MonoBehaviour:
     lateralConnections: 
     windowRect:
       serializedVersion: 2
-      x: 229
-      y: 59
+      x: -45
+      y: 71
       width: 375
       height: 285
     rank: 0
     dialogue: 'Great! We have production and shipping, two essential building blocks
       for our empire. '
     dialogueContainer: 3
-    speakerImage: {fileID: 21300000, guid: 1c62aa0f66d4b2c4a85532b5464366dd, type: 3}
+    speakerImage: {fileID: 21300002, guid: 1c62aa0f66d4b2c4a85532b5464366dd, type: 3}
     playerImageIndex: 0
     useCustomPlayerImage: 0
     flipImage: 0
@@ -306,19 +258,16 @@ MonoBehaviour:
     lateralConnections: 
     windowRect:
       serializedVersion: 2
-      x: 719
-      y: 56
+      x: 444
+      y: 68
       width: 375
       height: 285
     rank: 0
-    dialogue: "Eddie in engineering reported flickering lights. When these complaints
-      come from Accounting, you can usually ignore them, those guys are half blind
-      from all those numbers. But Eddie? He knows our inventory, which means he knows
-      we only have a limited supply of power left, and that when it runs out we all
-      die.\r\n\r\nLet\u2019s build a Power Plant before he tells the whole station
-      of their imminent death.\r"
+    dialogue: "Eddie from engineering made me promise to tell you about their \u201Cflickering
+      lights\u201D. The crew down there thinks that we can just drop what we\u2019re
+      doing every time they have a problem.\r"
     dialogueContainer: 3
-    speakerImage: {fileID: 21300000, guid: 1c62aa0f66d4b2c4a85532b5464366dd, type: 3}
+    speakerImage: {fileID: 21300002, guid: 1c62aa0f66d4b2c4a85532b5464366dd, type: 3}
     playerImageIndex: 0
     useCustomPlayerImage: 0
     flipImage: 0
@@ -330,8 +279,124 @@ MonoBehaviour:
     dialogueWaitTime: 0
     dialoguefadeTime: 0
     inputButtons:
+    - buttonText: Next
+      nextEventIDsForInputs: 0a000000
+    triggers: []
+    triggerBools: 
+    itemsGiven: []
+    itemsGivenString: []
+    itemsTaken: []
+    itemsTakenString: []
+    experienceGiven: 0
+    missions: []
+    subDialogue: {fileID: 0}
+    audio: {fileID: 0}
+    loop: 0
+    overlay: 1
+    fadeTime: 0
+    playOriginalAfter: 1
+    originalFadeTime: 1.25
+    audioVolume: 1
+    chainIntAdjustments: []
+    triggerChecks: []
+    triggerCheckBools: 
+    itemChecks: []
+    itemChecksString: []
+    chainIntChecks: []
+    secondaryInputButtons: []
+    sendMessage: 000000
+    messageFloat: 0
+    messageString: 
+    messageBool: 0
+  - cEventType: 3
+    eventID: 10
+    nextEventIDs: 
+    previousEventIDs: 08000000
+    lateralConnections: 
+    windowRect:
+      serializedVersion: 2
+      x: 890
+      y: 76
+      width: 375
+      height: 285
+    rank: 0
+    dialogue: "When these complaints come from Accounting, you can usually ignore
+      them, those guys are half blind from all those numbers. But Eddie? He knows
+      our inventory, which means he knows we only have a limited supply of power left,
+      and that when it runs out we all die.\r"
+    dialogueContainer: 3
+    speakerImage: {fileID: 21300004, guid: 1c62aa0f66d4b2c4a85532b5464366dd, type: 3}
+    playerImageIndex: 0
+    useCustomPlayerImage: 0
+    flipImage: 0
+    leftSide: 0
+    showImage: 1
+    speaker: Evie
+    noSpeaker: 0
+    textDelay: 0.02
+    dialogueWaitTime: 0
+    dialoguefadeTime: 0
+    inputButtons:
+    - buttonText: Next
+      nextEventIDsForInputs: 0b000000
+    triggers: []
+    triggerBools: 
+    itemsGiven: []
+    itemsGivenString: []
+    itemsTaken: []
+    itemsTakenString: []
+    experienceGiven: 0
+    missions: []
+    subDialogue: {fileID: 0}
+    audio: {fileID: 0}
+    loop: 0
+    overlay: 1
+    fadeTime: 0
+    playOriginalAfter: 1
+    originalFadeTime: 1.25
+    audioVolume: 1
+    chainIntAdjustments: []
+    triggerChecks: []
+    triggerCheckBools: 
+    itemChecks: []
+    itemChecksString: []
+    chainIntChecks: []
+    secondaryInputButtons: []
+    sendMessage: 000000
+    messageFloat: 0
+    messageString: 
+    messageBool: 0
+  - cEventType: 3
+    eventID: 11
+    nextEventIDs: 
+    previousEventIDs: 0a000000
+    lateralConnections: 
+    windowRect:
+      serializedVersion: 2
+      x: 244
+      y: 416
+      width: 375
+      height: 285
+    rank: 0
+    dialogue: "Sir, meet Evie. She has been turning wrenches for this company since
+      she was a little kid. Unfortunately, she knows this area better than I do, so
+      we should listen to her.\r\n\r\nLet\u2019s build a Power Plant before Eddie
+      tells the whole station of their imminent death.\r\n"
+    dialogueContainer: 3
+    speakerImage: {fileID: 21300002, guid: 1c62aa0f66d4b2c4a85532b5464366dd, type: 3}
+    playerImageIndex: 0
+    useCustomPlayerImage: 0
+    flipImage: 0
+    leftSide: 1
+    showImage: 1
+    speaker: Reginald
+    noSpeaker: 0
+    textDelay: 0.02
+    dialogueWaitTime: 0
+    dialoguefadeTime: 0
+    inputButtons:
     - buttonText: Accept
-      nextEventIDsForInputs: 09000000
+      nextEventIDsForInputs: 0c000000
     triggers: []
     triggerBools: 
     itemsGiven: []
@@ -360,14 +425,14 @@ MonoBehaviour:
     messageString: 
     messageBool: 0
   - cEventType: 12
-    eventID: 9
+    eventID: 12
     nextEventIDs: 
-    previousEventIDs: 08000000
+    previousEventIDs: 0b000000
     lateralConnections: 
     windowRect:
       serializedVersion: 2
-      x: 1136
-      y: 176
+      x: 734
+      y: 574
       width: 200
       height: 78
     rank: 0

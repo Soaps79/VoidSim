@@ -36,8 +36,8 @@ MonoBehaviour:
     lateralConnections: 
     windowRect:
       serializedVersion: 2
-      x: -360
-      y: 168
+      x: -176
+      y: 145
       width: 165
       height: 40
     rank: 0
@@ -90,8 +90,8 @@ MonoBehaviour:
     lateralConnections: 
     windowRect:
       serializedVersion: 2
-      x: 1440
-      y: 216
+      x: 1624
+      y: 193
       width: 200
       height: 78
     rank: 0
@@ -145,8 +145,8 @@ MonoBehaviour:
     lateralConnections: 
     windowRect:
       serializedVersion: 2
-      x: -360
-      y: 168
+      x: -176
+      y: 145
       width: 165
       height: 40
     rank: 0
@@ -198,8 +198,8 @@ MonoBehaviour:
     lateralConnections: 
     windowRect:
       serializedVersion: 2
-      x: -114
-      y: 96
+      x: 70
+      y: 73
       width: 375
       height: 285
     rank: 0
@@ -208,7 +208,7 @@ MonoBehaviour:
       imagine why YOU, stepping in straight out of school would require an advisor
       of my caliber.\r"
     dialogueContainer: 3
-    speakerImage: {fileID: 21300000, guid: 1c62aa0f66d4b2c4a85532b5464366dd, type: 3}
+    speakerImage: {fileID: 21300002, guid: 1c62aa0f66d4b2c4a85532b5464366dd, type: 3}
     playerImageIndex: 0
     useCustomPlayerImage: 0
     flipImage: 0
@@ -256,8 +256,8 @@ MonoBehaviour:
     lateralConnections: 
     windowRect:
       serializedVersion: 2
-      x: 349
-      y: 105
+      x: 533
+      y: 82
       width: 375
       height: 285
     rank: 0
@@ -267,7 +267,7 @@ MonoBehaviour:
       actually worth money, or we can use to improve the station. Tell your factory
       to produce some Consumer Goods, that we can then sell out into the galaxy.\r"
     dialogueContainer: 3
-    speakerImage: {fileID: 21300000, guid: 1c62aa0f66d4b2c4a85532b5464366dd, type: 3}
+    speakerImage: {fileID: 21300002, guid: 1c62aa0f66d4b2c4a85532b5464366dd, type: 3}
     playerImageIndex: 0
     useCustomPlayerImage: 0
     flipImage: 0
@@ -315,8 +315,8 @@ MonoBehaviour:
     lateralConnections: 
     windowRect:
       serializedVersion: 2
-      x: 1025
-      y: 102
+      x: 1209
+      y: 79
       width: 375
       height: 285
     rank: 1
@@ -325,7 +325,7 @@ MonoBehaviour:
       You DO know that our entire purpose out here is to bring in traffic, don\u2019t
       you?\r\n"
     dialogueContainer: 3
-    speakerImage: {fileID: 21300000, guid: 1c62aa0f66d4b2c4a85532b5464366dd, type: 3}
+    speakerImage: {fileID: 21300002, guid: 1c62aa0f66d4b2c4a85532b5464366dd, type: 3}
     playerImageIndex: 0
     useCustomPlayerImage: 0
     flipImage: 0
@@ -373,8 +373,8 @@ MonoBehaviour:
     lateralConnections: 
     windowRect:
       serializedVersion: 2
-      x: 1440
-      y: 216
+      x: 1624
+      y: 193
       width: 200
       height: 78
     rank: 0
@@ -427,8 +427,8 @@ MonoBehaviour:
     lateralConnections: 
     windowRect:
       serializedVersion: 2
-      x: 766
-      y: 178
+      x: 950
+      y: 155
       width: 200
       height: 78
     rank: 0

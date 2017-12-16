@@ -1,10 +1,13 @@
 fileFormatVersion: 2
 guid: 1c62aa0f66d4b2c4a85532b5464366dd
-timeCreated: 1511740349
+timeCreated: 1513447290
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
     21300000: advisor_happy
+    21300002: reginald
+    21300004: evie
+    21300006: actor_avatars_2
   externalObjects: {}
   serializedVersion: 4
   mipmaps:
@@ -106,15 +109,29 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: advisor_happy
+      name: reginald
       rect:
         serializedVersion: 2
         x: 0
-        y: 780
+        y: 768
         width: 256
-        height: 244
+        height: 256
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: evie
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 768
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
