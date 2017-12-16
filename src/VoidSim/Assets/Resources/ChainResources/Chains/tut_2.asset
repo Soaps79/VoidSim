@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nodeIDCount: 13
   paused: 0
-  hasEnded: 0
+  hasEnded: 1
   haltMovement: 1
   defaultShowImages: 1
   defaultShowNames: 1
@@ -83,37 +83,32 @@ MonoBehaviour:
     messageString: 
     messageBool: 0
   currentEvent:
-    cEventType: 3
-    eventID: 10
+    cEventType: 12
+    eventID: 12
     nextEventIDs: 
-    previousEventIDs: 08000000
+    previousEventIDs: 0b000000
     lateralConnections: 
     windowRect:
       serializedVersion: 2
-      x: 890
-      y: 76
-      width: 375
-      height: 285
+      x: 734
+      y: 574
+      width: 200
+      height: 78
     rank: 0
-    dialogue: "When these complaints come from Accounting, you can usually ignore
-      them, those guys are half blind from all those numbers. But Eddie? He knows
-      our inventory, which means he knows we only have a limited supply of power left,
-      and that when it runs out we all die.\r"
-    dialogueContainer: 3
-    speakerImage: {fileID: 21300004, guid: 1c62aa0f66d4b2c4a85532b5464366dd, type: 3}
+    dialogue: 
+    dialogueContainer: 0
+    speakerImage: {fileID: 0}
     playerImageIndex: 0
     useCustomPlayerImage: 0
     flipImage: 0
-    leftSide: 0
-    showImage: 1
-    speaker: Evie
+    leftSide: 1
+    showImage: 0
+    speaker: 
     noSpeaker: 0
     textDelay: 0.02
     dialogueWaitTime: 0
     dialoguefadeTime: 0
-    inputButtons:
-    - buttonText: Next
-      nextEventIDsForInputs: 0b000000
+    inputButtons: []
     triggers: []
     triggerBools: 
     itemsGiven: []
@@ -121,7 +116,8 @@ MonoBehaviour:
     itemsTaken: []
     itemsTakenString: []
     experienceGiven: 0
-    missions: []
+    missions:
+    - {fileID: 11400000, guid: a4973a6bbc876094e8ebc6ea44bd5599, type: 2}
     subDialogue: {fileID: 0}
     audio: {fileID: 0}
     loop: 0
@@ -333,7 +329,7 @@ MonoBehaviour:
     showImage: 1
     speaker: Evie
     noSpeaker: 0
-    textDelay: 0.02
+    textDelay: 0
     dialogueWaitTime: 0
     dialoguefadeTime: 0
     inputButtons:
@@ -391,7 +387,7 @@ MonoBehaviour:
     showImage: 1
     speaker: Reginald
     noSpeaker: 0
-    textDelay: 0.02
+    textDelay: 0
     dialogueWaitTime: 0
     dialoguefadeTime: 0
     inputButtons:

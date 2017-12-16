@@ -306,8 +306,9 @@ public class DialogueController : MonoBehaviour
     //Instantiates the correct dialogue container prefab chosen by the dialogue chain event
     void GetContainer(ContainerType cType)
     {
-        loadedCanvas = Instantiate(dialogueCanvas, Vector3.zero, Quaternion.identity) as Canvas;
-        loadedContainer = Instantiate(containers[(int)cType], loadedCanvas.transform) as GameObject;
+        loadedCanvas = Instantiate(dialogueCanvas) as Canvas;
+        loadedCanvas.worldCamera = Camera.main;
+        loadedContainer = Instantiate(containers[(int)cType], loadedCanvas.transform, false) as GameObject;
         SetupContainer();
     }
 
