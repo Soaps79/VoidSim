@@ -88,6 +88,8 @@ public class DialogueControllerEditor : Editor
         GUI.enabled = true;
 
         dController.dialogueCanvas = (Canvas)EditorGUILayout.ObjectField("Canvas Prefab", dController.dialogueCanvas, typeof(Canvas), false);
+        dController.ViewModelPrefab = (ConversationViewModel)EditorGUILayout.ObjectField("Convo Prefab", dController.ViewModelPrefab, typeof(ConversationViewModel), false);
+        dController.ButtonPrefab = (Button)EditorGUILayout.ObjectField("Button Prefab", dController.ButtonPrefab, typeof(Button), false);
 
         dController.chainDataReset = EditorGUILayout.Toggle(new GUIContent("Reset data after Playmode", "If true, triggers will return to their original " +
             "state when exiting playmode. If false, triggers will retain their playmode altered state like other assets."), dController.chainDataReset);
