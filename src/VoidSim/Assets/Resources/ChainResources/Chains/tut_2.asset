@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nodeIDCount: 13
   paused: 0
-  hasEnded: 1
+  hasEnded: 0
   haltMovement: 1
   defaultShowImages: 1
   defaultShowNames: 1
@@ -83,32 +83,35 @@ MonoBehaviour:
     messageString: 
     messageBool: 0
   currentEvent:
-    cEventType: 12
-    eventID: 12
+    cEventType: 3
+    eventID: 5
     nextEventIDs: 
-    previousEventIDs: 0b000000
+    previousEventIDs: 00000000
     lateralConnections: 
     windowRect:
       serializedVersion: 2
-      x: 734
-      y: 574
-      width: 200
-      height: 78
+      x: -45
+      y: 71
+      width: 375
+      height: 285
     rank: 0
-    dialogue: 
-    dialogueContainer: 0
-    speakerImage: {fileID: 0}
+    dialogue: 'Great! We have production and shipping, two essential building blocks
+      for our empire. '
+    dialogueContainer: 3
+    speakerImage: {fileID: 21300002, guid: 1c62aa0f66d4b2c4a85532b5464366dd, type: 3}
     playerImageIndex: 0
     useCustomPlayerImage: 0
     flipImage: 0
     leftSide: 1
-    showImage: 0
-    speaker: 
+    showImage: 1
+    speaker: Reginald
     noSpeaker: 0
-    textDelay: 0.02
+    textDelay: 0
     dialogueWaitTime: 0
     dialoguefadeTime: 0
-    inputButtons: []
+    inputButtons:
+    - buttonText: Next
+      nextEventIDsForInputs: 08000000
     triggers: []
     triggerBools: 
     itemsGiven: []
@@ -116,8 +119,7 @@ MonoBehaviour:
     itemsTaken: []
     itemsTakenString: []
     experienceGiven: 0
-    missions:
-    - {fileID: 11400000, guid: a4973a6bbc876094e8ebc6ea44bd5599, type: 2}
+    missions: []
     subDialogue: {fileID: 0}
     audio: {fileID: 0}
     loop: 0

@@ -232,12 +232,16 @@ public class DialogueController : MonoBehaviour
 
             if (!currentEvent.leftSide)
             {
-                Vector2 containerPos = currentContainer.container.GetComponent<RectTransform>().anchoredPosition;
-                containerPos.x = loadedCanvas.GetComponent<RectTransform>().rect.width - currentContainer.container.GetComponent<LayoutElement>().preferredWidth - containerPos.x;
-                currentContainer.container.GetComponent<RectTransform>().anchoredPosition = containerPos;
+                //Vector2 containerPos = currentContainer.container.GetComponent<RectTransform>().anchoredPosition;
+                //containerPos.x = loadedCanvas.GetComponent<RectTransform>().rect.width - currentContainer.container.GetComponent<LayoutElement>().preferredWidth - containerPos.x;
+                //currentContainer.container.GetComponent<RectTransform>().anchoredPosition = containerPos;
 
                 currentContainer.dialogueBox.transform.parent.GetComponent<VerticalLayoutGroup>().childAlignment = TextAnchor.LowerRight;
-                currentContainer.speakerNameBox.GetComponent<RectTransform>().anchoredPosition = new Vector3(currentContainer.dialogueBox.transform.parent.GetComponent<RectTransform>().rect.width - (currentContainer.speakerNameText.GetComponent<RectTransform>().rect.width + speakerTextToBoxDiff) + originalSpeakerPos.x, originalSpeakerPos.y, originalSpeakerPos.z);
+                currentContainer.speakerNameBox.GetComponent<RectTransform>().anchoredPosition = 
+                    new Vector3(currentContainer.dialogueBox.transform.parent.GetComponent<RectTransform>().rect.width 
+                        - (currentContainer.speakerNameText.GetComponent<RectTransform>().rect.width 
+                        + speakerTextToBoxDiff) + originalSpeakerPos.x, 
+                        originalSpeakerPos.y, originalSpeakerPos.z);
 
                 if (currentEvent.showImage)
                 {
@@ -247,7 +251,12 @@ public class DialogueController : MonoBehaviour
                     {
                         mod = 1;
                     }
-                    pos.x = (currentContainer.container.GetComponent<LayoutElement>().preferredWidth - currentContainer.speakerImage.GetComponent<RectTransform>().anchoredPosition.x + currentEvent.speakerImage.rect.width * mod);
+                    //pos.x = (currentContainer.container.GetComponent<LayoutElement>().preferredWidth - currentContainer.speakerImage.GetComponent<RectTransform>().anchoredPosition.x + currentEvent.speakerImage.rect.width * mod);
+                    pos.x = (currentContainer.container.GetComponent<LayoutElement>().preferredWidth
+                             + currentContainer.speakerImage.GetComponent<RectTransform>().anchoredPosition.x
+                             + currentContainer.speakerImage.preferredWidth);
+                        //- currentContainer.speakerImage.GetComponent<RectTransform>().anchoredPosition.x 
+                        //+ currentEvent.speakerImage.rect.width * mod);
                     currentContainer.speakerImage.GetComponent<RectTransform>().anchoredPosition = pos;
                 }
                 if (!currentEvent.noSpeaker)
@@ -307,7 +316,6 @@ public class DialogueController : MonoBehaviour
     void GetContainer(ContainerType cType)
     {
         loadedCanvas = Instantiate(dialogueCanvas) as Canvas;
-        loadedCanvas.worldCamera = Camera.main;
         loadedContainer = Instantiate(containers[(int)cType], loadedCanvas.transform, false) as GameObject;
         SetupContainer();
     }

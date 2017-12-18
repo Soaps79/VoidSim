@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Name: tutorial
   m_EditorClassIdentifier: 
   Conversations:
-  - Conversation: {fileID: 11400000, guid: ea34bf454aec1444ab026f9a542972b3, type: 2}
+  - Conversation: {fileID: 11400000, guid: c4de5b1595c495e45be321766eea90e4, type: 2}
     Type: 0
     Values: []
-  - Conversation: {fileID: 11400000, guid: c4de5b1595c495e45be321766eea90e4, type: 2}
+  - Conversation: {fileID: 11400000, guid: ea34bf454aec1444ab026f9a542972b3, type: 2}
     Type: 1
     Values:
     - learn_crafting
