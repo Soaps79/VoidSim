@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 114880538023754656}
   - component: {fileID: 114316238360149524}
   - component: {fileID: 114548660360921500}
+  - component: {fileID: 225634180984569716}
   m_Layer: 5
   m_Name: conversation_panel
   m_TagString: Untagged
@@ -1712,3 +1713,14 @@ RectTransform:
   m_AnchoredPosition: {x: -7.3, y: 38.01}
   m_SizeDelta: {x: 287.2, y: 52.67}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &225634180984569716
+CanvasGroup:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1214872326651512}
+  m_Enabled: 1
+  m_Alpha: 0.8
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
