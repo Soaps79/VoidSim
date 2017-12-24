@@ -20,6 +20,7 @@ namespace Assets.Station
 		public int Capacity;
 		public int InboundPopulation;
 		public EmployerControlData EmployerControlData;
+	    public List<PersonData> Population;
 	}
 
 	/// <summary>
@@ -104,6 +105,7 @@ namespace Assets.Station
 			_currentCount = _deserialized.CurrentCount;
 			_inboundPopulation = _deserialized.InboundPopulation;
 			_employerControl.Deserialize(_deserialized.EmployerControlData);
+            _allPopulation.AddRange(_deserialized.Population.Select(i => new Person(i)));
 			if(_inventory.GetProductCurrentAmount(ProductIdLookup.Population) != _currentCount)
 				throw new UnityException("PopControl data not matching station inventory");
 		}
@@ -246,7 +248,8 @@ namespace Assets.Station
 				CurrentCount = _currentCount,
 				Capacity = _totalCapacity,
 				InboundPopulation = _inboundPopulation,
-				EmployerControlData = _employerControl.GetData()
+				EmployerControlData = _employerControl.GetData(),
+                Population = _allPopulation.Select(i => i.GetData()).ToList()
 			};
 			return data;
 		}
