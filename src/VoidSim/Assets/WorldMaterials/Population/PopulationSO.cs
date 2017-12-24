@@ -26,6 +26,13 @@ namespace Assets.WorldMaterials.Population
 		public float BaseEmployChance;
 	}
 
+    [Serializable]
+    public class GenerationParams
+    {
+        public int MinNamesLoaded;
+        public int MaxNamesLoaded;
+    }
+
 	public class PopulationSO : ScriptableObject
 	{
 		public int InitialCount;
@@ -33,5 +40,6 @@ namespace Assets.WorldMaterials.Population
 		public GameColors Colors;
 		public MoodParams MoodParams;
 		public EmploymentParams EmploymentParams;
+	    public GenerationParams GenerationParams;
 	}
 }

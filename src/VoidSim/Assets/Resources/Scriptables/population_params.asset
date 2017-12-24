@@ -26,3 +26,6 @@ MonoBehaviour:
       Length: 1
     EmploymentUpdateCount: 2
     BaseEmployChance: 0.6
+  GenerationParams:
+    MinNamesLoaded: 50
+    MaxNamesLoaded: 100

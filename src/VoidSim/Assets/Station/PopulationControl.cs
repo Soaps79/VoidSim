@@ -32,9 +32,10 @@ namespace Assets.Station
 		[SerializeField] private int _totalCapacity;
 		[SerializeField] private int _baseCapacity;
 		[SerializeField] private int _currentCount;
+	    [SerializeField] private int _countNamesToLoad;
 		private readonly List<PopHousing> _housing = new List<PopHousing>();
 
-		// Population is currently stored in the Station's inventory as a Product
+	    // Population is currently stored in the Station's inventory as a Product
 		// Allows it to be handled by trade, cargo, etc
 		private Inventory _inventory;
 		private int _populationProductId;
@@ -56,10 +57,13 @@ namespace Assets.Station
 		private PopulationData _deserialized;
 		private const string _collectionName = "PopulationControl";
 
+        private readonly PersonGenerator _personGenerator = new PersonGenerator();
+        private readonly List<Person> _allPopulation = new List<Person>();
+
 
 		public void Initialize(Inventory inventory, PopulationSO scriptable)
 		{
-			_scriptable = scriptable;
+		    _scriptable = scriptable;
 			_inventory = inventory;
 			_inventory.OnProductsChanged += HandleInventoryProductChanged;
 
@@ -74,9 +78,10 @@ namespace Assets.Station
 			MoodManager = new MoodManager(scriptable.MoodParams, inventory);
 			_employerControl = gameObject.AddComponent<EmployerControl>();
 			_employerControl.Initialize(scriptable, MoodManager.EfficiencyModule, _currentCount);
+		    _personGenerator.Initialize(scriptable.GenerationParams);
 
-			// load or set defaults
-			if (_serializer.HasDataFor(this, _collectionName))
+            // load or set defaults
+            if (_serializer.HasDataFor(this, _collectionName))
 				LoadFromFile();
 			else
 				LoadFromScriptable();
@@ -90,6 +95,7 @@ namespace Assets.Station
 		private void LoadFromScriptable()
 		{
 			_inventory.TryAddProduct(_populationProductId, _scriptable.InitialCount);
+            _allPopulation.AddRange(_personGenerator.GeneratePeople(_scriptable.InitialCount));
 		}
 
 		private void LoadFromFile()
