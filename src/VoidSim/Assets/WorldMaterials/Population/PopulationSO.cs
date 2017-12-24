@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Assets.Scripts;
 using Assets.Station;
 using UnityEngine;
@@ -31,6 +32,7 @@ namespace Assets.WorldMaterials.Population
     {
         public int MinNamesLoaded;
         public int MaxNamesLoaded;
+        public List<PersonNeeds> ResidentNeeds;
     }
 
 	public class PopulationSO : ScriptableObject

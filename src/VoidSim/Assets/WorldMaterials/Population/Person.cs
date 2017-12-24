@@ -1,13 +1,22 @@
-﻿using Assets.Scripts.Serialization;
+﻿using System;
+using Assets.Scripts.Serialization;
 
 namespace Assets.WorldMaterials.Population
 {
+    [Serializable]
     public class PersonData
     {
         public int Id;
         public string FirstName;
         public string LastName;
         public bool IsMale;
+    }
+
+    [Serializable]
+    public class PersonNeeds
+    {
+        public string Name;
+        public string DisplayName;
     }
 
     public class Person : ISerializeData<PersonData>

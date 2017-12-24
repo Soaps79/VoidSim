@@ -29,3 +29,10 @@ MonoBehaviour:
   GenerationParams:
     MinNamesLoaded: 50
     MaxNamesLoaded: 100
+    ResidentNeeds:
+    - Name: rest
+      DisplayName: Rest
+    - Name: entertainment
+      DisplayName: Entertainment
+    - Name: sustenance
+      DisplayName: Food/Drink
