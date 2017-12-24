@@ -60,9 +60,10 @@ namespace Assets.Station
 
         private readonly PersonGenerator _personGenerator = new PersonGenerator();
         private readonly List<Person> _allPopulation = new List<Person>();
+        private readonly List<Person> _needsResidentHousing = new List<Person>();
 
 
-		public void Initialize(Inventory inventory, PopulationSO scriptable)
+	    public void Initialize(Inventory inventory, PopulationSO scriptable)
 		{
 		    _scriptable = scriptable;
 			_inventory = inventory;
@@ -96,8 +97,11 @@ namespace Assets.Station
 		private void LoadFromScriptable()
 		{
 			_inventory.TryAddProduct(_populationProductId, _scriptable.InitialCount);
-            _allPopulation.AddRange(_personGenerator.GeneratePeople(_scriptable.InitialCount));
-		}
+		    var people = _personGenerator.GeneratePeople(_scriptable.InitialCount);
+            people.ForEach(i => i.IsResident = true);
+            _needsResidentHousing.AddRange(people);
+		    _allPopulation.AddRange(people);
+        }
 
 		private void LoadFromFile()
 		{
@@ -166,12 +170,30 @@ namespace Assets.Station
 			_housing.Add(args.PopHousing);
 			args.PopHousing.OnRemove += HandleRemove;
 
+		    TryMovePeopleIntoHomes(args.PopHousing);
 			// update capacity, put out a request for inhabitants
 			UpdateCapacity();
 			UpdateTradeRequest();
 		}
 
-		private void HandleRemove(PopHousing obj)
+	    private void TryMovePeopleIntoHomes(PopHousing popHousing)
+	    {
+            // this is primitive, will work until people are choosy about their housing
+	        if (!_needsResidentHousing.Any())
+	            return;
+
+	        var movingIn = new List<Person>();
+	        if (_needsResidentHousing.Count > popHousing.Capacity)
+	            movingIn.AddRange(_needsResidentHousing.Take(popHousing.Capacity));
+            else
+                movingIn.AddRange(_needsResidentHousing);
+
+	        var holder = popHousing.GetComponent<PopHolder>();
+            holder.TakePeople(movingIn);
+            movingIn.ForEach(i => _needsResidentHousing.Remove(i));
+	    }
+
+	    private void HandleRemove(PopHousing obj)
 		{
 			if (_housing.Remove(obj))
 			{

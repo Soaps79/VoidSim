@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Assets.Scripts.Serialization;
 
 namespace Assets.WorldMaterials.Population
@@ -9,7 +10,9 @@ namespace Assets.WorldMaterials.Population
         public int Id;
         public string FirstName;
         public string LastName;
+        public string Home;
         public bool IsMale;
+        public bool IsResident;
     }
 
     [Serializable]
@@ -19,12 +22,20 @@ namespace Assets.WorldMaterials.Population
         public string DisplayName;
     }
 
+    public interface IPeopleHolder
+    {
+        void TakePeople(IEnumerable<Person> people);
+    }
+
+    [Serializable]
     public class Person : ISerializeData<PersonData>
     {
         public int Id;
         public string FirstName;
         public string LastName;
+        public string Home;
         public bool IsMale;
+        public bool IsResident;
 
         public Person() { }
         
@@ -34,6 +45,8 @@ namespace Assets.WorldMaterials.Population
             FirstName = data.FirstName;
             LastName = data.LastName;
             IsMale = data.IsMale;
+            Home = data.Home;
+            IsResident = data.IsResident;
         }
 
         public PersonData GetData()
@@ -43,7 +56,9 @@ namespace Assets.WorldMaterials.Population
                 Id = Id,
                 FirstName = FirstName,
                 LastName = LastName,
-                IsMale = IsMale
+                Home = Home,
+                IsMale = IsMale,
+                IsResident = IsResident
             };
         }
     }
