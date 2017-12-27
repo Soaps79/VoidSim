@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Logistics;
-using Assets.Placeables.Nodes;
 using Assets.Scripts;
 using Assets.Scripts.Serialization;
 using Assets.Station.Population;
@@ -21,7 +20,6 @@ namespace Assets.Station
 		public int CurrentCount;
 		public int Capacity;
 		public int InboundPopulation;
-		public EmployerControlData EmployerControlData;
 	    public List<PersonData> Population;
 	}
 
@@ -50,7 +48,6 @@ namespace Assets.Station
 		private bool _ignoreNeeds;
 
 		public MoodManager MoodManager { get; private set; }
-		private EmployerControl _employerControl;
 
 		// serialization
 		private readonly CollectionSerializer<PopulationData> _serializer
@@ -59,14 +56,11 @@ namespace Assets.Station
 		private const string _collectionName = "PopulationControl";
 
         private readonly PersonGenerator _personGenerator = new PersonGenerator();
+	    private readonly List<IPopMonitor> _peopleHandlers = new List<IPopMonitor>();
+
         public readonly List<Person> AllPopulation = new List<Person>();
-        private readonly List<Person> _needsResidentHousing = new List<Person>();
-	    private PeopleMover _peopleMover;
 
 	    public Action<List<Person>, bool> OnPopulationUpdated;
-	    private PeopleHouser _peopleHouser;
-
-        private readonly List<IPeopleHandler> _peopleHandlers = new List<IPeopleHandler>();
 
 	    public void Initialize(Inventory inventory, PopulationSO scriptable)
 		{
@@ -83,10 +77,9 @@ namespace Assets.Station
 
 			// establish sub-objects
 			MoodManager = new MoodManager(scriptable.MoodParams, inventory);
-			_employerControl = gameObject.AddComponent<EmployerControl>();
-			_employerControl.Initialize(scriptable, MoodManager.EfficiencyModule, _currentCount);
 		    _personGenerator.Initialize(scriptable.GenerationParams);
 
+		    InitializeEmployment();
             InitializeMover();
             InitializeHouser();
 
@@ -100,6 +93,13 @@ namespace Assets.Station
 			InitializeProductTrader();
 		}
 
+	    private void InitializeEmployment()
+	    {
+	        var employer = GetComponent<PopEmployerMonitor>();
+            employer.Initialize(this, _scriptable, MoodManager.EfficiencyModule);
+            _peopleHandlers.Add(employer);
+	    }
+
 	    private void InitializeMover()
 	    {
 	        var mover = GetComponent<PeopleMover>();
@@ -109,7 +109,7 @@ namespace Assets.Station
 
 	    private void InitializeHouser()
 	    {
-	        var houser = GetComponent<PeopleHouser>();
+	        var houser = GetComponent<PopHomeMonitor>();
 	        houser.Initialize(this, _inventory);
 	        _peopleHandlers.Add(houser);
 	    }
@@ -129,7 +129,6 @@ namespace Assets.Station
 			_deserialized = _serializer.DeserializeData();
 			_currentCount = _deserialized.CurrentCount;
 			_inboundPopulation = _deserialized.InboundPopulation;
-			_employerControl.Deserialize(_deserialized.EmployerControlData);
 
 		    var people = _deserialized.Population.Select(i => new Person(i)).ToList();
             if(_inventory.GetProductCurrentAmount(ProductIdLookup.Population) != people.Count())
@@ -156,7 +155,6 @@ namespace Assets.Station
 				_inboundPopulation -= amount;
 
 			_currentCount = _inventory.GetProductCurrentAmount(_populationProductId);
-			_employerControl.CurrentUnemployed += amount;
 		}
 
 		// checks to see if inventory has room for more pop (discounting those already in transit)
@@ -239,7 +237,6 @@ namespace Assets.Station
 				CurrentCount = _currentCount,
 				Capacity = _totalCapacity,
 				InboundPopulation = _inboundPopulation,
-				EmployerControlData = _employerControl.GetData(),
                 Population = AllPopulation.Select(i => i.GetData()).ToList()
 			};
 			return data;

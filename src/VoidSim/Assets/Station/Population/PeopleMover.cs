@@ -5,7 +5,7 @@ using QGame;
 
 namespace Assets.Station.Population
 {
-    public class PeopleMover : QScript, IMessageListener, IPeopleHandler
+    public class PeopleMover : QScript, IMessageListener, IPopMonitor
     {
         private readonly List<Person> _allPopulation = new List<Person>();
 

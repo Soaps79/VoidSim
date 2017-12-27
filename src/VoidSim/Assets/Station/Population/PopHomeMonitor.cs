@@ -19,7 +19,7 @@ namespace Assets.Station.Population
     /// <summary>
     /// Finds housing for population
     /// </summary>
-    public class PeopleHouser : QScript, IMessageListener, IPeopleHandler
+    public class PopHomeMonitor : QScript, IMessageListener, IPopMonitor
     {
         // currently used to space out placement, will be replaced when people choose their homes
         public float ToHouseChance;
@@ -123,7 +123,7 @@ namespace Assets.Station.Population
         private void HandleHousingAdd(PopHousingMessageArgs args)
         {
             if(args == null && args.PopHome == null)
-                throw new UnityException("PeopleHouser given bad message args");
+                throw new UnityException("PopHomeMonitor given bad message args");
 
             var home = args.PopHome;
             // if new, name it
@@ -169,6 +169,6 @@ namespace Assets.Station.Population
             _inventory.SetProductMaxAmount(ProductIdLookup.Population, MaxCapacity);
         }
 
-        public string Name { get { return "PeopleHouser"; } }
+        public string Name { get { return "PopHomeMonitor"; } }
     }
 }

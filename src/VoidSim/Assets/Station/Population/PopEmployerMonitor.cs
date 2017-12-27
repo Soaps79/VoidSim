@@ -3,33 +3,23 @@ using System.Linq;
 using Assets.Placeables.Nodes;
 using Assets.Scripts;
 using Assets.Scripts.Serialization;
-using Assets.Station;
 using Assets.Station.Efficiency;
+using Assets.WorldMaterials.Population;
 using Messaging;
 using QGame;
 using UnityEngine;
 using TimeLength = Assets.Scripts.TimeLength;
 
-namespace Assets.WorldMaterials.Population
+namespace Assets.Station.Population
 {
-	public class EmployerControlData
-	{
-		public int CurrentUnemployed;
-		public List<EmployerData> Employers;
-	}
-
-	public class EmployerData
-	{
-		public string EmployerName;
-		public int Count;
-	}
-
 	/// <summary>
 	/// Handles matching population with employment
 	/// </summary>
-	public class EmployerControl : QScript, ISerializeData<EmployerControlData>, IMessageListener
+	public class PopEmployerMonitor : QScript, IMessageListener, IPopMonitor
 	{
+        // maintain these values for editor debugging
 		public int CurrentUnemployed;
+	    public int CurrentCapacity;
 
 		[SerializeField] private TimeLength _employmentUpdateTimeLength;
 		[SerializeField] private int _employmentUpdateCount;
@@ -37,14 +27,18 @@ namespace Assets.WorldMaterials.Population
 
 		private readonly string _stopwatchNodeName = "employment";
 		private readonly List<PopEmployer> _employers = new List<PopEmployer>();
-		private readonly List<EmployerData> _deserialized = new List<EmployerData>();
+		private readonly List<Person> _unemployed = new List<Person>();
+	    private readonly List<Person> _deserialized = new List<Person>();
 
-		// passed on to Employers
-		private readonly EfficiencyAffector _employerAffector = new EfficiencyAffector("Pop Mood");
+        // passed on to Employers
+        private readonly EfficiencyAffector _employerAffector = new EfficiencyAffector("Pop Mood");
 
-		public void Initialize(PopulationSO scriptable, EfficiencyModule module, int currentEmployed)
+	    private List<Person> _allPopulation;
+
+	    public void Initialize(PopulationControl control, PopulationSO scriptable, EfficiencyModule module)
 		{
-			CurrentUnemployed = currentEmployed;
+		    _allPopulation = control.AllPopulation;
+			
 			InitializeEmploymentUpdate(scriptable.EmploymentParams);
 			Locator.MessageHub.AddListener(this, PopEmployer.MessageName);
 			if(module == null)
@@ -56,13 +50,6 @@ namespace Assets.WorldMaterials.Population
 		private void HandleMoodChange(EfficiencyModule module)
 		{
 			_employerAffector.Efficiency = module.CurrentAmount;
-		}
-
-
-		public void Deserialize(EmployerControlData deserialized)
-		{
-			CurrentUnemployed = deserialized.CurrentUnemployed;
-			_deserialized.AddRange(deserialized.Employers);
 		}
 
 		// register with stopwatch to regularly check for updates
@@ -90,7 +77,7 @@ namespace Assets.WorldMaterials.Population
 			// for each possible employee
 			for (int i = 0; i < _employmentUpdateCount; i++)
 			{
-				if (CurrentUnemployed < 0 || !employers.Any())
+				if (_unemployed.Count <= 0 || !employers.Any())
 					break;
 
 				// see if they want the job
@@ -100,27 +87,22 @@ namespace Assets.WorldMaterials.Population
 
 				// pop the employer, give him the worker, add to back if he still has room
 				var employer = employers.Dequeue();
-				employer.AddEmployee(1);
-				CurrentUnemployed -= 1;
+			    var employee = _unemployed.First();
+				employer.AddEmployee(employee);
+			    _unemployed.Remove(employee);
 				if (employer.HasRoom)
 					employers.Enqueue(employer);
 			}
+		    UpdateCounts();
 		}
 
-		public EmployerControlData GetData()
-		{
-			return new EmployerControlData
-			{
-				CurrentUnemployed = CurrentUnemployed,
-				Employers = _employers.Select(i => new EmployerData
-				{
-					EmployerName = i.name,
-					Count = i.CurrentEmployeeCount
-				}).ToList()
-			};
-		}
+	    private void UpdateCounts()
+	    {
+	        CurrentUnemployed = _unemployed.Count;
+	        CurrentCapacity = _employers.Sum(i => i.MaxEmployeeCount);
+	    }
 
-		public void HandleMessage(string type, MessageArgs args)
+        public void HandleMessage(string type, MessageArgs args)
 		{
 			if (type == PopEmployer.MessageName && args != null)
 				HandleEmployerPlacement(args as PopEmployerMessageArgs);
@@ -138,45 +120,67 @@ namespace Assets.WorldMaterials.Population
 			employer.RegisterMood(_employerAffector);
 			_employers.Add(employer);
 
-			if (_deserialized.Any(i => i.EmployerName == employer.name))
+			if (_deserialized.Any(i => i.Employer == employer.name))
 				HandleExistingEmployer(employer);
 			else
 				HandleNewEmployer(employer);
 
 			employer.OnRemove += HandleEmployerRemove;
+            UpdateCounts();
 		}
 
 		private void HandleEmployerRemove(PopEmployer obj)
 		{
-			CurrentUnemployed += obj.CurrentEmployeeCount;
-			_employers.Remove(obj);
+			if(_employers.Remove(obj))
+                UpdateCounts();
 		}
 
 		private void HandleExistingEmployer(PopEmployer employer)
 		{
-			var data = _deserialized.First(i => i.EmployerName == employer.name);
-			employer.AddEmployee(data.Count);
+		    var employees = _deserialized.Where(i => i.Employer == employer.name).ToList();
+            employees.ForEach(employer.AddEmployee);
+		    _deserialized.RemoveAll(i => employees.Contains(i));
 		}
 
 		private void HandleNewEmployer(PopEmployer employer)
 		{
 			// real basic implementation of placing employees, place half the max amount
-			if (CurrentUnemployed > 0)
+			if (_unemployed.Count > 0)
 			{
 				var countToEmploy = employer.MaxEmployeeCount / 2;
-				if (CurrentUnemployed > countToEmploy)
+				if (_unemployed.Count > countToEmploy)
 				{
-					employer.AddEmployee(countToEmploy);
-					CurrentUnemployed -= countToEmploy;
+				    var employees = _unemployed.Take(countToEmploy).ToList();
+                    employees.ForEach(employer.AddEmployee);
+                    _unemployed.RemoveRange(0, countToEmploy);
 				}
 				else
 				{
-					employer.CurrentEmployeeCount = CurrentUnemployed;
-					CurrentUnemployed = 0;
+                    _unemployed.ForEach(employer.AddEmployee);
+                    _unemployed.Clear();
 				}
 			}
 		}
 
 		public string Name { get { return "EmployerControl"; } }
+	    public void HandlePopulationUpdate(List<Person> people, bool wasAdded)
+	    {
+	        var unemployed = people.Where(i => string.IsNullOrEmpty(i.Employer));
+            _unemployed.AddRange(unemployed);
+
+	        var employed = people.Except(unemployed);
+	        foreach (var person in employed)
+	        {
+	            var employer = _employers.FirstOrDefault(i => i.name == person.Employer);
+                if(employer != null)
+                    employer.AddEmployee(person);
+	        }
+            UpdateCounts();
+	    }
+
+	    public void HandleDeserialization(List<Person> people)
+	    {
+	        _deserialized.AddRange(people);
+	    }
 	}
 }

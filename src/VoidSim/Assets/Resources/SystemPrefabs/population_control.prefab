@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 114272786897615986}
   - component: {fileID: 114195346340893394}
   - component: {fileID: 114653319925193394}
+  - component: {fileID: 114947384910430274}
   m_Layer: 0
   m_Name: population_control
   m_TagString: Untagged
@@ -54,6 +55,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ToHouseChance: 0.6
+  _needsHousing: []
+  _residentHousing: []
+  MaxCapacity: 0
+  OccupiedCapacity: 0
+  _updateFrequency:
+    TimeUnit: 0
+    Length: 8
 --- !u!114 &114272786897615986
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -80,3 +88,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37b968ec8bce76d4691c33daeb46661e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114947384910430274
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1991484871919434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e25fafc4b282471479cef8d463bbe5b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CurrentUnemployed: 0
+  CurrentCapacity: 0
+  _employmentUpdateTimeLength:
+    TimeUnit: 2
+    Length: 1
+  _employmentUpdateCount: 0

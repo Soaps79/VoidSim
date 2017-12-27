@@ -4,7 +4,7 @@ using Assets.WorldMaterials.Population;
 
 namespace Assets.Station.Population
 {
-    public interface IPeopleHandler
+    public interface IPopMonitor
     {
         void HandlePopulationUpdate(List<Person> people, bool wasAdded);
         void HandleDeserialization(List<Person> people);
