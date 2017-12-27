@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 114232037613243984}
   - component: {fileID: 212644938903889796}
   - component: {fileID: 60094245009809562}
-  - component: {fileID: 114492067889414346}
+  - component: {fileID: 114540691761293196}
   m_Layer: 0
   m_Name: sm_housing
   m_TagString: Untagged
@@ -123,8 +123,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6aebc1e5d0a40a4ea7d5b835fd15ff3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsForResidents: 1
   _initialValue: 20
---- !u!114 &114492067889414346
+--- !u!114 &114540691761293196
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -135,6 +136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c57f8221eae9798409e0ce65bc3c6c18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _occupants: []
 --- !u!114 &114840166276243458
 MonoBehaviour:
   m_ObjectHideFlags: 1

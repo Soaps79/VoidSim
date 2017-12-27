@@ -1,50 +1,69 @@
-﻿using Assets.Scripts;
+﻿using System;
+using System.Collections.Generic;
+using Assets.Scripts;
 using Assets.WorldMaterials.Population;
 using Messaging;
 using UnityEngine;
 
 namespace Assets.Placeables.Nodes
 {
-    public interface IPopResidence
+    public interface IPlaceableNode2<T> where T : PlaceableNode<T>
+    {
+        Action<T> OnRemove { get; set; }
+    }
+
+    // PopHome is the concept of where a Person lives when they are on the station
+    // Residents will live in housing, and Visitors will live in lodging
+
+    // Not sure that this will be needed... would have implemented anyway, 
+    // but OnRemove coming from base PlaceableNode is more annoying to tie into than I want to deal with right now
+    public interface IPopHome
     {
         int CurrentCapacity { get; }
-        int CurrentResidents { get; }
-        void AddResidents(int count);
+        int CurrentCount { get; }
+        void AddResident(Person person);
+        //Action<IPopHome> OnRemove { get; }
     }
     
 	public class PopHousingMessageArgs : MessageArgs
 	{
-		public PopHousing PopHousing;
+		public PopHousing PopHome;
 	}
 
 	/// <summary>
 	/// Population resides here when not assigned to a job
 	/// </summary>
 	[RequireComponent(typeof(Placeable))]
-	public class PopHousing : PlaceableNode<PopHousing>, IPopResidence
+	public class PopHousing : PlaceableNode<PopHousing>, IPopHome
 	{
 	    protected override PopHousing GetThis() { return this; }
 		public override string NodeName { get { return "PopHousing"; } }
 		public const string MessageName = "PopHousingCreated";
+	    public bool IsForResidents;
 		[SerializeField] private int _initialValue;
-
-		public int CurrentCapacity { get; private set; }
-	    public int CurrentResidents { get; private set; }
+        [SerializeField] private List<Person> _housed = new List<Person>();
+        
+        public int CurrentCapacity { get; private set; }
+	    public int CurrentCount { get; private set; }
 
 	    void Awake()
 		{
 			CurrentCapacity = _initialValue;
+		    CurrentCount = 0;
 		}
 
 		public override void BroadcastPlacement()
 		{
-			Locator.MessageHub.QueueMessage(MessageName, new PopHousingMessageArgs { PopHousing = this });
+			Locator.MessageHub.QueueMessage(MessageName, new PopHousingMessageArgs { PopHome = this });
 		}
 
-	    //public int MaxCapacity { get; private set; }
-	    public void AddResidents(int count)
+	    public void AddResident(Person person)
 	    {
-	        throw new System.NotImplementedException();
+	        if (!_housed.Contains(person))
+	        {
+	            _housed.Add(person);
+	            CurrentCount = _housed.Count;
+	        }
 	    }
 	}
 }

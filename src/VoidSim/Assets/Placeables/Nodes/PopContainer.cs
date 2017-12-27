@@ -8,10 +8,10 @@ namespace Assets.Placeables.Nodes
 {
     public class PopHolderMessageArgs : MessageArgs
     {
-        public PopHolder PopHolder;
+        public PopContainer PopContainer;
     }
 
-    public interface IPeopleHolder
+    public interface IPopContainer
     {
         void TakePeople(IEnumerable<Person> people);
     }
@@ -20,13 +20,13 @@ namespace Assets.Placeables.Nodes
     /// <summary>
     /// Provides a container for a Person's physical presence
     /// </summary>
-    public class PopHolder : PlaceableNode<PopHolder>, IPeopleHolder
+    public class PopContainer : PlaceableNode<PopContainer>, IPopContainer
     {
         [SerializeField]
         private List<Person> _occupants;
 
-        protected override PopHolder GetThis() { return this; }
-        public const string MessageName = "PopHolderCreated";
+        protected override PopContainer GetThis() { return this; }
+        public const string MessageName = "PopContainerCreated";
 
         private int _maxCapacity;
 
@@ -43,9 +43,9 @@ namespace Assets.Placeables.Nodes
 
         public override void BroadcastPlacement()
         {
-            Locator.MessageHub.QueueMessage(MessageName, new PopHolderMessageArgs{ PopHolder = this });
+            Locator.MessageHub.QueueMessage(MessageName, new PopHolderMessageArgs{ PopContainer = this });
         }
 
-        public override string NodeName { get { return "PopHolder"; } }
+        public override string NodeName { get { return "PopContainer"; } }
     }
 }

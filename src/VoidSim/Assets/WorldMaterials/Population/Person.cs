@@ -13,6 +13,7 @@ namespace Assets.WorldMaterials.Population
         public string Home;
         public bool IsMale;
         public bool IsResident;
+        public string Employer;
     }
 
     [Serializable]
@@ -32,9 +33,10 @@ namespace Assets.WorldMaterials.Population
         public string Home;
         public bool IsMale;
         public bool IsResident;
+        public string Employer;
 
         public Person() { }
-        
+
         public Person(PersonData data)
         {
             Id = data.Id;
@@ -43,6 +45,7 @@ namespace Assets.WorldMaterials.Population
             IsMale = data.IsMale;
             Home = data.Home;
             IsResident = data.IsResident;
+            Employer = data.Employer;
         }
 
         public PersonData GetData()
@@ -54,7 +57,8 @@ namespace Assets.WorldMaterials.Population
                 LastName = LastName,
                 Home = Home,
                 IsMale = IsMale,
-                IsResident = IsResident
+                IsResident = IsResident,
+                Employer = Employer
             };
         }
     }

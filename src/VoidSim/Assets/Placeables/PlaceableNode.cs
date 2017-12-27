@@ -13,7 +13,7 @@ namespace Assets.Placeables
 
 	public abstract class PlaceableNode<T> : QScript, IDisposable, IPlaceableNode where T: PlaceableNode<T>
 	{
-		public Action<T> OnRemove;
+		public Action<T> OnRemove { get; set; }
 		public abstract void BroadcastPlacement();
 		public abstract string NodeName { get; }
 
