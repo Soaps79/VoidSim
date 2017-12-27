@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Assets.Placeables;
 using Assets.Placeables.Nodes;
 using Assets.Scripts;
 using Assets.WorldMaterials;
@@ -8,33 +9,46 @@ using Assets.WorldMaterials.Products;
 using Messaging;
 using QGame;
 using UnityEngine;
+using TimeLength = Assets.Scripts.TimeLength;
+
+// ReSharper disable FieldCanBeMadeReadOnly.Local
+// - leaving them not-readonly to see in the editor
 
 namespace Assets.Station.Population
 {
-    public class PeopleHouser : QScript, IMessageListener
+    /// <summary>
+    /// Finds housing for population
+    /// </summary>
+    public class PeopleHouser : QScript, IMessageListener, IPeopleHandler
     {
         // currently used to space out placement, will be replaced when people choose their homes
         public float ToHouseChance;
         private List<Person> _allPopulation;
         [SerializeField] private List<Person> _needsHousing = new List<Person>();
+        private List<Person> _deserialized = new List<Person>();
         [SerializeField] private List<PopHousing> _residentHousing = new List<PopHousing>();
         private const string _nodeName = "Check";
+        private const string _placeableNameSuffix = "pop_housing_";
 
         public int MaxCapacity;
         public int OccupiedCapacity;
         private Inventory _inventory;
 
+        [SerializeField] private TimeLength _updateFrequency;
+
         public void Initialize(PopulationControl control, Inventory inventory)
         {
             control.OnPopulationUpdated += HandlePopulationUpdate;
-            var node = StopWatch.AddNode(_nodeName, 5);
-            node.OnTick += HandleTimeTick;
+            var time = Locator.WorldClock.GetSeconds(_updateFrequency);
+            var node = StopWatch.AddNode(_nodeName, time);
+            node.OnTick += TickPlacement;
+
             _allPopulation = control.AllPopulation;
             Locator.MessageHub.AddListener(this, PopHousing.MessageName);
             _inventory = inventory;
         }
 
-        private void HandleTimeTick()
+        private void TickPlacement()
         {
             if (!_needsHousing.Any() || !_residentHousing.Any(i => i.CurrentCapacity > i.CurrentCount))
                 return;
@@ -58,11 +72,11 @@ namespace Assets.Station.Population
             }
 
             _needsHousing.RemoveAll(i => foundHomes.Contains(i));
+            UpdateCapacity();
         }
 
         // add to list, placed in housing during Tick()
-        // Handles both new pop and pop coming from serialization
-        private void HandlePopulationUpdate(List<Person> persons, bool wasAdded)
+        public void HandlePopulationUpdate(List<Person> persons, bool wasAdded)
         {
             var residents = persons.Where(i => i.IsResident);
             foreach (var resident in residents)
@@ -78,6 +92,28 @@ namespace Assets.Station.Population
             }
         }
 
+        public void HandleDeserialization(List<Person> people)
+        {
+            // either queue the person to find a home, 
+            var homeless = people.Where(i => string.IsNullOrEmpty(i.Home)).ToList();
+            if (homeless.Any())
+            {
+                _needsHousing.AddRange(homeless);
+            }
+
+            var homed = people.Except(homeless);
+            foreach (var person in homed)
+            {
+                // find their home if it is already in the scene,
+                if (_residentHousing.Any(i => i.name == person.Home))
+                    _residentHousing.First(i => i.name == person.Home).AddResident(person);
+                
+                // or put them aside for when the homes come in
+                else
+                    _deserialized.Add(person);
+            }
+        }
+
         public void HandleMessage(string type, MessageArgs args)
         {
             if (type == PopHousing.MessageName && args != null)
@@ -90,17 +126,34 @@ namespace Assets.Station.Population
                 throw new UnityException("PeopleHouser given bad message args");
 
             var home = args.PopHome;
+            // if new, name it
+            if(home.name == Placeable.DefaultName)
+                home.name = _placeableNameSuffix + Locator.LastId.GetNext("pop_housing");
 
-            if(home.IsForResidents)
+            if (home.IsForResidents)
                 _residentHousing.Add(home);
             home.OnRemove += HandleHousingRemove;
-            var waitingForHousing = _needsHousing.Where(i => i.Home == home.name).ToList();
-            if(waitingForHousing.Any())
-                waitingForHousing.ForEach(i => home.AddResident(i));
+
+            // housing data is propagated as the Placeables are placed
+            if (_deserialized.Any())
+                CheckDeserialized(home);
 
             UpdateCapacity();
         }
 
+        // see if anyone is waiting to move back in
+        // place in home and remove them from waiting list if so
+        private void CheckDeserialized(PopHousing home)
+        {
+            var waitingForHousing = _deserialized.Where(i => i.Home == home.name).ToList();
+            if (!waitingForHousing.Any())
+                return;
+
+            waitingForHousing.ForEach(home.AddResident);
+            _deserialized.RemoveAll(i => waitingForHousing.Contains(i));
+        }
+
+        // put all residents living there back in _needsHousing
         private void HandleHousingRemove(PopHousing housing)
         {
             _residentHousing.Remove(housing);

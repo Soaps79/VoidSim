@@ -4,6 +4,7 @@ using Assets.Scripts;
 using Assets.WorldMaterials.Population;
 using Messaging;
 using UnityEngine;
+// ReSharper disable FieldCanBeMadeReadOnly.Local
 
 namespace Assets.Placeables.Nodes
 {
@@ -57,10 +58,12 @@ namespace Assets.Placeables.Nodes
 			Locator.MessageHub.QueueMessage(MessageName, new PopHousingMessageArgs { PopHome = this });
 		}
 
+        // tells the person their new home and saves a ref to them
 	    public void AddResident(Person person)
 	    {
 	        if (!_housed.Contains(person))
 	        {
+	            person.Home = name;
 	            _housed.Add(person);
 	            CurrentCount = _housed.Count;
 	        }

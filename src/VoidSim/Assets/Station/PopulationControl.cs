@@ -30,7 +30,6 @@ namespace Assets.Station
 	/// </summary>
 	public class PopulationControl : QScript, IPopulationHost, ISerializeData<PopulationData>, ITraderDriver, IMessageListener
 	{
-		private const string _placeableNameSuffix = "pop_housing_";
 		public string Name { get { return "PopulationControl"; } }
 		[SerializeField] private int _totalCapacity;
 		[SerializeField] private int _baseCapacity;
@@ -67,6 +66,8 @@ namespace Assets.Station
 	    public Action<List<Person>, bool> OnPopulationUpdated;
 	    private PeopleHouser _peopleHouser;
 
+        private readonly List<IPeopleHandler> _peopleHandlers = new List<IPeopleHandler>();
+
 	    public void Initialize(Inventory inventory, PopulationSO scriptable)
 		{
 		    _scriptable = scriptable;
@@ -85,12 +86,11 @@ namespace Assets.Station
 			_employerControl = gameObject.AddComponent<EmployerControl>();
 			_employerControl.Initialize(scriptable, MoodManager.EfficiencyModule, _currentCount);
 		    _personGenerator.Initialize(scriptable.GenerationParams);
-		    _peopleMover = GetComponent<PeopleMover>();
-            _peopleMover.Initialize(this);
-		    _peopleHouser = GetComponent<PeopleHouser>();
-            _peopleHouser.Initialize(this, _inventory);
 
-            // load or set defaults
+            InitializeMover();
+            InitializeHouser();
+
+		    // load or set defaults
             if (_serializer.HasDataFor(this, _collectionName))
 				LoadFromFile();
 			else
@@ -100,21 +100,29 @@ namespace Assets.Station
 			InitializeProductTrader();
 		}
 
-		private void LoadFromScriptable()
+	    private void InitializeMover()
+	    {
+	        var mover = GetComponent<PeopleMover>();
+	        mover.Initialize(this);
+	        _peopleHandlers.Add(mover);
+	    }
+
+	    private void InitializeHouser()
+	    {
+	        var houser = GetComponent<PeopleHouser>();
+	        houser.Initialize(this, _inventory);
+	        _peopleHandlers.Add(houser);
+	    }
+
+	    private void LoadFromScriptable()
 		{
 			_inventory.TryAddProduct(_populationProductId, _scriptable.InitialCount);
 		    var people = _personGenerator.GeneratePeople(_scriptable.InitialCount);
             // move this into scriptable? maybe a percentage?
             people.ForEach(i => i.IsResident = true);
-            AddPopulation(people);
-        }
-
-	    private void AddPopulation(List<Person> people)
-	    {
 	        AllPopulation.AddRange(people);
-	        if (OnPopulationUpdated != null)
-	            OnPopulationUpdated(people, true);
-	    }
+		    _peopleHandlers.ForEach(i => i.HandlePopulationUpdate(people, true));
+        }
 
 	    private void LoadFromFile()
 		{
@@ -126,10 +134,11 @@ namespace Assets.Station
 		    var people = _deserialized.Population.Select(i => new Person(i)).ToList();
             if(_inventory.GetProductCurrentAmount(ProductIdLookup.Population) != people.Count())
 				throw new UnityException("PopControl data not matching station inventory");
-            AddPopulation(people);
-		}
+	        AllPopulation.AddRange(people);
+		    _peopleHandlers.ForEach(i => i.HandleDeserialization(people));
+        }
 
-		private void InitializeProductTrader()
+        private void InitializeProductTrader()
 		{
 			_trader = gameObject.AddComponent<ProductTrader>();
 			_trader.Initialize(this, Station.ClientName);

@@ -5,18 +5,13 @@ using QGame;
 
 namespace Assets.Station.Population
 {
-    public class PeopleMover : QScript, IMessageListener
+    public class PeopleMover : QScript, IMessageListener, IPeopleHandler
     {
         private readonly List<Person> _allPopulation = new List<Person>();
 
-        public void AddPerson(Person person)
-        {
-            _allPopulation.Add(person);
-        }
-
         internal void Initialize(PopulationControl populationControl)
         {
-            //populationControl.OnPopulationUpdated += AddPerson;
+            
         }
 
         public void HandleMessage(string type, MessageArgs args)
@@ -25,5 +20,15 @@ namespace Assets.Station.Population
         }
 
         public string Name { get { return "PeopleMover"; } }
+
+        public void HandlePopulationUpdate(List<Person> people, bool wasAdded)
+        {
+            
+        }
+
+        public void HandleDeserialization(List<Person> people)
+        {
+            
+        }
     }
 }
