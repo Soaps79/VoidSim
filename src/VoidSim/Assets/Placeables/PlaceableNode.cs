@@ -11,21 +11,13 @@ namespace Assets.Placeables
 		string Name { get; set; }
 	}
 
+    // TODO: Why is this an IDisposable?
 	public abstract class PlaceableNode<T> : QScript, IDisposable, IPlaceableNode where T: PlaceableNode<T>
 	{
 		public Action<T> OnRemove { get; set; }
-		public abstract void BroadcastPlacement();
-		public abstract string NodeName { get; }
+	    protected abstract T GetThis();
 
-		public string Name
-		{
-			get { return name; }
-			set { name = value; }
-		}
-
-		protected abstract T GetThis();
-
-		protected virtual void OnHandleRemove() { }
+        protected virtual void OnHandleRemove() { }
 
 		public void HandleRemove()
 		{
@@ -34,6 +26,15 @@ namespace Assets.Placeables
 				OnRemove(GetThis());
 		}
 
-		public void Dispose() { }
+	    public abstract void BroadcastPlacement();
+	    public abstract string NodeName { get; }
+
+	    public string Name
+	    {
+	        get { return name; }
+	        set { name = value; }
+	    }
+
+        public void Dispose() { }
 	}
 }

@@ -1,51 +1,84 @@
-﻿using System.Collections.Generic;
-using Assets.Scripts;
+﻿using System;
+using System.Collections.Generic;
 using Assets.WorldMaterials.Population;
-using Messaging;
-using UnityEngine;
 
 namespace Assets.Placeables.Nodes
 {
-    public class PopHolderMessageArgs : MessageArgs
+    [Serializable]
+    public enum PopContainerType { Employment, Service }
+
+    public class PopContainerParams
     {
-        public PopContainer PopContainer;
+        public PopContainerType Type;
+        public int MaxCapacity;
+        public int Reserved;
     }
 
-    public interface IPopContainer
+    [Serializable]
+    public class PopContainer
     {
-        void TakePeople(IEnumerable<Person> people);
-    }
+        public PopContainerType Type;
+        public int MaxCapacity;
+        public int Reserved;
+        public List<Person> CurrentOccupants = new List<Person>();
 
-
-    /// <summary>
-    /// Provides a container for a Person's physical presence
-    /// </summary>
-    public class PopContainer : PlaceableNode<PopContainer>, IPopContainer
-    {
-        [SerializeField]
-        private List<Person> _occupants;
-
-        protected override PopContainer GetThis() { return this; }
-        public const string MessageName = "PopContainerCreated";
-
-        private int _maxCapacity;
-
-        public void TakePeople(IEnumerable<Person> people)
+        public Action OnUpdate;
+        private void CheckUpdate()
         {
-            _occupants = new List<Person>();
-            _occupants.AddRange(people);
+            if (OnUpdate != null)
+                OnUpdate();
         }
 
-        public void SetCapacity(int capacity)
+        public PopContainer(PopContainerParams param)
         {
-            _maxCapacity = capacity;
+            Type = param.Type;
+            MaxCapacity = param.MaxCapacity;
+            Reserved = param.Reserved;
         }
 
-        public override void BroadcastPlacement()
+        // The Set functions wrap basic functionality, and ensure that subscribers know
+        // would normally do this using properties, but I want it to display in editor
+        public void SetMaxCapacity(int capacity)
         {
-            Locator.MessageHub.QueueMessage(MessageName, new PopHolderMessageArgs{ PopContainer = this });
+            if (capacity == MaxCapacity)
+                return;
+
+            MaxCapacity = capacity;
+            CheckUpdate();
         }
 
-        public override string NodeName { get { return "PopContainer"; } }
+        // not sure if this will stay
+        // currently exists to distinguish employee spots when they are away
+        public void SetReserved(int capacity)
+        {
+            if (capacity == MaxCapacity)
+                return;
+
+            MaxCapacity = capacity;
+            CheckUpdate();
+        }
+
+        public void AddPerson(Person person, bool incrementReserve = false)
+        {
+            if (CurrentOccupants.Contains(person))
+                return;
+
+            CurrentOccupants.Add(person);
+            if (incrementReserve)
+                Reserved++;
+
+            CheckUpdate();
+        }
+
+        public void RemovePerson(Person person, bool incrementReserve = false)
+        {
+            if (!CurrentOccupants.Remove(person))
+                return;
+
+            if(incrementReserve)
+                Reserved++;
+
+            CheckUpdate();
+        }
     }
 }

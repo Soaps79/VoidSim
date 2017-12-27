@@ -22,7 +22,6 @@ namespace Assets.WorldMaterials.Population
         public string Name;
         public string DisplayName;
     }
-
     
     [Serializable]
     public class Person : ISerializeData<PersonData>

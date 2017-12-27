@@ -11,10 +11,14 @@
     },
     {
       "Name": "transit_entry",
-      "LastId": 1
+      "LastId": 2
     },
     {
       "Name": "pop_housing",
+      "LastId": 1
+    },
+    {
+      "Name": "product_factory",
       "LastId": 1
     }
   ]
@@ -22,39 +26,34 @@
   "ShipGenerator": {
   "Ships": [
     {
-      "ShipName": "ship_2",
-      "SOName": "sm_cargo_2",
-      "TimeRemaining": 11.9614964
-    },
-    {
       "ShipName": "ship_3",
       "SOName": "sm_cargo_1",
-      "TimeRemaining": 33.9614944
+      "TimeRemaining": 15.389864
     },
     {
       "ShipName": "ship_4",
       "SOName": "sm_cargo_1",
-      "TimeRemaining": 61.9614944
+      "TimeRemaining": 43.3898621
     },
     {
       "ShipName": "ship_5",
       "SOName": "sm_cargo_3",
-      "TimeRemaining": 77.9614944
+      "TimeRemaining": 59.3898621
     },
     {
       "ShipName": "ship_6",
       "SOName": "sm_cargo_1",
-      "TimeRemaining": 95.9614944
+      "TimeRemaining": 77.38986
     },
     {
       "ShipName": "ship_7",
       "SOName": "sm_cargo_2",
-      "TimeRemaining": 139.9615
+      "TimeRemaining": 121.389862
     },
     {
       "ShipName": "ship_8",
       "SOName": "sm_cargo_1",
-      "TimeRemaining": 161.9615
+      "TimeRemaining": 143.389862
     }
   ],
   "LastId": 8
@@ -67,10 +66,31 @@
     {
       "Name": "ship_1",
       "SOName": "sm_cargo_1",
+      "Status": "Hold",
+      "Ticker": {
+        "TotalTicks": 21.6,
+        "ElapsedTicks": 11.1028156
+      },
+      "Navigation": {
+        "Locations": [
+          "Station",
+          "Void"
+        ],
+        "LastDeparted": "Void",
+        "CurrentDestination": "Station"
+      },
+      "ManifestBook": {
+        "Manifests": []
+      },
+      "TrafficShipData": null
+    },
+    {
+      "Name": "ship_2",
+      "SOName": "sm_cargo_2",
       "Status": "Transit",
       "Ticker": {
         "TotalTicks": 14.4000006,
-        "ElapsedTicks": 6.976867
+        "ElapsedTicks": 6.55972
       },
       "Navigation": {
         "Locations": [
@@ -124,7 +144,7 @@
     },
     {
       "ProductName": "Energy",
-      "Amount": 500,
+      "Amount": 498,
       "MaxAmount": 1000000
     },
     {
@@ -139,12 +159,12 @@
     },
     {
       "ProductName": "Food",
-      "Amount": 198,
+      "Amount": 193,
       "MaxAmount": 10000
     },
     {
       "ProductName": "Water",
-      "Amount": 198,
+      "Amount": 193,
       "MaxAmount": 10000
     }
   ],
@@ -155,10 +175,6 @@
     },
     {
       "Id": 2,
-      "PlaceableName": "Small Factory"
-    },
-    {
-      "Id": 3,
       "PlaceableName": "Small Factory"
     },
     {
@@ -180,37 +196,33 @@
   "CurrentCount": 20,
   "Capacity": 0,
   "InboundPopulation": -20,
-  "EmployerControlData": {
-    "CurrentUnemployed": 20,
-    "Employers": []
-  },
   "Population": [
     {
       "Id": 1,
-      "FirstName": "Allegra",
-      "LastName": "Greene",
+      "FirstName": "Rachel",
+      "LastName": "Newman",
       "Home": "pop_housing_1",
       "IsMale": false,
       "IsResident": true,
-      "Employer": null
+      "Employer": "product_factory_1"
     },
     {
       "Id": 2,
-      "FirstName": "Rudyard",
-      "LastName": "Solomon",
+      "FirstName": "Allegra",
+      "LastName": "Obrien",
       "Home": "pop_housing_1",
-      "IsMale": true,
+      "IsMale": false,
       "IsResident": true,
-      "Employer": null
+      "Employer": "product_factory_1"
     },
     {
       "Id": 3,
-      "FirstName": "Acton",
+      "FirstName": "Jelani",
       "LastName": "Guy",
       "Home": "pop_housing_1",
       "IsMale": true,
       "IsResident": true,
-      "Employer": null
+      "Employer": "product_factory_1"
     },
     {
       "Id": 4,
@@ -219,39 +231,39 @@
       "Home": "pop_housing_1",
       "IsMale": false,
       "IsResident": true,
-      "Employer": null
+      "Employer": "product_factory_1"
     },
     {
       "Id": 5,
-      "FirstName": "Margaret",
-      "LastName": "Crawford",
+      "FirstName": "Gloria",
+      "LastName": "Sweeney",
       "Home": "pop_housing_1",
       "IsMale": false,
       "IsResident": true,
-      "Employer": null
+      "Employer": "product_factory_1"
     },
     {
       "Id": 6,
-      "FirstName": "Ethan",
-      "LastName": "Witt",
+      "FirstName": "Gannon",
+      "LastName": "Acosta",
       "Home": "pop_housing_1",
       "IsMale": true,
       "IsResident": true,
-      "Employer": null
+      "Employer": "product_factory_1"
     },
     {
       "Id": 7,
-      "FirstName": "Grant",
-      "LastName": "Decker",
-      "Home": null,
+      "FirstName": "Ethan",
+      "LastName": "Hammond",
+      "Home": "pop_housing_1",
       "IsMale": true,
       "IsResident": true,
-      "Employer": null
+      "Employer": "product_factory_1"
     },
     {
       "Id": 8,
-      "FirstName": "Gillian",
-      "LastName": "Powers",
+      "FirstName": "Margaret",
+      "LastName": "Contreras",
       "Home": "pop_housing_1",
       "IsMale": false,
       "IsResident": true,
@@ -259,53 +271,53 @@
     },
     {
       "Id": 9,
-      "FirstName": "Bell",
-      "LastName": "Baxter",
-      "Home": null,
+      "FirstName": "Gillian",
+      "LastName": "Walls",
+      "Home": "pop_housing_1",
       "IsMale": false,
       "IsResident": true,
       "Employer": null
     },
     {
       "Id": 10,
-      "FirstName": "Mason",
-      "LastName": "Murray",
+      "FirstName": "Colette",
+      "LastName": "Witt",
       "Home": "pop_housing_1",
-      "IsMale": true,
+      "IsMale": false,
       "IsResident": true,
       "Employer": null
     },
     {
       "Id": 11,
-      "FirstName": "Aquila",
-      "LastName": "Perkins",
-      "Home": null,
+      "FirstName": "Phillip",
+      "LastName": "Decker",
+      "Home": "pop_housing_1",
       "IsMale": true,
       "IsResident": true,
       "Employer": null
     },
     {
       "Id": 12,
-      "FirstName": "Aristotle",
-      "LastName": "Chavez",
+      "FirstName": "Bell",
+      "LastName": "Donaldson",
       "Home": "pop_housing_1",
-      "IsMale": true,
+      "IsMale": false,
       "IsResident": true,
       "Employer": null
     },
     {
       "Id": 13,
-      "FirstName": "Colorado",
-      "LastName": "Mclean",
+      "FirstName": "Ava",
+      "LastName": "Baxter",
       "Home": "pop_housing_1",
-      "IsMale": true,
+      "IsMale": false,
       "IsResident": true,
       "Employer": null
     },
     {
       "Id": 14,
-      "FirstName": "Alice",
-      "LastName": "Jennings",
+      "FirstName": "Bethany",
+      "LastName": "Peterson",
       "Home": "pop_housing_1",
       "IsMale": false,
       "IsResident": true,
@@ -313,17 +325,17 @@
     },
     {
       "Id": 15,
-      "FirstName": "Susan",
-      "LastName": "Gould",
+      "FirstName": "Michael",
+      "LastName": "Pena",
       "Home": "pop_housing_1",
-      "IsMale": false,
+      "IsMale": true,
       "IsResident": true,
       "Employer": null
     },
     {
       "Id": 16,
-      "FirstName": "Ronan",
-      "LastName": "Holman",
+      "FirstName": "Michael",
+      "LastName": "Curry",
       "Home": "pop_housing_1",
       "IsMale": true,
       "IsResident": true,
@@ -331,8 +343,8 @@
     },
     {
       "Id": 17,
-      "FirstName": "Cullen",
-      "LastName": "Duke",
+      "FirstName": "Grant",
+      "LastName": "Mclean",
       "Home": "pop_housing_1",
       "IsMale": true,
       "IsResident": true,
@@ -340,8 +352,8 @@
     },
     {
       "Id": 18,
-      "FirstName": "Bethany",
-      "LastName": "Lee",
+      "FirstName": "Rama",
+      "LastName": "Jennings",
       "Home": "pop_housing_1",
       "IsMale": false,
       "IsResident": true,
@@ -349,8 +361,8 @@
     },
     {
       "Id": 19,
-      "FirstName": "Ciara",
-      "LastName": "Burt",
+      "FirstName": "Britanney",
+      "LastName": "Bond",
       "Home": "pop_housing_1",
       "IsMale": false,
       "IsResident": true,
@@ -358,10 +370,10 @@
     },
     {
       "Id": 20,
-      "FirstName": "Valentine",
-      "LastName": "Holden",
+      "FirstName": "Tana",
+      "LastName": "Saunders",
       "Home": "pop_housing_1",
-      "IsMale": true,
+      "IsMale": false,
       "IsResident": true,
       "Employer": null
     }
@@ -421,17 +433,25 @@
   "HoldEntries": []
 },
   "FactoryControl": {
-  "Factories": []
+  "Factories": [
+    {
+      "Name": "product_factory_1",
+      "IsCrafting": false,
+      "CurrentlyCraftingRecipeId": 0,
+      "RemainingCraftTime": 0.0,
+      "IsBuying": false
+    }
+  ]
 },
   "Placeables": {
   "Placeables": [
     {
       "PlaceableName": "Small Housing",
       "InstanceName": "pop_housing_1",
-      "HardPointName": "hardpoint_mid_3",
+      "HardPointName": "hardpoint_mid_2",
       "Position": {
-        "X": 1.34844971,
-        "Y": -1.69603252,
+        "X": -29.7515869,
+        "Y": 0.9039736,
         "Z": 1.0
       },
       "Nodes": [
@@ -440,8 +460,36 @@
           "InstanceName": "pop_housing_1"
         },
         {
-          "NodeName": "PopContainer",
+          "NodeName": "PopContainerNode",
           "InstanceName": "pop_housing_1"
+        }
+      ]
+    },
+    {
+      "PlaceableName": "Small Factory",
+      "InstanceName": "product_factory_1",
+      "HardPointName": "hardpoint_top_2",
+      "Position": {
+        "X": -15.3516226,
+        "Y": 12.0039558,
+        "Z": 1.0
+      },
+      "Nodes": [
+        {
+          "NodeName": "EnergyConsumer",
+          "InstanceName": "product_factory_1"
+        },
+        {
+          "NodeName": "ProductFactory",
+          "InstanceName": "product_factory_1"
+        },
+        {
+          "NodeName": "efficency",
+          "InstanceName": "product_factory_1"
+        },
+        {
+          "NodeName": "PopEmployer",
+          "InstanceName": "product_factory_1"
         }
       ]
     }

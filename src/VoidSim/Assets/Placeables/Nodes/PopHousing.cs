@@ -35,7 +35,8 @@ namespace Assets.Placeables.Nodes
 	/// Population resides here when not assigned to a job
 	/// </summary>
 	[RequireComponent(typeof(Placeable))]
-	public class PopHousing : PlaceableNode<PopHousing>, IPopHome
+	[RequireComponent(typeof(PopContainer))]
+    public class PopHousing : PlaceableNode<PopHousing>, IPopHome
 	{
 	    protected override PopHousing GetThis() { return this; }
 		public override string NodeName { get { return "PopHousing"; } }
@@ -43,8 +44,9 @@ namespace Assets.Placeables.Nodes
 	    public bool IsForResidents;
 		[SerializeField] private int _initialValue;
         [SerializeField] private List<Person> _housed = new List<Person>();
-        
-        public int CurrentCapacity { get; private set; }
+	    private PopContainer _container;
+
+	    public int CurrentCapacity { get; private set; }
 	    public int CurrentCount { get; private set; }
 
 	    void Awake()
@@ -55,6 +57,13 @@ namespace Assets.Placeables.Nodes
 
 		public override void BroadcastPlacement()
 		{
+		    var containers = GetComponent<PopContainerSet>();
+		    _container = containers.CreateContainer(new PopContainerParams
+		    {
+                Type = PopContainerType.Service,
+                MaxCapacity = CurrentCapacity,
+                Reserved = CurrentCount
+		    });
 			Locator.MessageHub.QueueMessage(MessageName, new PopHousingMessageArgs { PopHome = this });
 		}
 
@@ -66,6 +75,8 @@ namespace Assets.Placeables.Nodes
 	            person.Home = name;
 	            _housed.Add(person);
 	            CurrentCount = _housed.Count;
+
+                _container.AddPerson(person, true);
 	        }
 	    }
 	}
