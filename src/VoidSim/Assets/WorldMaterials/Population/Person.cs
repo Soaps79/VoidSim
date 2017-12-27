@@ -22,11 +22,7 @@ namespace Assets.WorldMaterials.Population
         public string DisplayName;
     }
 
-    public interface IPeopleHolder
-    {
-        void TakePeople(IEnumerable<Person> people);
-    }
-
+    
     [Serializable]
     public class Person : ISerializeData<PersonData>
     {

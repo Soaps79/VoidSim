@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Assets.Logistics;
 using Assets.Placeables.Nodes;
 using Assets.Scripts;
 using Assets.Scripts.Serialization;
+using Assets.Station.Population;
 using Assets.WorldMaterials;
 using Assets.WorldMaterials.Population;
 using Assets.WorldMaterials.Products;
@@ -61,7 +63,9 @@ namespace Assets.Station
         private readonly PersonGenerator _personGenerator = new PersonGenerator();
         private readonly List<Person> _allPopulation = new List<Person>();
         private readonly List<Person> _needsResidentHousing = new List<Person>();
+	    private PeopleMover _peopleMover;
 
+	    public Action<Person> OnPersonAdded;
 
 	    public void Initialize(Inventory inventory, PopulationSO scriptable)
 		{
@@ -81,6 +85,7 @@ namespace Assets.Station
 			_employerControl = gameObject.AddComponent<EmployerControl>();
 			_employerControl.Initialize(scriptable, MoodManager.EfficiencyModule, _currentCount);
 		    _personGenerator.Initialize(scriptable.GenerationParams);
+		    _peopleMover = GetComponent<PeopleMover>();
 
             // load or set defaults
             if (_serializer.HasDataFor(this, _collectionName))
@@ -98,12 +103,19 @@ namespace Assets.Station
 		{
 			_inventory.TryAddProduct(_populationProductId, _scriptable.InitialCount);
 		    var people = _personGenerator.GeneratePeople(_scriptable.InitialCount);
-            people.ForEach(i => i.IsResident = true);
+            people.ForEach(i => AddPopulation(i, true));
             _needsResidentHousing.AddRange(people);
 		    _allPopulation.AddRange(people);
         }
 
-		private void LoadFromFile()
+	    private void AddPopulation(Person person, bool isResident)
+	    {
+	        person.IsResident = isResident;
+            _allPopulation.Add(person);
+	        _peopleMover.AddPerson(person);
+	    }
+
+	    private void LoadFromFile()
 		{
 			_deserialized = _serializer.DeserializeData();
 			_currentCount = _deserialized.CurrentCount;
@@ -178,13 +190,15 @@ namespace Assets.Station
 
 	    private void TryMovePeopleIntoHomes(PopHousing popHousing)
 	    {
-            // this is primitive, will work until people are choosy about their housing
+            // this is primitive, but will work until people are choosy about their housing
 	        if (!_needsResidentHousing.Any())
 	            return;
 
 	        var movingIn = new List<Person>();
-	        if (_needsResidentHousing.Count > popHousing.Capacity)
-	            movingIn.AddRange(_needsResidentHousing.Take(popHousing.Capacity));
+            
+            // if nothing else, tighten this up
+	        if (_needsResidentHousing.Count > popHousing.CurrentCapacity)
+	            movingIn.AddRange(_needsResidentHousing.Take(popHousing.CurrentCapacity));
             else
                 movingIn.AddRange(_needsResidentHousing);
 
@@ -203,7 +217,7 @@ namespace Assets.Station
 
 		private void UpdateCapacity()
 		{
-			_totalCapacity = _baseCapacity + _housing.Sum(i => i.Capacity);
+			_totalCapacity = _baseCapacity + _housing.Sum(i => i.CurrentCapacity);
 			_inventory.SetProductMaxAmount(_populationProductId, _totalCapacity);
 		}
 
