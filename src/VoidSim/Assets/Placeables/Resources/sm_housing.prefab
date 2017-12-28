@@ -146,14 +146,16 @@ MonoBehaviour:
     MaxCapacity: 0
     Reserved: 0
     CurrentOccupants: []
+    Affectors: []
   _serviceContainer:
     Type: 0
     MaxCapacity: 0
     Reserved: 0
     CurrentOccupants: []
+    Affectors: []
   _updateTime:
     TimeUnit: 0
-    Length: 0
+    Length: 4
 --- !u!114 &114840166276243458
 MonoBehaviour:
   m_ObjectHideFlags: 1

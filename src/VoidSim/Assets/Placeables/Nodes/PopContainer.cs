@@ -22,6 +22,7 @@ namespace Assets.Placeables.Nodes
         public int MaxCapacity;
         public int Reserved;
         public List<Person> CurrentOccupants = new List<Person>();
+        public List<NeedsAffector> Affectors;
 
         public Action OnUpdate;
         private void CheckUpdate()
@@ -35,11 +36,12 @@ namespace Assets.Placeables.Nodes
             Type = param.Type;
             MaxCapacity = param.MaxCapacity;
             Reserved = param.Reserved;
+            Affectors = param.Affectors;
         }
 
         public void ApplyAffectors()
         {
-            
+            CurrentOccupants.ForEach(i => i.ApplyAffectors(Affectors));
         }
 
         // The Set functions wrap basic functionality, and ensure that subscribers know

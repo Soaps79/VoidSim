@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace Assets.WorldMaterials.Population
 {
+    // Covers all progress needs for game serialization
     [Serializable]
     public class PersonData
     {
@@ -19,6 +20,7 @@ namespace Assets.WorldMaterials.Population
         public List<PersonNeedsData> Needs;
     }
 
+    // Simplest form of needs for noting progress
     [Serializable]
     public class PersonNeedsData
     {
@@ -26,12 +28,14 @@ namespace Assets.WorldMaterials.Population
         public float CurrentValue;
     }
 
+    // Should this be an enum, or list of strings?
     [Serializable]
     public enum PersonNeedsType
     {
         Rest, Entertainment
     }
 
+    // used to apply a ticking change to needs while person is being affected
     [Serializable]
     public class NeedsAffector
     {
@@ -39,12 +43,14 @@ namespace Assets.WorldMaterials.Population
         public float Value;
     }
 
+    // not really necessary, but makes it easier to drop needs into a PlaceableNode
     [Serializable]
     public class NeedsAffectorList
     {
         public List<NeedsAffector> Affectors;
     }
 
+    // the version of needs that Person hangs onto during runtime
     [Serializable]
     public class PersonNeeds
     {
@@ -52,9 +58,10 @@ namespace Assets.WorldMaterials.Population
         public float CurrentValue;
         public float MaxValue;
         public float MinValue;
+        public float MinTolerance;
     }
 
-    
+    // currently holding all data for a person and applying affectors
     [Serializable]
     public class Person : ISerializeData<PersonData>
     {
@@ -69,16 +76,19 @@ namespace Assets.WorldMaterials.Population
         private readonly Dictionary<PersonNeedsType, PersonNeeds> 
             _needs = new Dictionary<PersonNeedsType, PersonNeeds>();
 
+        [SerializeField] private List<PersonNeeds> _needsList = new List<PersonNeeds>();
+
         public Person() { }
 
+        // used during deserialization
         public Person(PersonData data)
         {
             Id = data.Id;
             FirstName = data.FirstName;
             LastName = data.LastName;
             IsMale = data.IsMale;
-            Home = data.Home;
             IsResident = data.IsResident;
+            Home = data.Home;
             Employer = data.Employer;
         }
 
@@ -89,6 +99,8 @@ namespace Assets.WorldMaterials.Population
             {
                 _needs.Add(need.Type, need);
             }
+
+            UpdateDebugOutput();
         }
 
         public void ApplyAffectors(List<NeedsAffector> affectors)
@@ -100,6 +112,14 @@ namespace Assets.WorldMaterials.Population
                     _needs[affector.Type].MinValue, 
                     _needs[affector.Type].MaxValue);
             }
+
+            UpdateDebugOutput();
+        }
+
+        private void UpdateDebugOutput()
+        {
+            _needsList.Clear();
+            _needsList.AddRange(_needs.Values.ToList());
         }
 
         public PersonData GetData()

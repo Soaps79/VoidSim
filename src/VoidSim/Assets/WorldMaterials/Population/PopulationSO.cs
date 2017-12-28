@@ -36,6 +36,7 @@ namespace Assets.WorldMaterials.Population
         public float MaxInitialValue;
         public float MinValue;
         public float MaxValue;
+        public float MinTolerance;
     }
 
     [Serializable]
