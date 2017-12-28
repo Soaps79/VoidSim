@@ -60,7 +60,7 @@ namespace Assets.Station
 
         public readonly List<Person> AllPopulation = new List<Person>();
 
-	    public Action<List<Person>, bool> OnPopulationUpdated;
+	    //public Action<List<Person>, bool> OnPopulationUpdated;
 
 	    public void Initialize(Inventory inventory, PopulationSO scriptable)
 		{
@@ -110,7 +110,7 @@ namespace Assets.Station
 	    private void InitializeHouser()
 	    {
 	        var houser = GetComponent<PopHomeMonitor>();
-	        houser.Initialize(this, _inventory);
+	        houser.Initialize(this, _inventory, _scriptable);
 	        _peopleHandlers.Add(houser);
 	    }
 
@@ -119,9 +119,14 @@ namespace Assets.Station
 			_inventory.TryAddProduct(_populationProductId, _scriptable.InitialCount);
 		    var people = _personGenerator.GeneratePeople(_scriptable.InitialCount);
             // move this into scriptable? maybe a percentage?
-            people.ForEach(i => i.IsResident = true);
+		    people.ForEach(i => i.IsResident = true);
+            AddPopulation(people);
+        }
+
+	    private void AddPopulation(List<Person> people)
+	    {
 	        AllPopulation.AddRange(people);
-		    _peopleHandlers.ForEach(i => i.HandlePopulationUpdate(people, true));
+            _peopleHandlers.ForEach(i => i.HandlePopulationUpdate(people, true));
         }
 
 	    private void LoadFromFile()
@@ -137,33 +142,6 @@ namespace Assets.Station
 	        AllPopulation.AddRange(people);
 		    _peopleHandlers.ForEach(i => i.HandleDeserialization(people));
         }
-
-        // hydrates Person objects with static data from SO and deserialized data from file
-        private List<Person> DeserializePopulation()
-	    {
-	        var needsTemplate = _scriptable.GenerationParams.ResidentNeeds.ToDictionary(i => i.Type);
-	        var people = new List<Person>();
-
-            foreach (var personData in _deserialized.Population)
-	        {
-	            var person = new Person(personData);
-	            var needs = new List<PersonNeeds>();
-	            foreach (var need in personData.Needs)
-	            {
-	                needs.Add(new PersonNeeds
-	                {
-	                    MinValue = needsTemplate[need.Type].MinValue,
-	                    MaxValue = needsTemplate[need.Type].MaxValue,
-	                    CurrentValue = need.CurrentValue,
-	                    Type = need.Type
-	                });
-	            }
-	            person.SetNeeds(needs);
-	            people.Add(person);
-	        }
-
-	        return people;
-	    }
 
 	    private void InitializeProductTrader()
 		{
@@ -269,5 +247,14 @@ namespace Assets.Station
 			};
 			return data;
 		}
+
+	    public void HandleManifestComplete(CargoManifest manifest)
+	    {
+	        if (manifest.ProductAmount.ProductId != _populationProductId)
+	            return;
+
+	        var people = _personGenerator.GeneratePeople(manifest.ProductAmount.Amount);
+            AddPopulation(people);
+	    }
 	}
 }

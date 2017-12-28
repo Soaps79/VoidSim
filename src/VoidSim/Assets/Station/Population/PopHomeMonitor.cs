@@ -35,10 +35,10 @@ namespace Assets.Station.Population
         private Inventory _inventory;
 
         [SerializeField] private TimeLength _updateFrequency;
+        private int _initialCapacity;
 
-        public void Initialize(PopulationControl control, Inventory inventory)
+        public void Initialize(PopulationControl control, Inventory inventory, PopulationSO scriptable)
         {
-            control.OnPopulationUpdated += HandlePopulationUpdate;
             var time = Locator.WorldClock.GetSeconds(_updateFrequency);
             var node = StopWatch.AddNode(_nodeName, time);
             node.OnTick += TickPlacement;
@@ -46,6 +46,7 @@ namespace Assets.Station.Population
             _allPopulation = control.AllPopulation;
             Locator.MessageHub.AddListener(this, PopHousing.MessageName);
             _inventory = inventory;
+            _initialCapacity = scriptable.BaseCapacity;
         }
 
         private void TickPlacement()
@@ -164,7 +165,7 @@ namespace Assets.Station.Population
 
         private void UpdateCapacity()
         {
-            MaxCapacity = _residentHousing.Sum(i => i.CurrentCapacity);
+            MaxCapacity = _residentHousing.Sum(i => i.CurrentCapacity) + _initialCapacity;
             OccupiedCapacity = _residentHousing.Sum(i => i.CurrentCount);
             _inventory.SetProductMaxAmount(ProductIdLookup.Population, MaxCapacity);
         }
