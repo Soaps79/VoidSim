@@ -12,6 +12,7 @@ namespace Assets.Placeables.Nodes
         public PopContainerType Type;
         public int MaxCapacity;
         public int Reserved;
+        public List<NeedsAffector> Affectors;
     }
 
     [Serializable]
@@ -34,6 +35,11 @@ namespace Assets.Placeables.Nodes
             Type = param.Type;
             MaxCapacity = param.MaxCapacity;
             Reserved = param.Reserved;
+        }
+
+        public void ApplyAffectors()
+        {
+            
         }
 
         // The Set functions wrap basic functionality, and ensure that subscribers know

@@ -28,11 +28,22 @@ namespace Assets.WorldMaterials.Population
 	}
 
     [Serializable]
+    public class PersonNeedsInfo
+    {
+        public PersonNeedsType Type;
+        public string DisplayName;
+        public float MinInitialValue;
+        public float MaxInitialValue;
+        public float MinValue;
+        public float MaxValue;
+    }
+
+    [Serializable]
     public class GenerationParams
     {
         public int MinNamesLoaded;
         public int MaxNamesLoaded;
-        public List<PersonNeeds> ResidentNeeds;
+        public List<PersonNeedsInfo> ResidentNeeds;
     }
 
 	public class PopulationSO : ScriptableObject

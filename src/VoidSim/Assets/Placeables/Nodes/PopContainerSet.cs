@@ -21,13 +21,12 @@ namespace Assets.Placeables.Nodes
         // for early debugging
         [SerializeField] private PopContainer _employmentContainer;
         [SerializeField] private PopContainer _serviceContainer;
+        [SerializeField] private TimeLength _updateTime;
 
         protected override PopContainerSet GetThis() { return this; }
         public const string MessageName = "PopContainerNodeCreated";
-        public List<PopContainer> Containers = new List<PopContainer>();
 
-        private readonly Dictionary<PopContainerType, PopContainer> _containers 
-            = new Dictionary<PopContainerType, PopContainer>();
+        private readonly List<PopContainer> _containers = new List<PopContainer>();
 
         public Action OnContainersUpdated;
 
@@ -47,13 +46,22 @@ namespace Assets.Placeables.Nodes
             {
                 _serviceContainer = container;
             }
-            _containers.Add(container.Type, container);
+            _containers.Add(container);
             return container;
         }
 
         public override void BroadcastPlacement()
         {
+            var time = Locator.WorldClock.GetSeconds(_updateTime);
+            var node = StopWatch.AddNode("apply_affectors", time);
+            node.OnTick += UpdatePeople;
+
             Locator.MessageHub.QueueMessage(MessageName, new PopHolderMessageArgs{ PopContainerSet = this });
+        }
+
+        private void UpdatePeople()
+        {
+            _containers.ForEach(i => i.ApplyAffectors());
         }
 
         public override string NodeName { get { return "PopContainerSet"; } }

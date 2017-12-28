@@ -43,6 +43,7 @@ namespace Assets.Placeables.Nodes
 		public const string MessageName = "PopHousingCreated";
 	    public bool IsForResidents;
 		[SerializeField] private int _initialValue;
+	    [SerializeField] private NeedsAffectorList _affectors;
         [SerializeField] private List<Person> _housed = new List<Person>();
 	    private PopContainer _container;
 
@@ -62,7 +63,8 @@ namespace Assets.Placeables.Nodes
 		    {
                 Type = PopContainerType.Service,
                 MaxCapacity = CurrentCapacity,
-                Reserved = CurrentCount
+                Reserved = CurrentCount,
+                Affectors = _affectors.Affectors
 		    });
 			Locator.MessageHub.QueueMessage(MessageName, new PopHousingMessageArgs { PopHome = this });
 		}

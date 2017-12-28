@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.Serialization;
+using UnityEngine;
 
 namespace Assets.WorldMaterials.Population
 {
@@ -14,14 +16,44 @@ namespace Assets.WorldMaterials.Population
         public bool IsMale;
         public bool IsResident;
         public string Employer;
+        public List<PersonNeedsData> Needs;
+    }
+
+    [Serializable]
+    public class PersonNeedsData
+    {
+        public PersonNeedsType Type;
+        public float CurrentValue;
+    }
+
+    [Serializable]
+    public enum PersonNeedsType
+    {
+        Rest, Entertainment
+    }
+
+    [Serializable]
+    public class NeedsAffector
+    {
+        public PersonNeedsType Type;
+        public float Value;
+    }
+
+    [Serializable]
+    public class NeedsAffectorList
+    {
+        public List<NeedsAffector> Affectors;
     }
 
     [Serializable]
     public class PersonNeeds
     {
-        public string Name;
-        public string DisplayName;
+        public PersonNeedsType Type;
+        public float CurrentValue;
+        public float MaxValue;
+        public float MinValue;
     }
+
     
     [Serializable]
     public class Person : ISerializeData<PersonData>
@@ -33,6 +65,9 @@ namespace Assets.WorldMaterials.Population
         public bool IsMale;
         public bool IsResident;
         public string Employer;
+
+        private readonly Dictionary<PersonNeedsType, PersonNeeds> 
+            _needs = new Dictionary<PersonNeedsType, PersonNeeds>();
 
         public Person() { }
 
@@ -47,6 +82,26 @@ namespace Assets.WorldMaterials.Population
             Employer = data.Employer;
         }
 
+        public void SetNeeds(List<PersonNeeds> needs)
+        {
+            _needs.Clear();
+            foreach (var need in needs)
+            {
+                _needs.Add(need.Type, need);
+            }
+        }
+
+        public void ApplyAffectors(List<NeedsAffector> affectors)
+        {
+            foreach (var affector in affectors)
+            {
+                _needs[affector.Type].CurrentValue = Mathf.Clamp(
+                    _needs[affector.Type].CurrentValue + affector.Value, 
+                    _needs[affector.Type].MinValue, 
+                    _needs[affector.Type].MaxValue);
+            }
+        }
+
         public PersonData GetData()
         {
             return new PersonData
@@ -57,7 +112,12 @@ namespace Assets.WorldMaterials.Population
                 Home = Home,
                 IsMale = IsMale,
                 IsResident = IsResident,
-                Employer = Employer
+                Employer = Employer,
+                Needs = _needs.Select(i => new PersonNeedsData
+                {
+                    CurrentValue = i.Value.CurrentValue,
+                    Type = i.Value.Type
+                }).ToList()
             };
         }
     }

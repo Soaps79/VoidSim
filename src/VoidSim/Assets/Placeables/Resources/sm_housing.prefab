@@ -125,6 +125,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsForResidents: 1
   _initialValue: 20
+  _affectors:
+    Affectors:
+    - Type: 0
+      Value: 0.02
+  _housed: []
 --- !u!114 &114540691761293196
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -136,7 +141,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c57f8221eae9798409e0ce65bc3c6c18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _occupants: []
+  _employmentContainer:
+    Type: 0
+    MaxCapacity: 0
+    Reserved: 0
+    CurrentOccupants: []
+  _serviceContainer:
+    Type: 0
+    MaxCapacity: 0
+    Reserved: 0
+    CurrentOccupants: []
+  _updateTime:
+    TimeUnit: 0
+    Length: 0
 --- !u!114 &114840166276243458
 MonoBehaviour:
   m_ObjectHideFlags: 1

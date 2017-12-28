@@ -30,9 +30,15 @@ MonoBehaviour:
     MinNamesLoaded: 50
     MaxNamesLoaded: 100
     ResidentNeeds:
-    - Name: rest
+    - Type: 0
       DisplayName: Rest
-    - Name: entertainment
+      MinInitialValue: 0.25
+      MaxInitialValue: 0.85
+      MinValue: 0
+      MaxValue: 1.25
+    - Type: 1
       DisplayName: Entertainment
-    - Name: sustenance
-      DisplayName: Food/Drink
+      MinInitialValue: 0.25
+      MaxInitialValue: 0.85
+      MinValue: 0
+      MaxValue: 1.25

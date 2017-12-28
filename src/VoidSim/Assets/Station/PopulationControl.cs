@@ -130,14 +130,42 @@ namespace Assets.Station
 			_currentCount = _deserialized.CurrentCount;
 			_inboundPopulation = _deserialized.InboundPopulation;
 
-		    var people = _deserialized.Population.Select(i => new Person(i)).ToList();
+		    var people = _personGenerator.DeserializePopulation(_deserialized.Population);
+
             if(_inventory.GetProductCurrentAmount(ProductIdLookup.Population) != people.Count())
 				throw new UnityException("PopControl data not matching station inventory");
 	        AllPopulation.AddRange(people);
 		    _peopleHandlers.ForEach(i => i.HandleDeserialization(people));
         }
 
-        private void InitializeProductTrader()
+        // hydrates Person objects with static data from SO and deserialized data from file
+        private List<Person> DeserializePopulation()
+	    {
+	        var needsTemplate = _scriptable.GenerationParams.ResidentNeeds.ToDictionary(i => i.Type);
+	        var people = new List<Person>();
+
+            foreach (var personData in _deserialized.Population)
+	        {
+	            var person = new Person(personData);
+	            var needs = new List<PersonNeeds>();
+	            foreach (var need in personData.Needs)
+	            {
+	                needs.Add(new PersonNeeds
+	                {
+	                    MinValue = needsTemplate[need.Type].MinValue,
+	                    MaxValue = needsTemplate[need.Type].MaxValue,
+	                    CurrentValue = need.CurrentValue,
+	                    Type = need.Type
+	                });
+	            }
+	            person.SetNeeds(needs);
+	            people.Add(person);
+	        }
+
+	        return people;
+	    }
+
+	    private void InitializeProductTrader()
 		{
 			_trader = gameObject.AddComponent<ProductTrader>();
 			_trader.Initialize(this, Station.ClientName);
