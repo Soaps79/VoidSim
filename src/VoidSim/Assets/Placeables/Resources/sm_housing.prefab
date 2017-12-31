@@ -126,9 +126,7 @@ MonoBehaviour:
   IsForResidents: 1
   _initialValue: 20
   _affectors:
-    Affectors:
-    - Type: 0
-      Value: 0.02
+    Affectors: []
   _housed: []
 --- !u!114 &114540691761293196
 MonoBehaviour:
