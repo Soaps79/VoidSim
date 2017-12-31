@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Narrative.Conversations;
 using Assets.Narrative.Goals;
 using Assets.Narrative.UI;
 using Assets.Scripts;
@@ -9,7 +8,6 @@ using Assets.Scripts.Initialization;
 using Assets.Scripts.Serialization;
 using Assets.WorldMaterials.Products;
 using Messaging;
-using NUnit.Framework;
 using QGame;
 using UnityEngine;
 
