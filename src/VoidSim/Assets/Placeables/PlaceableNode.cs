@@ -11,21 +11,13 @@ namespace Assets.Placeables
 		string Name { get; set; }
 	}
 
+    // TODO: Why is this an IDisposable?
 	public abstract class PlaceableNode<T> : QScript, IDisposable, IPlaceableNode where T: PlaceableNode<T>
 	{
-		public Action<T> OnRemove;
-		public abstract void BroadcastPlacement();
-		public abstract string NodeName { get; }
+		public Action<T> OnRemove { get; set; }
+	    protected abstract T GetThis();
 
-		public string Name
-		{
-			get { return name; }
-			set { name = value; }
-		}
-
-		protected abstract T GetThis();
-
-		protected virtual void OnHandleRemove() { }
+        protected virtual void OnHandleRemove() { }
 
 		public void HandleRemove()
 		{
@@ -34,10 +26,15 @@ namespace Assets.Placeables
 				OnRemove(GetThis());
 		}
 
-		public void Dispose() { }
-	}
+	    public abstract void BroadcastPlacement();
+	    public abstract string NodeName { get; }
 
-	// how to handle interactions with other nodes?
-	// ie: A factory placeable also has an energy consumer node
-	// but when a module is added, its energy consumer should be a child of the factory's
+	    public string Name
+	    {
+	        get { return name; }
+	        set { name = value; }
+	    }
+
+        public void Dispose() { }
+	}
 }

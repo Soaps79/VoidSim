@@ -69,6 +69,8 @@ namespace Assets.Station
 			cargoBay.transform.SetParent(transform, true);
 			cargoBay.Initialize(berth, _inventory, _reserve, _textPrefab);
 			_cargoBays.Add(cargoBay);
+		    if (_popControl != null)
+		        cargoBay.OnCargoManifestComplete += _popControl.HandleManifestComplete;
 
 			if (OnBayAdded != null)
 				OnBayAdded(cargoBay);

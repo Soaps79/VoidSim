@@ -26,3 +26,19 @@ MonoBehaviour:
       Length: 1
     EmploymentUpdateCount: 2
     BaseEmployChance: 0.6
+  GenerationParams:
+    MinNamesLoaded: 50
+    MaxNamesLoaded: 100
+    ResidentNeeds:
+    - Type: 0
+      DisplayName: Rest
+      MinInitialValue: 0.25
+      MaxInitialValue: 0.85
+      MinValue: 0
+      MaxValue: 1.25
+    - Type: 1
+      DisplayName: Entertainment
+      MinInitialValue: 0.25
+      MaxInitialValue: 0.85
+      MinValue: 0
+      MaxValue: 1.25

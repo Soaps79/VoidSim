@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Assets.Logistics;
 using Assets.Station.UI;
@@ -34,6 +35,8 @@ namespace Assets.Station
 		private ProductAmount _productIn;
 		private ProductAmount _productOut;
 		private TransactionText _textPrefab;
+
+	    public Action<CargoManifest> OnCargoManifestComplete;
 
 		public void Initialize(ShipBerth berth, Inventory inventory, InventoryReserve reserve, TransactionText textPrefab)
 		{
@@ -86,7 +89,7 @@ namespace Assets.Station
 		// removes manifest from book, and checks for a new one
 		private void TickUnloads()
 		{
-			if (_isUnloadingIn)
+		    if (_isUnloadingIn)
 			{
 				if (AmountPerTick > _productIn.Amount)
 				{
@@ -108,6 +111,8 @@ namespace Assets.Station
 					_manifestBook.Close(manifest.Id);
 					CreateCompletionText(manifest.Currency, true);
 					CheckNextIncoming();
+                    if(OnCargoManifestComplete != null)
+                        OnCargoManifestComplete(manifest);
 				}
 			}
 
@@ -133,7 +138,9 @@ namespace Assets.Station
 					_manifestBook.Close(manifest.Id);
 					CreateCompletionText(manifest.Currency, false);
 					CheckNextOutgoing();
-				}
+				    if (OnCargoManifestComplete != null)
+				        OnCargoManifestComplete(manifest);
+                }
 			}
 
 			if (!_isUnloadingIn && !_isUnloadingOut)

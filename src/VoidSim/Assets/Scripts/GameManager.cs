@@ -13,7 +13,8 @@ namespace Assets.Scripts
 		public const string Trade = "Trade";
 		public const string Serialization = "Serial";
 		public const string Warning = "Warning";
-	}
+	    public const string Population = "Population";
+    }
 
 	public class GameMessages
 	{

@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Assets.Logistics;
-using Assets.Placeables.Nodes;
 using Assets.Scripts;
 using Assets.Scripts.Serialization;
+using Assets.Station.Population;
 using Assets.WorldMaterials;
 using Assets.WorldMaterials.Population;
 using Assets.WorldMaterials.Products;
@@ -19,7 +20,7 @@ namespace Assets.Station
 		public int CurrentCount;
 		public int Capacity;
 		public int InboundPopulation;
-		public EmployerControlData EmployerControlData;
+	    public List<PersonData> Population;
 	}
 
 	/// <summary>
@@ -27,14 +28,13 @@ namespace Assets.Station
 	/// </summary>
 	public class PopulationControl : QScript, IPopulationHost, ISerializeData<PopulationData>, ITraderDriver, IMessageListener
 	{
-		private const string _placeableNameSuffix = "pop_housing_";
 		public string Name { get { return "PopulationControl"; } }
 		[SerializeField] private int _totalCapacity;
 		[SerializeField] private int _baseCapacity;
 		[SerializeField] private int _currentCount;
-		private readonly List<PopHousing> _housing = new List<PopHousing>();
+	    [SerializeField] private int _countNamesToLoad;
 
-		// Population is currently stored in the Station's inventory as a Product
+	    // Population is currently stored in the Station's inventory as a Product
 		// Allows it to be handled by trade, cargo, etc
 		private Inventory _inventory;
 		private int _populationProductId;
@@ -48,7 +48,6 @@ namespace Assets.Station
 		private bool _ignoreNeeds;
 
 		public MoodManager MoodManager { get; private set; }
-		private EmployerControl _employerControl;
 
 		// serialization
 		private readonly CollectionSerializer<PopulationData> _serializer
@@ -56,10 +55,16 @@ namespace Assets.Station
 		private PopulationData _deserialized;
 		private const string _collectionName = "PopulationControl";
 
+        private readonly PersonGenerator _personGenerator = new PersonGenerator();
+	    private readonly List<IPopMonitor> _peopleHandlers = new List<IPopMonitor>();
 
-		public void Initialize(Inventory inventory, PopulationSO scriptable)
+        public readonly List<Person> AllPopulation = new List<Person>();
+
+	    //public Action<List<Person>, bool> OnPopulationUpdated;
+
+	    public void Initialize(Inventory inventory, PopulationSO scriptable)
 		{
-			_scriptable = scriptable;
+		    _scriptable = scriptable;
 			_inventory = inventory;
 			_inventory.OnProductsChanged += HandleInventoryProductChanged;
 
@@ -72,37 +77,73 @@ namespace Assets.Station
 
 			// establish sub-objects
 			MoodManager = new MoodManager(scriptable.MoodParams, inventory);
-			_employerControl = gameObject.AddComponent<EmployerControl>();
-			_employerControl.Initialize(scriptable, MoodManager.EfficiencyModule, _currentCount);
+		    _personGenerator.Initialize(scriptable.GenerationParams);
 
-			// load or set defaults
-			if (_serializer.HasDataFor(this, _collectionName))
+		    InitializeEmployment();
+            InitializeMover();
+            InitializeHouser();
+
+		    // load or set defaults
+            if (_serializer.HasDataFor(this, _collectionName))
 				LoadFromFile();
 			else
 				LoadFromScriptable();
 			_inventory.SetProductMaxAmount(_populationProductId, scriptable.BaseCapacity);
 
-			Locator.MessageHub.AddListener(this, PopHousing.MessageName);
-
 			InitializeProductTrader();
 		}
 
-		private void LoadFromScriptable()
+	    private void InitializeEmployment()
+	    {
+	        var employer = GetComponent<PopEmployerMonitor>();
+            employer.Initialize(this, _scriptable, MoodManager.EfficiencyModule);
+            _peopleHandlers.Add(employer);
+	    }
+
+	    private void InitializeMover()
+	    {
+	        var mover = GetComponent<PeopleMover>();
+	        mover.Initialize(this);
+	        _peopleHandlers.Add(mover);
+	    }
+
+	    private void InitializeHouser()
+	    {
+	        var houser = GetComponent<PopHomeMonitor>();
+	        houser.Initialize(this, _inventory, _scriptable);
+	        _peopleHandlers.Add(houser);
+	    }
+
+	    private void LoadFromScriptable()
 		{
 			_inventory.TryAddProduct(_populationProductId, _scriptable.InitialCount);
-		}
+		    var people = _personGenerator.GeneratePeople(_scriptable.InitialCount);
+            // move this into scriptable? maybe a percentage?
+		    people.ForEach(i => i.IsResident = true);
+            AddPopulation(people);
+        }
 
-		private void LoadFromFile()
+	    private void AddPopulation(List<Person> people)
+	    {
+	        AllPopulation.AddRange(people);
+            _peopleHandlers.ForEach(i => i.HandlePopulationUpdate(people, true));
+        }
+
+	    private void LoadFromFile()
 		{
 			_deserialized = _serializer.DeserializeData();
 			_currentCount = _deserialized.CurrentCount;
 			_inboundPopulation = _deserialized.InboundPopulation;
-			_employerControl.Deserialize(_deserialized.EmployerControlData);
-			if(_inventory.GetProductCurrentAmount(ProductIdLookup.Population) != _currentCount)
-				throw new UnityException("PopControl data not matching station inventory");
-		}
 
-		private void InitializeProductTrader()
+		    var people = _personGenerator.DeserializePopulation(_deserialized.Population);
+
+            if(_inventory.GetProductCurrentAmount(ProductIdLookup.Population) != people.Count())
+				throw new UnityException("PopControl data not matching station inventory");
+	        AllPopulation.AddRange(people);
+		    _peopleHandlers.ForEach(i => i.HandleDeserialization(people));
+        }
+
+	    private void InitializeProductTrader()
 		{
 			_trader = gameObject.AddComponent<ProductTrader>();
 			_trader.Initialize(this, Station.ClientName);
@@ -120,7 +161,6 @@ namespace Assets.Station
 				_inboundPopulation -= amount;
 
 			_currentCount = _inventory.GetProductCurrentAmount(_populationProductId);
-			_employerControl.CurrentUnemployed += amount;
 		}
 
 		// checks to see if inventory has room for more pop (discounting those already in transit)
@@ -137,44 +177,7 @@ namespace Assets.Station
 
 		public void HandleMessage(string type, MessageArgs args)
 		{
-			switch (type)
-			{
-				case PopHousing.MessageName:
-					HandleHousingAdd(args as PopHousingMessageArgs);
-					break;
-			}
-		}
-
-		private void HandleHousingAdd(PopHousingMessageArgs args)
-		{
-			if (args == null || args.PopHousing == null)
-			{
-				Debug.Log("PopulationControl given bad housing message args.");
-				return;
-			}
-
-			// name it since popcontrol owns all pop housings
-			args.PopHousing.name = _placeableNameSuffix + Locator.LastId.GetNext("pop_housing");
-			_housing.Add(args.PopHousing);
-			args.PopHousing.OnRemove += HandleRemove;
-
-			// update capacity, put out a request for inhabitants
-			UpdateCapacity();
-			UpdateTradeRequest();
-		}
-
-		private void HandleRemove(PopHousing obj)
-		{
-			if (_housing.Remove(obj))
-			{
-				UpdateCapacity();
-			}
-		}
-
-		private void UpdateCapacity()
-		{
-			_totalCapacity = _baseCapacity + _housing.Sum(i => i.Capacity);
-			_inventory.SetProductMaxAmount(_populationProductId, _totalCapacity);
+		
 		}
 
 		// will cause mood to be ignored, always returning 100%
@@ -240,9 +243,18 @@ namespace Assets.Station
 				CurrentCount = _currentCount,
 				Capacity = _totalCapacity,
 				InboundPopulation = _inboundPopulation,
-				EmployerControlData = _employerControl.GetData()
+                Population = AllPopulation.Select(i => i.GetData()).ToList()
 			};
 			return data;
 		}
+
+	    public void HandleManifestComplete(CargoManifest manifest)
+	    {
+	        if (manifest.ProductAmount.ProductId != _populationProductId)
+	            return;
+
+	        var people = _personGenerator.GeneratePeople(manifest.ProductAmount.Amount);
+            AddPopulation(people);
+	    }
 	}
 }

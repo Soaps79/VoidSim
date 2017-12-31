@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Assets.Scripts;
 using Assets.Station;
 using UnityEngine;
@@ -26,6 +27,26 @@ namespace Assets.WorldMaterials.Population
 		public float BaseEmployChance;
 	}
 
+    [Serializable]
+    public class PersonNeedsInfo
+    {
+        public PersonNeedsType Type;
+        public string DisplayName;
+        public float MinInitialValue;
+        public float MaxInitialValue;
+        public float MinValue;
+        public float MaxValue;
+        public float MinTolerance;
+    }
+
+    [Serializable]
+    public class GenerationParams
+    {
+        public int MinNamesLoaded;
+        public int MaxNamesLoaded;
+        public List<PersonNeedsInfo> ResidentNeeds;
+    }
+
 	public class PopulationSO : ScriptableObject
 	{
 		public int InitialCount;
@@ -33,5 +54,6 @@ namespace Assets.WorldMaterials.Population
 		public GameColors Colors;
 		public MoodParams MoodParams;
 		public EmploymentParams EmploymentParams;
+	    public GenerationParams GenerationParams;
 	}
 }

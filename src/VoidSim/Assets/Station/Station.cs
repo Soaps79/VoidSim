@@ -44,6 +44,7 @@ namespace Assets.Station
 	    [SerializeField] private bool _ignoreMoodInitial;
 	    [SerializeField] private PopulationSO _popScriptable;
 	    [SerializeField] private UserPlacement _userPlacementPrefab;
+        [SerializeField] private PopulationControl _popControlPrefab;
 
 		private CraftingContainer _crafter;
         private Inventory _inventory;
@@ -177,12 +178,10 @@ namespace Assets.Station
 
         private void InstantiatePopulationControl()
         {
-	        var go = new GameObject {name = "population_control"};
-	        go.transform.SetParent(_layers[LayerType.Core].transform);
-            var pop = go.GetOrAddComponent<PopulationControl>();
-            pop.Initialize(_inventory,_popScriptable);
-	        pop.IgnoreNeeds = _ignoreMoodInitial;
-	        _populationControl = pop;
+            _populationControl = Instantiate(_popControlPrefab, _layers[LayerType.Core].transform);
+            _populationControl.name = "population_control";
+            _populationControl.Initialize(_inventory,_popScriptable);
+	        _populationControl.IgnoreNeeds = _ignoreMoodInitial;
         }
 
         // Crafting items here are temporary. They will eventually work entirely through Placeables
