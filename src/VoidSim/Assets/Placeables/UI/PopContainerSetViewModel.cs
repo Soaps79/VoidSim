@@ -43,6 +43,7 @@ namespace Assets.Placeables.UI
             foreach (var popContainer in containers)
             {
                 var viewmodel = Instantiate(_containerPrefab, _containerParent, false);
+                viewmodel.name = popContainer.Name;
                 viewmodel.Initialize(popContainer);
             }
         }

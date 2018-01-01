@@ -17,7 +17,8 @@ namespace Assets.Station.Population
         [SerializeField] private PopContainerSetViewModel _viewModelPrefab;
         [SerializeField] private CanvasGroup _canvasGroupPrefab;
         private CanvasGroup _canvasGroup;
-        private readonly List<PopContainerSetViewModel> _containers = new List<PopContainerSetViewModel>();
+        [SerializeField] private List<PopContainerSetViewModel> _containers 
+            = new List<PopContainerSetViewModel>();
 
         void Start()
         {
@@ -38,6 +39,7 @@ namespace Assets.Station.Population
                 throw new UnityException("PopContainerMonitor given bad message data");
 
             var viewModel = Instantiate(_viewModelPrefab, _canvasGroup.transform);
+            viewModel.name = args.PopContainerSet.name;
             viewModel.Initialize(args.PopContainerSet);
             _containers.Add(viewModel);
             args.PopContainerSet.OnRemove += set => OnRemove(viewModel);

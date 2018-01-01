@@ -55,7 +55,7 @@ namespace Assets.Placeables.Nodes
 		        MaxCapacity = MaxEmployeeCount,
 		        Reserved = CurrentEmployeeCount,
 		        Affectors = _affectors.Affectors,
-
+                Name = name + "_employer"
 		    });
 
 		    Locator.MessageHub.QueueMessage(MessageName, new PopEmployerMessageArgs { PopEmployer = this });

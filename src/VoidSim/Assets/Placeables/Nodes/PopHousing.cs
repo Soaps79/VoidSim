@@ -64,8 +64,9 @@ namespace Assets.Placeables.Nodes
                 Type = PopContainerType.Service,
                 MaxCapacity = CurrentCapacity,
                 Reserved = CurrentCount,
-                Affectors = _affectors.Affectors
-		    });
+                Affectors = _affectors.Affectors,
+		        Name = name + "_housing"
+            });
 			Locator.MessageHub.QueueMessage(MessageName, new PopHousingMessageArgs { PopHome = this });
 		}
 
