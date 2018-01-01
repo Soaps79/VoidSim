@@ -126,7 +126,9 @@ MonoBehaviour:
   IsForResidents: 1
   _initialValue: 20
   _affectors:
-    Affectors: []
+    Affectors:
+    - Type: 0
+      Value: 0.02
   _housed: []
 --- !u!114 &114540691761293196
 MonoBehaviour:
@@ -143,19 +145,19 @@ MonoBehaviour:
     Type: 0
     MaxCapacity: 0
     Reserved: 0
+    Name: 
     CurrentOccupants: []
     Affectors: []
   _serviceContainer:
     Type: 0
     MaxCapacity: 0
     Reserved: 0
+    Name: 
     CurrentOccupants: []
     Affectors: []
   _updateTime:
     TimeUnit: 0
     Length: 4
-  _viewModelPrefab: {fileID: 114601793615521158, guid: 1acc1d274ae92e4408353dd4065779c8,
-    type: 2}
 --- !u!114 &114840166276243458
 MonoBehaviour:
   m_ObjectHideFlags: 1

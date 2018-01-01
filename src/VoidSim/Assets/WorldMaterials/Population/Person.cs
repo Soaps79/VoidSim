@@ -74,9 +74,12 @@ namespace Assets.WorldMaterials.Population
         public string Employer;
         public string CurrentlyOccupying;
 
+        public bool WantsToLeave { get; private set; }
+        public bool ReadyToWork { get; private set; }
+
         private readonly Dictionary<PersonNeedsType, PersonNeeds> 
             _needs = new Dictionary<PersonNeedsType, PersonNeeds>();
-
+        
         [SerializeField] private List<PersonNeeds> _needsList = new List<PersonNeeds>();
 
         public Person() { }
@@ -106,15 +109,13 @@ namespace Assets.WorldMaterials.Population
 
         public void ApplyAffectors(List<NeedsAffector> affectors)
         {
-            foreach (var affector in affectors)
-            {
-                _needs[affector.Type].CurrentValue = Mathf.Clamp(
-                    _needs[affector.Type].CurrentValue + affector.Value, 
-                    _needs[affector.Type].MinValue, 
-                    _needs[affector.Type].MaxValue);
-            }
-
+            NeedsHandler.ApplyAffectors(affectors, _needs);
             UpdateDebugOutput();
+        }
+
+        public void AssessNeeds()
+        {
+            
         }
 
         private void UpdateDebugOutput()

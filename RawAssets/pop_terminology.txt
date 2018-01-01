@@ -1,0 +1,10 @@
+Person - Any one living being in the galaxy
+
+Resident - Person living on the station
+Tourist - Person visiting the station for entertainment
+
+PopContainer - Represents space in a placeable that Persons can occupy
+PopContainerSet - Group of containers contained within one placeable. An example would be the Lounge, in which one container is for employees, and the other services guests.
+Containers have Occupants.
+
+PopContainer Terminology
