@@ -72,6 +72,7 @@ namespace Assets.WorldMaterials.Population
         public bool IsMale;
         public bool IsResident;
         public string Employer;
+        public string CurrentlyOccupying;
 
         private readonly Dictionary<PersonNeedsType, PersonNeeds> 
             _needs = new Dictionary<PersonNeedsType, PersonNeeds>();

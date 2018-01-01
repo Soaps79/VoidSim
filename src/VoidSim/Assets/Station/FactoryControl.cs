@@ -86,20 +86,7 @@ namespace Assets.Station
 			factory.OnIsBuyingchanged += RefreshPurchasing;
 			factory.OnCraftComplete += HandleCraftComplete;
 
-			if (factory.IsCore && _deserialized.Any())
-			{
-				// this is weird because deserialization depends on the factory having a name,
-				// which it isn't guaranteed to have until this message handling cycle is complete
-				OnNextUpdate += f => CheckForDeserialized(factory);
-			}
-			else
-			{
-				// factories that are core, ie: energy, will get named by their own managers
-				if (factory.name == Placeable.DefaultName)
-					factory.name = "product_factory_" + Locator.LastId.GetNext("product_factory");
-
-				CheckForDeserialized(factory);
-			}
+			CheckForDeserialized(factory);
 
 			factory.OnRemove += HandleFactoryRemove;
 			Factories.Add(factory);

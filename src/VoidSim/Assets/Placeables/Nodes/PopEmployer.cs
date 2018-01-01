@@ -51,10 +51,11 @@ namespace Assets.Placeables.Nodes
 		    var containers = GetComponent<PopContainerSet>();
 		    _container = containers.CreateContainer(new PopContainerParams
 		    {
-		        Type = PopContainerType.Service,
+		        Type = PopContainerType.Employment,
 		        MaxCapacity = MaxEmployeeCount,
 		        Reserved = CurrentEmployeeCount,
-		        Affectors = _affectors.Affectors
+		        Affectors = _affectors.Affectors,
+
 		    });
 
 		    Locator.MessageHub.QueueMessage(MessageName, new PopEmployerMessageArgs { PopEmployer = this });

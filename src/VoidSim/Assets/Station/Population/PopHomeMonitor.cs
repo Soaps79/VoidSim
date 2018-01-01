@@ -127,10 +127,7 @@ namespace Assets.Station.Population
                 throw new UnityException("PopHomeMonitor given bad message args");
 
             var home = args.PopHome;
-            // if new, name it
-            if(home.name == Placeable.DefaultName)
-                home.name = _placeableNameSuffix + Locator.LastId.GetNext("pop_housing");
-
+            
             if (home.IsForResidents)
                 _residentHousing.Add(home);
             home.OnRemove += HandleHousingRemove;

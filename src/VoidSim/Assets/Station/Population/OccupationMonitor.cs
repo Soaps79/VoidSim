@@ -9,7 +9,8 @@ using UnityEngine;
 namespace Assets.Station.Population
 {
     /// <summary>
-    /// Currently used mainly as a UI conduit for people occupying physical space
+    /// Monitors all pop containers
+    /// Stores references to containers as they are placed, handles instantiating their UI components
     /// </summary>
     public class OccupationMonitor : QScript, IMessageListener
     {

@@ -10,6 +10,7 @@ namespace Assets.Placeables.Nodes
 
     public class PopContainerParams
     {
+        public string Name;
         public PopContainerType Type;
         public int MaxCapacity;
         public int Reserved;
@@ -19,9 +20,11 @@ namespace Assets.Placeables.Nodes
     [Serializable]
     public class PopContainer
     {
+        // these are left public for the editor, should never be set from outside
         public PopContainerType Type;
         public int MaxCapacity;
         public int Reserved;
+        public string Name;
         public List<Person> CurrentOccupants = new List<Person>();
         public List<NeedsAffector> Affectors;
 
@@ -34,6 +37,7 @@ namespace Assets.Placeables.Nodes
 
         public PopContainer(PopContainerParams param)
         {
+            Name = param.Name;
             Type = param.Type;
             MaxCapacity = param.MaxCapacity;
             Reserved = param.Reserved;

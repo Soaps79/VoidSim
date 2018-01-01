@@ -52,8 +52,7 @@ namespace Assets.Placeables
 		[HideInInspector] public LayerType Layer;
 		public string PlaceableName { get { return _scriptable.ProductName; } }
 		public string HardPointName { get; set; }
-
-		public const string DefaultName = "unnamed_placeable";
+        
 		private PlaceableScriptable _scriptable;
 		private List<IPlaceableNode> _nodes;
 		private PlaceableViewModel _viewModelInstance;
@@ -62,25 +61,18 @@ namespace Assets.Placeables
 		{
 			_scriptable = scriptable;
 			Layer = scriptable.Layer;
-
+		    
 			gameObject.TrimCloneFromName();
 			var rend = gameObject.GetComponent<SpriteRenderer>();
-			//rend.enabled = true;
-			//rend.sprite = scriptable.PlacedSprite;
 			rend.sortingLayerName = Layer.ToString();
 			rend.sortingOrder = 1;
 		}
 
 		public void InitializeNodes(PlaceableData data = null)
 		{
-			name = DefaultName;
 			_nodes = GetComponents<IPlaceableNode>().ToList();
 			foreach (var node in _nodes)
 			{
-				if (data != null && data.Nodes != null && data.Nodes.Any(i => i.NodeName == node.NodeName))
-				{
-					node.Name = data.Nodes.First(i => i.NodeName == node.NodeName).InstanceName;
-				}
 				node.BroadcastPlacement();
 			}
 		}

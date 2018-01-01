@@ -6,6 +6,10 @@ using UnityEngine.UI.Extensions;
 
 namespace Assets.Placeables.UI
 {
+    /// <summary>
+    /// This class represents a physical spot that cen be occupied by a person,
+    /// uses different icons to represent the possible states
+    /// </summary>
     [RequireComponent(typeof(Image))]
     [RequireComponent(typeof(BoundTooltipTrigger))]
     public class OccupantViewModel : QScript

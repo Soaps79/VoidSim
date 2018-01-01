@@ -17,12 +17,6 @@ namespace Assets.Placeables.Nodes
 
 		public override void BroadcastPlacement()
 		{
-			if (name == Placeable.DefaultName)
-			{
-				var lastId = Locator.LastId.GetNext("ship_bay");
-				name = "ship_bay_" + lastId;
-			}
-
 			Berths = gameObject.GetComponentsInChildren<ShipBerth>().ToList();
 			foreach (var shipBerth in Berths)
 			{

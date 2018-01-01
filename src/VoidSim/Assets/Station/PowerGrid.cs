@@ -153,8 +153,7 @@ namespace Assets.Station
 	        if (factory.InitialRecipe != ENERGY_PRODUCT_NAME)
 		        return;
 
-	        factory.name = "power_plant_" + Locator.LastId.GetNext("power_plant");
-			// power plant resposible for initializing power providers
+	        // power plant resposible for initializing power providers
 			factory.Initialize(_inventory, ProductLookup.Instance);
         }
 
