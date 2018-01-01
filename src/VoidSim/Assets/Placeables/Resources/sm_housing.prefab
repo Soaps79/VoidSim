@@ -154,6 +154,8 @@ MonoBehaviour:
   _updateTime:
     TimeUnit: 0
     Length: 4
+  _viewModelPrefab: {fileID: 114601793615521158, guid: 1acc1d274ae92e4408353dd4065779c8,
+    type: 2}
 --- !u!114 &114840166276243458
 MonoBehaviour:
   m_ObjectHideFlags: 1

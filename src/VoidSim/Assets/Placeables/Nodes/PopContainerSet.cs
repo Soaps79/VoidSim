@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Assets.Placeables.UI;
 using Assets.Scripts;
 using Assets.WorldMaterials.Population;
 using Messaging;
@@ -22,13 +24,15 @@ namespace Assets.Placeables.Nodes
         [SerializeField] private PopContainer _employmentContainer;
         [SerializeField] private PopContainer _serviceContainer;
         [SerializeField] private TimeLength _updateTime;
+        [SerializeField] private PopContainerSetViewModel _viewModelPrefab;
+        private PopContainerSetViewModel _viewModel;
 
         protected override PopContainerSet GetThis() { return this; }
         public const string MessageName = "PopContainerNodeCreated";
 
         private readonly List<PopContainer> _containers = new List<PopContainer>();
 
-        public Action OnContainersUpdated;
+        public Action<List<PopContainer>> OnContainersUpdated;
 
         // creates a container, adds it to the list, returns it
         public PopContainer CreateContainer(PopContainerParams param)
@@ -36,7 +40,7 @@ namespace Assets.Placeables.Nodes
             var container = new PopContainer(param);
             container.OnUpdate += () =>
             {
-                if (OnContainersUpdated != null) OnContainersUpdated();
+                if (OnContainersUpdated != null) OnContainersUpdated(_containers);
             };
             if (param.Type == PopContainerType.Employment)
             {
@@ -47,6 +51,8 @@ namespace Assets.Placeables.Nodes
                 _serviceContainer = container;
             }
             _containers.Add(container);
+
+            if (OnContainersUpdated != null) OnContainersUpdated(_containers);
             return container;
         }
 
@@ -56,7 +62,16 @@ namespace Assets.Placeables.Nodes
             var node = StopWatch.AddNode("apply_affectors", time);
             node.OnTick += UpdatePeople;
 
+            CreateUi();
+
             Locator.MessageHub.QueueMessage(MessageName, new PopHolderMessageArgs{ PopContainerSet = this });
+        }
+
+        private void CreateUi()
+        {
+            var canvas = GameObject.Find("GameUICanvas");
+            _viewModel = Instantiate(_viewModelPrefab, canvas.transform);
+            _viewModel.Initialize(this);
         }
 
         private void UpdatePeople()
