@@ -35,7 +35,7 @@ namespace Assets.Placeables.Nodes
 	/// Population resides here when not assigned to a job
 	/// </summary>
 	[RequireComponent(typeof(Placeable))]
-	[RequireComponent(typeof(PopContainer))]
+	[RequireComponent(typeof(PopContainerSet))]
     public class PopHousing : PlaceableNode<PopHousing>, IPopHome
 	{
 	    protected override PopHousing GetThis() { return this; }

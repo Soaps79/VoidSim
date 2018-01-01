@@ -33,7 +33,7 @@ namespace Assets.Placeables.UI
                 var reservedToDisplay = popContainer.Reserved - _childCount;
                 for (int i = 0; i < reservedToDisplay; i++)
                 {
-                    AddPersonAvatar(_spriteOutlineEmpty);
+                    AddPersonAvatar(_spriteOutlineFilled);
                 }
             }
 

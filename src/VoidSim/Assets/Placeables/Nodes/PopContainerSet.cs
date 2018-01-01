@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Assets.Placeables.UI;
 using Assets.Scripts;
-using Assets.WorldMaterials.Population;
 using Messaging;
 using UnityEngine;
 
 namespace Assets.Placeables.Nodes
 {
-    public class PopHolderMessageArgs : MessageArgs
+    public class PopContainerSetMessageArgs : MessageArgs
     {
         public PopContainerSet PopContainerSet;
     }
@@ -20,17 +17,16 @@ namespace Assets.Placeables.Nodes
     /// </summary>
     public class PopContainerSet : PlaceableNode<PopContainerSet>
     {
-        // for early debugging
+        // for early debugging in editor
         [SerializeField] private PopContainer _employmentContainer;
         [SerializeField] private PopContainer _serviceContainer;
+
         [SerializeField] private TimeLength _updateTime;
-        [SerializeField] private PopContainerSetViewModel _viewModelPrefab;
-        private PopContainerSetViewModel _viewModel;
 
         protected override PopContainerSet GetThis() { return this; }
         public const string MessageName = "PopContainerNodeCreated";
 
-        private readonly List<PopContainer> _containers = new List<PopContainer>();
+        public readonly List<PopContainer> Containers = new List<PopContainer>();
 
         public Action<List<PopContainer>> OnContainersUpdated;
 
@@ -40,7 +36,7 @@ namespace Assets.Placeables.Nodes
             var container = new PopContainer(param);
             container.OnUpdate += () =>
             {
-                if (OnContainersUpdated != null) OnContainersUpdated(_containers);
+                if (OnContainersUpdated != null) OnContainersUpdated(Containers);
             };
             if (param.Type == PopContainerType.Employment)
             {
@@ -50,9 +46,9 @@ namespace Assets.Placeables.Nodes
             {
                 _serviceContainer = container;
             }
-            _containers.Add(container);
+            Containers.Add(container);
 
-            if (OnContainersUpdated != null) OnContainersUpdated(_containers);
+            if (OnContainersUpdated != null) OnContainersUpdated(Containers);
             return container;
         }
 
@@ -62,21 +58,12 @@ namespace Assets.Placeables.Nodes
             var node = StopWatch.AddNode("apply_affectors", time);
             node.OnTick += UpdatePeople;
 
-            CreateUi();
-
-            Locator.MessageHub.QueueMessage(MessageName, new PopHolderMessageArgs{ PopContainerSet = this });
-        }
-
-        private void CreateUi()
-        {
-            var canvas = GameObject.Find("GameUICanvas");
-            _viewModel = Instantiate(_viewModelPrefab, canvas.transform);
-            _viewModel.Initialize(this);
+            Locator.MessageHub.QueueMessage(MessageName, new PopContainerSetMessageArgs{ PopContainerSet = this });
         }
 
         private void UpdatePeople()
         {
-            _containers.ForEach(i => i.ApplyAffectors());
+            Containers.ForEach(i => i.ApplyAffectors());
         }
 
         public override string NodeName { get { return "PopContainerSet"; } }

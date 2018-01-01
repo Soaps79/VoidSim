@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Assets.Placeables.UI
 {
     /// <summary>
-    /// Represents the PopContainerSet placeable node. Refreshes entier array on changes
+    /// Represents the PopContainerSet placeable node. Refreshes entire array on changes
     /// </summary>
     public class PopContainerSetViewModel : QScript
     {
@@ -16,26 +16,21 @@ namespace Assets.Placeables.UI
 
         private PopContainerSet _containerSet;
         private readonly List<PopContainerViewModel> _containers = new List<PopContainerViewModel>();
-        //private Canvas _canvas;
 
         public void Initialize(PopContainerSet containerSet)
         {
             _containerSet = containerSet;
-            _containerSet.OnContainersUpdated += HandleContainerUpdate;
-            //_canvas = transform.parent.GetComponent<Canvas>();
+            _containerSet.OnContainersUpdated += DrawContainers;
             transform.position = new Vector3 
                     { 
                        x = containerSet.transform.position.x + _offset.x,
                        y = containerSet.transform.position.y + _offset.y,
                        z = transform.position.z
                     };
-
-            containerSet.OnRemove += set => Destroy(gameObject);
-            //if(_canvas == null)
-            //    throw new UnityException("PopContainerSetViewModel has parent that is not a canvas");
+            DrawContainers(containerSet.Containers);
         }
 
-        private void HandleContainerUpdate(List<PopContainer> containers)
+        private void DrawContainers(List<PopContainer> containers)
         {
             _containers.ForEach(i => Destroy(i.gameObject));
             _containers.Clear();

@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 114195346340893394}
   - component: {fileID: 114653319925193394}
   - component: {fileID: 114947384910430274}
+  - component: {fileID: 114150495617910924}
   m_Layer: 0
   m_Name: population_control
   m_TagString: Untagged
@@ -43,6 +44,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114150495617910924
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1991484871919434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58dd041af52810948927a71fb0da9113, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _viewModelPrefab: {fileID: 114601793615521158, guid: 1acc1d274ae92e4408353dd4065779c8,
+    type: 2}
+  _canvasGroupPrefab: {fileID: 225841797129575816, guid: b02a07d533b3b0440ac87e251809eb45,
+    type: 2}
 --- !u!114 &114195346340893394
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -54,7 +70,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94e889c29a57b764991e12dbdcfc05d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ToHouseChance: 0.6
+  ToHouseChance: 0.2
   _needsHousing: []
   _residentHousing: []
   MaxCapacity: 0

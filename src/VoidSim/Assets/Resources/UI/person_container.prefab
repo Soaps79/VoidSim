@@ -98,7 +98,7 @@ MonoBehaviour:
     type: 3}
   _spriteOutlineEmpty: {fileID: 21300014, guid: 2d33af4d6987723438ad05df90bde957,
     type: 3}
-  _residentColor: {r: 0.15294118, g: 0.8392157, b: 0.3019608, a: 1}
+  _residentColor: {r: 0.039359853, g: 0.7647059, b: 0.19686355, a: 1}
 --- !u!222 &222237072085629676
 CanvasRenderer:
   m_ObjectHideFlags: 1

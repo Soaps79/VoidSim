@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Assets.WorldMaterials.Population;
 
 namespace Assets.Placeables.Nodes
@@ -12,7 +13,7 @@ namespace Assets.Placeables.Nodes
         public PopContainerType Type;
         public int MaxCapacity;
         public int Reserved;
-        public List<NeedsAffector> Affectors;
+        public List<NeedsAffector> Affectors = new List<NeedsAffector>();
     }
 
     [Serializable]
@@ -41,6 +42,9 @@ namespace Assets.Placeables.Nodes
 
         public void ApplyAffectors()
         {
+            if (!Affectors.Any())
+                return;
+
             CurrentOccupants.ForEach(i => i.ApplyAffectors(Affectors));
         }
 
@@ -57,12 +61,12 @@ namespace Assets.Placeables.Nodes
 
         // not sure if this will stay
         // currently exists to distinguish employee spots when they are away
-        public void SetReserved(int capacity)
+        public void SetReserved(int reserved)
         {
-            if (capacity == MaxCapacity)
+            if (reserved == Reserved)
                 return;
 
-            MaxCapacity = capacity;
+            Reserved = reserved;
             CheckUpdate();
         }
 

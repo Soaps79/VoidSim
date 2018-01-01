@@ -4,7 +4,6 @@ using Assets.Scripts;
 using Assets.Station.Efficiency;
 using Assets.WorldMaterials.Population;
 using Messaging;
-using QGame;
 using UnityEngine;
 
 namespace Assets.Placeables.Nodes
@@ -19,15 +18,18 @@ namespace Assets.Placeables.Nodes
 	/// </summary>
 	[RequireComponent(typeof(Placeable))]
 	[RequireComponent(typeof(EfficiencyNode))]
-
-	public class PopEmployer : PlaceableNode<PopEmployer>
+	[RequireComponent(typeof(PopContainerSet))]
+    public class PopEmployer : PlaceableNode<PopEmployer>
 	{
+        // basic node needs
 	    protected override PopEmployer GetThis() { return this; }
 		public const string MessageName = "PopEmployerCreated";
-		public int CurrentEmployeeCount;
+
+        // currently kept up to date for UI debugging purposes
+        public int CurrentEmployeeCount;
 		public int MaxEmployeeCount;
-		[SerializeField] private float _weight = 1.0f;
-        [SerializeField] private List<Person> _employees = new List<Person>();
+
+	    [SerializeField] private List<Person> _employees = new List<Person>();
 		private EfficiencyAffector _countAffector;
 		public bool HasRoom {  get { return MaxEmployeeCount > CurrentEmployeeCount; } }
 
@@ -35,9 +37,10 @@ namespace Assets.Placeables.Nodes
 		public float EmployeeDesirability { get { return _initialDesirability; } }
 
 		public Action OnEmployeesChanged;
+	    private PopContainer _container;
+	    [SerializeField] private NeedsAffectorList _affectors;
 
-
-		public override void BroadcastPlacement()
+        public override void BroadcastPlacement()
 		{
 			// hook into efficiency system
 			_countAffector = new EfficiencyAffector("Employees");
@@ -45,7 +48,16 @@ namespace Assets.Placeables.Nodes
 			var efficiency = GetComponent<EfficiencyNode>();
 			efficiency.Module.RegisterAffector(_countAffector);
 
-			Locator.MessageHub.QueueMessage(MessageName, new PopEmployerMessageArgs { PopEmployer = this });
+		    var containers = GetComponent<PopContainerSet>();
+		    _container = containers.CreateContainer(new PopContainerParams
+		    {
+		        Type = PopContainerType.Service,
+		        MaxCapacity = MaxEmployeeCount,
+		        Reserved = CurrentEmployeeCount,
+		        Affectors = _affectors.Affectors
+		    });
+
+		    Locator.MessageHub.QueueMessage(MessageName, new PopEmployerMessageArgs { PopEmployer = this });
 		}
 
 		public void RegisterMood(EfficiencyAffector affector)
@@ -58,11 +70,18 @@ namespace Assets.Placeables.Nodes
 		{
 		    person.Employer = name;
             _employees.Add(person);
-		    CurrentEmployeeCount = _employees.Count;
-			_countAffector.Efficiency = (float)CurrentEmployeeCount / MaxEmployeeCount;
-			if (OnEmployeesChanged != null)
-				OnEmployeesChanged();
+		    UpdateEmployees();
 		}
+
+	    private void UpdateEmployees()
+	    {
+	        CurrentEmployeeCount = _employees.Count;
+            _container.SetMaxCapacity(MaxEmployeeCount);
+	        _container.SetReserved(CurrentEmployeeCount);
+	        _countAffector.Efficiency = (float) CurrentEmployeeCount / MaxEmployeeCount;
+	        if (OnEmployeesChanged != null)
+	            OnEmployeesChanged();
+	    }
 
 	    public void RemoveEmployee(Person person)
 	    {
@@ -71,6 +90,7 @@ namespace Assets.Placeables.Nodes
 
 	        person.Employer = string.Empty;
 	        _employees.Remove(person);
+            UpdateEmployees();
 	    }
 
 		public override string NodeName { get { return "PopEmployer"; } }

@@ -61,7 +61,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.241}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -104,7 +104,6 @@ MonoBehaviour:
     type: 2}
   _offset: {x: 0, y: 10}
   _containerParent: {fileID: 224327248835440552}
-  _residentColor: {r: 0.16078432, g: 0.81960785, b: 0.30588236, a: 1}
 --- !u!114 &114684144424844534
 MonoBehaviour:
   m_ObjectHideFlags: 1
