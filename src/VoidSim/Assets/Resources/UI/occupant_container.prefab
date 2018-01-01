@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 114392032104680968}
   - component: {fileID: 114911028548388488}
   m_Layer: 0
-  m_Name: person_container
+  m_Name: occupant_container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -91,14 +91,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df263d227e7db7b48a6611fd016082df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _personPrefab: {fileID: 114777777997622848, guid: db820a827b6949942a9d67f8300f8815,
+  _personPrefab: {fileID: 114319143466454876, guid: db820a827b6949942a9d67f8300f8815,
     type: 2}
-  _spriteFilled: {fileID: 21300010, guid: 2d33af4d6987723438ad05df90bde957, type: 3}
-  _spriteOutlineFilled: {fileID: 21300012, guid: 2d33af4d6987723438ad05df90bde957,
-    type: 3}
-  _spriteOutlineEmpty: {fileID: 21300014, guid: 2d33af4d6987723438ad05df90bde957,
-    type: 3}
-  _residentColor: {r: 0.039359853, g: 0.7647059, b: 0.19686355, a: 1}
 --- !u!222 &222237072085629676
 CanvasRenderer:
   m_ObjectHideFlags: 1

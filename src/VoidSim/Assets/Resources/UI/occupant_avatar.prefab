@@ -21,13 +21,32 @@ GameObject:
   - component: {fileID: 224159913915246276}
   - component: {fileID: 222303989648353754}
   - component: {fileID: 114777777997622848}
+  - component: {fileID: 114877327344208856}
+  - component: {fileID: 114319143466454876}
   m_Layer: 0
-  m_Name: person_avatar
+  m_Name: occupant_avatar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &114319143466454876
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1625884178160444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e569409473656646a6e11fe423d8f55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _spriteFilled: {fileID: 21300010, guid: 2d33af4d6987723438ad05df90bde957, type: 3}
+  _spriteOutlineFilled: {fileID: 21300012, guid: 2d33af4d6987723438ad05df90bde957,
+    type: 3}
+  _spriteOutlineEmpty: {fileID: 21300014, guid: 2d33af4d6987723438ad05df90bde957,
+    type: 3}
+  _residentColor: {r: 0.0992647, g: 0.7941176, b: 0.24781942, a: 1}
 --- !u!114 &114777777997622848
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -55,6 +74,20 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114877327344208856
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1625884178160444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4d7c934af453a9469701b72267593ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: 
+  useMousePosition: 1
+  offset: {x: 0, y: 0, z: 0}
 --- !u!222 &222303989648353754
 CanvasRenderer:
   m_ObjectHideFlags: 1

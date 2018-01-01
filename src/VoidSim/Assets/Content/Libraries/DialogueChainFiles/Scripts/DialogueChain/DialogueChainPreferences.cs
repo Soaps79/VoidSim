@@ -47,8 +47,8 @@ public static class DialogueChainPreferences
         //Resources folder. The pathways need to be in the Resources folder for the built in saving and loading method to work, or you can design your own saving/loading method.
         //Defaults = "ChainResources/Chains"  and  "ChainResources/ChainTriggers"
         //DO NOT PUT "Resources/ChainResources/ChainTriggers" or "Assets/Resources/ChainResources/ChainTriggers. Only the pathway after Resources.
-    public static string chainAssetPathway = "ChainResources/Chains";
-    public static string triggerAssetPathway = "ChainResources/Triggers";
+    public static string chainAssetPathway = "Narrative/Conversation/Chains";
+    public static string triggerAssetPathway = "Narrative/Conversation/Triggers";
 
     //This array will always be added to a new chain's list of speakers. Add names that often appear in dialogue for convenience.
     //Example: new string[] {"Tom", "Susie", "Mr. Hats"};

@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 114550389454025640}
   - component: {fileID: 114601793615521158}
   m_Layer: 0
-  m_Name: occupation_panel
+  m_Name: occupant_panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

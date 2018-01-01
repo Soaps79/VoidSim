@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 222937845683297872}
   - component: {fileID: 225841797129575816}
   m_Layer: 0
-  m_Name: occupation_panel_group
+  m_Name: occupant_panel_group
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -61,5 +61,5 @@ CanvasGroup:
   m_Enabled: 1
   m_Alpha: 1
   m_Interactable: 1
-  m_BlocksRaycasts: 0
+  m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
