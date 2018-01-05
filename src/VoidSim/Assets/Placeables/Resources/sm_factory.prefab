@@ -160,17 +160,21 @@ MonoBehaviour:
     Type: 0
     MaxCapacity: 0
     Reserved: 0
+    Name: 
     CurrentOccupants: []
     Affectors: []
+    PlaceableName: 
   _serviceContainer:
     Type: 0
     MaxCapacity: 0
     Reserved: 0
+    Name: 
     CurrentOccupants: []
     Affectors: []
+    PlaceableName: 
   _updateTime:
     TimeUnit: 0
-    Length: 0
+    Length: 4
 --- !u!114 &114244983653617566
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -208,11 +212,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CurrentEmployeeCount: 0
   MaxEmployeeCount: 10
-  _weight: 1
   _employees: []
   _initialDesirability: 0
   _affectors:
-    Affectors: []
+    Affectors:
+    - Type: 0
+      Value: -0.02
+    - Type: 1
+      Value: -0.01
 --- !u!114 &114653386725603476
 MonoBehaviour:
   m_ObjectHideFlags: 1

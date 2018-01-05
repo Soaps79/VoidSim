@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Serialization;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Assets.WorldMaterials.Population
 {
@@ -59,6 +60,8 @@ namespace Assets.WorldMaterials.Population
         public float MaxValue;
         public float MinValue;
         public float MinTolerance;
+        public float MinFulfillment;
+        public float StartWantingToMove;
     }
 
     // currently holding all data for a person and applying affectors
@@ -74,13 +77,12 @@ namespace Assets.WorldMaterials.Population
         public string Employer;
         public string CurrentlyOccupying;
 
-        public bool WantsToLeave { get; private set; }
-        public bool ReadyToWork { get; private set; }
-
-        private readonly Dictionary<PersonNeedsType, PersonNeeds> 
-            _needs = new Dictionary<PersonNeedsType, PersonNeeds>();
+        public bool NeedsFulfillment { get; set; }
+        public bool ReadyToWork { get; set; }
+        private readonly NeedsHandler _needsHandler = new NeedsHandler();
         
         [SerializeField] private List<PersonNeeds> _needsList = new List<PersonNeeds>();
+        public List<NeedsValue> UnfulfilledNeeds = new List<NeedsValue>();
 
         public Person() { }
 
@@ -98,30 +100,39 @@ namespace Assets.WorldMaterials.Population
 
         public void SetNeeds(List<PersonNeeds> needs)
         {
-            _needs.Clear();
-            foreach (var need in needs)
-            {
-                _needs.Add(need.Type, need);
-            }
-
+            _needsHandler.SetNeeds(needs);
             UpdateDebugOutput();
         }
 
         public void ApplyAffectors(List<NeedsAffector> affectors)
         {
-            NeedsHandler.ApplyAffectors(affectors, _needs);
+            _needsHandler.ApplyAffectors(affectors);
             UpdateDebugOutput();
         }
 
         public void AssessNeeds()
         {
-            
+            if (ReadyToWork)
+                return;
+
+            UnfulfilledNeeds = _needsHandler.GetUnfulfilledNeeds();
+
+            if (!NeedsFulfillment && UnfulfilledNeeds.Any())
+            {
+                NeedsFulfillment = _needsHandler.CheckWantsToLeave(Random.value);
+            }
+
+            if (!NeedsFulfillment && (string.IsNullOrEmpty(CurrentlyOccupying) 
+                || (!string.IsNullOrEmpty(Employer) && !CurrentlyOccupying.Contains(Employer))))
+            {
+                ReadyToWork = _needsHandler.CheckReadyToWork(Random.value);
+            }
         }
 
         private void UpdateDebugOutput()
         {
             _needsList.Clear();
-            _needsList.AddRange(_needs.Values.ToList());
+            _needsList.AddRange(_needsHandler.GetNeedsList());
         }
 
         public PersonData GetData()
@@ -135,11 +146,7 @@ namespace Assets.WorldMaterials.Population
                 IsMale = IsMale,
                 IsResident = IsResident,
                 Employer = Employer,
-                Needs = _needs.Select(i => new PersonNeedsData
-                {
-                    CurrentValue = i.Value.CurrentValue,
-                    Type = i.Value.Type
-                }).ToList()
+                Needs = _needsHandler.GetData()
             };
         }
     }

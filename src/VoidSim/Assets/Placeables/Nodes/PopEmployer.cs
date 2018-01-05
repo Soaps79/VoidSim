@@ -55,6 +55,7 @@ namespace Assets.Placeables.Nodes
 		        MaxCapacity = MaxEmployeeCount,
 		        Reserved = CurrentEmployeeCount,
 		        Affectors = _affectors.Affectors,
+                PlaceableName = name,
                 Name = name + "_employer"
 		    });
 

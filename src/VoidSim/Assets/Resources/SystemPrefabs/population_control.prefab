@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 114653319925193394}
   - component: {fileID: 114947384910430274}
   - component: {fileID: 114150495617910924}
+  - component: {fileID: 114472814659195612}
   m_Layer: 0
   m_Name: population_control
   m_TagString: Untagged
@@ -59,6 +60,7 @@ MonoBehaviour:
     type: 2}
   _canvasGroupPrefab: {fileID: 225841797129575816, guid: b02a07d533b3b0440ac87e251809eb45,
     type: 2}
+  _containers: []
 --- !u!114 &114195346340893394
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -93,6 +95,21 @@ MonoBehaviour:
   _baseCapacity: 0
   _currentCount: 0
   _countNamesToLoad: 0
+--- !u!114 &114472814659195612
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1991484871919434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a30ecdf9beb14a419adcbf9e6e5e8e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GroupSize: 5
+  UpdateFrequency:
+    TimeUnit: 0
+    Length: 4
 --- !u!114 &114653319925193394
 MonoBehaviour:
   m_ObjectHideFlags: 1

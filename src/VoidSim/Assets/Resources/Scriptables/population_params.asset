@@ -36,9 +36,15 @@ MonoBehaviour:
       MaxInitialValue: 0.85
       MinValue: 0
       MaxValue: 1.25
+      MinTolerance: 0.3
+      MinFulfillment: 0.8
+      StartingWantToMove: 0.2
     - Type: 1
       DisplayName: Entertainment
       MinInitialValue: 0.25
       MaxInitialValue: 0.85
       MinValue: 0
       MaxValue: 1.25
+      MinTolerance: 0.3
+      MinFulfillment: 0.8
+      StartingWantToMove: 0.2

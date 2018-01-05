@@ -14,6 +14,7 @@ namespace Assets.Placeables.Nodes
         public PopContainerType Type;
         public int MaxCapacity;
         public int Reserved;
+        public string PlaceableName;
         public List<NeedsAffector> Affectors = new List<NeedsAffector>();
     }
 
@@ -27,6 +28,8 @@ namespace Assets.Placeables.Nodes
         public string Name;
         public List<Person> CurrentOccupants = new List<Person>();
         public List<NeedsAffector> Affectors;
+        public string PlaceableName;
+        public bool HasRoom { get { return CurrentOccupants.Count < MaxCapacity; } }
 
         public Action OnUpdate;
         private void CheckUpdate()
@@ -41,6 +44,7 @@ namespace Assets.Placeables.Nodes
             Type = param.Type;
             MaxCapacity = param.MaxCapacity;
             Reserved = param.Reserved;
+            PlaceableName = param.PlaceableName;
             Affectors = param.Affectors;
         }
 
@@ -80,6 +84,7 @@ namespace Assets.Placeables.Nodes
                 return;
 
             CurrentOccupants.Add(person);
+            person.CurrentlyOccupying = Name;
             if (incrementReserve)
                 Reserved++;
 

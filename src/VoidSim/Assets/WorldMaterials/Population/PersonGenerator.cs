@@ -3,7 +3,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Assets.Scripts;
 using UnityEngine;
-using UnityEngine.WSA;
 
 namespace Assets.WorldMaterials.Population
 {
@@ -132,8 +131,11 @@ namespace Assets.WorldMaterials.Population
                 {
                     MinValue = _needsTemplate[template.Type].MinValue,
                     MaxValue = _needsTemplate[template.Type].MaxValue,
+                    MinTolerance = _needsTemplate[template.Type].MinTolerance,
                     CurrentValue = value,
-                    Type = template.Type
+                    Type = template.Type,
+                    MinFulfillment = template.MinFulfillment,
+                    StartWantingToMove = template.StartingWantToMove
                 });
             }
             person.SetNeeds(needs);
@@ -164,7 +166,10 @@ namespace Assets.WorldMaterials.Population
                         MinValue = _needsTemplate[need.Type].MinValue,
                         MaxValue = _needsTemplate[need.Type].MaxValue,
                         CurrentValue = need.CurrentValue,
-                        Type = need.Type
+                        Type = need.Type,
+                        MinFulfillment = _needsTemplate[need.Type].MinFulfillment,
+                        StartWantingToMove = _needsTemplate[need.Type].StartingWantToMove,
+                        MinTolerance = _needsTemplate[need.Type].MinTolerance
                     });
                 }
                 person.SetNeeds(needs);

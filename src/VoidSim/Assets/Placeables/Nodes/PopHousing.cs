@@ -65,6 +65,7 @@ namespace Assets.Placeables.Nodes
                 MaxCapacity = CurrentCapacity,
                 Reserved = CurrentCount,
                 Affectors = _affectors.Affectors,
+                PlaceableName = name,
 		        Name = name + "_housing"
             });
 			Locator.MessageHub.QueueMessage(MessageName, new PopHousingMessageArgs { PopHome = this });
@@ -78,8 +79,6 @@ namespace Assets.Placeables.Nodes
 	            person.Home = name;
 	            _housed.Add(person);
 	            CurrentCount = _housed.Count;
-
-                _container.AddPerson(person, true);
 	        }
 	    }
 	}

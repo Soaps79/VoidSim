@@ -128,7 +128,9 @@ MonoBehaviour:
   _affectors:
     Affectors:
     - Type: 0
-      Value: 0.02
+      Value: 0.04
+    - Type: 1
+      Value: 0.01
   _housed: []
 --- !u!114 &114540691761293196
 MonoBehaviour:
@@ -148,6 +150,7 @@ MonoBehaviour:
     Name: 
     CurrentOccupants: []
     Affectors: []
+    PlaceableName: 
   _serviceContainer:
     Type: 0
     MaxCapacity: 0
@@ -155,6 +158,7 @@ MonoBehaviour:
     Name: 
     CurrentOccupants: []
     Affectors: []
+    PlaceableName: 
   _updateTime:
     TimeUnit: 0
     Length: 4

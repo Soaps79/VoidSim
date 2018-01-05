@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Assets.Logistics;
 using Assets.WorldMaterials.Population;
 
 namespace Assets.Station.Population
