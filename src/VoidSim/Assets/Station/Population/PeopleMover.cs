@@ -12,20 +12,27 @@ using UnityEngine;
 
 namespace Assets.Station.Population
 {
+    public class NeedsContainerEntry
+    {
+        public PersonNeedsType Type;
+        public float Value;
+        public PopContainer PopContainer;
+    }
+
     [RequireComponent(typeof(PopulationControl))]
     public class PeopleMover : QScript, IMessageListener, IPopMonitor
     {
         private readonly List<Person> _allPopulation = new List<Person>();
         private readonly List<PopContainerSet> _containersets = new List<PopContainerSet>();
 
-        private readonly Dictionary<PersonNeedsType, List<PopContainer>> _containersByNeed 
-            = new Dictionary<PersonNeedsType, List<PopContainer>>();
+        private readonly Dictionary<PersonNeedsType, List<NeedsContainerEntry>> _containersByNeed 
+            = new Dictionary<PersonNeedsType, List<NeedsContainerEntry>>();
 
         private readonly Dictionary<string, PopContainer> _containersByName 
             = new Dictionary<string, PopContainer>();
 
-        private readonly Dictionary<string, PopContainer> _containersByPlaceableName
-            = new Dictionary<string, PopContainer>();
+        private readonly Dictionary<string, List<PopContainer>> _containersByPlaceableName
+            = new Dictionary<string, List<PopContainer>>();
 
         private readonly Dictionary<string, PopContainer> _employerContainers
             = new Dictionary<string, PopContainer>();
@@ -52,7 +59,7 @@ namespace Assets.Station.Population
             {
                 foreach (var person in hasNoLocation)
                 {
-                    // the read to work loop will pick these people up
+                    // the ready to work loop will pick these people up
                     if(person.ReadyToWork && !string.IsNullOrEmpty(person.Employer))
                         continue;
 
@@ -62,7 +69,7 @@ namespace Assets.Station.Population
             }
 
             // if they are ready to work, find their job and send them there
-            var readyToWork = _control.AllPopulation.Where(i => i.ReadyToWork);
+            var readyToWork = _control.AllPopulation.Where(i => i.ReadyToWork).ToList();
             if (readyToWork.Any())
             {
                 foreach (var person in readyToWork)
@@ -70,10 +77,10 @@ namespace Assets.Station.Population
                     if (string.IsNullOrEmpty(person.Employer))
                         continue;
 
-                    RemovePersonFromCurrentLocation(person);
-
                     if(!_employerContainers.ContainsKey(person.Employer))
                         throw new UnityException(string.Format("Employer container {0} not found", person.Employer));
+
+                    RemovePersonFromCurrentLocation(person);
 
                     var employer = _employerContainers[person.Employer];
                     employer.AddPerson(person);
@@ -81,7 +88,8 @@ namespace Assets.Station.Population
                 }
             }
 
-            var wantsToMove = _control.AllPopulation.Where(i => i.NeedsFulfillment);
+            // if they need fulfillment, try and find it
+            var wantsToMove = _control.AllPopulation.Where(i => i.NeedsFulfillment).ToList();
             if (wantsToMove.Any())
             {
                 foreach (var person in wantsToMove)
@@ -100,11 +108,17 @@ namespace Assets.Station.Population
 
         private void SendPersonHome(Person person)
         {
+            // make sure the home placeable exists
             if(!_containersByPlaceableName.ContainsKey(person.Home))
                 throw new UnityException(string.Format("Home container {0} not found", person.Home));
 
+            // and that it has a Service container
+            var container = _containersByPlaceableName[person.Home].FirstOrDefault(i => i.Type == PopContainerType.Service);
+            if(container == null)
+                throw new UnityException(string.Format("No registered Service container for PopHousing {0}", person.Home));
+
+            // if found, remove person from current location and send them there
             RemovePersonFromCurrentLocation(person);
-            var container = _containersByPlaceableName[person.Home];
             container.AddPerson(person);
             person.NeedsFulfillment = false;
         }
@@ -128,13 +142,13 @@ namespace Assets.Station.Population
                 return false;
             }
 
-            foreach (var popContainer in _containersByNeed[need.Type])
+            foreach (var needsContainer in _containersByNeed[need.Type])
             {
-                if(!popContainer.HasRoom)
+                if(!needsContainer.PopContainer.HasRoom)
                     continue;
 
                 RemovePersonFromCurrentLocation(person);
-                popContainer.AddPerson(person);
+                needsContainer.PopContainer.AddPerson(person);
                 person.NeedsFulfillment = false;
                 return true;
             }
@@ -178,7 +192,10 @@ namespace Assets.Station.Population
                 foreach (var container in containerSet.Containers)
                 {
                     _containersByName.Add(container.Name, container);
-                    _containersByPlaceableName.Add(container.PlaceableName, container);
+                    if(!_containersByPlaceableName.ContainsKey(container.PlaceableName))
+                        _containersByPlaceableName.Add(container.PlaceableName, new List<PopContainer>());
+
+                    _containersByPlaceableName[container.PlaceableName].Add(container);
 
                     // hold all employers
                     if (container.Type == PopContainerType.Employment)
@@ -190,11 +207,24 @@ namespace Assets.Station.Population
                     {
                         foreach (var affector in container.Affectors)
                         {
-                            if (affector.Value > 0 && !_containersByNeed[affector.Type].Contains(container))
-                                _containersByNeed[affector.Type].Add(container);
+                            if (affector.Value > 0)
+                                _containersByNeed[affector.Type].Add(new NeedsContainerEntry
+                                {
+                                    PopContainer = container,
+                                    Type = affector.Type,
+                                    Value = affector.Value
+                                });
                         }
                     }
                 }
+            }
+
+            // order services by their value
+            foreach (var pair in _containersByNeed)
+            {
+                var list = pair.Value.ToList();
+                pair.Value.Clear();
+                pair.Value.AddRange(list.OrderByDescending(i => i.Value));
             }
         }
 
@@ -203,7 +233,7 @@ namespace Assets.Station.Population
             _containersByNeed.Clear();
             foreach (PersonNeedsType value in Enum.GetValues(typeof(PersonNeedsType)))
             {
-                _containersByNeed.Add(value, new List<PopContainer>());
+                _containersByNeed.Add(value, new List<NeedsContainerEntry>());
             }
         }
 

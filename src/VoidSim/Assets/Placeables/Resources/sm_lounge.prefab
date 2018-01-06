@@ -24,6 +24,8 @@ GameObject:
   - component: {fileID: 212794525094851700}
   - component: {fileID: 60728678801049328}
   - component: {fileID: 114315186858982648}
+  - component: {fileID: 114643133577593900}
+  - component: {fileID: 114511438417011632}
   m_Layer: 0
   m_Name: sm_lounge
   m_TagString: Untagged
@@ -157,17 +159,21 @@ MonoBehaviour:
     Type: 0
     MaxCapacity: 0
     Reserved: 0
+    Name: 
     CurrentOccupants: []
     Affectors: []
+    PlaceableName: 
   _serviceContainer:
     Type: 0
     MaxCapacity: 0
     Reserved: 0
+    Name: 
     CurrentOccupants: []
     Affectors: []
+    PlaceableName: 
   _updateTime:
     TimeUnit: 0
-    Length: 0
+    Length: 6
 --- !u!114 &114439710200841554
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -180,6 +186,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Layer: 0
+--- !u!114 &114511438417011632
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1150369450097946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6cf306bd6d42d64eb8bf7509c9da010, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CurrentEmployeeCount: 0
+  MaxEmployeeCount: 4
+  _employees: []
+  _initialDesirability: 0
+  _affectors:
+    Affectors:
+    - Type: 0
+      Value: -0.01
+--- !u!114 &114643133577593900
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1150369450097946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96ebd6e976f37c941bd9c02ab4ab068c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _currentValue: 0
 --- !u!114 &114785772077724598
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -192,6 +229,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AmountProvided: 50
+  _affectors:
+    Affectors:
+    - Type: 1
+      Value: 0.03
+    - Type: 0
+      Value: 0.005
+  CurrentCapacity: 10
 --- !u!212 &212794525094851700
 SpriteRenderer:
   m_ObjectHideFlags: 1

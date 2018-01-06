@@ -87,8 +87,8 @@ namespace Assets.WorldMaterials.Population
 
                 // compare random to calculated chance to see if move is going to be requested
                 var current = _needs[need.Type];
-                var chance = Mathf.Lerp(0, 1, current.CurrentValue / current.MinTolerance);
-                if (chance > rand)
+                var chance = current.CurrentValue == 0 ? 1.0f : 1.0f - current.CurrentValue / current.MinTolerance;
+                if (chance >= rand)
                     return true;
             }
             return false;
