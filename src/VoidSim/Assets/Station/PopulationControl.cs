@@ -5,6 +5,7 @@ using Assets.Logistics;
 using Assets.Scripts;
 using Assets.Scripts.Serialization;
 using Assets.Station.Population;
+using Assets.Station.UI;
 using Assets.WorldMaterials;
 using Assets.WorldMaterials.Population;
 using Assets.WorldMaterials.Products;
@@ -60,6 +61,9 @@ namespace Assets.Station
 
         public readonly List<Person> AllPopulation = new List<Person>();
 
+	    [SerializeField] private PopulationListViewModel _listViewModelPrefab;
+        private PopulationListViewModel _listViewModel;
+
 	    //public Action<List<Person>, bool> OnPopulationUpdated;
 
 	    public void Initialize(Inventory inventory, PopulationSO scriptable)
@@ -91,7 +95,18 @@ namespace Assets.Station
 			_inventory.SetProductMaxAmount(_populationProductId, scriptable.BaseCapacity);
 
 			InitializeProductTrader();
+
+            InitializeListView();
 		}
+
+	    private void InitializeListView()
+	    {
+	        if (_listViewModelPrefab == null)
+	            return;
+	        var canvas = GameObject.Find("InfoCanvas");
+	        _listViewModel = Instantiate(_listViewModelPrefab, canvas.transform, false);
+            _listViewModel.UpdateList(AllPopulation);
+	    }
 
 	    private void InitializeEmployment()
 	    {
@@ -127,6 +142,8 @@ namespace Assets.Station
 	    {
 	        AllPopulation.AddRange(people);
             _peopleHandlers.ForEach(i => i.HandlePopulationUpdate(people, true));
+            if(_listViewModel != null)
+                _listViewModel.UpdateList(AllPopulation);
         }
 
 	    private void LoadFromFile()

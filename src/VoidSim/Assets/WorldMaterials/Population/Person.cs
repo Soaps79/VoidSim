@@ -68,14 +68,102 @@ namespace Assets.WorldMaterials.Population
     [Serializable]
     public class Person : ISerializeData<PersonData>
     {
-        public int Id;
-        public string FirstName;
-        public string LastName;
-        public string Home;
-        public bool IsMale;
-        public bool IsResident;
-        public string Employer;
-        public string CurrentlyOccupying;
+        public int Id
+        {
+            get { return _id; }
+            set
+            {
+                if (value == _id) return;
+                _id = value;
+                CheckUpdateCallback();
+            }
+        }
+        public string FirstName
+        {
+            get { return _firstName; }
+            set
+            {
+                if (value == _firstName) return;
+                _firstName = value;
+                CheckUpdateCallback();
+            }
+        }
+
+        public string LastName
+        {
+            get { return _lastName; }
+            set
+            {
+                if (value == _lastName) return;
+                _lastName = value;
+                CheckUpdateCallback();
+            }
+        }
+
+        public string Home
+        {
+            get { return _home; }
+            set
+            {
+                if (value == _home) return;
+                _home = value;
+                CheckUpdateCallback();
+            }
+        }
+
+        public bool IsMale
+        {
+            get { return _isMale; }
+            set
+            {
+                if (value == _isMale) return;
+                _isMale = value;
+                CheckUpdateCallback();
+            }
+        }
+
+        public bool IsResident
+        {
+            get { return _isResident; }
+            set
+            {
+                if (value == _isResident) return;
+                _isResident = value;
+                CheckUpdateCallback();
+            }
+        }
+
+        public string Employer
+        {
+            get { return _employer; }
+            set
+            {
+                if (value == _employer) return;
+                _employer = value;
+                CheckUpdateCallback();
+            }
+        }
+
+        public string CurrentlyOccupying
+        {
+            get { return _currentlyOccupying; }
+            set
+            {
+                if (value == _currentlyOccupying) return;
+                _currentlyOccupying = value;
+                CheckUpdateCallback();
+            }
+        }
+
+        // serializing these so they're viewable in Unity editor
+        [SerializeField] private int _id;
+        [SerializeField] private string _firstName;
+        [SerializeField] private string _lastName;
+        [SerializeField] private string _home;
+        [SerializeField] private bool _isMale;
+        [SerializeField] private bool _isResident;
+        [SerializeField] private string _employer;
+        [SerializeField] private string _currentlyOccupying;
 
         public bool NeedsFulfillment { get; set; }
         public bool ReadyToWork { get; set; }
@@ -83,6 +171,14 @@ namespace Assets.WorldMaterials.Population
         
         [SerializeField] private List<PersonNeeds> _needsList = new List<PersonNeeds>();
         public List<NeedsValue> UnfulfilledNeeds = new List<NeedsValue>();
+
+        public Action<Person> OnUpdate;
+
+        private void CheckUpdateCallback()
+        {
+            if (OnUpdate != null)
+                OnUpdate(this);
+        }
 
         public Person() { }
 
