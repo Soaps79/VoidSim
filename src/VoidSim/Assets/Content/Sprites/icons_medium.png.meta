@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 2d33af4d6987723438ad05df90bde957
-timeCreated: 1514760703
+timeCreated: 1515353470
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -12,6 +12,7 @@ TextureImporter:
     21300010: pop_filled
     21300012: pop_outline_filled
     21300014: pop_outline_empty
+    21300016: population
   externalObjects: {}
   serializedVersion: 4
   mipmaps:
@@ -182,7 +183,7 @@ TextureImporter:
         width: 21
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -196,7 +197,7 @@ TextureImporter:
         width: 22
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -208,6 +209,20 @@ TextureImporter:
         x: 107
         y: 128
         width: 21
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: population
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 128
+        width: 64
         height: 64
       alignment: 0
       pivot: {x: 0, y: 0}

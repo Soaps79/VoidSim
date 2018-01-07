@@ -210,7 +210,7 @@ MonoBehaviour:
       Value: -0.02
     - Type: 1
       Value: -0.01
-    ActivityPrefix: Working
+    ActivityPrefix: Providing luxury
 --- !u!114 &114643133577593900
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -240,7 +240,7 @@ MonoBehaviour:
     Affectors:
     - Type: 1
       Value: 0.02
-    ActivityPrefix: Lounging
+    ActivityPrefix: Kicking back
   CurrentCapacity: 10
 --- !u!212 &212794525094851700
 SpriteRenderer:

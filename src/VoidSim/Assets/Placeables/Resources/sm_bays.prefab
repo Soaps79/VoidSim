@@ -714,14 +714,20 @@ MonoBehaviour:
     Type: 0
     MaxCapacity: 0
     Reserved: 0
+    Name: 
+    ActivityPrefix: 
     CurrentOccupants: []
     Affectors: []
+    PlaceableName: 
   _serviceContainer:
     Type: 0
     MaxCapacity: 0
     Reserved: 0
+    Name: 
+    ActivityPrefix: 
     CurrentOccupants: []
     Affectors: []
+    PlaceableName: 
   _updateTime:
     TimeUnit: 0
     Length: 0
@@ -752,8 +758,12 @@ MonoBehaviour:
   MaxEmployeeCount: 4
   _employees: []
   _initialDesirability: 0
-  _affectors:
-    Affectors: []
+  _containerGenerationParams:
+    Type: 0
+    Affectors:
+    - Type: 0
+      Value: -0.02
+    ActivityPrefix: 'Handling cargo '
 --- !u!114 &114867690801470922
 MonoBehaviour:
   m_ObjectHideFlags: 1

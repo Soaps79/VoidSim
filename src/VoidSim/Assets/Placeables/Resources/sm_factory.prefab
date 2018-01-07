@@ -223,7 +223,7 @@ MonoBehaviour:
       Value: -0.02
     - Type: 1
       Value: -0.01
-    ActivityPrefix: Working
+    ActivityPrefix: Producing goods
 --- !u!114 &114653386725603476
 MonoBehaviour:
   m_ObjectHideFlags: 1

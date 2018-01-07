@@ -141,6 +141,7 @@ GameObject:
   - component: {fileID: 114587645286708780}
   - component: {fileID: 114928680028418452}
   - component: {fileID: 114718465909112984}
+  - component: {fileID: 114186239752403364}
   m_Layer: 5
   m_Name: population_list_viewmodel
   m_TagString: Untagged
@@ -416,6 +417,20 @@ MonoBehaviour:
   MaxWidth: 0
   MaxHeight: 0
   version: 1
+--- !u!114 &114186239752403364
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1522195528709228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 587654a2f20c10b458b6e17d4e25ea9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 21300016, guid: 2d33af4d6987723438ad05df90bde957, type: 3}
+  DisplayName: Population List
+  InputAxis: Population List
 --- !u!114 &114228045916405658
 MonoBehaviour:
   m_ObjectHideFlags: 1
