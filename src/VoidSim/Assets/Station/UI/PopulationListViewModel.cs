@@ -10,6 +10,7 @@ namespace Assets.Station.UI
         void Start()
         {
             gameObject.RegisterSystemPanel(gameObject);
+            gameObject.SetActive(false);
         }
 
         public void UpdateList(List<Person> allPopulation)
