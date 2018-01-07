@@ -125,12 +125,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsForResidents: 1
   _initialValue: 20
-  _affectors:
+  _containerGenerationParams:
+    Type: 1
     Affectors:
     - Type: 0
-      Value: 0.04
+      Value: 0.03
     - Type: 1
       Value: 0.01
+    ActivityPrefix: Resting
   _housed: []
 --- !u!114 &114540691761293196
 MonoBehaviour:
@@ -148,6 +150,7 @@ MonoBehaviour:
     MaxCapacity: 0
     Reserved: 0
     Name: 
+    ActivityPrefix: 
     CurrentOccupants: []
     Affectors: []
     PlaceableName: 
@@ -156,6 +159,7 @@ MonoBehaviour:
     MaxCapacity: 0
     Reserved: 0
     Name: 
+    ActivityPrefix: 
     CurrentOccupants: []
     Affectors: []
     PlaceableName: 

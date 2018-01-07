@@ -161,6 +161,7 @@ MonoBehaviour:
     MaxCapacity: 0
     Reserved: 0
     Name: 
+    ActivityPrefix: 
     CurrentOccupants: []
     Affectors: []
     PlaceableName: 
@@ -169,6 +170,7 @@ MonoBehaviour:
     MaxCapacity: 0
     Reserved: 0
     Name: 
+    ActivityPrefix: 
     CurrentOccupants: []
     Affectors: []
     PlaceableName: 
@@ -214,12 +216,14 @@ MonoBehaviour:
   MaxEmployeeCount: 10
   _employees: []
   _initialDesirability: 0
-  _affectors:
+  _containerGenerationParams:
+    Type: 0
     Affectors:
     - Type: 0
       Value: -0.02
     - Type: 1
       Value: -0.01
+    ActivityPrefix: Working
 --- !u!114 &114653386725603476
 MonoBehaviour:
   m_ObjectHideFlags: 1

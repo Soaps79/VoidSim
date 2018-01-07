@@ -38,7 +38,7 @@ namespace Assets.Placeables.Nodes
 
 		public Action OnEmployeesChanged;
 	    private PopContainer _container;
-	    [SerializeField] private NeedsAffectorList _affectors;
+	    [SerializeField] private ContainerGenerationParams _containerGenerationParams;
 
         public override void BroadcastPlacement()
 		{
@@ -54,9 +54,9 @@ namespace Assets.Placeables.Nodes
 		        Type = PopContainerType.Employment,
 		        MaxCapacity = MaxEmployeeCount,
 		        Reserved = CurrentEmployeeCount,
-		        Affectors = _affectors.Affectors,
+		        Affectors = _containerGenerationParams.Affectors,
                 PlaceableName = name,
-                Name = name + "_employer"
+                ActivityPrefix = _containerGenerationParams.ActivityPrefix
 		    });
 
 		    Locator.MessageHub.QueueMessage(MessageName, new PopEmployerMessageArgs { PopEmployer = this });

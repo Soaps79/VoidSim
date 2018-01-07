@@ -155,6 +155,17 @@ namespace Assets.WorldMaterials.Population
             }
         }
 
+        public string CurrentActivity
+        {
+            get { return _currentActivity; }
+            set
+            {
+                if (value == _currentActivity) return;
+                _currentActivity = value;
+                CheckUpdateCallback();
+            }
+        }
+
         // serializing these so they're viewable in Unity editor
         [SerializeField] private int _id;
         [SerializeField] private string _firstName;
@@ -164,6 +175,7 @@ namespace Assets.WorldMaterials.Population
         [SerializeField] private bool _isResident;
         [SerializeField] private string _employer;
         [SerializeField] private string _currentlyOccupying;
+        [SerializeField] private string _currentActivity;
 
         public bool NeedsFulfillment { get; set; }
         public bool ReadyToWork { get; set; }

@@ -8,13 +8,21 @@ namespace Assets.Placeables.Nodes
     [Serializable]
     public enum PopContainerType { Employment, Service }
 
+    [Serializable]
+    public class ContainerGenerationParams
+    {
+        public PopContainerType Type;
+        public List<NeedsAffector> Affectors;
+        public string ActivityPrefix;
+    }
+
     public class PopContainerParams
     {
-        public string Name;
         public PopContainerType Type;
         public int MaxCapacity;
         public int Reserved;
         public string PlaceableName;
+        public string ActivityPrefix;
         public List<NeedsAffector> Affectors = new List<NeedsAffector>();
     }
 
@@ -26,6 +34,7 @@ namespace Assets.Placeables.Nodes
         public int MaxCapacity;
         public int Reserved;
         public string Name;
+        public string ActivityPrefix;
         public List<Person> CurrentOccupants = new List<Person>();
         public List<NeedsAffector> Affectors;
         public string PlaceableName;
@@ -40,12 +49,12 @@ namespace Assets.Placeables.Nodes
 
         public PopContainer(PopContainerParams param)
         {
-            Name = param.Name;
             Type = param.Type;
             MaxCapacity = param.MaxCapacity;
             Reserved = param.Reserved;
             PlaceableName = param.PlaceableName;
             Affectors = param.Affectors;
+            ActivityPrefix = param.ActivityPrefix;
         }
 
         public void ApplyAffectors()
@@ -85,6 +94,7 @@ namespace Assets.Placeables.Nodes
 
             CurrentOccupants.Add(person);
             person.CurrentlyOccupying = Name;
+            person.CurrentActivity = ActivityPrefix + " at " + PlaceableName;
             if (incrementReserve)
                 Reserved++;
 

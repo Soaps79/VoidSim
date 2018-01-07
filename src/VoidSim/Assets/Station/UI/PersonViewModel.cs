@@ -23,7 +23,7 @@ namespace Assets.Station.UI
         {
             GenderText.text = item.IsMale ? "M" : "F";
             NameText.text = item.FirstName + " " + item.LastName;
-            LocationText.text = item.CurrentlyOccupying;
+            LocationText.text = item.CurrentActivity;
         }
 
         protected override void OnDisable()

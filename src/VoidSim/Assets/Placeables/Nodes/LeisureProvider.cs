@@ -16,7 +16,7 @@ namespace Assets.Placeables.Nodes
 		protected override LeisureProvider GetThis() { return this; }
 		public const string MessageName = "LeisureNodeCreated";
 		public int AmountProvided;
-		[SerializeField] private NeedsAffectorList _affectors;
+		[SerializeField] private ContainerGenerationParams _containerGenerationParams;
 		private PopContainer _container;
 		public int CurrentCapacity;
 
@@ -28,9 +28,9 @@ namespace Assets.Placeables.Nodes
 			{
 				Type = PopContainerType.Service,
 				MaxCapacity = CurrentCapacity,
-				Affectors = _affectors.Affectors,
+				Affectors = _containerGenerationParams.Affectors,
 				PlaceableName = name,
-				Name = name + "_housing"
+				ActivityPrefix = _containerGenerationParams.ActivityPrefix
 			});
 
 			Locator.MessageHub.QueueMessage(MessageName, new LeisureProviderMessageArgs { LeisureProvider = this });

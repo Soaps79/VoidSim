@@ -160,6 +160,7 @@ MonoBehaviour:
     MaxCapacity: 0
     Reserved: 0
     Name: 
+    ActivityPrefix: 
     CurrentOccupants: []
     Affectors: []
     PlaceableName: 
@@ -168,6 +169,7 @@ MonoBehaviour:
     MaxCapacity: 0
     Reserved: 0
     Name: 
+    ActivityPrefix: 
     CurrentOccupants: []
     Affectors: []
     PlaceableName: 
@@ -201,10 +203,14 @@ MonoBehaviour:
   MaxEmployeeCount: 4
   _employees: []
   _initialDesirability: 0
-  _affectors:
+  _containerGenerationParams:
+    Type: 0
     Affectors:
     - Type: 0
+      Value: -0.02
+    - Type: 1
       Value: -0.01
+    ActivityPrefix: Working
 --- !u!114 &114643133577593900
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -229,12 +235,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AmountProvided: 50
-  _affectors:
+  _containerGenerationParams:
+    Type: 1
     Affectors:
     - Type: 1
-      Value: 0.03
-    - Type: 0
-      Value: 0.005
+      Value: 0.02
+    ActivityPrefix: Lounging
   CurrentCapacity: 10
 --- !u!212 &212794525094851700
 SpriteRenderer:
