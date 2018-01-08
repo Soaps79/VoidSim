@@ -95,7 +95,7 @@ MonoBehaviour:
   _baseCapacity: 0
   _currentCount: 0
   _countNamesToLoad: 0
-  _listViewModelPrefab: {fileID: 114718465909112984, guid: bb18116276809134c97375a21c91fca0,
+  _listViewModelPrefab: {fileID: 114954812567353600, guid: bb18116276809134c97375a21c91fca0,
     type: 2}
 --- !u!114 &114472814659195612
 MonoBehaviour:

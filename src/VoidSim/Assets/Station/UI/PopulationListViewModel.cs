@@ -7,15 +7,14 @@ namespace Assets.Station.UI
 {
     public class PopulationListViewModel : ListViewCustom<PersonViewModel, Person>
     {
-        void Start()
-        {
-            gameObject.RegisterSystemPanel(gameObject);
-            gameObject.SetActive(false);
-        }
-
         public void UpdateList(List<Person> allPopulation)
         {
             DataSource = allPopulation.ToObservableList();
+        }
+
+        public void Initialize()
+        {
+            gameObject.RegisterSystemPanel(gameObject);
         }
     }
 }

@@ -105,10 +105,12 @@ namespace Assets.Station
 	            return;
 	        var canvas = GameObject.Find("InfoCanvas");
 	        _listViewModel = Instantiate(_listViewModelPrefab, canvas.transform, false);
+	        _listViewModel.Initialize();
             _listViewModel.UpdateList(AllPopulation);
+	        _listViewModel.gameObject.SetActive(false);
 	    }
 
-	    private void InitializeEmployment()
+        private void InitializeEmployment()
 	    {
 	        var employer = GetComponent<PopEmployerMonitor>();
             employer.Initialize(this, _scriptable, MoodManager.EfficiencyModule);

@@ -1,6 +1,7 @@
 ﻿using Assets.WorldMaterials.Population;
 using TMPro;
 using UIWidgets;
+using UnityEngine.UI;
 
 namespace Assets.Station.UI
 {
@@ -11,6 +12,14 @@ namespace Assets.Station.UI
         public TMP_Text LocationText;
 
         private Person _person;
+
+        public override Graphic[] GraphicsBackground
+        {
+            get
+            {
+                return new Graphic[] { Background, };
+            }
+        }
 
         public void SetData(Person item)
         {
