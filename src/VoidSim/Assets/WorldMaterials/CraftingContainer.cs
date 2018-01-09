@@ -54,7 +54,7 @@ namespace Assets.Scripts.WorldMaterials
             get
             {
                 var returnVal = StopWatch.IsRunning()
-                ? StopWatch[STOPWATCH_NAME].RemainingLifetimeAsZeroToOne : 0f;
+                ? StopWatch[STOPWATCH_NAME].ElapsedLifetimeAsZeroToOne : 0f;
 	            return returnVal;
             }
         }

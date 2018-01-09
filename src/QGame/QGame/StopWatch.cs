@@ -75,7 +75,7 @@ namespace QGame
             }
         }
 
-        public float RemainingLifetimeAsZeroToOne
+        public float ElapsedLifetimeAsZeroToOne
         {
             get
             {

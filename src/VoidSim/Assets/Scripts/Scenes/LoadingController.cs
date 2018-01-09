@@ -21,7 +21,7 @@ namespace Assets.Scripts.Scenes
 			var node = StopWatch.AddNode("loading_bar", LoadTime, true);
 			node.OnTick += HandleLoadComplete;
 			_binding = _slider.gameObject.AddComponent<SliderBinding>();
-			_binding.Initialize(() => node.RemainingLifetimeAsZeroToOne);
+			_binding.Initialize(() => node.ElapsedLifetimeAsZeroToOne);
 		}
 
 		private void HandleLoadComplete()
