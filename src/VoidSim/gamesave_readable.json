@@ -11,38 +11,14 @@
     },
     {
       "Name": "transit_entry",
-      "LastId": 5
-    },
-    {
-      "Name": "sm_housing",
       "LastId": 1
     },
     {
       "Name": "sm_factory",
-      "LastId": 2
-    },
-    {
-      "Name": "sm_bays",
       "LastId": 1
-    },
-    {
-      "Name": "basic_needs",
-      "LastId": 1
-    },
-    {
-      "Name": "crafting_container_basic_needs_1",
-      "LastId": 10
     },
     {
       "Name": "sm_lounge",
-      "LastId": 1
-    },
-    {
-      "Name": "trade_manifest",
-      "LastId": 1
-    },
-    {
-      "Name": "manifest",
       "LastId": 1
     }
   ]
@@ -50,79 +26,45 @@
   "ShipGenerator": {
   "Ships": [
     {
+      "ShipName": "ship_2",
+      "SOName": "sm_cargo_2",
+      "TimeRemaining": 12.947813
+    },
+    {
+      "ShipName": "ship_3",
+      "SOName": "sm_cargo_1",
+      "TimeRemaining": 34.9478149
+    },
+    {
+      "ShipName": "ship_4",
+      "SOName": "sm_cargo_1",
+      "TimeRemaining": 62.9478149
+    },
+    {
       "ShipName": "ship_5",
       "SOName": "sm_cargo_3",
-      "TimeRemaining": 6.577347
+      "TimeRemaining": 78.9478149
     },
     {
       "ShipName": "ship_6",
       "SOName": "sm_cargo_1",
-      "TimeRemaining": 24.5773468
+      "TimeRemaining": 96.9478149
     },
     {
       "ShipName": "ship_7",
       "SOName": "sm_cargo_2",
-      "TimeRemaining": 68.57735
+      "TimeRemaining": 140.947815
     },
     {
       "ShipName": "ship_8",
       "SOName": "sm_cargo_1",
-      "TimeRemaining": 90.57735
+      "TimeRemaining": 162.947815
     }
   ],
   "LastId": 8
 },
   "TrafficControl": {
-  "Berths": [
-    {
-      "ShipSize": "Corvette",
-      "State": "Reserved",
-      "IsInUse": true,
-      "Name": "sm_bays_1_1"
-    },
-    {
-      "ShipSize": "Corvette",
-      "State": "Empty",
-      "IsInUse": false,
-      "Name": "sm_bays_1_2"
-    },
-    {
-      "ShipSize": "Corvette",
-      "State": "Empty",
-      "IsInUse": false,
-      "Name": "sm_bays_1_3"
-    },
-    {
-      "ShipSize": "Corvette",
-      "State": "Empty",
-      "IsInUse": false,
-      "Name": "sm_bays_1_4"
-    },
-    {
-      "ShipSize": "Corvette",
-      "State": "Empty",
-      "IsInUse": false,
-      "Name": "sm_bays_1_5"
-    },
-    {
-      "ShipSize": "Corvette",
-      "State": "Empty",
-      "IsInUse": false,
-      "Name": "sm_bays_1_6"
-    },
-    {
-      "ShipSize": "Corvette",
-      "State": "Empty",
-      "IsInUse": false,
-      "Name": "sm_bays_1_7"
-    },
-    {
-      "ShipSize": "Corvette",
-      "State": "Empty",
-      "IsInUse": false,
-      "Name": "sm_bays_1_8"
-    }
-  ]
+  "Berths": []
 },
   "ShipMonitor": {
   "Ships": [
@@ -132,170 +74,7 @@
       "Status": "Transit",
       "Ticker": {
         "TotalTicks": 14.4000006,
-        "ElapsedTicks": 10.4706755
-      },
-      "Navigation": {
-        "Locations": [
-          "Void",
-          "Station"
-        ],
-        "LastDeparted": "Station",
-        "CurrentDestination": "Void"
-      },
-      "ManifestBook": {
-        "Manifests": [
-          {
-            "Id": 1,
-            "Buyer": "Station",
-            "Seller": "Void",
-            "ProductId": 8,
-            "ProductAmount": 20,
-            "Currency": 0,
-            "TradeManifestId": 1
-          }
-        ]
-      },
-      "TrafficShipData": null
-    },
-    {
-      "Name": "ship_2",
-      "SOName": "sm_cargo_2",
-      "Status": "Traffic",
-      "Ticker": {
-        "TotalTicks": 14.4000006,
-        "ElapsedTicks": 14.4167967
-      },
-      "Navigation": {
-        "Locations": [
-          "Station",
-          "Void"
-        ],
-        "LastDeparted": "Void",
-        "CurrentDestination": "Station"
-      },
-      "ManifestBook": {
-        "Manifests": []
-      },
-      "TrafficShipData": {
-        "Phase": "Departing",
-        "Position": {
-          "X": -174.639664,
-          "Y": -25.557848,
-          "Z": 0.5213691
-        },
-        "Rotation": {
-          "X": 0.00127976446,
-          "Y": -2.35823227E-05,
-          "Z": -0.018423941,
-          "W": -0.9998295
-        },
-        "TargetRotation": {
-          "X": 0.0,
-          "Y": 0.0,
-          "Z": 2.47424316
-        },
-        "StartingDistance": 382.947845,
-        "TravelTime": 26.6684761,
-        "ApproachFromLeft": false,
-        "BerthName": "sm_bays_1_2",
-        "Waypoints": [
-          {
-            "X": 393.850128,
-            "Y": -16.8187256,
-            "Z": 0.0
-          },
-          {
-            "X": 10.9029531,
-            "Y": -17.5404549,
-            "Z": 1.0
-          },
-          {
-            "X": -376.749878,
-            "Y": -34.2911377,
-            "Z": 0.0
-          }
-        ],
-        "LocalScale": {
-          "X": 0.641876459,
-          "Y": 0.641876459,
-          "Z": 0.0
-        },
-        "ElapsedMovement": 44.9195747
-      }
-    },
-    {
-      "Name": "ship_3",
-      "SOName": "sm_cargo_1",
-      "Status": "Traffic",
-      "Ticker": {
-        "TotalTicks": 14.4000006,
-        "ElapsedTicks": 14.4219961
-      },
-      "Navigation": {
-        "Locations": [
-          "Station",
-          "Void"
-        ],
-        "LastDeparted": "Void",
-        "CurrentDestination": "Station"
-      },
-      "ManifestBook": {
-        "Manifests": []
-      },
-      "TrafficShipData": {
-        "Phase": "Approaching",
-        "Position": {
-          "X": -16.4452877,
-          "Y": -18.86296,
-          "Z": 0.934679031
-        },
-        "Rotation": {
-          "X": 0.00562411826,
-          "Y": -5.18635E-05,
-          "Z": 0.009221086,
-          "W": 0.9999417
-        },
-        "TargetRotation": {
-          "X": 0.0,
-          "Y": 0.0,
-          "Z": 0.0
-        },
-        "StartingDistance": 386.004181,
-        "TravelTime": 29.852005,
-        "ApproachFromLeft": true,
-        "BerthName": "sm_bays_1_1",
-        "Waypoints": [
-          {
-            "X": -376.749878,
-            "Y": -37.57211,
-            "Z": 0.0
-          },
-          {
-            "X": 8.734953,
-            "Y": -17.5554543,
-            "Z": 1.0
-          },
-          {
-            "X": 393.850128,
-            "Y": -22.5087814,
-            "Z": 0.0
-          }
-        ],
-        "LocalScale": {
-          "X": 0.226460814,
-          "Y": 0.226460814,
-          "Z": 0.0
-        },
-        "ElapsedMovement": 22.8887978
-      }
-    },
-    {
-      "Name": "ship_4",
-      "SOName": "sm_cargo_1",
-      "Status": "Transit",
-      "Ticker": {
-        "TotalTicks": 14.4000006,
-        "ElapsedTicks": 9.351294
+        "ElapsedTicks": 6.028818
       },
       "Navigation": {
         "Locations": [
@@ -313,19 +92,7 @@
   ]
 },
   "TradeMonitor": {
-  "Manifests": [
-    {
-      "Id": 1,
-      "Provider": "Void",
-      "Consumer": "Station",
-      "ProductId": 8,
-      "CreditsTotal": 0,
-      "CreditsComplete": 0,
-      "AmountTotal": 20,
-      "AmountComplete": 0,
-      "Status": "Accepted"
-    }
-  ]
+  "Manifests": []
 },
   "StationInventory": {
   "Products": [
@@ -361,13 +128,13 @@
     },
     {
       "ProductName": "Energy",
-      "Amount": 471,
+      "Amount": 500,
       "MaxAmount": 1000000
     },
     {
       "ProductName": "Population",
       "Amount": 20,
-      "MaxAmount": 50
+      "MaxAmount": 30
     },
     {
       "ProductName": "Credits",
@@ -376,12 +143,12 @@
     },
     {
       "ProductName": "Food",
-      "Amount": 223,
+      "Amount": 198,
       "MaxAmount": 10000
     },
     {
       "ProductName": "Water",
-      "Amount": 223,
+      "Amount": 198,
       "MaxAmount": 10000
     }
   ],
@@ -389,6 +156,22 @@
     {
       "Id": 1,
       "PlaceableName": "Small Power Plant"
+    },
+    {
+      "Id": 3,
+      "PlaceableName": "Small Factory"
+    },
+    {
+      "Id": 4,
+      "PlaceableName": "Small Housing"
+    },
+    {
+      "Id": 5,
+      "PlaceableName": "Small Bays"
+    },
+    {
+      "Id": 6,
+      "PlaceableName": "Basic Needs"
     }
   ],
   "DefaultProductCapacity": 0
@@ -396,385 +179,385 @@
   "PopulationControl": {
   "CurrentCount": 20,
   "Capacity": 0,
-  "InboundPopulation": 0,
+  "InboundPopulation": -20,
   "Population": [
     {
       "Id": 1,
-      "FirstName": "Lila",
-      "LastName": "Greene",
-      "Home": "sm_housing_1",
+      "FirstName": "Rachel",
+      "LastName": "Ashley",
+      "Home": null,
       "IsMale": false,
       "IsResident": true,
       "Employer": "sm_factory_1",
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.7560677
+          "CurrentValue": 0.6778822
         },
         {
           "Type": 1,
-          "CurrentValue": 0.363464534
+          "CurrentValue": 0.6899314
         }
       ]
     },
     {
       "Id": 2,
-      "FirstName": "Gloria",
-      "LastName": "Ashley",
-      "Home": "sm_housing_1",
+      "FirstName": "Fallon",
+      "LastName": "Obrien",
+      "Home": null,
       "IsMale": false,
       "IsResident": true,
       "Employer": "sm_factory_1",
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.5966698
+          "CurrentValue": 0.221827179
         },
         {
           "Type": 1,
-          "CurrentValue": 0.285239726
+          "CurrentValue": 0.451705247
         }
       ]
     },
     {
       "Id": 3,
-      "FirstName": "Mira",
+      "FirstName": "Dominique",
       "LastName": "Parks",
-      "Home": "sm_housing_1",
+      "Home": null,
       "IsMale": false,
       "IsResident": true,
       "Employer": "sm_factory_1",
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.349573344
+          "CurrentValue": 0.285599977
         },
         {
           "Type": 1,
-          "CurrentValue": 0.6741184
+          "CurrentValue": 0.540917635
         }
       ]
     },
     {
       "Id": 4,
-      "FirstName": "Colette",
-      "LastName": "Kirk",
-      "Home": "sm_housing_1",
-      "IsMale": false,
+      "FirstName": "Jelani",
+      "LastName": "Ramos",
+      "Home": null,
+      "IsMale": true,
       "IsResident": true,
       "Employer": "sm_factory_1",
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.446410328
+          "CurrentValue": 0.245033845
         },
         {
           "Type": 1,
-          "CurrentValue": 0.373747
+          "CurrentValue": 0.689828157
         }
       ]
     },
     {
       "Id": 5,
-      "FirstName": "Alice",
-      "LastName": "Contreras",
-      "Home": "sm_housing_1",
-      "IsMale": false,
+      "FirstName": "Phillip",
+      "LastName": "Guy",
+      "Home": null,
+      "IsMale": true,
       "IsResident": true,
       "Employer": "sm_factory_1",
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.5084385
+          "CurrentValue": 0.7718838
         },
         {
           "Type": 1,
-          "CurrentValue": 0.529733062
+          "CurrentValue": 0.7650573
         }
       ]
     },
     {
       "Id": 6,
-      "FirstName": "Nasim",
-      "LastName": "Decker",
-      "Home": "sm_housing_1",
-      "IsMale": true,
+      "FirstName": "Gloria",
+      "LastName": "Richards",
+      "Home": null,
+      "IsMale": false,
       "IsResident": true,
-      "Employer": "sm_factory_1",
+      "Employer": "sm_lounge_1",
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.2952586
+          "CurrentValue": 0.5070953
         },
         {
           "Type": 1,
-          "CurrentValue": 0.7875664
+          "CurrentValue": 0.2727259
         }
       ]
     },
     {
       "Id": 7,
-      "FirstName": "Ava",
-      "LastName": "Powers",
-      "Home": "sm_housing_1",
+      "FirstName": "Margaret",
+      "LastName": "Rodriquez",
+      "Home": null,
       "IsMale": false,
       "IsResident": true,
-      "Employer": "sm_bays_1",
+      "Employer": "sm_lounge_1",
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.5504397
+          "CurrentValue": 0.4986758
         },
         {
           "Type": 1,
-          "CurrentValue": 0.6361017
+          "CurrentValue": 0.7704311
         }
       ]
     },
     {
       "Id": 8,
-      "FirstName": "Acton",
-      "LastName": "Donaldson",
-      "Home": "sm_housing_1",
+      "FirstName": "Octavius",
+      "LastName": "Duran",
+      "Home": null,
       "IsMale": true,
       "IsResident": true,
-      "Employer": "sm_bays_1",
+      "Employer": null,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.6700237
+          "CurrentValue": 0.770561457
         },
         {
           "Type": 1,
-          "CurrentValue": 0.5013109
+          "CurrentValue": 0.2723569
         }
       ]
     },
     {
       "Id": 9,
-      "FirstName": "Price",
-      "LastName": "Peterson",
-      "Home": "sm_housing_1",
-      "IsMale": true,
+      "FirstName": "Gillian",
+      "LastName": "Baxter",
+      "Home": null,
+      "IsMale": false,
       "IsResident": true,
-      "Employer": "basic_needs_1",
+      "Employer": null,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.348961234
+          "CurrentValue": 0.7855815
         },
         {
           "Type": 1,
-          "CurrentValue": 0.73378
+          "CurrentValue": 0.261452019
         }
       ]
     },
     {
       "Id": 10,
-      "FirstName": "Gannon",
-      "LastName": "Curry",
-      "Home": "sm_housing_1",
-      "IsMale": true,
+      "FirstName": "Liberty",
+      "LastName": "Murray",
+      "Home": null,
+      "IsMale": false,
       "IsResident": true,
-      "Employer": "basic_needs_1",
+      "Employer": null,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.7388249
+          "CurrentValue": 0.8073584
         },
         {
           "Type": 1,
-          "CurrentValue": 0.6338899
+          "CurrentValue": 0.460110545
         }
       ]
     },
     {
       "Id": 11,
-      "FirstName": "Susan",
-      "LastName": "Mccall",
-      "Home": "sm_housing_1",
-      "IsMale": false,
+      "FirstName": "Mason",
+      "LastName": "Perkins",
+      "Home": null,
+      "IsMale": true,
       "IsResident": true,
-      "Employer": "basic_needs_1",
+      "Employer": null,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.823677242
+          "CurrentValue": 0.490668863
         },
         {
           "Type": 1,
-          "CurrentValue": 0.356741428
+          "CurrentValue": 0.558820665
         }
       ]
     },
     {
       "Id": 12,
-      "FirstName": "Bethany",
-      "LastName": "Jennings",
-      "Home": "sm_housing_1",
+      "FirstName": "Alice",
+      "LastName": "Pena",
+      "Home": null,
       "IsMale": false,
       "IsResident": true,
-      "Employer": "basic_needs_1",
+      "Employer": null,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.3593347
+          "CurrentValue": 0.28059873
         },
         {
           "Type": 1,
-          "CurrentValue": 0.2697352
+          "CurrentValue": 0.7026623
         }
       ]
     },
     {
       "Id": 13,
-      "FirstName": "Elvis",
-      "LastName": "Gould",
-      "Home": "sm_housing_1",
+      "FirstName": "Jin",
+      "LastName": "Schultz",
+      "Home": null,
       "IsMale": true,
       "IsResident": true,
-      "Employer": "basic_needs_1",
+      "Employer": null,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.7073438
+          "CurrentValue": 0.6921545
         },
         {
           "Type": 1,
-          "CurrentValue": 0.5185125
+          "CurrentValue": 0.466653049
         }
       ]
     },
     {
       "Id": 14,
-      "FirstName": "Ciara",
-      "LastName": "Goff",
-      "Home": "sm_housing_1",
-      "IsMale": false,
+      "FirstName": "Fritz",
+      "LastName": "Chavez",
+      "Home": null,
+      "IsMale": true,
       "IsResident": true,
-      "Employer": "sm_factory_1",
+      "Employer": null,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.496463865
+          "CurrentValue": 0.5291833
         },
         {
           "Type": 1,
-          "CurrentValue": 0.777098358
+          "CurrentValue": 0.6852312
         }
       ]
     },
     {
       "Id": 15,
-      "FirstName": "Xerxes",
-      "LastName": "Cummings",
-      "Home": "sm_housing_1",
-      "IsMale": false,
+      "FirstName": "Charles",
+      "LastName": "Alston",
+      "Home": null,
+      "IsMale": true,
       "IsResident": true,
-      "Employer": "sm_bays_1",
+      "Employer": null,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.5427271
+          "CurrentValue": 0.335534573
         },
         {
           "Type": 1,
-          "CurrentValue": 0.5259005
+          "CurrentValue": 0.486243874
         }
       ]
     },
     {
       "Id": 16,
-      "FirstName": "Octavius",
-      "LastName": "Hoffman",
-      "Home": "sm_housing_1",
+      "FirstName": "Timothy",
+      "LastName": "Nielsen",
+      "Home": null,
       "IsMale": true,
       "IsResident": true,
-      "Employer": "sm_factory_2",
+      "Employer": null,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.77751416
+          "CurrentValue": 0.252644658
         },
         {
           "Type": 1,
-          "CurrentValue": 0.752456665
+          "CurrentValue": 0.394980937
         }
       ]
     },
     {
       "Id": 17,
-      "FirstName": "Aimee",
-      "LastName": "Cabrera",
-      "Home": "sm_housing_1",
+      "FirstName": "Ava",
+      "LastName": "Bond",
+      "Home": null,
       "IsMale": false,
       "IsResident": true,
-      "Employer": "sm_factory_2",
+      "Employer": null,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.3509919
+          "CurrentValue": 0.771781564
         },
         {
           "Type": 1,
-          "CurrentValue": 0.781175256
+          "CurrentValue": 0.522646368
         }
       ]
     },
     {
       "Id": 18,
-      "FirstName": "Mikayla",
-      "LastName": "Howard",
-      "Home": "sm_housing_1",
+      "FirstName": "Jorden",
+      "LastName": "Holman",
+      "Home": null,
       "IsMale": false,
       "IsResident": true,
-      "Employer": "sm_factory_2",
+      "Employer": null,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.367796928
+          "CurrentValue": 0.383299172
         },
         {
           "Type": 1,
-          "CurrentValue": 0.7958393
+          "CurrentValue": 0.27160874
         }
       ]
     },
     {
       "Id": 19,
-      "FirstName": "Michael",
-      "LastName": "Holcomb",
-      "Home": "sm_housing_1",
+      "FirstName": "Orson",
+      "LastName": "Holden",
+      "Home": null,
       "IsMale": true,
       "IsResident": true,
-      "Employer": "sm_factory_2",
+      "Employer": null,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.600092
+          "CurrentValue": 0.6991844
         },
         {
           "Type": 1,
-          "CurrentValue": 0.6732609
+          "CurrentValue": 0.493974358
         }
       ]
     },
     {
       "Id": 20,
-      "FirstName": "Jin",
-      "LastName": "Edwards",
-      "Home": "sm_housing_1",
+      "FirstName": "Upton",
+      "LastName": "Foley",
+      "Home": null,
       "IsMale": true,
       "IsResident": true,
-      "Employer": "sm_factory_2",
+      "Employer": null,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.7095274
+          "CurrentValue": 0.589491546
         },
         {
           "Type": 1,
-          "CurrentValue": 0.47985822
+          "CurrentValue": 0.462256163
         }
       ]
     }
@@ -841,45 +624,11 @@
       "CurrentlyCraftingRecipeId": 0,
       "RemainingCraftTime": 0.0,
       "IsBuying": false
-    },
-    {
-      "Name": "basic_needs_1",
-      "IsCrafting": true,
-      "CurrentlyCraftingRecipeId": 6,
-      "RemainingCraftTime": 0.241727024,
-      "IsBuying": false
-    },
-    {
-      "Name": "sm_factory_2",
-      "IsCrafting": false,
-      "CurrentlyCraftingRecipeId": 0,
-      "RemainingCraftTime": 0.0,
-      "IsBuying": false
     }
   ]
 },
   "Placeables": {
   "Placeables": [
-    {
-      "PlaceableName": "Small Housing",
-      "InstanceName": "sm_housing_1",
-      "HardPointName": "hardpoint_mid_2",
-      "Position": {
-        "X": -29.7515869,
-        "Y": 0.9039736,
-        "Z": 1.0
-      },
-      "Nodes": [
-        {
-          "NodeName": "PopHousing",
-          "InstanceName": "sm_housing_1"
-        },
-        {
-          "NodeName": "PopContainerSet",
-          "InstanceName": "sm_housing_1"
-        }
-      ]
-    },
     {
       "PlaceableName": "Small Factory",
       "InstanceName": "sm_factory_1",
@@ -913,72 +662,12 @@
       ]
     },
     {
-      "PlaceableName": "Small Bays",
-      "InstanceName": "sm_bays_1",
-      "HardPointName": "hardpoint_bot_2",
-      "Position": {
-        "X": 9.815953,
-        "Y": -18.545454,
-        "Z": 1.0
-      },
-      "Nodes": [
-        {
-          "NodeName": "ShipBay",
-          "InstanceName": "sm_bays_1"
-        },
-        {
-          "NodeName": "efficency",
-          "InstanceName": "sm_bays_1"
-        },
-        {
-          "NodeName": "PopEmployer",
-          "InstanceName": "sm_bays_1"
-        },
-        {
-          "NodeName": "PopContainerSet",
-          "InstanceName": "sm_bays_1"
-        }
-      ]
-    },
-    {
-      "PlaceableName": "Basic Needs",
-      "InstanceName": "basic_needs_1",
-      "HardPointName": "hardpoint_top_5",
-      "Position": {
-        "X": 12.5484619,
-        "Y": 2.40394974,
-        "Z": 1.0
-      },
-      "Nodes": [
-        {
-          "NodeName": "efficency",
-          "InstanceName": "basic_needs_1"
-        },
-        {
-          "NodeName": "ProductFactory",
-          "InstanceName": "basic_needs_1"
-        },
-        {
-          "NodeName": "PopEmployer",
-          "InstanceName": "basic_needs_1"
-        },
-        {
-          "NodeName": "EnergyConsumer",
-          "InstanceName": "basic_needs_1"
-        },
-        {
-          "NodeName": "PopContainerSet",
-          "InstanceName": "basic_needs_1"
-        }
-      ]
-    },
-    {
       "PlaceableName": "Small Lounge",
       "InstanceName": "sm_lounge_1",
-      "HardPointName": "hardpoint_mid_5",
+      "HardPointName": "hardpoint_mid_3",
       "Position": {
-        "X": 57.5484619,
-        "Y": 3.40397358,
+        "X": 1.34844971,
+        "Y": -1.69603252,
         "Z": 1.0
       },
       "Nodes": [
@@ -989,38 +678,14 @@
         {
           "NodeName": "PopContainerSet",
           "InstanceName": "sm_lounge_1"
-        }
-      ]
-    },
-    {
-      "PlaceableName": "Small Factory",
-      "InstanceName": "sm_factory_2",
-      "HardPointName": "hardpoint_top_4",
-      "Position": {
-        "X": 27.1483765,
-        "Y": 7.40394974,
-        "Z": 1.0
-      },
-      "Nodes": [
-        {
-          "NodeName": "EnergyConsumer",
-          "InstanceName": "sm_factory_2"
-        },
-        {
-          "NodeName": "ProductFactory",
-          "InstanceName": "sm_factory_2"
         },
         {
           "NodeName": "efficency",
-          "InstanceName": "sm_factory_2"
+          "InstanceName": "sm_lounge_1"
         },
         {
           "NodeName": "PopEmployer",
-          "InstanceName": "sm_factory_2"
-        },
-        {
-          "NodeName": "PopContainerSet",
-          "InstanceName": "sm_factory_2"
+          "InstanceName": "sm_lounge_1"
         }
       ]
     }

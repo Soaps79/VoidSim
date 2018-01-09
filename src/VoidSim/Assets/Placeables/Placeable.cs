@@ -47,6 +47,7 @@ namespace Assets.Placeables
 	/// <summary>
 	/// Represents any structure or module or any other object placed into the game world.
 	/// </summary>
+	[RequireComponent(typeof(PolygonCollider2D))]
 	public class Placeable : QScript, ISerializeData<PlaceableData>, IPointerClickHandler
 	{
 		[HideInInspector] public LayerType Layer;
