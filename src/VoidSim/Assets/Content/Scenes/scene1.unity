@@ -1777,12 +1777,12 @@ Prefab:
     - target: {fileID: 224337550640712236, guid: 7580feb122e119045b7b12321dbcdc2a,
         type: 2}
       propertyPath: m_LocalPosition.x
-      value: 127.819984
+      value: 127.81999
       objectReference: {fileID: 0}
     - target: {fileID: 224337550640712236, guid: 7580feb122e119045b7b12321dbcdc2a,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 2.469986
+      value: 2.4699936
       objectReference: {fileID: 0}
     - target: {fileID: 1887455403154080, guid: 7580feb122e119045b7b12321dbcdc2a, type: 2}
       propertyPath: m_IsActive
@@ -4645,6 +4645,7 @@ GameObject:
   m_Component:
   - component: {fileID: 884852071}
   - component: {fileID: 884852070}
+  - component: {fileID: 884852072}
   m_Layer: 0
   m_Name: Station
   m_TagString: Untagged
@@ -4698,6 +4699,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &884852072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 884852069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3aff3956d0c0817409adb07e756510e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsOn: 1
+  Placeables:
+  - Placeable: {fileID: 11400000, guid: 407ab2f72ba45804fa3b452ed23b67eb, type: 2}
+    HardPointNumber: 4
 --- !u!1 &916369621
 GameObject:
   m_ObjectHideFlags: 0
@@ -6824,12 +6840,12 @@ Prefab:
     - target: {fileID: 224156052781830228, guid: 1fc7c3453a85b9d41b9b164fa3294e1e,
         type: 2}
       propertyPath: m_LocalPosition.x
-      value: 127.819984
+      value: 127.81999
       objectReference: {fileID: 0}
     - target: {fileID: 224156052781830228, guid: 1fc7c3453a85b9d41b9b164fa3294e1e,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 2.469986
+      value: 2.4699936
       objectReference: {fileID: 0}
     - target: {fileID: 1364436687230358, guid: 1fc7c3453a85b9d41b9b164fa3294e1e, type: 2}
       propertyPath: m_IsActive

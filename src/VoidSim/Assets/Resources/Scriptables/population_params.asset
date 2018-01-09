@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Name: population_params
   m_EditorClassIdentifier: 
   InitialCount: 20
-  BaseCapacity: 30
+  BaseCapacity: 0
   Colors: {fileID: 11400000, guid: 860de5100961aef478ae76cfef3fa84c, type: 2}
   MoodParams:
     FoodPerPop: 0.05

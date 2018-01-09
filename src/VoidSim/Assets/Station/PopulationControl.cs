@@ -71,6 +71,7 @@ namespace Assets.Station
 		    _scriptable = scriptable;
 			_inventory = inventory;
 			_inventory.OnProductsChanged += HandleInventoryProductChanged;
+            OnNextUpdate += f => _inventory.OnProductMaxAmountChanged += HandleInventoryMaxAmountChanged;
 
 			_populationProductId = ProductIdLookup.Population;
 			_currentCount = _inventory.GetProductCurrentAmount(_populationProductId);
@@ -169,8 +170,14 @@ namespace Assets.Station
 			UpdateTradeRequest();
 		}
 
-		// Hooked into _inventory's update event
-		private void HandleInventoryProductChanged(int productId, int amount)
+        // for handling PopHomeMonitor adding/removing housing
+	    private void HandleInventoryMaxAmountChanged(int productId, int amount)
+	    {
+            UpdateTradeRequest();
+	    }
+
+        // Hooked into _inventory's update event
+        private void HandleInventoryProductChanged(int productId, int amount)
 		{
 			if (productId != _populationProductId)
 				return;
