@@ -24,7 +24,7 @@ namespace Assets.Placeables.Placement
 
         void Start()
         {
-            if (!IsOn || Placeables == null || !Placeables.Any())
+            if (!IsOn || Placeables == null || !Placeables.Any() || Locator.Serialization.IsLoading)
             {
                 enabled = false;
                 return;
