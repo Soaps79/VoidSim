@@ -194,8 +194,13 @@ namespace Assets.WorldMaterials
 
 	    public int GetProductRemainingSpace(int productId)
 	    {
-			return _productTable.ContainsKey(productId) ? _productTable[productId].MaxAmount - _productTable[productId].Amount : 0;
-		}
+	        if (!_productTable.ContainsKey(productId))
+	            return 0;
+
+            // return the remaining space, if there is any
+            return _productTable[productId].MaxAmount > _productTable[productId].Amount ?
+	            _productTable[productId].MaxAmount - _productTable[productId].Amount : 0;
+	    }
 
         public void Initialize(InventoryScriptable inventoryScriptable, IProductLookup productLookup, bool addAllEntries = false)
         {

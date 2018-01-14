@@ -76,9 +76,17 @@ namespace Assets.WorldMaterials.Trade
             {
                 product.Amount = productAmount.Amount;
             }
+
+            PruneOfferings();
         }
 
-        public void SetConsume(ProductAmount productAmount)
+	    private void PruneOfferings()
+	    {
+	        Consuming.RemoveAll(i => i.Amount <= 0);
+	        Providing.RemoveAll(i => i.Amount <= 0);
+        }
+
+	    public void SetConsume(ProductAmount productAmount)
         {
             var product = Consuming.FirstOrDefault(i => i.ProductId == productAmount.ProductId);
             if (product == null)
@@ -89,9 +97,11 @@ namespace Assets.WorldMaterials.Trade
             {
                 product.Amount = productAmount.Amount;
             }
+
+            PruneOfferings();
         }
 
-	    public void AddConsume(ProductAmount productAmount)
+        public void AddConsume(ProductAmount productAmount)
 	    {
 		    AddConsume(productAmount.ProductId, productAmount.Amount);
 	    }
@@ -107,9 +117,11 @@ namespace Assets.WorldMaterials.Trade
 		    {
 			    product.Amount += amount;
 		    }
-	    }
 
-		public void AddProvide(ProductAmount productAmount)
+	        PruneOfferings();
+        }
+
+        public void AddProvide(ProductAmount productAmount)
         {
             AddProvide(productAmount.ProductId, productAmount.Amount);
         }
@@ -125,6 +137,8 @@ namespace Assets.WorldMaterials.Trade
             {
                 product.Amount += amount;
             }
+
+            PruneOfferings();
         }
 
 		// will always be true if driver is not set
@@ -138,5 +152,13 @@ namespace Assets.WorldMaterials.Trade
 	    {
 			return Driver == null || Driver.WillProvideTo(consumer, provided);
 		}
-    }
+
+	    public Action<TradeManifest> OnResume;
+
+	    public void HandleResume(TradeManifest manifest)
+	    {
+	        if (OnResume != null)
+	            OnResume(manifest);
+	    }
+	}
 }

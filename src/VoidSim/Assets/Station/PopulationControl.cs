@@ -166,6 +166,7 @@ namespace Assets.Station
 	    private void InitializeProductTrader()
 		{
 			_trader = gameObject.AddComponent<ProductTrader>();
+		    _trader.OnResume += HandleNewManifest;
 			_trader.Initialize(this, Station.ClientName);
 			UpdateTradeRequest();
 		}
@@ -173,7 +174,8 @@ namespace Assets.Station
         // for handling PopHomeMonitor adding/removing housing
 	    private void HandleInventoryMaxAmountChanged(int productId, int amount)
 	    {
-            UpdateTradeRequest();
+            if(productId == _populationProductId)
+                UpdateTradeRequest();
 	    }
 
         // Hooked into _inventory's update event
@@ -181,10 +183,6 @@ namespace Assets.Station
 		{
 			if (productId != _populationProductId)
 				return;
-
-			// currently the only way pop can rise is through being delivered, acknowledge the fulfilled trade
-			if (amount > 0)
-				_inboundPopulation -= amount;
 
 			_currentCount = _inventory.GetProductCurrentAmount(_populationProductId);
 		}
@@ -233,7 +231,6 @@ namespace Assets.Station
 			if(provided.ProductId != _populationProductId)
 				throw new UnityException("PopulationControl offered trade that was not population");
 
-			_inboundPopulation += provided.Amount;
 			return true;
 		}
 
@@ -260,9 +257,27 @@ namespace Assets.Station
 			});
 		}
 
-		public void HandleConsumeSuccess(TradeManifest manifest) { }
+	    public void HandleConsumeSuccess(TradeManifest manifest)
+	    {
+	        _inboundPopulation += manifest.AmountTotal;
+            HandleNewManifest(manifest);
+	    }
 
-		public PopulationData GetData()
+	    private void HandleNewManifest(TradeManifest manifest)
+	    {
+	        manifest.OnAmountCompleted += HandleTradeComplete;
+	    }
+
+	    private void HandleTradeComplete(TradeManifest tradeManifest)
+	    {
+	        if (tradeManifest.Status == TradeStatus.Complete && tradeManifest.Consumer == _trader.ClientName)
+	        {
+	            _inboundPopulation -= tradeManifest.AmountTotal;
+                UpdateTradeRequest();
+            }
+        }
+
+	    public PopulationData GetData()
 		{
 			var data = new PopulationData
 			{
@@ -280,6 +295,7 @@ namespace Assets.Station
 	            return;
 
 	        var people = _personGenerator.GeneratePeople(manifest.ProductAmount.Amount);
+            people.ForEach(i => i.IsResident = true);
             AddPopulation(people);
 	    }
 	}

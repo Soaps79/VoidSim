@@ -92,12 +92,13 @@ namespace Assets.WorldMaterials.Trade
 
 			CreditsComplete += currencyAmount;
 			AmountComplete += productAmount;
-			if (OnAmountCompleted != null)
-				OnAmountCompleted(this);
-
+			
 			if (AmountComplete >= AmountTotal)
 				Status = TradeStatus.Complete;
-		}
+
+		    if (OnAmountCompleted != null)
+		        OnAmountCompleted(this);
+        }
 
 		public TradeManifestData GetData()
 		{

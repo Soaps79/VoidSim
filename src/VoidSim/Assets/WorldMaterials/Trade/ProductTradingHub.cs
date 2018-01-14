@@ -13,8 +13,8 @@ namespace Assets.WorldMaterials.Trade
 	public static class TradeMessages
 	{
 		public const string TraderCreated = "TraderInstance";
-		public const string TradeAccepted = "TradeManifest updated";
-	}
+		public const string TradeAccepted = "TradeAccepted";
+    }
 
     /// <summary>
     /// Manages the supply and demand of ProductAmount between game actors. 
@@ -73,12 +73,13 @@ namespace Assets.WorldMaterials.Trade
 
                     foreach (var consumer in consumers)
                     {
-                        // only consider consumers who want this product
-	                    if (!IsMatch(provider, consumer, provided))
+                        var consumed = consumer.Consuming.FirstOrDefault(i => i.ProductId == provided.ProductId);
+
+                        // only consider consumers who want a real amount of this product
+                        if (consumed == null || consumed.Amount <= 0 || !IsMatch(provider, consumer, provided))
 		                    continue;
                         
                         var amountConsumed = 0;
-                        var consumed = consumer.Consuming.First(i => i.ProductId == provided.ProductId);
 
                         // consumer either finishes off entire amount
                         if (consumed.Amount > provided.Amount)
