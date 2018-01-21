@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using Assets.Scripts;
 using Assets.WorldMaterials.Population;
 using QGame;
@@ -18,10 +19,13 @@ namespace Assets.Station.Population
         private int _nextPersonToUpdate;
         private PopulationControl _control;
 
+        private readonly List<Person> _toUpdate = new List<Person>();
+        private float _time;
+
         void Start()
         {
-            var time = Locator.WorldClock.GetSeconds(UpdateFrequency);
-            var node = StopWatch.AddNode("update", time);
+            _time = Locator.WorldClock.GetSeconds(UpdateFrequency);
+            var node = StopWatch.AddNode("update", _time);
             node.OnTick += UpdatePeople;
 
             _control = GetComponent<PopulationControl>();
@@ -29,21 +33,34 @@ namespace Assets.Station.Population
 
         private void UpdatePeople()
         {
-            var toUpdate = new List<Person>();
             var totalCount = _control.AllPopulation.Count;
+            _toUpdate.Clear();
             // updates the lesser of the full group size or those remaining in the list
             if (_nextPersonToUpdate + GroupSize > totalCount)
             {
-                toUpdate.AddRange(_control.AllPopulation.GetRange(_nextPersonToUpdate, totalCount - _nextPersonToUpdate));
+                _toUpdate.AddRange(_control.AllPopulation.GetRange(_nextPersonToUpdate, totalCount - _nextPersonToUpdate));
                 _nextPersonToUpdate = 0;
             }
             else
             {
-                toUpdate.AddRange(_control.AllPopulation.GetRange(_nextPersonToUpdate, GroupSize));
+                _toUpdate.AddRange(_control.AllPopulation.GetRange(_nextPersonToUpdate, GroupSize));
                 _nextPersonToUpdate += GroupSize;
             }
 
-            toUpdate.ForEach(i => i.AssessNeeds());
+            StartCoroutine(UpdateList());
+        }
+
+        private IEnumerator UpdateList()
+        {
+            var startTime = Time.time;
+            for (int i = 0; i < _toUpdate.Count; i++)
+            {
+                _toUpdate[i].AssessNeeds();
+                yield return null;
+            }
+
+            if(Time.time - startTime > _time)
+                throw new UnityException("PopUpdater took longer to assess needs than its given tickTime, problems coming.");
         }
     }
 }

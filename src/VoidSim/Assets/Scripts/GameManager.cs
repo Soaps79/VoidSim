@@ -14,6 +14,7 @@ namespace Assets.Scripts
 		public const string Serialization = "Serial";
 		public const string Warning = "Warning";
 	    public const string Population = "Population";
+	    public const string Performance = "Performance";
     }
 
 	public class GameMessages

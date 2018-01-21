@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Placeables.Nodes;
@@ -39,6 +40,8 @@ namespace Assets.Station.Population
             = new Dictionary<string, PopContainer>();
 
         private PopulationControl _control;
+        private WaitForSeconds _enumerator;
+        private const float _tickTime = 2.0f;
 
         internal void Initialize(PopulationControl populationControl)
         {
@@ -48,33 +51,43 @@ namespace Assets.Station.Population
         void Start()
         {
             Locator.MessageHub.AddListener(this, PopContainerSet.MessageName);
-            var node = StopWatch.AddNode("mover", 2.0f);
-            node.OnTick += CheckForPeopleToMove;
+            var node = StopWatch.AddNode("PeopleMover", _tickTime);
+            node.OnTick += () => StartCoroutine(CheckForPeopleToMove());
         }
 
-        private void CheckForPeopleToMove()
+        private IEnumerator CheckForPeopleToMove()
         {
+            var startTime = Time.time;
+
             // should be for people just arriving at the station, or on level start
-            var hasNoLocation = _control.AllPopulation.Where(i => string.IsNullOrEmpty(i.CurrentlyOccupying));
+            var hasNoLocation = _control.AllPopulation.Where(i => string.IsNullOrEmpty(i.CurrentlyOccupying)).ToList();
+            yield return null;
+
             if (hasNoLocation.Any())
             {
-                foreach (var person in hasNoLocation)
+                for (int i = 0; i < hasNoLocation.Count(); i++)
                 {
+                    var person = hasNoLocation[i];
                     // the ready to work loop will pick these people up
-                    if(person.Wants.IsRequesting(PopContainerType.Employment) && !string.IsNullOrEmpty(person.Employer))
+                    if (person.Wants.IsRequesting(PopContainerType.Employment) && !string.IsNullOrEmpty(person.Employer))
                         continue;
 
                     if(!string.IsNullOrEmpty(person.Home))
                         SendPersonHome(person);
+
+                    yield return null;
                 }
             }
 
             // if they are ready to work, find their job and send them there
             var readyToWork = _control.AllPopulation.Where(i => i.Wants.IsRequesting(PopContainerType.Employment)).ToList();
+            yield return null;
+
             if (readyToWork.Any())
             {
-                foreach (var person in readyToWork)
+                for (int i = 0; i < readyToWork.Count; i++)
                 {
+                    var person = readyToWork[i];
                     if (string.IsNullOrEmpty(person.Employer))
                         continue;
 
@@ -83,15 +96,20 @@ namespace Assets.Station.Population
 
                     var employer = _employerContainers[person.Employer];
                     MovePerson(employer, person);
+                    yield return null;
                 }
             }
 
+
             // if they need fulfillment, try and find it
             var wantsToMove = _control.AllPopulation.Where(i => i.Wants.IsRequesting(PopContainerType.Service)).ToList();
+            yield return null;
+
             if (wantsToMove.Any())
             {
-                foreach (var person in wantsToMove)
+                for (int i = 0; i < wantsToMove.Count; i++)
                 {
+                    var person = wantsToMove[i];
                     var needs = person.Wants.GetRequested(PopContainerType.Service) as FulfillmentWant;
                     if(needs == null)
                         throw new UnityException("Person want handler passing around bad data");
@@ -103,9 +121,17 @@ namespace Assets.Station.Population
 
                         else if (TryFulfillNeed(need, person))
                             break;
+
+                        yield return null;
                     }
                 }
             }
+
+            var elapsed = Time.time - startTime;
+            if(elapsed > _tickTime)
+                throw new UnityException("PeopleMover took longer to move people than its given tickTime, problems coming.");
+
+            UberDebug.LogChannel(LogChannels.Performance, string.Format("PeopleMoverUpdate: {0}", elapsed));
         }
 
         private void MovePerson(PopContainer newContainer, Person person)
