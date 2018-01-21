@@ -6,7 +6,7 @@ using Assets.WorldMaterials.Population;
 namespace Assets.Placeables.Nodes
 {
     [Serializable]
-    public enum PopContainerType { Employment, Service }
+    public enum PopContainerType { Employment, Service, Transport }
 
     [Serializable]
     public class ContainerGenerationParams
@@ -23,6 +23,14 @@ namespace Assets.Placeables.Nodes
         public int Reserved;
         public string PlaceableName;
         public string ActivityPrefix;
+        public List<NeedsAffector> Affectors = new List<NeedsAffector>();
+    }
+
+    public class PopContainerDetails
+    {
+        public string Name;
+        public PopContainerType Type;
+        public string PlaceableName;
         public List<NeedsAffector> Affectors = new List<NeedsAffector>();
     }
 
@@ -93,8 +101,7 @@ namespace Assets.Placeables.Nodes
                 return;
 
             CurrentOccupants.Add(person);
-            person.CurrentlyOccupying = Name;
-            person.CurrentActivity = ActivityPrefix + " at " + PlaceableName;
+            
             if (incrementReserve)
                 Reserved++;
 

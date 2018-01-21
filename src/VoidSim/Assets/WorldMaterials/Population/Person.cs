@@ -1,12 +1,64 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Placeables.Nodes;
 using Assets.Scripts.Serialization;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Assets.WorldMaterials.Population
 {
+    public static class PersonWantsName
+    {
+        public const string Fulfillment = "Fulfillment";
+        public const string Transport = "Transport";
+        public const string GoToWork = "GoToWork";
+    }
+
+    public interface IPersonWant
+    {
+        PopContainerType Type { get; }
+        string GetDisplayName { get; }
+    }
+
+    /// <summary>
+    /// Indicates that the Person is requesting fulfillment of their Needs
+    /// </summary>
+    public class FulfillmentWant : IPersonWant
+    {
+        public PopContainerType Type { get { return PopContainerType.Service; }}
+
+        public string GetDisplayName
+        {
+            get
+            {
+                return UnfulfilledNeeds.Aggregate("",
+                    (s, value) => s + string.Format("Wants fulfillment - {0}: {1}", value.Type, value.Amount));
+            }
+        }
+
+        public List<NeedsValue> UnfulfilledNeeds = new List<NeedsValue>();
+    }
+
+    /// <summary>
+    /// Indicates that the Person would like to go to a bay to depart the station
+    /// </summary>
+    public class TransportWant : IPersonWant
+    {
+        public string ClientName;
+        public PopContainerType Type { get { return PopContainerType.Transport; } }
+        public string GetDisplayName { get { return "Requesting transport"; } }
+    }
+
+    /// <summary>
+    /// Indicates that the Person's Needs are ulfilled and they are ready to work
+    /// </summary>
+    public class GoToWorkWant : IPersonWant
+    {
+        public PopContainerType Type { get { return PopContainerType.Employment; } }
+        public string GetDisplayName { get { return "Ready to work"; } }
+    }
+
     // Covers all progress needs for game serialization
     [Serializable]
     public class PersonData
@@ -78,6 +130,7 @@ namespace Assets.WorldMaterials.Population
                 CheckUpdateCallback();
             }
         }
+
         public string FirstName
         {
             get { return _firstName; }
@@ -176,14 +229,11 @@ namespace Assets.WorldMaterials.Population
         [SerializeField] private string _employer;
         [SerializeField] private string _currentlyOccupying;
         [SerializeField] private string _currentActivity;
-
-        public bool NeedsFulfillment { get; set; }
-        public bool ReadyToWork { get; set; }
-        private readonly NeedsHandler _needsHandler = new NeedsHandler();
+        
+        public readonly WantsHandler Wants = new WantsHandler();
         
         [SerializeField] private List<PersonNeeds> _needsList = new List<PersonNeeds>();
-        public List<NeedsValue> UnfulfilledNeeds = new List<NeedsValue>();
-
+        
         public Action<Person> OnUpdate;
 
         private void CheckUpdateCallback()
@@ -208,39 +258,30 @@ namespace Assets.WorldMaterials.Population
 
         public void SetNeeds(List<PersonNeeds> needs)
         {
-            _needsHandler.SetNeeds(needs);
+            Wants.SetNeeds(needs);
             UpdateDebugOutput();
         }
 
         public void ApplyAffectors(List<NeedsAffector> affectors)
         {
-            _needsHandler.ApplyAffectors(affectors);
+            Wants.ApplyAffectors(affectors);
             UpdateDebugOutput();
         }
 
         public void AssessNeeds()
         {
-            if (ReadyToWork)
-                return;
+            Wants.AssessNeeds();
+        }
 
-            UnfulfilledNeeds = _needsHandler.GetUnfulfilledNeeds();
-
-            if (!NeedsFulfillment && UnfulfilledNeeds.Any())
-            {
-                NeedsFulfillment = _needsHandler.CheckWantsToLeave(Random.value);
-            }
-
-            if (!NeedsFulfillment && (string.IsNullOrEmpty(CurrentlyOccupying) 
-                || (!string.IsNullOrEmpty(Employer) && !CurrentlyOccupying.Contains(Employer))))
-            {
-                ReadyToWork = _needsHandler.CheckReadyToWork(Random.value);
-            }
+        public void HandleLocationChange(PopContainerDetails details)
+        {
+            Wants.HandleLocationChange(details);
         }
 
         private void UpdateDebugOutput()
         {
             _needsList.Clear();
-            _needsList.AddRange(_needsHandler.GetNeedsList());
+            _needsList.AddRange(Wants.GetNeedsList());
         }
 
         public PersonData GetData()
@@ -254,7 +295,7 @@ namespace Assets.WorldMaterials.Population
                 IsMale = IsMale,
                 IsResident = IsResident,
                 Employer = Employer,
-                Needs = _needsHandler.GetData()
+                Needs = Wants.GetData()
             };
         }
     }

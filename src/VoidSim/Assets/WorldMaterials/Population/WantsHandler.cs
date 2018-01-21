@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Placeables.Nodes;
 using Assets.Scripts.Serialization;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Assets.WorldMaterials.Population
 {
@@ -12,13 +14,25 @@ namespace Assets.WorldMaterials.Population
         public float Amount;
     }
 
-    public class NeedsHandler : ISerializeData<List<PersonNeedsData>>
+    public class WantsHandler : ISerializeData<List<PersonNeedsData>>
     {
         private readonly Dictionary<PersonNeedsType, PersonNeeds>
             _needs = new Dictionary<PersonNeedsType, PersonNeeds>();
 
         private readonly List<NeedsValue> _lastAffected = new List<NeedsValue>();
         private readonly List<NeedsValue> _unfulfilledNeeds = new List<NeedsValue>();
+
+        public bool IsAtWork { get; private set; }
+
+        private readonly Dictionary<PopContainerType, IPersonWant> _wants = new Dictionary<PopContainerType, IPersonWant>();
+
+        public WantsHandler()
+        {
+            foreach (var value in Enum.GetValues(typeof(PopContainerType)))
+            {
+                _wants.Add((PopContainerType)value, null);
+            }
+        }
 
         public float OverallMood { get; private set; }
 
@@ -37,8 +51,8 @@ namespace Assets.WorldMaterials.Population
             OverallMood = _needs.Values.Average(i => i.CurrentValue);
         }
 
-        // finds unfulfilled needs, puts them in order, saves them locally and returns the list
-        public List<NeedsValue> GetUnfulfilledNeeds()
+        // finds unfulfilled needs, puts them in order, and saves them locally
+        private void RefreshUnfulfilledNeeds()
         {
             var list = new List<NeedsValue>();
 
@@ -54,10 +68,22 @@ namespace Assets.WorldMaterials.Population
                 }
             }
 
-            var toReturn = list.OrderByDescending(i => i.Amount).ToList();
+            var newNeeds = list.OrderByDescending(i => i.Amount).ToList();
             _unfulfilledNeeds.Clear();
-            _unfulfilledNeeds.AddRange(toReturn);
-            return toReturn;
+            _unfulfilledNeeds.AddRange(newNeeds);
+        }
+
+        public void HandleLocationChange(PopContainerDetails details)
+        {
+            if (details.Type == PopContainerType.Employment)
+            {
+                _wants[PopContainerType.Employment] = null;
+                IsAtWork = true;
+            }
+            else
+            {
+                IsAtWork = false;
+            }
         }
 
         // applies the value and tracks it as the "last applied"
@@ -76,8 +102,9 @@ namespace Assets.WorldMaterials.Population
         }
 
         // iterates through unfulfilled needs and checks if any trigger him to want to move
-        public bool CheckWantsToLeave(float rand)
+        public bool CheckWantsToFulfill(float rand)
         {
+            // this should be given another pass, when moving from one need to another needs to be more robust
             foreach (var need in _unfulfilledNeeds)
             {
                 // if this need is already being fulfilled, move on to the next
@@ -92,6 +119,41 @@ namespace Assets.WorldMaterials.Population
                     return true;
             }
             return false;
+        }
+
+        public bool IsRequesting(PopContainerType type)
+        {
+            return _wants[type] != null;
+        }
+
+        public IPersonWant GetRequested(PopContainerType type)
+        {
+            return _wants[type];
+        }
+
+        public void AssessNeeds()
+        {
+            // employment and transport are dominant needs until they are fulfilled
+            if (IsRequesting(PopContainerType.Employment) || IsRequesting(PopContainerType.Transport))
+                return;
+
+            // if the Person is already trying to fulfill, don't bother with the random check again
+            var isAlreadyTryingToFulfill = _wants[PopContainerType.Service] != null;
+            _wants[PopContainerType.Service] = null;
+
+            RefreshUnfulfilledNeeds();
+
+            if (_unfulfilledNeeds.Any() && (isAlreadyTryingToFulfill || CheckWantsToFulfill(Random.value)))
+            {
+                _wants[PopContainerType.Service] = new FulfillmentWant { UnfulfilledNeeds = _unfulfilledNeeds.ToList() };
+                return;
+            }
+
+            // if no needs require attention, make sure the world knows person is ready to work
+            if (!IsAtWork && CheckReadyToWork(Random.value))
+            {
+                _wants[PopContainerType.Employment] = new GoToWorkWant();
+            }
         }
 
         public List<PersonNeeds> GetNeedsList()
@@ -129,7 +191,8 @@ namespace Assets.WorldMaterials.Population
 
             if (lowest == null)
                 return true;
-            // now check its chance against the random number given
+
+            // check its chance against the random number given
             var chanceRange = 1.0f - lowest.StartWantingToMove;
             var range = 1.0f - lowest.MinFulfillment;
 

@@ -34,6 +34,7 @@ namespace Assets.Station.Population
         private readonly Dictionary<string, List<PopContainer>> _containersByPlaceableName
             = new Dictionary<string, List<PopContainer>>();
 
+        // replace with a dictionary
         private readonly Dictionary<string, PopContainer> _employerContainers
             = new Dictionary<string, PopContainer>();
 
@@ -60,7 +61,7 @@ namespace Assets.Station.Population
                 foreach (var person in hasNoLocation)
                 {
                     // the ready to work loop will pick these people up
-                    if(person.ReadyToWork && !string.IsNullOrEmpty(person.Employer))
+                    if(person.Wants.IsRequesting(PopContainerType.Employment) && !string.IsNullOrEmpty(person.Employer))
                         continue;
 
                     if(!string.IsNullOrEmpty(person.Home))
@@ -69,7 +70,7 @@ namespace Assets.Station.Population
             }
 
             // if they are ready to work, find their job and send them there
-            var readyToWork = _control.AllPopulation.Where(i => i.ReadyToWork).ToList();
+            var readyToWork = _control.AllPopulation.Where(i => i.Wants.IsRequesting(PopContainerType.Employment)).ToList();
             if (readyToWork.Any())
             {
                 foreach (var person in readyToWork)
@@ -80,21 +81,22 @@ namespace Assets.Station.Population
                     if(!_employerContainers.ContainsKey(person.Employer))
                         throw new UnityException(string.Format("Employer container {0} not found", person.Employer));
 
-                    RemovePersonFromCurrentLocation(person);
-
                     var employer = _employerContainers[person.Employer];
-                    employer.AddPerson(person);
-                    person.ReadyToWork = false;
+                    MovePerson(employer, person);
                 }
             }
 
             // if they need fulfillment, try and find it
-            var wantsToMove = _control.AllPopulation.Where(i => i.NeedsFulfillment).ToList();
+            var wantsToMove = _control.AllPopulation.Where(i => i.Wants.IsRequesting(PopContainerType.Service)).ToList();
             if (wantsToMove.Any())
             {
                 foreach (var person in wantsToMove)
                 {
-                    foreach (var need in person.UnfulfilledNeeds)
+                    var needs = person.Wants.GetRequested(PopContainerType.Service) as FulfillmentWant;
+                    if(needs == null)
+                        throw new UnityException("Person want handler passing around bad data");
+
+                    foreach (var need in needs.UnfulfilledNeeds)
                     {
                         if (need.Type == PersonNeedsType.Rest && !string.IsNullOrEmpty(person.Home))
                             SendPersonHome(person);
@@ -104,6 +106,35 @@ namespace Assets.Station.Population
                     }
                 }
             }
+        }
+
+        private void MovePerson(PopContainer newContainer, Person person)
+        {
+            RemovePersonFromCurrentLocation(person);
+
+            newContainer.AddPerson(person);
+            person.CurrentlyOccupying = newContainer.Name;
+            person.CurrentActivity = newContainer.ActivityPrefix + " at " + newContainer.PlaceableName;
+
+            person.HandleLocationChange(new PopContainerDetails
+            {
+                Name = newContainer.Name,
+                PlaceableName = newContainer.PlaceableName,
+                Type = newContainer.Type,
+                Affectors = newContainer.Affectors.ToList()
+            });
+        }
+
+        private void RemovePersonFromCurrentLocation(Person person)
+        {
+            if (!string.IsNullOrEmpty(person.CurrentlyOccupying) &&
+                _containersByName.ContainsKey(person.CurrentlyOccupying))
+            {
+                _containersByName[person.CurrentlyOccupying].RemovePerson(person);
+            }
+
+            person.CurrentlyOccupying = string.Empty;
+            person.CurrentActivity = string.Empty;
         }
 
         private void SendPersonHome(Person person)
@@ -118,19 +149,7 @@ namespace Assets.Station.Population
                 throw new UnityException(string.Format("No registered Service container for PopHousing {0}", person.Home));
 
             // if found, remove person from current location and send them there
-            RemovePersonFromCurrentLocation(person);
-            container.AddPerson(person);
-            person.NeedsFulfillment = false;
-        }
-
-        private void RemovePersonFromCurrentLocation(Person person)
-        {
-            if (!string.IsNullOrEmpty(person.CurrentlyOccupying) &&
-                _containersByName.ContainsKey(person.CurrentlyOccupying))
-            {
-                _containersByName[person.CurrentlyOccupying].RemovePerson(person);
-                person.CurrentlyOccupying = string.Empty;
-            }
+            MovePerson(container, person);
         }
 
         // see if there are any containers to fulfill the person's need
@@ -147,9 +166,7 @@ namespace Assets.Station.Population
                 if(!needsContainer.PopContainer.HasRoom)
                     continue;
 
-                RemovePersonFromCurrentLocation(person);
-                needsContainer.PopContainer.AddPerson(person);
-                person.NeedsFulfillment = false;
+                MovePerson(needsContainer.PopContainer, person);
                 return true;
             }
 
