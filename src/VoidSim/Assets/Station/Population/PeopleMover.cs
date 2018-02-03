@@ -102,7 +102,7 @@ namespace Assets.Station.Population
 
 
             // if they need fulfillment, try and find it
-            var wantsToMove = _control.AllPopulation.Where(i => i.Wants.IsRequesting(PopContainerType.Service)).ToList();
+            var wantsToMove = _control.AllPopulation.Where(i => i.Wants.IsRequesting(PopContainerType.Fulfillment)).ToList();
             yield return null;
 
             if (wantsToMove.Any())
@@ -110,7 +110,7 @@ namespace Assets.Station.Population
                 for (int i = 0; i < wantsToMove.Count; i++)
                 {
                     var person = wantsToMove[i];
-                    var needs = person.Wants.GetRequested(PopContainerType.Service) as FulfillmentWant;
+                    var needs = person.Wants.GetRequested(PopContainerType.Fulfillment) as FulfillmentWant;
                     if(needs == null)
                         throw new UnityException("Person want handler passing around bad data");
 
@@ -169,10 +169,10 @@ namespace Assets.Station.Population
             if(!_containersByPlaceableName.ContainsKey(person.Home))
                 throw new UnityException(string.Format("Home container {0} not found", person.Home));
 
-            // and that it has a Service container
-            var container = _containersByPlaceableName[person.Home].FirstOrDefault(i => i.Type == PopContainerType.Service);
+            // and that it has a Fulfillment container
+            var container = _containersByPlaceableName[person.Home].FirstOrDefault(i => i.Type == PopContainerType.Fulfillment);
             if(container == null)
-                throw new UnityException(string.Format("No registered Service container for PopHousing {0}", person.Home));
+                throw new UnityException(string.Format("No registered Fulfillment container for PopHousing {0}", person.Home));
 
             // if found, remove person from current location and send them there
             MovePerson(container, person);

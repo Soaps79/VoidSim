@@ -19,6 +19,7 @@ namespace Assets.WorldMaterials.Population
     {
         PopContainerType Type { get; }
         string GetDisplayName { get; }
+        bool IsActive { get; set; }
     }
 
     /// <summary>
@@ -26,7 +27,7 @@ namespace Assets.WorldMaterials.Population
     /// </summary>
     public class FulfillmentWant : IPersonWant
     {
-        public PopContainerType Type { get { return PopContainerType.Service; }}
+        public PopContainerType Type { get { return PopContainerType.Fulfillment; }}
 
         public string GetDisplayName
         {
@@ -36,6 +37,8 @@ namespace Assets.WorldMaterials.Population
                     (s, value) => s + string.Format("Wants fulfillment - {0}: {1}", value.Type, value.Amount));
             }
         }
+
+        public bool IsActive { get; set; }
 
         public List<NeedsValue> UnfulfilledNeeds = new List<NeedsValue>();
     }
@@ -48,6 +51,7 @@ namespace Assets.WorldMaterials.Population
         public string ClientName;
         public PopContainerType Type { get { return PopContainerType.Transport; } }
         public string GetDisplayName { get { return "Requesting transport"; } }
+        public bool IsActive { get; set; }
     }
 
     /// <summary>
@@ -57,6 +61,7 @@ namespace Assets.WorldMaterials.Population
     {
         public PopContainerType Type { get { return PopContainerType.Employment; } }
         public string GetDisplayName { get { return "Ready to work"; } }
+        public bool IsActive { get; set; }
     }
 
     // Covers all progress needs for game serialization

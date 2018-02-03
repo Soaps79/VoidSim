@@ -26,7 +26,7 @@ namespace Assets.Placeables.Nodes
 			var containers = GetComponent<PopContainerSet>();
 			_container = containers.CreateContainer(new PopContainerParams
 			{
-				Type = PopContainerType.Service,
+				Type = PopContainerType.Fulfillment,
 				MaxCapacity = CurrentCapacity,
 				Affectors = _containerGenerationParams.Affectors,
 				PlaceableName = name,

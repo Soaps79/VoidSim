@@ -43,7 +43,7 @@ namespace Assets.Placeables.Nodes
             {
                 _employmentContainer = container;
             }
-            else if (param.Type == PopContainerType.Service)
+            else if (param.Type == PopContainerType.Fulfillment)
             {
                 _serviceContainer = container;
             }

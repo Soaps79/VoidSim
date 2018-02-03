@@ -28,10 +28,9 @@ namespace Assets.WorldMaterials.Population
 
         public WantsHandler()
         {
-            foreach (var value in Enum.GetValues(typeof(PopContainerType)))
-            {
-                _wants.Add((PopContainerType)value, null);
-            }
+            _wants.Add(PopContainerType.Employment, new GoToWorkWant());
+            _wants.Add(PopContainerType.Fulfillment, new FulfillmentWant());
+            _wants.Add(PopContainerType.Transport, new TransportWant());
         }
 
         public float OverallMood { get; private set; }
@@ -77,7 +76,7 @@ namespace Assets.WorldMaterials.Population
         {
             if (details.Type == PopContainerType.Employment)
             {
-                _wants[PopContainerType.Employment] = null;
+                _wants[PopContainerType.Employment].IsActive = false;
                 IsAtWork = true;
             }
             else
@@ -123,7 +122,7 @@ namespace Assets.WorldMaterials.Population
 
         public bool IsRequesting(PopContainerType type)
         {
-            return _wants[type] != null;
+            return _wants[type].IsActive;
         }
 
         public IPersonWant GetRequested(PopContainerType type)
@@ -134,25 +133,26 @@ namespace Assets.WorldMaterials.Population
         public void AssessNeeds()
         {
             // employment and transport are dominant needs until they are fulfilled
-            if (IsRequesting(PopContainerType.Employment) || IsRequesting(PopContainerType.Transport))
+            if (_wants[PopContainerType.Employment].IsActive || _wants[PopContainerType.Transport].IsActive)
                 return;
 
             // if the Person is already trying to fulfill, don't bother with the random check again
-            var isAlreadyTryingToFulfill = _wants[PopContainerType.Service] != null;
-            _wants[PopContainerType.Service] = null;
-
+            var isAlreadyTryingToFulfill = _wants[PopContainerType.Fulfillment].IsActive;
+            
             RefreshUnfulfilledNeeds();
 
             if (_unfulfilledNeeds.Any() && (isAlreadyTryingToFulfill || CheckWantsToFulfill(Random.value)))
             {
-                _wants[PopContainerType.Service] = new FulfillmentWant { UnfulfilledNeeds = _unfulfilledNeeds.ToList() };
+                var service = _wants[PopContainerType.Fulfillment] as FulfillmentWant;
+                service.UnfulfilledNeeds.Clear();
+                service.UnfulfilledNeeds.AddRange(_unfulfilledNeeds.ToList());
                 return;
             }
 
             // if no needs require attention, make sure the world knows person is ready to work
             if (!IsAtWork && CheckReadyToWork(Random.value))
             {
-                _wants[PopContainerType.Employment] = new GoToWorkWant();
+                _wants[PopContainerType.Employment].IsActive = true;
             }
         }
 

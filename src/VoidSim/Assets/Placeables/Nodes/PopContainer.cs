@@ -6,7 +6,7 @@ using Assets.WorldMaterials.Population;
 namespace Assets.Placeables.Nodes
 {
     [Serializable]
-    public enum PopContainerType { Employment, Service, Transport }
+    public enum PopContainerType { Employment, Fulfillment, Transport }
 
     [Serializable]
     public class ContainerGenerationParams
