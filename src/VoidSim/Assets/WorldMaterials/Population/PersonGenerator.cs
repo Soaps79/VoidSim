@@ -17,6 +17,9 @@ namespace Assets.WorldMaterials.Population
         private Dictionary<PersonNeedsType, PersonNeedsInfo> _needsTemplate;
         private const string _lastIdName = "PersonGenerator";
 
+        private readonly Dictionary<PersonNeedsType, PersonNeeds> _staticNeeds =
+            new Dictionary<PersonNeedsType, PersonNeeds>();
+
         public void Initialize(GenerationParams genParams)
         {
             _minNames = genParams.MinNamesLoaded;
@@ -24,6 +27,25 @@ namespace Assets.WorldMaterials.Population
             _needsTemplate = genParams.ResidentNeeds.ToDictionary(i => i.Type); ;
 
             PopulateNameLists();
+            PopulateStaticNeedsList();
+        }
+
+        private void PopulateStaticNeedsList()
+        {
+            foreach (var template in _needsTemplate.Values)
+            {
+                _staticNeeds.Add(template.Type, new PersonNeeds
+                {
+                    MinValue = template.MinValue,
+                    MaxValue = template.MaxValue,
+                    MinTolerance = template.MinTolerance,
+                    Type = template.Type,
+                    MinFulfillment = template.MinFulfillment,
+                    StartWantingToMove = template.StartingWantToMove
+                });
+            }
+
+            WantsHandler.SetStaticNeeds(_staticNeeds);
         }
 
         #region Name Management
@@ -121,21 +143,16 @@ namespace Assets.WorldMaterials.Population
             };
 
             // match static data from SO with random values
-            var needs = new List<PersonNeeds>();
+            var needs = new List<PersonNeedsValue>();
             foreach (var template in _needsTemplate.Values)
             {
                 var value = template.MinInitialValue + 
                     Random.value * (template.MaxInitialValue - template.MinInitialValue);
 
-                needs.Add(new PersonNeeds
+                needs.Add(new PersonNeedsValue
                 {
-                    MinValue = _needsTemplate[template.Type].MinValue,
-                    MaxValue = _needsTemplate[template.Type].MaxValue,
-                    MinTolerance = _needsTemplate[template.Type].MinTolerance,
-                    CurrentValue = value,
                     Type = template.Type,
-                    MinFulfillment = template.MinFulfillment,
-                    StartWantingToMove = template.StartingWantToMove
+                    Value = value
                 });
             }
             person.SetNeeds(needs);
@@ -158,18 +175,13 @@ namespace Assets.WorldMaterials.Population
             foreach (var personData in personDatas)
             {
                 var person = new Person(personData);
-                var needs = new List<PersonNeeds>();
+                var needs = new List<PersonNeedsValue>();
                 foreach (var need in personData.Needs)
                 {
-                    needs.Add(new PersonNeeds
+                    needs.Add(new PersonNeedsValue()
                     {
-                        MinValue = _needsTemplate[need.Type].MinValue,
-                        MaxValue = _needsTemplate[need.Type].MaxValue,
-                        CurrentValue = need.CurrentValue,
-                        Type = need.Type,
-                        MinFulfillment = _needsTemplate[need.Type].MinFulfillment,
-                        StartWantingToMove = _needsTemplate[need.Type].StartingWantToMove,
-                        MinTolerance = _needsTemplate[need.Type].MinTolerance
+                        Value = need.CurrentValue,
+                        Type = need.Type
                     });
                 }
                 person.SetNeeds(needs);

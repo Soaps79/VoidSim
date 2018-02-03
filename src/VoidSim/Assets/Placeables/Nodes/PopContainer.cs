@@ -12,7 +12,7 @@ namespace Assets.Placeables.Nodes
     public class ContainerGenerationParams
     {
         public PopContainerType Type;
-        public List<NeedsAffector> Affectors;
+        public List<PersonNeedsValue> Affectors;
         public string ActivityPrefix;
     }
 
@@ -23,7 +23,7 @@ namespace Assets.Placeables.Nodes
         public int Reserved;
         public string PlaceableName;
         public string ActivityPrefix;
-        public List<NeedsAffector> Affectors = new List<NeedsAffector>();
+        public List<PersonNeedsValue> Affectors = new List<PersonNeedsValue>();
     }
 
     public class PopContainerDetails
@@ -31,7 +31,7 @@ namespace Assets.Placeables.Nodes
         public string Name;
         public PopContainerType Type;
         public string PlaceableName;
-        public List<NeedsAffector> Affectors = new List<NeedsAffector>();
+        public List<PersonNeedsValue> Affectors = new List<PersonNeedsValue>();
     }
 
     [Serializable]
@@ -44,7 +44,7 @@ namespace Assets.Placeables.Nodes
         public string Name;
         public string ActivityPrefix;
         public List<Person> CurrentOccupants = new List<Person>();
-        public List<NeedsAffector> Affectors;
+        public List<PersonNeedsValue> Affectors;
         public string PlaceableName;
         public bool HasRoom { get { return CurrentOccupants.Count < MaxCapacity; } }
 

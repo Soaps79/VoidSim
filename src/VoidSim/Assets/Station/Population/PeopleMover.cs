@@ -55,14 +55,29 @@ namespace Assets.Station.Population
             node.OnTick += () => StartCoroutine(CheckForPeopleToMove());
         }
 
+        private float _startTime;
+
+        private void StartTimer()
+        {
+            _startTime = Time.time;
+        }
+
+        private void CheckTimer(int step)
+        {
+            UberDebug.LogChannel(LogChannels.Performance, string.Format("PeopleMoverUpdate {0}: {1}", step, Time.time - _startTime));
+        }
+
         private IEnumerator CheckForPeopleToMove()
         {
             var startTime = Time.time;
+            StartTimer();
 
             // should be for people just arriving at the station, or on level start
             var hasNoLocation = _control.AllPopulation.Where(i => string.IsNullOrEmpty(i.CurrentlyOccupying)).ToList();
+            CheckTimer(1);
             yield return null;
 
+            StartTimer();
             if (hasNoLocation.Any())
             {
                 for (int i = 0; i < hasNoLocation.Count(); i++)
@@ -78,11 +93,16 @@ namespace Assets.Station.Population
                     yield return null;
                 }
             }
-
-            // if they are ready to work, find their job and send them there
-            var readyToWork = _control.AllPopulation.Where(i => i.Wants.IsRequesting(PopContainerType.Employment)).ToList();
+            CheckTimer(2);
             yield return null;
 
+            StartTimer();
+            // if they are ready to work, find their job and send them there
+            var readyToWork = _control.AllPopulation.Where(i => i.Wants.IsRequesting(PopContainerType.Employment)).ToList();
+            CheckTimer(3);
+            yield return null;
+
+            StartTimer();
             if (readyToWork.Any())
             {
                 for (int i = 0; i < readyToWork.Count; i++)
@@ -99,12 +119,16 @@ namespace Assets.Station.Population
                     yield return null;
                 }
             }
-
-
+            CheckTimer(4);
+            yield return null;
+            
             // if they need fulfillment, try and find it
+            StartTimer();
             var wantsToMove = _control.AllPopulation.Where(i => i.Wants.IsRequesting(PopContainerType.Fulfillment)).ToList();
+            CheckTimer(5);
             yield return null;
 
+            StartTimer();
             if (wantsToMove.Any())
             {
                 for (int i = 0; i < wantsToMove.Count; i++)
@@ -121,17 +145,17 @@ namespace Assets.Station.Population
 
                         else if (TryFulfillNeed(need, person))
                             break;
-
-                        yield return null;
                     }
+                    yield return null;
                 }
             }
+            CheckTimer(6);
 
             var elapsed = Time.time - startTime;
             if(elapsed > _tickTime)
                 throw new UnityException("PeopleMover took longer to move people than its given tickTime, problems coming.");
 
-            UberDebug.LogChannel(LogChannels.Performance, string.Format("PeopleMoverUpdate: {0}", elapsed));
+            UberDebug.LogChannel(LogChannels.Performance, string.Format("PeopleMoverUpdate Total: {0}", elapsed));
         }
 
         private void MovePerson(PopContainer newContainer, Person person)

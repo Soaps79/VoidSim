@@ -14,10 +14,64 @@ namespace Assets.WorldMaterials.Population
         public float Amount;
     }
 
+    public interface IPersonWant
+    {
+        PopContainerType Type { get; }
+        string GetDisplayName { get; }
+        bool IsActive { get; set; }
+    }
+
+    /// <summary>
+    /// Indicates that the Person is requesting fulfillment of their Needs
+    /// </summary>
+    public class FulfillmentWant : IPersonWant
+    {
+        public PopContainerType Type { get { return PopContainerType.Fulfillment; } }
+
+        public string GetDisplayName
+        {
+            get
+            {
+                return UnfulfilledNeeds.Aggregate("",
+                    (s, value) => s + string.Format("Wants fulfillment - {0}: {1}", value.Type, value.Amount));
+            }
+        }
+
+        public bool IsActive { get; set; }
+
+        public List<NeedsValue> UnfulfilledNeeds = new List<NeedsValue>();
+    }
+
+    /// <summary>
+    /// Indicates that the Person would like to go to a bay to depart the station
+    /// </summary>
+    public class TransportWant : IPersonWant
+    {
+        public string ClientName;
+        public PopContainerType Type { get { return PopContainerType.Transport; } }
+        public string GetDisplayName { get { return "Requesting transport"; } }
+        public bool IsActive { get; set; }
+    }
+
+    /// <summary>
+    /// Indicates that the Person's Needs are ulfilled and they are ready to work
+    /// </summary>
+    public class GoToWorkWant : IPersonWant
+    {
+        public PopContainerType Type { get { return PopContainerType.Employment; } }
+        public string GetDisplayName { get { return "Ready to work"; } }
+        public bool IsActive { get; set; }
+    }
+
+    /// <summary>
+    /// Handles signalling when a Person wants something enough to move for it.
+    /// Note that all of the current needs are related to movement, this will have to be refactored when
+    /// Wants are more robust than simply wanting to move.
+    /// </summary>
     public class WantsHandler : ISerializeData<List<PersonNeedsData>>
     {
-        private readonly Dictionary<PersonNeedsType, PersonNeeds>
-            _needs = new Dictionary<PersonNeedsType, PersonNeeds>();
+        private readonly Dictionary<PersonNeedsType, PersonNeedsValue>
+            _needs = new Dictionary<PersonNeedsType, PersonNeedsValue>();
 
         private readonly List<NeedsValue> _lastAffected = new List<NeedsValue>();
         private readonly List<NeedsValue> _unfulfilledNeeds = new List<NeedsValue>();
@@ -25,6 +79,7 @@ namespace Assets.WorldMaterials.Population
         public bool IsAtWork { get; private set; }
 
         private readonly Dictionary<PopContainerType, IPersonWant> _wants = new Dictionary<PopContainerType, IPersonWant>();
+        private static Dictionary<PersonNeedsType, PersonNeeds> _staticNeeds;
 
         public WantsHandler()
         {
@@ -35,7 +90,7 @@ namespace Assets.WorldMaterials.Population
 
         public float OverallMood { get; private set; }
 
-        public void SetNeeds(List<PersonNeeds> needs)
+        public void SetNeeds(List<PersonNeedsValue> needs)
         {
             _needs.Clear();
             foreach (var need in needs)
@@ -47,7 +102,7 @@ namespace Assets.WorldMaterials.Population
 
         private void UpdateOverallMood()
         {
-            OverallMood = _needs.Values.Average(i => i.CurrentValue);
+            OverallMood = _needs.Values.Average(i => i.Value);
         }
 
         // finds unfulfilled needs, puts them in order, and saves them locally
@@ -57,12 +112,12 @@ namespace Assets.WorldMaterials.Population
 
             foreach (var need in _needs.Values)
             {
-                if (need.CurrentValue < need.MinTolerance)
+                if (need.Value < _staticNeeds[need.Type].MinTolerance)
                 {
                     list.Add(new NeedsValue
                     {
                         Type = need.Type,
-                        Amount = need.MinTolerance - need.CurrentValue
+                        Amount = _staticNeeds[need.Type].MinTolerance - need.Value
                     });
                 }
             }
@@ -86,15 +141,15 @@ namespace Assets.WorldMaterials.Population
         }
 
         // applies the value and tracks it as the "last applied"
-        public void ApplyAffectors(List<NeedsAffector> affectors)
+        public void ApplyAffectors(List<PersonNeedsValue> affectors)
         {
             _lastAffected.Clear();
             foreach (var affector in affectors)
             {
-                _needs[affector.Type].CurrentValue = Mathf.Clamp(
-                    _needs[affector.Type].CurrentValue + affector.Value,
-                    _needs[affector.Type].MinValue,
-                    _needs[affector.Type].MaxValue);
+                _needs[affector.Type].Value = Mathf.Clamp(
+                    _needs[affector.Type].Value + affector.Value,
+                    _staticNeeds[affector.Type].MinValue,
+                    _staticNeeds[affector.Type].MaxValue);
                 _lastAffected.Add(new NeedsValue { Type = affector.Type, Amount = affector.Value });
             }
             UpdateOverallMood();
@@ -113,7 +168,7 @@ namespace Assets.WorldMaterials.Population
 
                 // compare random to calculated chance to see if move is going to be requested
                 var current = _needs[need.Type];
-                var chance = current.CurrentValue == 0 ? 1.0f : 1.0f - current.CurrentValue / current.MinTolerance;
+                var chance = current.Value == 0 ? 1.0f : 1.0f - current.Value / _staticNeeds[need.Type].MinTolerance;
                 if (chance >= rand)
                     return true;
             }
@@ -138,7 +193,7 @@ namespace Assets.WorldMaterials.Population
 
             // if the Person is already trying to fulfill, don't bother with the random check again
             var isAlreadyTryingToFulfill = _wants[PopContainerType.Fulfillment].IsActive;
-            
+            _wants[PopContainerType.Fulfillment].IsActive = false;
             RefreshUnfulfilledNeeds();
 
             if (_unfulfilledNeeds.Any() && (isAlreadyTryingToFulfill || CheckWantsToFulfill(Random.value)))
@@ -146,6 +201,7 @@ namespace Assets.WorldMaterials.Population
                 var service = _wants[PopContainerType.Fulfillment] as FulfillmentWant;
                 service.UnfulfilledNeeds.Clear();
                 service.UnfulfilledNeeds.AddRange(_unfulfilledNeeds.ToList());
+                service.IsActive = true;
                 return;
             }
 
@@ -156,7 +212,7 @@ namespace Assets.WorldMaterials.Population
             }
         }
 
-        public List<PersonNeeds> GetNeedsList()
+        public List<PersonNeedsValue> GetNeedsList()
         {
             return _needs.Values.ToList();
         }
@@ -165,7 +221,7 @@ namespace Assets.WorldMaterials.Population
         {
             return _needs.Select(i => new PersonNeedsData
             {
-                CurrentValue = i.Value.CurrentValue,
+                CurrentValue = i.Value.Value,
                 Type = i.Value.Type
             }).ToList();
         }
@@ -173,18 +229,18 @@ namespace Assets.WorldMaterials.Population
         public bool CheckReadyToWork(float rand)
         {
             // no needs below 1.0, go to work
-            if (!_needs.Values.All(i => i.CurrentValue >= 1.0))
+            if (!_needs.Values.All(i => i.Value >= 1.0))
                 return true;
 
-            PersonNeeds lowest = null;
+            PersonNeedsValue lowest = null;
             // find the need with the lowest value
             foreach (var need in _needs.Values)
             {
-                if (need.CurrentValue < 1.0f)
+                if (need.Value < 1.0f)
                 {
                     if (lowest == null)
                         lowest = need;
-                    else if (need.CurrentValue < lowest.CurrentValue)
+                    else if (need.Value < lowest.Value)
                         lowest = need;
                 }
             }
@@ -193,11 +249,16 @@ namespace Assets.WorldMaterials.Population
                 return true;
 
             // check its chance against the random number given
-            var chanceRange = 1.0f - lowest.StartWantingToMove;
-            var range = 1.0f - lowest.MinFulfillment;
+            var chanceRange = 1.0f - _staticNeeds[lowest.Type].StartWantingToMove;
+            var range = 1.0f - _staticNeeds[lowest.Type].MinFulfillment;
 
-            var chance = chanceRange + Mathf.Lerp(0, chanceRange, (lowest.CurrentValue - lowest.MinFulfillment) / range);
+            var chance = chanceRange + Mathf.Lerp(0, chanceRange, (lowest.Value - _staticNeeds[lowest.Type].MinFulfillment) / range);
             return chance > rand;
+        }
+
+        public static void SetStaticNeeds(Dictionary<PersonNeedsType, PersonNeeds> staticNeeds)
+        {
+            _staticNeeds = staticNeeds;
         }
     }
 }
