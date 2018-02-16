@@ -35,10 +35,6 @@ namespace Assets.Placeables.Nodes
         {
             var container = new PopContainer(param) {Name = (name + "_" + param.Type).ToLower()};
 
-            container.OnUpdate += () =>
-            {
-                if (OnContainersUpdated != null) OnContainersUpdated(Containers);
-            };
             if (param.Type == PopContainerType.Employment)
             {
                 _employmentContainer = container;

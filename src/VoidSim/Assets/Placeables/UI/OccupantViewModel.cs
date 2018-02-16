@@ -29,11 +29,16 @@ namespace Assets.Placeables.UI
             var trigger = GetComponent<BoundTooltipTrigger>();
             trigger.OnHoverActivate += HandleTooltipActivate;
 
+            UpdateSprite();
+        }
+
+        private void UpdateSprite()
+        {
             var img = GetComponent<Image>();
             img.color = _residentColor;
-            if (person != null)
+            if (_person != null)
                 img.sprite = _spriteFilled;
-            else if (isReserved)
+            else if (_isReserved)
                 img.sprite = _spriteOutlineFilled;
             else
                 img.sprite = _spriteOutlineEmpty;
@@ -49,6 +54,16 @@ namespace Assets.Placeables.UI
 
             var text = _person.FirstName + " " + _person.LastName + " - " + (_person.IsMale ? "Male" : "Female");
             trigger.text = text;
+        }
+
+        public void UpdateValues(Person person, bool value)
+        {
+            if (_person == person && _isReserved == value)
+                return;
+
+            _person = person;
+            _isReserved = value;
+            UpdateSprite();
         }
     }
 }
