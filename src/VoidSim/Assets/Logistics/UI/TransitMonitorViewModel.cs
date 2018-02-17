@@ -35,7 +35,7 @@ namespace Assets.Logistics.UI
 
 		private void CreatePanel()
 		{
-			var canvas = GameObject.Find("InfoCanvas");
+		    var canvas = Locator.CanvasManager.GetCanvas(CanvasType.ConstantUpdate);
 			_panel = Instantiate(_panelPrefab, canvas.transform, false);
 			_panelContent = _panel.transform.Find("content_holder/scroll_view/view_port/content").GetComponent<Image>();
 		}

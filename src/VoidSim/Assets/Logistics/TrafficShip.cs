@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Logistics.Ships;
 using Assets.Logistics.UI;
+using Assets.Scripts;
 using Assets.Scripts.Serialization;
 using DG.Tweening;
 using Newtonsoft.Json;
@@ -124,8 +125,8 @@ namespace Assets.Logistics
 		private void GenerateUI()
 		{
 			// create view model
-			var canvas = GameObject.Find("InfoCanvas");
-			_viewModel = Instantiate(_viewModelPrefab, canvas.transform, false);
+			var canvas = Locator.CanvasManager.GetCanvas(CanvasType.LowUpdate);
+            _viewModel = Instantiate(_viewModelPrefab, canvas.transform, false);
 			_viewModel.Bind(this);
 			_viewModel.gameObject.SetActive(false);
 		}

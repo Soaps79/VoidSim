@@ -29,7 +29,7 @@ namespace Assets.Station.UI
 
         void Start()
         {
-            var canvas = GameObject.Find("InfoCanvas");
+            var canvas = Locator.CanvasManager.GetCanvas(CanvasType.LowUpdate);
             _panelInstance = Instantiate(_panelPrefab, canvas.transform, false);
             _contentHolder = _panelInstance.Find("content_holder").GetComponent<RectTransform>();
 

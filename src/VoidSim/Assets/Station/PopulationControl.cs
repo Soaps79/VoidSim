@@ -104,8 +104,8 @@ namespace Assets.Station
 	    {
 	        if (_listViewModelPrefab == null)
 	            return;
-	        var canvas = GameObject.Find("InfoCanvas");
-	        _listViewModel = Instantiate(_listViewModelPrefab, canvas.transform, false);
+	        var canvas = Locator.CanvasManager.GetCanvas(CanvasType.MediumUpdate);
+            _listViewModel = Instantiate(_listViewModelPrefab, canvas.transform, false);
 	        _listViewModel.Initialize();
             _listViewModel.UpdateList(AllPopulation);
 	        _listViewModel.gameObject.SetActive(false);

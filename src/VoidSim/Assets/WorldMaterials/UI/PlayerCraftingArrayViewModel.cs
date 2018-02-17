@@ -43,7 +43,7 @@ namespace Assets.WorldMaterials.UI
 
 	    private void CreatePanel()
         {
-            var canvas = GameObject.Find("InfoCanvas");
+            var canvas = Locator.CanvasManager.GetCanvas(CanvasType.ConstantUpdate);
             _arrayPanel = Instantiate(_arrayPrefab, canvas.transform, false);
             _arrayContent = _arrayPanel.transform.Find("content_holder").GetComponent<Image>();
 			if(_arrayPanel ==  null || _arrayContent == null)

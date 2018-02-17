@@ -61,7 +61,10 @@ namespace Assets.Scripts
 			if (clock == null)
 				throw new UnityException("WorldClock cannot be found");
 			ServiceInitializer.Initialize<IWorldClock>(clock);
-		}
+
+		    var canvasManager = transform.GetComponentInChildren<CanvasManager>();
+		    ServiceLocator.Register<ICanvasManager>(canvasManager);
+        }
 
 		void Start()
 		{
@@ -70,13 +73,14 @@ namespace Assets.Scripts
 			UberDebug.LogChannel(LogChannels.Serialization, "Initializing");
 
 			DOTween.Init(false, true, LogBehaviour.ErrorsOnly);
-			InititalizeDebugDisplay();
+
+		    InititalizeDebugDisplay();
 			BindMouseMovementToKvd();
 			InitializeScreenBounds();
 			InitializeProductLookup();
 			InitializeProductIds();
 			Locator.MessageHub.AddListener(this, GameMessages.GameSpeedChange);
-		}
+        }
 
 		private void InitializeProductIds()
 		{

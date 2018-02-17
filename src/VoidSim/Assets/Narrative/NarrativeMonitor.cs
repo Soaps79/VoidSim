@@ -3,6 +3,7 @@ using Assets.Narrative.Conversations;
 using Assets.Narrative.Missions;
 using Assets.Narrative.Notifications;
 using Assets.Narrative.UI;
+using Assets.Scripts;
 using Assets.Scripts.Initialization;
 using Assets.Scripts.Serialization;
 using QGame;
@@ -32,7 +33,7 @@ namespace Assets.Narrative
 		private readonly CollectionSerializer<NarrativeProgressData> _serializer
 			= new CollectionSerializer<NarrativeProgressData>();
 
-		private GameObject _canvas;
+		private Canvas _canvas;
 		private MissionsMonitor _missionsMonitor;
 		private ConversationsMonitor _conversationsMonitor;
 		private NarrativeProgressData _data;
@@ -48,10 +49,10 @@ namespace Assets.Narrative
 
 		private void Initialize(float obj)
 		{
-			_canvas = GameObject.Find("InfoCanvas");
+			_canvas = Locator.CanvasManager.GetCanvas(CanvasType.MediumUpdate);
 
-			// if there is loading data, bring missions up to date
-			if (_serializer.HasDataFor(this, "Narrative"))
+            // if there is loading data, bring missions up to date
+            if (_serializer.HasDataFor(this, "Narrative"))
 				_data = _serializer.DeserializeData();
 
             InitializeMissions();

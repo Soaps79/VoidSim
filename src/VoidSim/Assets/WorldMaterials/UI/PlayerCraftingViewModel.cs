@@ -85,7 +85,7 @@ namespace Assets.WorldMaterials.UI
 
         private void BindToUI()
         {
-            var canvas = GameObject.Find("InfoCanvas");
+            var canvas = Locator.CanvasManager.GetCanvas(CanvasType.LowUpdate);
 
             // Instantiate the UI prefab
             var craftingPanel = Instantiate(_craftingPanelPrefab, canvas.transform, false);

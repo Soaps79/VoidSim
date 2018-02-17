@@ -65,5 +65,10 @@ namespace Assets.Scripts
 		{
 			get { return ServiceLocator.Get<IWorldClock>(); }
 		}
-	}
+
+	    public static ICanvasManager CanvasManager
+	    {
+	        get { return ServiceLocator.Get<ICanvasManager>(); }
+	    }
+    }
 }

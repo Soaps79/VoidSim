@@ -47,7 +47,7 @@ namespace Assets.Station.UI
         }
         private void InitializeDisplay()
         {
-            var canvas = GameObject.Find("InfoCanvas");
+            var canvas = Locator.CanvasManager.GetCanvas(CanvasType.ConstantUpdate);
             _display = Instantiate(_displayPanelPrefab, canvas.transform, false);
         }
 

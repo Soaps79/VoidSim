@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Assets.Controllers.GUI;
+using Assets.Scripts;
 using Assets.Scripts.UI;
 using UnityEngine;
 using Zenject;
@@ -38,8 +39,8 @@ namespace Assets.Placeables.UI
 		private static void EnableUI(Placeable placeable)
 		{
 			// create view model
-			var canvas = GameObject.Find("InfoCanvas");
-			var viewModelInstance = GameObject.Instantiate(_scriptable.ViewModel, canvas.transform, false);
+			var canvas = Locator.CanvasManager.GetCanvas(CanvasType.ConstantUpdate);
+            var viewModelInstance = GameObject.Instantiate(_scriptable.ViewModel, canvas.transform, false);
 			viewModelInstance.Bind(placeable);
 			var position = GetUiObjectPosition(placeable.transform);
 			viewModelInstance.transform.position = position;

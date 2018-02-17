@@ -33,14 +33,14 @@ namespace Assets.Narrative.Missions
 
 		[SerializeField] private MissionListViewModel _missionViewModelPrefab;
 		public Action<Mission> OnMissionBegin;
-		private GameObject _canvas;
+		private Canvas _canvas;
 
 		public Action<Mission> OnMissionComplete;
 
 		public void Initialize(LevelPackage package)
 		{
-			_canvas = GameObject.Find("InfoCanvas");
-			InitializeTrackers();
+			_canvas = Locator.CanvasManager.GetCanvas(CanvasType.MediumUpdate);
+            InitializeTrackers();
 
 			FindLevelMissions();
 			InitializeMissionsUI();
