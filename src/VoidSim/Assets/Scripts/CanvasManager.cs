@@ -20,7 +20,7 @@ namespace Assets.Scripts
         private readonly Dictionary<CanvasType, Canvas> _canvases = new Dictionary<CanvasType, Canvas>();
         private Canvas _mainCanvas;
 
-        void Start()
+        void Awake()
         {
             _mainCanvas = Instantiate(_prefabCanvas);
             _mainCanvas.name = "canvas_root";
