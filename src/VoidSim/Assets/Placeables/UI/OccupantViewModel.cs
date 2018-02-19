@@ -1,5 +1,7 @@
-﻿using Assets.WorldMaterials.Population;
+﻿using Assets.Placeables.Nodes;
+using Assets.WorldMaterials.Population;
 using QGame;
+using UIWidgets;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
@@ -12,19 +14,18 @@ namespace Assets.Placeables.UI
     /// </summary>
     [RequireComponent(typeof(Image))]
     [RequireComponent(typeof(BoundTooltipTrigger))]
-    public class OccupantViewModel : QScript
+    public class OccupantViewModel : QScript //ListViewItem, IViewData<Person>
     {
         [SerializeField] private Sprite _spriteFilled;
         [SerializeField] private Sprite _spriteOutlineFilled;
         [SerializeField] private Sprite _spriteOutlineEmpty;
         [SerializeField] private Color _residentColor;
-        private Person _person;
-        private bool _isReserved;
+        private Occupancy _occupancy;
 
-        public void Initialize(bool isReserved, Person person)
+        public void Initialize(Occupancy occupancy)
         {
-            _person = person;
-            _isReserved = isReserved;
+            _occupancy = occupancy;
+            _occupancy.OnUpdate += HandleOccupancyUpdate;
 
             var trigger = GetComponent<BoundTooltipTrigger>();
             trigger.OnHoverActivate += HandleTooltipActivate;
@@ -32,13 +33,18 @@ namespace Assets.Placeables.UI
             UpdateSprite();
         }
 
+        private void HandleOccupancyUpdate(Occupancy obj)
+        {
+            UpdateSprite();
+        }
+
         private void UpdateSprite()
         {
             var img = GetComponent<Image>();
             img.color = _residentColor;
-            if (_person != null)
+            if (_occupancy.IsOccupied)
                 img.sprite = _spriteFilled;
-            else if (_isReserved)
+            else if (_occupancy.IsReserved)
                 img.sprite = _spriteOutlineFilled;
             else
                 img.sprite = _spriteOutlineEmpty;
@@ -46,24 +52,14 @@ namespace Assets.Placeables.UI
 
         private void HandleTooltipActivate(BoundTooltipTrigger trigger)
         {
-            if (_person == null)
+            if (!_occupancy.IsOccupied)
             {
-                trigger.text = _isReserved ? "Reserved" : "Open";
+                trigger.text = _occupancy.IsReserved ? "Reserved" : "Open";
                 return;
             }
 
-            var text = _person.FirstName + " " + _person.LastName + " - " + (_person.IsMale ? "Male" : "Female");
+            var text = _occupancy.Person.FirstName + " " + _occupancy.Person.LastName + " - " + (_occupancy.Person.IsMale ? "Male" : "Female");
             trigger.text = text;
-        }
-
-        public void UpdateValues(Person person, bool value)
-        {
-            if (_person == person && _isReserved == value)
-                return;
-
-            _person = person;
-            _isReserved = value;
-            UpdateSprite();
         }
     }
 }

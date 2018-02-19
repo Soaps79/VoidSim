@@ -35,29 +35,9 @@ namespace Assets.Placeables.UI
         {
             ClearOccupants();
 
-            for (int i = 0; i < _container.CurrentOccupants.Count; i++)
+            foreach (var occupancy in _container.CurrentOccupancy)
             {
-                AddOccupantAvatar(_container.Reserved > i, _container.CurrentOccupants[i]);
-            }
-
-            _lastReserveCount = _container.Reserved;
-
-            if (_occupants.Count < _container.Reserved)
-            {
-                var reservedToDisplay = _container.Reserved - _occupants.Count;
-                for (int i = 0; i < reservedToDisplay; i++)
-                {
-                    AddOccupantAvatar(true);
-                }
-            }
-
-            if (_occupants.Count < _container.MaxCapacity)
-            {
-                var emptyCount = _container.MaxCapacity - _occupants.Count;
-                for (int i = 0; i < emptyCount; i++)
-                {
-                    AddOccupantAvatar(false);
-                }
+                AddOccupantAvatar(occupancy);
             }
         }
 
@@ -73,10 +53,10 @@ namespace Assets.Placeables.UI
             _occupants.Clear();
         }
 
-        private void AddOccupantAvatar(bool isReserved, Person person = null)
+        private void AddOccupantAvatar(Occupancy occupancy)
         {
             var avatar = Instantiate(_personPrefab, transform, false);
-            avatar.Initialize(isReserved, person);
+            avatar.Initialize(occupancy);
             _occupants.Add(avatar);
         }
 
@@ -84,18 +64,17 @@ namespace Assets.Placeables.UI
         {
             if(_container.MaxCapacity != _occupants.Count)
                 RedrawAll();
-            else if (_lastReserveCount != _container.Reserved)
-                UpdateAll();
+            //else if (_lastReserveCount != _container.Reserved)
+            //    UpdateAll();
         }
 
-        private void UpdateAll()
-        {
-            var count = _container.CurrentOccupants.Count;
-            for (int i = 0; i < _occupants.Count; i++)
-            {
-                _occupants[i].UpdateValues(
-                    i < count ? _container.CurrentOccupants[i] : null, i <= _container.Reserved);
-            }
-        }
+        //private void UpdateAll()
+        //{
+        //    var count = _container.CurrentOccupants.Count;
+        //    for (int i = 0; i < _occupants.Count; i++)
+        //    {
+        //        _occupants[i].UpdateValues();
+        //    }
+        //}
     }
 }

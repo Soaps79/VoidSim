@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.WorldMaterials.Population;
+using UnityEngine;
 
 namespace Assets.Placeables.Nodes
 {
@@ -43,10 +44,12 @@ namespace Assets.Placeables.Nodes
         public int Reserved;
         public string Name;
         public string ActivityPrefix;
-        public List<Person> CurrentOccupants = new List<Person>();
+        public List<Occupancy> CurrentOccupancy = new List<Occupancy>();
         public List<PersonNeedsValue> Affectors;
         public string PlaceableName;
-        public bool HasRoom { get { return CurrentOccupants.Count < MaxCapacity; } }
+
+        private int _actualOccupants;
+        public bool HasRoom { get { return _actualOccupants < MaxCapacity; } }
 
         public Action OnUpdate;
         private void CheckUpdate()
@@ -70,7 +73,11 @@ namespace Assets.Placeables.Nodes
             if (!Affectors.Any())
                 return;
 
-            CurrentOccupants.ForEach(i => i.ApplyAffectors(Affectors));
+            for (int i = 0; i < CurrentOccupancy.Count; i++)
+            {
+                if (CurrentOccupancy[i].Person != null)
+                    CurrentOccupancy[i].Person.ApplyAffectors(Affectors);
+            }
         }
 
         // The Set functions wrap basic functionality, and ensure that subscribers know
@@ -80,8 +87,24 @@ namespace Assets.Placeables.Nodes
             if (capacity == MaxCapacity)
                 return;
 
+            if(capacity < MaxCapacity)
+                throw new UnityException("PopContainer MaxCapacity was lowered, not yet coded to handle this.");
+
             MaxCapacity = capacity;
+            UpdateOccupancy();
             CheckUpdate();
+        }
+
+        private void UpdateOccupancy()
+        {
+            var previousCount = CurrentOccupancy.Count;
+            for (int i = 0; i < MaxCapacity; i++)
+            {
+                if(i >= previousCount)
+                    CurrentOccupancy.Add(new Occupancy());
+
+                CurrentOccupancy[i].IsReserved = i < Reserved;
+            }
         }
 
         // not sure if this will stay
@@ -92,29 +115,38 @@ namespace Assets.Placeables.Nodes
                 return;
 
             Reserved = reserved;
+            UpdateOccupancy();
             CheckUpdate();
         }
 
-        public void AddPerson(Person person, bool incrementReserve = false)
+        public void AddPerson(Person person)
         {
-            if (CurrentOccupants.Contains(person))
-                return;
+            // should add some checks here to see if Person is already in Container
 
-            CurrentOccupants.Add(person);
-            
-            if (incrementReserve)
-                Reserved++;
+            for (var i = 0; i < CurrentOccupancy.Count; i++)
+            {
+                if (CurrentOccupancy[i].IsOccupied)
+                    continue;
+
+                CurrentOccupancy[i].Person = person;
+                _actualOccupants++;
+                break;
+            }
 
             CheckUpdate();
         }
 
-        public void RemovePerson(Person person, bool incrementReserve = false)
+        public void RemovePerson(Person person)
         {
-            if (!CurrentOccupants.Remove(person))
-                return;
+            for (var i = 0; i < CurrentOccupancy.Count; i++)
+            {
+                if (CurrentOccupancy[i].Person != person)
+                    continue;
 
-            if(incrementReserve)
-                Reserved++;
+                CurrentOccupancy[i].Person = null;
+                _actualOccupants--;
+                break;
+            }
 
             CheckUpdate();
         }
