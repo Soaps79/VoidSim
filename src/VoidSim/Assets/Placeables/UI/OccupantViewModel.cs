@@ -1,4 +1,5 @@
-﻿using Assets.Placeables.Nodes;
+﻿using System;
+using Assets.Placeables.Nodes;
 using Assets.WorldMaterials.Population;
 using QGame;
 using UIWidgets;
@@ -14,7 +15,7 @@ namespace Assets.Placeables.UI
     /// </summary>
     [RequireComponent(typeof(Image))]
     [RequireComponent(typeof(BoundTooltipTrigger))]
-    public class OccupantViewModel : QScript //ListViewItem, IViewData<Person>
+    public class OccupantViewModel : ListViewItem, IViewData<Occupancy>
     {
         [SerializeField] private Sprite _spriteFilled;
         [SerializeField] private Sprite _spriteOutlineFilled;
@@ -22,15 +23,10 @@ namespace Assets.Placeables.UI
         [SerializeField] private Color _residentColor;
         private Occupancy _occupancy;
 
-        public void Initialize(Occupancy occupancy)
+        void Start()
         {
-            _occupancy = occupancy;
-            _occupancy.OnUpdate += HandleOccupancyUpdate;
-
             var trigger = GetComponent<BoundTooltipTrigger>();
             trigger.OnHoverActivate += HandleTooltipActivate;
-
-            UpdateSprite();
         }
 
         private void HandleOccupancyUpdate(Occupancy obj)
@@ -60,6 +56,13 @@ namespace Assets.Placeables.UI
 
             var text = _occupancy.Person.FirstName + " " + _occupancy.Person.LastName + " - " + (_occupancy.Person.IsMale ? "Male" : "Female");
             trigger.text = text;
+        }
+
+        public void SetData(Occupancy occupancy)
+        {
+            _occupancy = occupancy;
+            _occupancy.OnUpdate += HandleOccupancyUpdate;
+            UpdateSprite();
         }
     }
 }

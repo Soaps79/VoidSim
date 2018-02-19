@@ -4,6 +4,7 @@ using System.Linq;
 using Assets.Placeables.Nodes;
 using Assets.WorldMaterials.Population;
 using QGame;
+using UIWidgets;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,7 +13,7 @@ namespace Assets.Placeables.UI
     /// <summary>
     /// Represents the pop container placeable node.
     /// </summary>
-    public class PopContainerViewModel : QScript
+    public class PopContainerViewModel : TileView<OccupantViewModel, Occupancy>
     {
         [SerializeField] private OccupantViewModel _personPrefab;
         
@@ -22,6 +23,7 @@ namespace Assets.Placeables.UI
 
         public void Initialize(PopContainer popContainer)
         {
+            DataSource = popContainer.CurrentOccupancy.ToObservableList();
             _container = popContainer;
             popContainer.OnUpdate += HandleContainerUpdate;
 
@@ -41,6 +43,11 @@ namespace Assets.Placeables.UI
             }
         }
 
+        void Update()
+        {
+            int i = 9;
+        }
+
         private void ClearOccupants()
         {
             if (_occupants.Count == 0)
@@ -55,15 +62,16 @@ namespace Assets.Placeables.UI
 
         private void AddOccupantAvatar(Occupancy occupancy)
         {
-            var avatar = Instantiate(_personPrefab, transform, false);
-            avatar.Initialize(occupancy);
-            _occupants.Add(avatar);
+            //var avatar = Instantiate(_personPrefab, transform, false);
+            //avatar.Initialize(occupancy);
+            //_occupants.Add(avatar);
         }
 
         private void HandleContainerUpdate()
         {
-            if(_container.MaxCapacity != _occupants.Count)
-                RedrawAll();
+            DataSource = _container.CurrentOccupancy.ToObservableList();
+            //if (_container.MaxCapacity != _occupants.Count)
+            //    RedrawAll();
             //else if (_lastReserveCount != _container.Reserved)
             //    UpdateAll();
         }
