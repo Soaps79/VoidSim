@@ -15,8 +15,6 @@ namespace Assets.Placeables.UI
     /// </summary>
     public class PopContainerViewModel : TileView<OccupantViewModel, Occupancy>
     {
-        [SerializeField] private OccupantViewModel _personPrefab;
-        
         private PopContainer _container;
         private int _lastReserveCount;
         private readonly List<OccupantViewModel> _occupants = new List<OccupantViewModel>();
@@ -26,9 +24,6 @@ namespace Assets.Placeables.UI
             DataSource = popContainer.CurrentOccupancy.ToObservableList();
             _container = popContainer;
             popContainer.OnUpdate += HandleContainerUpdate;
-
-            if (_personPrefab == null)
-                throw new UnityException("PopContainerViewModel missing static data");
 
             RedrawAll();
         }
@@ -70,6 +65,14 @@ namespace Assets.Placeables.UI
         private void HandleContainerUpdate()
         {
             DataSource = _container.CurrentOccupancy.ToObservableList();
+            var rows = DataSource.Count / Layout.GridConstraintCount;
+            var rect = GetComponent<RectTransform>();
+            var width = Layout.GridConstraintCount * (itemWidth + Layout.Spacing.x) + Layout.GetMarginLeft() + Layout.GetMarginRight();
+            //width -= Layout.Spacing.x;
+            var height = rows * (itemHeight + Layout.Spacing.y) + Layout.GetMarginTop() + Layout.GetMarginBottom();
+            //height -= Layout.Spacing.y;
+            rect.sizeDelta = new Vector2(width, height);
+            
             //if (_container.MaxCapacity != _occupants.Count)
             //    RedrawAll();
             //else if (_lastReserveCount != _container.Reserved)
