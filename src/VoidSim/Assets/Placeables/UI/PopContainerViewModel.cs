@@ -23,9 +23,9 @@ namespace Assets.Placeables.UI
         {
             DataSource = popContainer.CurrentOccupancy.ToObservableList();
             _container = popContainer;
-            popContainer.OnUpdate += HandleContainerUpdate;
+            popContainer.OnUpdate += UpdateContainer;
 
-            RedrawAll();
+            UpdateContainer();
         }
 
         private void RedrawAll()
@@ -62,7 +62,7 @@ namespace Assets.Placeables.UI
             //_occupants.Add(avatar);
         }
 
-        private void HandleContainerUpdate()
+        private void UpdateContainer()
         {
             DataSource = _container.CurrentOccupancy.ToObservableList();
             var rows = DataSource.Count / Layout.GridConstraintCount;
