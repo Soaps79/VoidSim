@@ -47,6 +47,7 @@ namespace Assets.Placeables.Nodes
         public List<Occupancy> CurrentOccupancy = new List<Occupancy>();
         public List<PersonNeedsValue> Affectors;
         public string PlaceableName;
+        [SerializeField] private bool _hasReserved;
 
         private int _actualOccupants;
         public bool HasRoom { get { return _actualOccupants < MaxCapacity; } }
@@ -66,6 +67,8 @@ namespace Assets.Placeables.Nodes
             PlaceableName = param.PlaceableName;
             Affectors = param.Affectors;
             ActivityPrefix = param.ActivityPrefix;
+
+            EstablishOccupancy();
         }
 
         public void ApplyAffectors()
@@ -75,80 +78,69 @@ namespace Assets.Placeables.Nodes
 
             for (int i = 0; i < CurrentOccupancy.Count; i++)
             {
-                if (CurrentOccupancy[i].Person != null)
-                    CurrentOccupancy[i].Person.ApplyAffectors(Affectors);
+                if (CurrentOccupancy[i].OccupiedBy != null)
+                    CurrentOccupancy[i].OccupiedBy.ApplyAffectors(Affectors);
             }
         }
 
-        // The Set functions wrap basic functionality, and ensure that subscribers know
-        // would normally do this using properties, but I want it to display in editor
-        public void SetMaxCapacity(int capacity)
+        private void EstablishOccupancy()
         {
-            if (capacity == MaxCapacity)
-                return;
-
-            if(capacity < MaxCapacity)
-                throw new UnityException("PopContainer MaxCapacity was lowered, not yet coded to handle this.");
-
-            MaxCapacity = capacity;
-            UpdateOccupancy();
-            CheckUpdate();
-        }
-
-        private void UpdateOccupancy()
-        {
-            var previousCount = CurrentOccupancy.Count;
             for (int i = 0; i < MaxCapacity; i++)
             {
-                if(i >= previousCount)
-                    CurrentOccupancy.Add(new Occupancy());
-
-                CurrentOccupancy[i].IsReserved = i < Reserved;
+                CurrentOccupancy.Add(new Occupancy());
             }
         }
 
-        // not sure if this will stay
-        // currently exists to distinguish employee spots when they are away
-        public void SetReserved(int reserved)
+        public void AddReserved(Person person)
         {
-            if (reserved == Reserved)
-                return;
-
-            Reserved = reserved;
-            UpdateOccupancy();
-            CheckUpdate();
+            var unoccupied = CurrentOccupancy.FirstOrDefault(i => !i.IsReserved);
+            if (unoccupied == null) return;
+            unoccupied.SetReserved(person);
+            _hasReserved = true;
         }
 
         public void AddPerson(Person person)
         {
-            // should add some checks here to see if Person is already in Container
+            if (person == null)
+                return;
 
-            for (var i = 0; i < CurrentOccupancy.Count; i++)
-            {
-                if (CurrentOccupancy[i].IsOccupied)
-                    continue;
+            // should add a check here to see if Person is already in Container
+            
+            Occupancy occupancy = null;
+            if (_hasReserved)
+                occupancy = CurrentOccupancy.FirstOrDefault(i => i.ReservedBy == person.Id);
 
-                CurrentOccupancy[i].Person = person;
-                _actualOccupants++;
-                break;
-            }
+            if (occupancy == null)
+                occupancy = CurrentOccupancy.FirstOrDefault(i => !i.IsReserved && !i.IsOccupied);
+
+            if (occupancy == null)
+                return;
+
+            occupancy.SetOccupant(person);
+            _actualOccupants++;
 
             CheckUpdate();
         }
 
         public void RemovePerson(Person person)
         {
-            for (var i = 0; i < CurrentOccupancy.Count; i++)
-            {
-                if (CurrentOccupancy[i].Person != person)
-                    continue;
+            var occupied = CurrentOccupancy.FirstOrDefault(i => i.OccupiedBy == person);
+            if (occupied == null) return;
 
-                CurrentOccupancy[i].Person = null;
-                _actualOccupants--;
-                break;
-            }
+            occupied.SetOccupant(null);
+            _actualOccupants--;
 
             CheckUpdate();
+        }
+
+        public void RemoveReserved(Person person)
+        {
+            var occupancy = CurrentOccupancy.FirstOrDefault(i => i.ReservedBy == person.Id);
+            if (occupancy != null)
+            {
+                occupancy.SetReserved(null);
+                CheckUpdate();
+            }
         }
     }
 }

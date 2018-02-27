@@ -79,7 +79,7 @@ namespace Assets.Placeables.Nodes
 	            person.Home = name;
 	            _housed.Add(person);
 	            CurrentCount = _housed.Count;
-                _container.SetReserved(_housed.Count);
+                _container.AddReserved(person);
 	        }
 	    }
 	}

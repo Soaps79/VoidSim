@@ -54,7 +54,7 @@ namespace Assets.Placeables.UI
                 return;
             }
 
-            var text = _occupancy.Person.FirstName + " " + _occupancy.Person.LastName + " - " + (_occupancy.Person.IsMale ? "Male" : "Female");
+            var text = _occupancy.OccupiedBy.FirstName + " " + _occupancy.OccupiedBy.LastName + " - " + (_occupancy.OccupiedBy.IsMale ? "Male" : "Female");
             trigger.text = text;
         }
 

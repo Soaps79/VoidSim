@@ -72,14 +72,13 @@ namespace Assets.Placeables.Nodes
 		{
 		    person.Employer = name;
             _employees.Add(person);
+            _container.AddReserved(person);
 		    UpdateEmployees();
 		}
 
 	    private void UpdateEmployees()
 	    {
 	        CurrentEmployeeCount = _employees.Count;
-            _container.SetMaxCapacity(MaxEmployeeCount);
-	        _container.SetReserved(CurrentEmployeeCount);
 	        _countAffector.Efficiency = (float) CurrentEmployeeCount / MaxEmployeeCount;
 	        if (OnEmployeesChanged != null)
 	            OnEmployeesChanged();
@@ -92,6 +91,7 @@ namespace Assets.Placeables.Nodes
 
 	        person.Employer = string.Empty;
 	        _employees.Remove(person);
+	        _container.RemoveReserved(person);
             UpdateEmployees();
 	    }
 

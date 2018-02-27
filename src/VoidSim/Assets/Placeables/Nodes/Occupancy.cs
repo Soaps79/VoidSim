@@ -1,37 +1,16 @@
 ﻿using System;
 using Assets.WorldMaterials.Population;
+using UnityEngine;
 
 namespace Assets.Placeables.Nodes
 {
     public class Occupancy
     {
-        private Person _person;
-        public Person Person
-        {
-            get { return _person; }
-            set
-            {
-                if (value == _person)
-                    return;
+        public Person OccupiedBy { get; private set; }
+        public bool IsOccupied { get { return OccupiedBy != null; } }
 
-                _person = value;
-                CheckUpdate();
-            }
-        }
-
-        private bool _isReserved;
-        public bool IsReserved
-        {
-            get { return _isReserved; }
-            set
-            {
-                if (value == _isReserved)
-                    return;
-
-                _isReserved = value;
-                CheckUpdate();
-            }
-        }
+        public int ReservedBy { get; private set; }
+        public bool IsReserved { get { return ReservedBy != 0; } }
 
         private void CheckUpdate()
         {
@@ -39,7 +18,19 @@ namespace Assets.Placeables.Nodes
                 OnUpdate(this);
         }
 
-        public bool IsOccupied { get { return _person != null; } }
+        // accepts null to "turn off" reserved
+        public void SetReserved(Person person)
+        {
+            ReservedBy = person != null ? person.Id : 0;
+            CheckUpdate();
+        }
+
+        // accepts null as "empty"
+        public void SetOccupant(Person person)
+        {
+            OccupiedBy = person;
+            CheckUpdate();
+        }
 
         public Action<Occupancy> OnUpdate;
     }
