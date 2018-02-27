@@ -66,6 +66,7 @@ namespace Assets.Placeables.UI
         {
             DataSource = _container.CurrentOccupancy.ToObservableList();
             var rows = DataSource.Count / Layout.GridConstraintCount;
+            if (rows < 1) rows = 1;
             var rect = GetComponent<RectTransform>();
             var width = Layout.GridConstraintCount * (itemWidth + Layout.Spacing.x) + Layout.GetMarginLeft() + Layout.GetMarginRight();
             //width -= Layout.Spacing.x;
