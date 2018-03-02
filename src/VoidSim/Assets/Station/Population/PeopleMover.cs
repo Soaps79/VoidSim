@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Assets.Placeables.Nodes;
 using Assets.Placeables.UI;
 using Assets.Scripts;
@@ -158,21 +159,27 @@ namespace Assets.Station.Population
             UberDebug.LogChannel(LogChannels.Performance, string.Format("PeopleMoverUpdate Total: {0}", elapsed));
         }
 
+        private PopContainerDetails _details = new PopContainerDetails();
+        private readonly StringBuilder _stringBuilder = new StringBuilder(255);
+
         private void MovePerson(PopContainer newContainer, Person person)
         {
             RemovePersonFromCurrentLocation(person);
 
             newContainer.AddPerson(person);
             person.CurrentlyOccupying = newContainer.Name;
-            person.CurrentActivity = newContainer.ActivityPrefix + " at " + newContainer.PlaceableName;
+            _stringBuilder.Length = 0;
+            _stringBuilder.Append(newContainer.ActivityPrefix);
+            _stringBuilder.Append(" at ");
+            _stringBuilder.Append(newContainer.PlaceableName);
+            person.CurrentActivity = _stringBuilder.ToString();
 
-            person.HandleLocationChange(new PopContainerDetails
-            {
-                Name = newContainer.Name,
-                PlaceableName = newContainer.PlaceableName,
-                Type = newContainer.Type,
-                Affectors = newContainer.Affectors.ToList()
-            });
+            _details.Name = newContainer.Name;
+            _details.PlaceableName = newContainer.PlaceableName;
+            _details.Type = newContainer.Type;
+            _details.Affectors = newContainer.Affectors;
+
+            person.HandleLocationChange(_details);
         }
 
         private void RemovePersonFromCurrentLocation(Person person)
