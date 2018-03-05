@@ -1,6 +1,7 @@
 ﻿using Assets.WorldMaterials.Population;
 using TMPro;
 using UIWidgets;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.Station.UI
@@ -23,28 +24,33 @@ namespace Assets.Station.UI
 
         public void SetData(Person item)
         {
+            ClearPerson();
             _person = item;
-            item.OnUpdate += SetPersonData;
+            _person.OnUpdate += SetPersonData;
             SetPersonData(item);
+        }
+
+        private void ClearPerson()
+        {
+            if (_person != null)
+            {
+                _person.OnUpdate -= SetPersonData;
+                _person = null;
+            }
         }
 
         private void SetPersonData(Person item)
         {
+            if(item.Id != _person.Id)
+                throw new UnityException("List PersonViewModel UI object being populated by not its owner");
             GenderText.text = item.IsMale ? "M" : "F";
             NameText.text = item.FirstName + " " + item.LastName;
             LocationText.text = item.CurrentActivity;
         }
 
-        protected override void OnDisable()
+        public override void MovedToCache()
         {
-            if(_person != null)
-                _person.OnUpdate -= SetPersonData;
-        }
-
-        protected override void OnEnable()
-        {
-            if(_person != null)
-                _person.OnUpdate += SetPersonData;
+            ClearPerson();
         }
     }
 }
