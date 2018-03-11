@@ -49,12 +49,15 @@ namespace Assets.Placeables.Nodes
             return container;
         }
 
-        public override void BroadcastPlacement()
+        public override void Initialize(PlaceableData data)
         {
             var time = Locator.WorldClock.GetSeconds(_updateTime);
             var node = StopWatch.AddNode("apply_affectors", time);
             node.OnTick += UpdatePeople;
+        }
 
+        public override void BroadcastPlacement()
+        {
             Locator.MessageHub.QueueMessage(MessageName, new PopContainerSetMessageArgs{ PopContainerSet = this });
         }
 

@@ -65,11 +65,14 @@ namespace Assets.Placeables.Nodes
 		public Action OnIsBuyingchanged;
 		public Action<Recipe> OnCraftComplete;
 
-		public override void BroadcastPlacement()
-		{
-			EfficiencyModule = GetComponent<EfficiencyNode>().Module;
-			EfficiencyModule.OnValueChanged += OnEfficiencyChanged;
+	    public override void Initialize(PlaceableData data)
+	    {
+	        EfficiencyModule = GetComponent<EfficiencyNode>().Module;
+	        EfficiencyModule.OnValueChanged += OnEfficiencyChanged;
+        }
 
+	    public override void BroadcastPlacement()
+		{
 			Locator.MessageHub.QueueMessage(MessageName, new ProductFactoryMessageArgs { ProductFactory = this });
 		}
 

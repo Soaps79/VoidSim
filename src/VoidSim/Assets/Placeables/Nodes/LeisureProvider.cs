@@ -20,19 +20,21 @@ namespace Assets.Placeables.Nodes
 		private PopContainer _container;
 		public int CurrentCapacity;
 
+	    public override void Initialize(PlaceableData data)
+	    {
+	        var containers = GetComponent<PopContainerSet>();
+	        _container = containers.CreateContainer(new PopContainerParams
+	        {
+	            Type = PopContainerType.Fulfillment,
+	            MaxCapacity = CurrentCapacity,
+	            Affectors = _containerGenerationParams.Affectors,
+	            PlaceableName = name,
+	            ActivityPrefix = _containerGenerationParams.ActivityPrefix
+	        });
+        }
 
-		public override void BroadcastPlacement()
+	    public override void BroadcastPlacement()
 		{
-			var containers = GetComponent<PopContainerSet>();
-			_container = containers.CreateContainer(new PopContainerParams
-			{
-				Type = PopContainerType.Fulfillment,
-				MaxCapacity = CurrentCapacity,
-				Affectors = _containerGenerationParams.Affectors,
-				PlaceableName = name,
-				ActivityPrefix = _containerGenerationParams.ActivityPrefix
-			});
-
 			Locator.MessageHub.QueueMessage(MessageName, new LeisureProviderMessageArgs { LeisureProvider = this });
 		}
 

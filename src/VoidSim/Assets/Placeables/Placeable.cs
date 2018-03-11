@@ -67,6 +67,7 @@ namespace Assets.Placeables
 			_nodes = GetComponents<IPlaceableNode>().ToList();
 			foreach (var node in _nodes)
 			{
+                node.Initialize(data);
 				node.BroadcastPlacement();
 			}
 		}

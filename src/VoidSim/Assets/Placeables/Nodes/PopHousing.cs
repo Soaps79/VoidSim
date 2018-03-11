@@ -56,18 +56,22 @@ namespace Assets.Placeables.Nodes
 		    CurrentCount = 0;
 		}
 
-		public override void BroadcastPlacement()
+	    public override void Initialize(PlaceableData data)
+	    {
+	        var containers = GetComponent<PopContainerSet>();
+	        _container = containers.CreateContainer(new PopContainerParams
+	        {
+	            Type = _containerGenerationParams.Type,
+	            MaxCapacity = CurrentCapacity,
+	            Reserved = CurrentCount,
+	            Affectors = _containerGenerationParams.Affectors,
+	            PlaceableName = name,
+	            ActivityPrefix = _containerGenerationParams.ActivityPrefix
+	        });
+        }
+
+	    public override void BroadcastPlacement()
 		{
-		    var containers = GetComponent<PopContainerSet>();
-		    _container = containers.CreateContainer(new PopContainerParams
-		    {
-                Type = _containerGenerationParams.Type,
-                MaxCapacity = CurrentCapacity,
-                Reserved = CurrentCount,
-                Affectors = _containerGenerationParams.Affectors,
-                PlaceableName = name,
-                ActivityPrefix = _containerGenerationParams.ActivityPrefix
-            });
 			Locator.MessageHub.QueueMessage(MessageName, new PopHousingMessageArgs { PopHome = this });
 		}
 

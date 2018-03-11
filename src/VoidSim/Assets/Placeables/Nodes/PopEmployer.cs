@@ -5,6 +5,7 @@ using Assets.Station.Efficiency;
 using Assets.WorldMaterials.Population;
 using Messaging;
 using UnityEngine;
+#pragma warning disable 649
 
 namespace Assets.Placeables.Nodes
 {
@@ -29,7 +30,7 @@ namespace Assets.Placeables.Nodes
         public int CurrentEmployeeCount;
 		public int MaxEmployeeCount;
 
-	    [SerializeField] private List<Person> _employees = new List<Person>();
+	    [SerializeField] private readonly List<Person> _employees = new List<Person>();
 		private EfficiencyAffector _countAffector;
 		public bool HasRoom {  get { return MaxEmployeeCount > CurrentEmployeeCount; } }
 
@@ -40,26 +41,29 @@ namespace Assets.Placeables.Nodes
 	    private PopContainer _container;
 	    [SerializeField] private ContainerGenerationParams _containerGenerationParams;
 
-        public override void BroadcastPlacement()
+	    public override void Initialize(PlaceableData data)
+	    {
+	        // hook into efficiency system
+	        _countAffector = new EfficiencyAffector("Employees");
+
+	        var efficiency = GetComponent<EfficiencyNode>();
+	        efficiency.Module.RegisterAffector(_countAffector);
+
+	        var containers = GetComponent<PopContainerSet>();
+	        _container = containers.CreateContainer(new PopContainerParams
+	        {
+	            Type = PopContainerType.Employment,
+	            MaxCapacity = MaxEmployeeCount,
+	            Reserved = CurrentEmployeeCount,
+	            Affectors = _containerGenerationParams.Affectors,
+	            PlaceableName = name,
+	            ActivityPrefix = _containerGenerationParams.ActivityPrefix
+	        });
+        }
+
+	    public override void BroadcastPlacement()
 		{
-			// hook into efficiency system
-			_countAffector = new EfficiencyAffector("Employees");
-
-			var efficiency = GetComponent<EfficiencyNode>();
-			efficiency.Module.RegisterAffector(_countAffector);
-
-		    var containers = GetComponent<PopContainerSet>();
-		    _container = containers.CreateContainer(new PopContainerParams
-		    {
-		        Type = PopContainerType.Employment,
-		        MaxCapacity = MaxEmployeeCount,
-		        Reserved = CurrentEmployeeCount,
-		        Affectors = _containerGenerationParams.Affectors,
-                PlaceableName = name,
-                ActivityPrefix = _containerGenerationParams.ActivityPrefix
-		    });
-
-		    Locator.MessageHub.QueueMessage(MessageName, new PopEmployerMessageArgs { PopEmployer = this });
+			Locator.MessageHub.QueueMessage(MessageName, new PopEmployerMessageArgs { PopEmployer = this });
 		}
 
 		public void RegisterMood(EfficiencyAffector affector)
