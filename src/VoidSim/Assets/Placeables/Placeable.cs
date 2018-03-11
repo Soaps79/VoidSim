@@ -35,13 +35,6 @@ namespace Assets.Placeables
 		public string InstanceName;
 		public string HardPointName;
 		public Vector3Data Position;
-		public List<PlaceableNodeData> Nodes;
-	}
-
-	public class PlaceableNodeData
-	{
-		public string NodeName;
-		public string InstanceName;
 	}
 
 	/// <summary>
@@ -85,11 +78,7 @@ namespace Assets.Placeables
 				InstanceName = name,
 				PlaceableName = PlaceableName,
 				Position = transform.position,
-				HardPointName = HardPointName,
-				Nodes = _nodes.Select(i => new PlaceableNodeData
-				{
-					NodeName = i.NodeName, InstanceName = i.Name
-				}).ToList()
+				HardPointName = HardPointName
 			};
 		}
 
