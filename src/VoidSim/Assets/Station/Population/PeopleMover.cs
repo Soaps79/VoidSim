@@ -322,9 +322,22 @@ namespace Assets.Station.Population
             
         }
 
+        private Dictionary<string, List<Person>> _deserialized;
+
         public void HandleDeserialization(List<Person> people)
         {
-            
+            _deserialized =  new Dictionary<string, List<Person>>();
+            for (int i = 0; i < people.Count; i++)
+            {
+                if (!string.IsNullOrEmpty(people[i].CurrentlyOccupying))
+                {
+                    if (!_deserialized.ContainsKey(people[i].CurrentlyOccupying))
+                    {
+                        _deserialized.Add(people[i].CurrentlyOccupying, new List<Person>());
+                    }
+                    _deserialized[people[i].CurrentlyOccupying].Add(people[i]);
+                }
+            }
         }
     }
 }

@@ -4,6 +4,12 @@ using UnityEngine;
 
 namespace Assets.Placeables.Nodes
 {
+    [Serializable]
+    public class OccupancyData
+    {
+        
+    }
+
     public class Occupancy
     {
         public Person OccupiedBy { get; private set; }

@@ -36,6 +36,12 @@ namespace Assets.Placeables.Nodes
     }
 
     [Serializable]
+    public class PopContainerData
+    {
+        
+    }
+
+    [Serializable]
     public class PopContainer
     {
         // these are left public for the editor, should never be set from outside
