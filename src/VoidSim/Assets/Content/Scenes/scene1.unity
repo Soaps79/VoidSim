@@ -1609,7 +1609,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _filename: gamesave
-  LoadOnStart: 0
+  LoadOnStart: 1
 --- !u!1 &416572257
 GameObject:
   m_ObjectHideFlags: 0

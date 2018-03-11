@@ -19,6 +19,8 @@ namespace Assets.WorldMaterials.Population
         public bool IsMale;
         public bool IsResident;
         public string Employer;
+        public string CurrentlyOccupying;
+        public int OccupancyId;
         public List<PersonNeedsData> Needs;
     }
 
@@ -86,6 +88,7 @@ namespace Assets.WorldMaterials.Population
             {
                 if (value == _firstName) return;
                 _firstName = value;
+                FullName = _firstName + " " + _lastName;
                 CheckUpdateCallback();
             }
         }
@@ -97,9 +100,12 @@ namespace Assets.WorldMaterials.Population
             {
                 if (value == _lastName) return;
                 _lastName = value;
+                FullName = _firstName + " " + _lastName;
                 CheckUpdateCallback();
             }
         }
+
+        public string FullName { get; private set; }
 
         public string Home
         {
@@ -167,6 +173,18 @@ namespace Assets.WorldMaterials.Population
             }
         }
 
+        // we do not want anything relying on this field updating, does not trigger callback like all other properties 
+        // not pretty, but occupancy will be moved to its own model when its better fleshed out
+        public int OccupancyId
+        {
+            get { return _occupancyId; }
+            set
+            {
+                if (value == _occupancyId) return;
+                _occupancyId = value;
+            }
+        }
+
         // serializing these so they're viewable in Unity editor
         [SerializeField] private int _id;
         [SerializeField] private string _firstName;
@@ -177,6 +195,7 @@ namespace Assets.WorldMaterials.Population
         [SerializeField] private string _employer;
         [SerializeField] private string _currentlyOccupying;
         [SerializeField] private string _currentActivity;
+        [SerializeField] private int _occupancyId;
         
         public readonly WantsHandler Wants = new WantsHandler();
         
@@ -202,6 +221,8 @@ namespace Assets.WorldMaterials.Population
             IsResident = data.IsResident;
             Home = data.Home;
             Employer = data.Employer;
+            CurrentlyOccupying = data.CurrentlyOccupying;
+            OccupancyId = data.OccupancyId;
         }
 
         public void SetNeeds(List<PersonNeedsValue> needs)
@@ -243,6 +264,8 @@ namespace Assets.WorldMaterials.Population
                 IsMale = IsMale,
                 IsResident = IsResident,
                 Employer = Employer,
+                CurrentlyOccupying = CurrentlyOccupying,
+                OccupancyId = OccupancyId,
                 Needs = Wants.GetData()
             };
         }

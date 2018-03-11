@@ -1,4 +1,5 @@
 ﻿using System;
+using Assets.Scripts.Serialization;
 using Assets.WorldMaterials.Population;
 using UnityEngine;
 
@@ -7,10 +8,13 @@ namespace Assets.Placeables.Nodes
     [Serializable]
     public class OccupancyData
     {
-        
+        public int OccupiedById;
+        public int ReservedById;
+        public string ReservedByName;
     }
 
-    public class Occupancy
+    [Serializable]
+    public class Occupancy : ISerializeData<OccupancyData>
     {
         public Person OccupiedBy { get; private set; }
         public bool IsOccupied { get { return OccupiedBy != null; } }
@@ -18,26 +22,60 @@ namespace Assets.Placeables.Nodes
         public int ReservedBy { get; private set; }
         public bool IsReserved { get { return ReservedBy != 0; } }
 
+        // for editor debugging
+        [SerializeField] private string _occupiedByName;
+        [SerializeField] private string _reservedByName;
+
+        public int Id { get; private set; }
+
+        public Occupancy(int id)
+        {
+            Id = id;
+        }
+
         private void CheckUpdate()
         {
             if (OnUpdate != null)
                 OnUpdate(this);
         }
 
-        // accepts null to "turn off" reserved
-        public void SetReserved(Person person)
+        public void SetReserved(int id, string name)
         {
-            ReservedBy = person != null ? person.Id : 0;
+            ReservedBy = id;
+            _reservedByName = name;
             CheckUpdate();
         }
 
-        // accepts null as "empty"
+        public void ClearReserved()
+        {
+            ReservedBy = 0;
+            _reservedByName = string.Empty;
+        }
+
         public void SetOccupant(Person person)
         {
             OccupiedBy = person;
+            _occupiedByName = person.FullName;
+            CheckUpdate();
+        }
+
+        public void ClearOccupant()
+        {
+            if (OccupiedBy == null) return;
+            OccupiedBy = null;
+            _occupiedByName = string.Empty;
             CheckUpdate();
         }
 
         public Action<Occupancy> OnUpdate;
+        public OccupancyData GetData()
+        {
+            return new OccupancyData
+            {
+                OccupiedById = OccupiedBy != null ? OccupiedBy.Id : 0,
+                ReservedById = ReservedBy,
+                ReservedByName = _reservedByName
+            };
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.Serialization;
 using Assets.WorldMaterials.Population;
 using UnityEngine;
 
@@ -21,7 +22,6 @@ namespace Assets.Placeables.Nodes
     {
         public PopContainerType Type;
         public int MaxCapacity;
-        public int Reserved;
         public string PlaceableName;
         public string ActivityPrefix;
         public List<PersonNeedsValue> Affectors = new List<PersonNeedsValue>();
@@ -38,24 +38,25 @@ namespace Assets.Placeables.Nodes
     [Serializable]
     public class PopContainerData
     {
-        
+        public string Name;
+        public List<OccupancyData> Occupancies;
     }
 
     [Serializable]
-    public class PopContainer
+    public class PopContainer : ISerializeData<PopContainerData>
     {
         // these are left public for the editor, should never be set from outside
         public PopContainerType Type;
         public int MaxCapacity;
-        public int Reserved;
         public string Name;
         public string ActivityPrefix;
         public List<Occupancy> CurrentOccupancy = new List<Occupancy>();
         public List<PersonNeedsValue> Affectors;
         public string PlaceableName;
-        [SerializeField] private bool _hasReserved;
 
-        private int _actualOccupants;
+        [SerializeField] private bool _hasReserved;
+        [SerializeField] private int _reservedCount;
+        [SerializeField] private int _actualOccupants;
         public bool HasRoom { get { return _actualOccupants < MaxCapacity; } }
 
         public Action OnUpdate;
@@ -69,7 +70,6 @@ namespace Assets.Placeables.Nodes
         {
             Type = param.Type;
             MaxCapacity = param.MaxCapacity;
-            Reserved = param.Reserved;
             PlaceableName = param.PlaceableName;
             Affectors = param.Affectors;
             ActivityPrefix = param.ActivityPrefix;
@@ -91,9 +91,11 @@ namespace Assets.Placeables.Nodes
 
         private void EstablishOccupancy()
         {
+            var currentId = 0;
             for (int i = 0; i < MaxCapacity; i++)
             {
-                CurrentOccupancy.Add(new Occupancy());
+                currentId++;
+                CurrentOccupancy.Add(new Occupancy(currentId));
             }
         }
 
@@ -101,7 +103,8 @@ namespace Assets.Placeables.Nodes
         {
             var unoccupied = CurrentOccupancy.FirstOrDefault(i => !i.IsReserved);
             if (unoccupied == null) return;
-            unoccupied.SetReserved(person);
+            unoccupied.SetReserved(person.Id, person.FullName);
+            _reservedCount++;
             _hasReserved = true;
         }
 
@@ -123,9 +126,17 @@ namespace Assets.Placeables.Nodes
                 return;
 
             occupancy.SetOccupant(person);
+            person.OccupancyId = occupancy.Id;
             _actualOccupants++;
 
             CheckUpdate();
+        }
+
+        public void ResumePerson(Person person)
+        {
+            var occupancy = CurrentOccupancy.FirstOrDefault(i => i.Id == person.OccupancyId);
+            if (occupancy == null) return;
+            occupancy.SetOccupant(person);
         }
 
         public void RemovePerson(Person person)
@@ -133,7 +144,7 @@ namespace Assets.Placeables.Nodes
             var occupied = CurrentOccupancy.FirstOrDefault(i => i.OccupiedBy == person);
             if (occupied == null) return;
 
-            occupied.SetOccupant(null);
+            occupied.ClearOccupant();
             _actualOccupants--;
 
             CheckUpdate();
@@ -144,9 +155,30 @@ namespace Assets.Placeables.Nodes
             var occupancy = CurrentOccupancy.FirstOrDefault(i => i.ReservedBy == person.Id);
             if (occupancy != null)
             {
-                occupancy.SetReserved(null);
+                occupancy.ClearReserved();
+                _reservedCount--;
                 CheckUpdate();
             }
+        }
+
+        public void SetFromData(PopContainerData data)
+        {
+            if(data.Occupancies.Count != CurrentOccupancy.Count)
+                throw new UnityException("PopContainer occupants count does not match the one from data");
+
+            for (int i = 0; i < data.Occupancies.Count; i++)
+            {
+                CurrentOccupancy[i].SetReserved(data.Occupancies[i].OccupiedById, data.Occupancies[i].ReservedByName);
+            }
+        }
+
+        public PopContainerData GetData()
+        {
+            return new PopContainerData
+            {
+                Name = Name,
+                Occupancies = CurrentOccupancy.Select(i => i.GetData()).ToList()
+            };
         }
     }
 }

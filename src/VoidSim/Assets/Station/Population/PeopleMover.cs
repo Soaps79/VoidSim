@@ -276,6 +276,7 @@ namespace Assets.Station.Population
                     {
                         _employerContainers.Add(container.PlaceableName, container);
                     }
+
                     // hold all service
                     else
                     {
@@ -289,6 +290,16 @@ namespace Assets.Station.Population
                                     Value = affector.Value
                                 });
                         }
+                    }
+
+                    // check for any deserialized people that need placement
+                    if (_deserialized.Any() && _deserialized.ContainsKey(container.Name))
+                    {
+                        foreach (var person in _deserialized[container.Name])
+                        {
+                            container.AddPerson(person);
+                        }
+                        _deserialized.Remove(container.Name);
                     }
                 }
             }
@@ -322,11 +333,10 @@ namespace Assets.Station.Population
             
         }
 
-        private Dictionary<string, List<Person>> _deserialized;
+        private readonly Dictionary<string, List<Person>> _deserialized = new Dictionary<string, List<Person>>();
 
         public void HandleDeserialization(List<Person> people)
         {
-            _deserialized =  new Dictionary<string, List<Person>>();
             for (int i = 0; i < people.Count; i++)
             {
                 if (!string.IsNullOrEmpty(people[i].CurrentlyOccupying))

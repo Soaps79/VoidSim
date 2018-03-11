@@ -54,7 +54,6 @@ namespace Assets.Placeables.Nodes
 	        {
 	            Type = PopContainerType.Employment,
 	            MaxCapacity = MaxEmployeeCount,
-	            Reserved = CurrentEmployeeCount,
 	            Affectors = _containerGenerationParams.Affectors,
 	            PlaceableName = name,
 	            ActivityPrefix = _containerGenerationParams.ActivityPrefix

@@ -6,6 +6,7 @@ namespace Assets.Placeables
 	public interface IPlaceableNode
 	{
 	    void Initialize(PlaceableData data);
+	    void AddToData(PlaceableData data);
 		void BroadcastPlacement();
 		string NodeName { get; }
 		void HandleRemove();
@@ -27,6 +28,8 @@ namespace Assets.Placeables
 		}
 
 	    public virtual void Initialize(PlaceableData data) { }
+	    public virtual void AddToData(PlaceableData data) { }
+
 	    public abstract void BroadcastPlacement();
 	    public abstract string NodeName { get; }
 

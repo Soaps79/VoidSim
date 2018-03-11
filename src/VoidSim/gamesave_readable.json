@@ -15,14 +15,18 @@
     },
     {
       "Name": "transit_entry",
-      "LastId": 2
+      "LastId": 16
     },
     {
       "Name": "sm_factory",
       "LastId": 1
     },
     {
-      "Name": "sm_bays",
+      "Name": "trade_manifest",
+      "LastId": 1
+    },
+    {
+      "Name": "manifest",
       "LastId": 1
     }
   ]
@@ -30,99 +34,82 @@
   "ShipGenerator": {
   "Ships": [
     {
-      "ShipName": "ship_3",
-      "SOName": "sm_cargo_1",
-      "TimeRemaining": 21.8422146
-    },
-    {
-      "ShipName": "ship_4",
-      "SOName": "sm_cargo_1",
-      "TimeRemaining": 49.8422165
-    },
-    {
-      "ShipName": "ship_5",
-      "SOName": "sm_cargo_3",
-      "TimeRemaining": 65.84222
-    },
-    {
-      "ShipName": "ship_6",
-      "SOName": "sm_cargo_1",
-      "TimeRemaining": 83.84222
-    },
-    {
       "ShipName": "ship_7",
       "SOName": "sm_cargo_2",
-      "TimeRemaining": 127.842216
+      "TimeRemaining": 24.1518021
     },
     {
       "ShipName": "ship_8",
       "SOName": "sm_cargo_1",
-      "TimeRemaining": 149.842209
+      "TimeRemaining": 46.1518021
     }
   ],
   "LastId": 8
 },
   "TrafficControl": {
-  "Berths": [
-    {
-      "ShipSize": "Corvette",
-      "State": "Reserved",
-      "IsInUse": true,
-      "Name": "sm_bays_1_1"
-    },
-    {
-      "ShipSize": "Corvette",
-      "State": "Empty",
-      "IsInUse": false,
-      "Name": "sm_bays_1_2"
-    },
-    {
-      "ShipSize": "Corvette",
-      "State": "Empty",
-      "IsInUse": false,
-      "Name": "sm_bays_1_3"
-    },
-    {
-      "ShipSize": "Corvette",
-      "State": "Empty",
-      "IsInUse": false,
-      "Name": "sm_bays_1_4"
-    },
-    {
-      "ShipSize": "Corvette",
-      "State": "Empty",
-      "IsInUse": false,
-      "Name": "sm_bays_1_5"
-    },
-    {
-      "ShipSize": "Corvette",
-      "State": "Empty",
-      "IsInUse": false,
-      "Name": "sm_bays_1_6"
-    },
-    {
-      "ShipSize": "Corvette",
-      "State": "Empty",
-      "IsInUse": false,
-      "Name": "sm_bays_1_7"
-    },
-    {
-      "ShipSize": "Corvette",
-      "State": "Empty",
-      "IsInUse": false,
-      "Name": "sm_bays_1_8"
-    }
-  ]
+  "Berths": []
 },
   "ShipMonitor": {
   "Ships": [
     {
       "Name": "ship_1",
       "SOName": "sm_cargo_1",
-      "Status": "Traffic",
+      "Status": "Hold",
       "Ticker": {
         "TotalTicks": 14.4000006,
-        "ElapsedTicks": 14.4058056
+        "ElapsedTicks": 7.47922
+      },
+      "Navigation": {
+        "Locations": [
+          "Void",
+          "Station"
+        ],
+        "LastDeparted": "Station",
+        "CurrentDestination": "Void"
+      },
+      "ManifestBook": {
+        "Manifests": [
+          {
+            "Id": 1,
+            "Buyer": "Station",
+            "Seller": "Void",
+            "ProductId": 8,
+            "ProductAmount": 10,
+            "Currency": 0,
+            "TradeManifestId": 1
+          }
+        ]
+      },
+      "TrafficShipData": null
+    },
+    {
+      "Name": "ship_2",
+      "SOName": "sm_cargo_2",
+      "Status": "Transit",
+      "Ticker": {
+        "TotalTicks": 14.4000006,
+        "ElapsedTicks": 2.88776946
+      },
+      "Navigation": {
+        "Locations": [
+          "Void",
+          "Station"
+        ],
+        "LastDeparted": "Station",
+        "CurrentDestination": "Void"
+      },
+      "ManifestBook": {
+        "Manifests": []
+      },
+      "TrafficShipData": null
+    },
+    {
+      "Name": "ship_3",
+      "SOName": "sm_cargo_1",
+      "Status": "Hold",
+      "Ticker": {
+        "TotalTicks": 21.6,
+        "ElapsedTicks": 2.54812574
       },
       "Navigation": {
         "Locations": [
@@ -135,60 +122,57 @@
       "ManifestBook": {
         "Manifests": []
       },
-      "TrafficShipData": {
-        "Phase": "Approaching",
-        "Position": {
-          "X": -275.7347,
-          "Y": -31.8942814,
-          "Z": 0.262160927
-        },
-        "Rotation": {
-          "X": 0.000305115129,
-          "Y": -8.065953E-06,
-          "Z": 0.0264265351,
-          "W": 0.9996507
-        },
-        "TargetRotation": {
-          "X": 0.0,
-          "Y": 0.0,
-          "Z": 0.0
-        },
-        "StartingDistance": 385.896118,
-        "TravelTime": 27.9041977,
-        "ApproachFromLeft": true,
-        "BerthName": "sm_bays_1_1",
-        "Waypoints": [
-          {
-            "X": -376.749878,
-            "Y": -37.43293,
-            "Z": 0.0
-          },
-          {
-            "X": 8.567462,
-            "Y": -16.3060265,
-            "Z": 1.0
-          },
-          {
-            "X": 393.850128,
-            "Y": -13.1350088,
-            "Z": 0.0
-          }
-        ],
-        "LocalScale": {
-          "X": 0.901552737,
-          "Y": 0.901552737,
-          "Z": 0.0
-        },
-        "ElapsedMovement": 4.683568
-      }
+      "TrafficShipData": null
     },
     {
-      "Name": "ship_2",
-      "SOName": "sm_cargo_2",
+      "Name": "ship_4",
+      "SOName": "sm_cargo_1",
+      "Status": "Hold",
+      "Ticker": {
+        "TotalTicks": 14.4000006,
+        "ElapsedTicks": 3.33903956
+      },
+      "Navigation": {
+        "Locations": [
+          "Void",
+          "Station"
+        ],
+        "LastDeparted": "Station",
+        "CurrentDestination": "Void"
+      },
+      "ManifestBook": {
+        "Manifests": []
+      },
+      "TrafficShipData": null
+    },
+    {
+      "Name": "ship_5",
+      "SOName": "sm_cargo_3",
       "Status": "Transit",
       "Ticker": {
         "TotalTicks": 14.4000006,
-        "ElapsedTicks": 0.103253394
+        "ElapsedTicks": 1.64522135
+      },
+      "Navigation": {
+        "Locations": [
+          "Void",
+          "Station"
+        ],
+        "LastDeparted": "Station",
+        "CurrentDestination": "Void"
+      },
+      "ManifestBook": {
+        "Manifests": []
+      },
+      "TrafficShipData": null
+    },
+    {
+      "Name": "ship_6",
+      "SOName": "sm_cargo_1",
+      "Status": "Hold",
+      "Ticker": {
+        "TotalTicks": 21.6,
+        "ElapsedTicks": 5.34346771
       },
       "Navigation": {
         "Locations": [
@@ -206,7 +190,19 @@
   ]
 },
   "TradeMonitor": {
-  "Manifests": []
+  "Manifests": [
+    {
+      "Id": 1,
+      "Provider": "Void",
+      "Consumer": "Station",
+      "ProductId": 8,
+      "CreditsTotal": 0,
+      "CreditsComplete": 0,
+      "AmountTotal": 10,
+      "AmountComplete": 0,
+      "Status": "Accepted"
+    }
+  ]
 },
   "StationInventory": {
   "Products": [
@@ -242,7 +238,7 @@
     },
     {
       "ProductName": "Energy",
-      "Amount": 498,
+      "Amount": 489,
       "MaxAmount": 1000000
     },
     {
@@ -257,12 +253,12 @@
     },
     {
       "ProductName": "Food",
-      "Amount": 194,
+      "Amount": 166,
       "MaxAmount": 10000
     },
     {
       "ProductName": "Water",
-      "Amount": 194,
+      "Amount": 166,
       "MaxAmount": 10000
     }
   ],
@@ -278,6 +274,10 @@
     {
       "Id": 4,
       "PlaceableName": "Small Housing"
+    },
+    {
+      "Id": 5,
+      "PlaceableName": "Small Bays"
     },
     {
       "Id": 6,
@@ -297,385 +297,425 @@
   "PopulationControl": {
   "CurrentCount": 20,
   "Capacity": 0,
-  "InboundPopulation": 0,
+  "InboundPopulation": 10,
   "Population": [
     {
       "Id": 1,
-      "FirstName": "Dominique",
-      "LastName": "Ashley",
+      "FirstName": "Lila",
+      "LastName": "Greene",
       "Home": "base_housing_1",
       "IsMale": false,
       "IsResident": true,
       "Employer": "sm_factory_1",
+      "CurrentlyOccupying": "base_housing_1_fulfillment",
+      "OccupancyId": 20,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.224610329
+          "CurrentValue": 0.7701067
         },
         {
           "Type": 1,
-          "CurrentValue": 0.338620842
+          "CurrentValue": 0.255615979
         }
       ]
     },
     {
       "Id": 2,
-      "FirstName": "Gloria",
-      "LastName": "Newman",
+      "FirstName": "Jelani",
+      "LastName": "Ashley",
       "Home": "base_housing_1",
-      "IsMale": false,
+      "IsMale": true,
       "IsResident": true,
       "Employer": "sm_factory_1",
+      "CurrentlyOccupying": "base_housing_1_fulfillment",
+      "OccupancyId": 1,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.347526073
+          "CurrentValue": 0.187460661
         },
         {
           "Type": 1,
-          "CurrentValue": 0.449604154
+          "CurrentValue": 0.299613535
         }
       ]
     },
     {
       "Id": 3,
-      "FirstName": "Jelani",
-      "LastName": "Parks",
+      "FirstName": "Nasim",
+      "LastName": "Newman",
       "Home": "base_housing_1",
       "IsMale": true,
       "IsResident": true,
       "Employer": "sm_factory_1",
+      "CurrentlyOccupying": "base_housing_1_fulfillment",
+      "OccupancyId": 8,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.559143364
+          "CurrentValue": 0.08
         },
         {
           "Type": 1,
-          "CurrentValue": 0.5010477
+          "CurrentValue": 0.2521602
         }
       ]
     },
     {
       "Id": 4,
-      "FirstName": "Nasim",
-      "LastName": "Solomon",
-      "Home": null,
-      "IsMale": true,
+      "FirstName": "Fallon",
+      "LastName": "Parks",
+      "Home": "base_housing_1",
+      "IsMale": false,
       "IsResident": true,
       "Employer": "sm_factory_1",
+      "CurrentlyOccupying": "base_housing_1_fulfillment",
+      "OccupancyId": 9,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.4747349
+          "CurrentValue": 0.279999971
         },
         {
           "Type": 1,
-          "CurrentValue": 0.292623043
+          "CurrentValue": 0.65972656
         }
       ]
     },
     {
       "Id": 5,
-      "FirstName": "Richard",
+      "FirstName": "Acton",
       "LastName": "Richards",
       "Home": "base_housing_1",
       "IsMale": true,
       "IsResident": true,
       "Employer": "sm_factory_1",
+      "CurrentlyOccupying": "base_housing_1_fulfillment",
+      "OccupancyId": 10,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.247496411
+          "CurrentValue": 0.09687868
         },
         {
           "Type": 1,
-          "CurrentValue": 0.536638439
+          "CurrentValue": 0.5787413
         }
       ]
     },
     {
       "Id": 6,
-      "FirstName": "Forrest",
-      "LastName": "Hammond",
+      "FirstName": "Octavia",
+      "LastName": "Sweeney",
       "Home": "base_housing_1",
-      "IsMale": true,
+      "IsMale": false,
       "IsResident": true,
       "Employer": "sm_factory_1",
+      "CurrentlyOccupying": "base_housing_1_fulfillment",
+      "OccupancyId": 15,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.3356602
+          "CurrentValue": 0.327187449
         },
         {
           "Type": 1,
-          "CurrentValue": 0.3536129
+          "CurrentValue": 0.620469332
         }
       ]
     },
     {
       "Id": 7,
-      "FirstName": "Colette",
-      "LastName": "Contreras",
+      "FirstName": "Gannon",
+      "LastName": "Kirk",
       "Home": "base_housing_1",
-      "IsMale": false,
+      "IsMale": true,
       "IsResident": true,
-      "Employer": "sm_bays_1",
+      "Employer": "sm_factory_1",
+      "CurrentlyOccupying": "sm_factory_1_employment",
+      "OccupancyId": 7,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.04
+          "CurrentValue": 0.1854617
         },
         {
           "Type": 1,
-          "CurrentValue": 0.515766263
+          "CurrentValue": 0.3414685
         }
       ]
     },
     {
       "Id": 8,
-      "FirstName": "Elvis",
-      "LastName": "Everett",
+      "FirstName": "Neville",
+      "LastName": "Hammond",
       "Home": "base_housing_1",
       "IsMale": true,
       "IsResident": true,
-      "Employer": "sm_bays_1",
+      "Employer": "sm_factory_1",
+      "CurrentlyOccupying": "base_housing_1_fulfillment",
+      "OccupancyId": 11,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.04
+          "CurrentValue": 0.450000674
         },
         {
           "Type": 1,
-          "CurrentValue": 0.520158648
+          "CurrentValue": 0.191140443
         }
       ]
     },
     {
       "Id": 9,
-      "FirstName": "Bell",
-      "LastName": "Witt",
+      "FirstName": "Mira",
+      "LastName": "Walls",
       "Home": "base_housing_1",
       "IsMale": false,
       "IsResident": true,
       "Employer": "sm_factory_1",
+      "CurrentlyOccupying": "sm_factory_1_employment",
+      "OccupancyId": 9,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.8225988
+          "CurrentValue": 0.370000631
         },
         {
           "Type": 1,
-          "CurrentValue": 0.6133124
+          "CurrentValue": 0.133670449
         }
       ]
     },
     {
       "Id": 10,
-      "FirstName": "Ava",
+      "FirstName": "Bell",
       "LastName": "Decker",
       "Home": "base_housing_1",
       "IsMale": false,
       "IsResident": true,
-      "Employer": "sm_bays_1",
+      "Employer": "sm_factory_1",
+      "CurrentlyOccupying": "sm_factory_1_employment",
+      "OccupancyId": 10,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.0
+          "CurrentValue": 0.5100007
         },
         {
           "Type": 1,
-          "CurrentValue": 0.84335506
+          "CurrentValue": 0.35015136
         }
       ]
     },
     {
       "Id": 11,
-      "FirstName": "Jorden",
-      "LastName": "Reid",
+      "FirstName": "Ava",
+      "LastName": "Powers",
       "Home": "base_housing_1",
       "IsMale": false,
       "IsResident": true,
       "Employer": null,
+      "CurrentlyOccupying": "base_housing_1_fulfillment",
+      "OccupancyId": 16,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.6991241
+          "CurrentValue": 1.25
         },
         {
           "Type": 1,
-          "CurrentValue": 0.492548048
+          "CurrentValue": 0.9149047
         }
       ]
     },
     {
       "Id": 12,
-      "FirstName": "Octavius",
-      "LastName": "Donaldson",
+      "FirstName": "Zachary",
+      "LastName": "Peterson",
       "Home": "base_housing_1",
       "IsMale": true,
       "IsResident": true,
       "Employer": null,
+      "CurrentlyOccupying": "base_housing_1_fulfillment",
+      "OccupancyId": 4,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.7521448
+          "CurrentValue": 1.25
         },
         {
           "Type": 1,
-          "CurrentValue": 0.342396021
+          "CurrentValue": 1.25
         }
       ]
     },
     {
       "Id": 13,
-      "FirstName": "Grant",
-      "LastName": "Baxter",
+      "FirstName": "Beck",
+      "LastName": "Perkins",
       "Home": "base_housing_1",
       "IsMale": true,
       "IsResident": true,
       "Employer": null,
+      "CurrentlyOccupying": "base_housing_1_fulfillment",
+      "OccupancyId": 2,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.642950058
+          "CurrentValue": 1.25
         },
         {
           "Type": 1,
-          "CurrentValue": 0.9021363
+          "CurrentValue": 1.19819713
         }
       ]
     },
     {
       "Id": 14,
-      "FirstName": "Troy",
-      "LastName": "Murray",
-      "Home": "base_housing_1",
-      "IsMale": true,
-      "IsResident": true,
-      "Employer": null,
-      "Needs": [
-        {
-          "Type": 0,
-          "CurrentValue": 0.5031905
-        },
-        {
-          "Type": 1,
-          "CurrentValue": 0.6403244
-        }
-      ]
-    },
-    {
-      "Id": 15,
-      "FirstName": "Neville",
+      "FirstName": "Charles",
       "LastName": "Pena",
       "Home": "base_housing_1",
       "IsMale": true,
       "IsResident": true,
       "Employer": null,
+      "CurrentlyOccupying": "base_housing_1_fulfillment",
+      "OccupancyId": 5,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.5586049
+          "CurrentValue": 1.25
         },
         {
           "Type": 1,
-          "CurrentValue": 0.5666982
+          "CurrentValue": 1.25
+        }
+      ]
+    },
+    {
+      "Id": 15,
+      "FirstName": "Phillip",
+      "LastName": "Alston",
+      "Home": "base_housing_1",
+      "IsMale": true,
+      "IsResident": true,
+      "Employer": null,
+      "CurrentlyOccupying": "base_housing_1_fulfillment",
+      "OccupancyId": 14,
+      "Needs": [
+        {
+          "Type": 0,
+          "CurrentValue": 1.25
+        },
+        {
+          "Type": 1,
+          "CurrentValue": 1.25
         }
       ]
     },
     {
       "Id": 16,
-      "FirstName": "Ciara",
-      "LastName": "Griffin",
+      "FirstName": "Davis",
+      "LastName": "Bond",
       "Home": "base_housing_1",
-      "IsMale": false,
+      "IsMale": true,
       "IsResident": true,
       "Employer": null,
+      "CurrentlyOccupying": "base_housing_1_fulfillment",
+      "OccupancyId": 6,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.470264316
+          "CurrentValue": 1.25
         },
         {
           "Type": 1,
-          "CurrentValue": 0.892622948
+          "CurrentValue": 0.9270525
         }
       ]
     },
     {
       "Id": 17,
-      "FirstName": "Aquila",
-      "LastName": "Nielsen",
+      "FirstName": "Deacon",
+      "LastName": "Hicks",
       "Home": "base_housing_1",
       "IsMale": true,
       "IsResident": true,
       "Employer": null,
+      "CurrentlyOccupying": "base_housing_1_fulfillment",
+      "OccupancyId": 3,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.7581654
+          "CurrentValue": 1.25
         },
         {
           "Type": 1,
-          "CurrentValue": 0.5735016
+          "CurrentValue": 1.25
         }
       ]
     },
     {
       "Id": 18,
-      "FirstName": "Tiger",
-      "LastName": "Goff",
+      "FirstName": "Susan",
+      "LastName": "Holman",
       "Home": "base_housing_1",
-      "IsMale": true,
+      "IsMale": false,
       "IsResident": true,
       "Employer": null,
+      "CurrentlyOccupying": "base_housing_1_fulfillment",
+      "OccupancyId": 7,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.448011041
+          "CurrentValue": 1.25
         },
         {
           "Type": 1,
-          "CurrentValue": 0.416297466
+          "CurrentValue": 1.0868926
         }
       ]
     },
     {
       "Id": 19,
-      "FirstName": "Beck",
-      "LastName": "Holman",
+      "FirstName": "Bethany",
+      "LastName": "Duke",
       "Home": "base_housing_1",
-      "IsMale": true,
+      "IsMale": false,
       "IsResident": true,
       "Employer": null,
+      "CurrentlyOccupying": "base_housing_1_fulfillment",
+      "OccupancyId": 19,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.7437904
+          "CurrentValue": 1.25
         },
         {
           "Type": 1,
-          "CurrentValue": 0.6402731
+          "CurrentValue": 0.856315434
         }
       ]
     },
     {
       "Id": 20,
-      "FirstName": "Christen",
-      "LastName": "Cummings",
+      "FirstName": "Ciara",
+      "LastName": "Holden",
       "Home": "base_housing_1",
       "IsMale": false,
       "IsResident": true,
       "Employer": null,
+      "CurrentlyOccupying": "base_housing_1_fulfillment",
+      "OccupancyId": 18,
       "Needs": [
         {
           "Type": 0,
-          "CurrentValue": 0.6381581
+          "CurrentValue": 1.25
         },
         {
           "Type": 1,
-          "CurrentValue": 0.4914884
+          "CurrentValue": 1.12386286
         }
       ]
     }
@@ -756,76 +796,234 @@
         "Y": -0.6960325,
         "Z": 1.0
       },
-      "Nodes": [
-        {
-          "NodeName": "PopContainerSet",
-          "InstanceName": "base_housing_1"
-        },
-        {
-          "NodeName": "PopHousing",
-          "InstanceName": "base_housing_1"
-        }
-      ]
+      "PopContainerData": {
+        "Containers": [
+          {
+            "Name": "base_housing_1_fulfillment",
+            "Occupancies": [
+              {
+                "OccupiedById": 2,
+                "ReservedById": 2,
+                "ReservedByName": "Jelani Ashley"
+              },
+              {
+                "OccupiedById": 13,
+                "ReservedById": 13,
+                "ReservedByName": "Beck Perkins"
+              },
+              {
+                "OccupiedById": 17,
+                "ReservedById": 17,
+                "ReservedByName": "Deacon Hicks"
+              },
+              {
+                "OccupiedById": 12,
+                "ReservedById": 12,
+                "ReservedByName": "Zachary Peterson"
+              },
+              {
+                "OccupiedById": 14,
+                "ReservedById": 14,
+                "ReservedByName": "Charles Pena"
+              },
+              {
+                "OccupiedById": 16,
+                "ReservedById": 16,
+                "ReservedByName": "Davis Bond"
+              },
+              {
+                "OccupiedById": 18,
+                "ReservedById": 18,
+                "ReservedByName": "Susan Holman"
+              },
+              {
+                "OccupiedById": 3,
+                "ReservedById": 3,
+                "ReservedByName": "Nasim Newman"
+              },
+              {
+                "OccupiedById": 4,
+                "ReservedById": 4,
+                "ReservedByName": "Fallon Parks"
+              },
+              {
+                "OccupiedById": 5,
+                "ReservedById": 5,
+                "ReservedByName": "Acton Richards"
+              },
+              {
+                "OccupiedById": 8,
+                "ReservedById": 8,
+                "ReservedByName": "Neville Hammond"
+              },
+              {
+                "OccupiedById": 0,
+                "ReservedById": 7,
+                "ReservedByName": "Gannon Kirk"
+              },
+              {
+                "OccupiedById": 0,
+                "ReservedById": 9,
+                "ReservedByName": "Mira Walls"
+              },
+              {
+                "OccupiedById": 15,
+                "ReservedById": 15,
+                "ReservedByName": "Phillip Alston"
+              },
+              {
+                "OccupiedById": 6,
+                "ReservedById": 6,
+                "ReservedByName": "Octavia Sweeney"
+              },
+              {
+                "OccupiedById": 11,
+                "ReservedById": 11,
+                "ReservedByName": "Ava Powers"
+              },
+              {
+                "OccupiedById": 0,
+                "ReservedById": 10,
+                "ReservedByName": "Bell Decker"
+              },
+              {
+                "OccupiedById": 20,
+                "ReservedById": 20,
+                "ReservedByName": "Ciara Holden"
+              },
+              {
+                "OccupiedById": 19,
+                "ReservedById": 19,
+                "ReservedByName": "Bethany Duke"
+              },
+              {
+                "OccupiedById": 1,
+                "ReservedById": 1,
+                "ReservedByName": "Lila Greene"
+              },
+              {
+                "OccupiedById": 0,
+                "ReservedById": 0,
+                "ReservedByName": null
+              },
+              {
+                "OccupiedById": 0,
+                "ReservedById": 0,
+                "ReservedByName": null
+              },
+              {
+                "OccupiedById": 0,
+                "ReservedById": 0,
+                "ReservedByName": null
+              },
+              {
+                "OccupiedById": 0,
+                "ReservedById": 0,
+                "ReservedByName": null
+              },
+              {
+                "OccupiedById": 0,
+                "ReservedById": 0,
+                "ReservedByName": null
+              },
+              {
+                "OccupiedById": 0,
+                "ReservedById": 0,
+                "ReservedByName": null
+              },
+              {
+                "OccupiedById": 0,
+                "ReservedById": 0,
+                "ReservedByName": null
+              },
+              {
+                "OccupiedById": 0,
+                "ReservedById": 0,
+                "ReservedByName": null
+              },
+              {
+                "OccupiedById": 0,
+                "ReservedById": 0,
+                "ReservedByName": null
+              },
+              {
+                "OccupiedById": 0,
+                "ReservedById": 0,
+                "ReservedByName": null
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "PlaceableName": "Small Factory",
       "InstanceName": "sm_factory_1",
       "HardPointName": "hardpoint_top_2",
       "Position": {
-        "X": -15.9336081,
-        "Y": 12.8413286,
+        "X": -15.3516226,
+        "Y": 12.0039558,
         "Z": 1.0
       },
-      "Nodes": [
-        {
-          "NodeName": "EnergyConsumer",
-          "InstanceName": "sm_factory_1"
-        },
-        {
-          "NodeName": "ProductFactory",
-          "InstanceName": "sm_factory_1"
-        },
-        {
-          "NodeName": "efficency",
-          "InstanceName": "sm_factory_1"
-        },
-        {
-          "NodeName": "PopEmployer",
-          "InstanceName": "sm_factory_1"
-        },
-        {
-          "NodeName": "PopContainerSet",
-          "InstanceName": "sm_factory_1"
-        }
-      ]
-    },
-    {
-      "PlaceableName": "Small Bays",
-      "InstanceName": "sm_bays_1",
-      "HardPointName": "hardpoint_bot_2",
-      "Position": {
-        "X": 9.648462,
-        "Y": -17.2960262,
-        "Z": 1.0
-      },
-      "Nodes": [
-        {
-          "NodeName": "ShipBay",
-          "InstanceName": "sm_bays_1"
-        },
-        {
-          "NodeName": "efficency",
-          "InstanceName": "sm_bays_1"
-        },
-        {
-          "NodeName": "PopEmployer",
-          "InstanceName": "sm_bays_1"
-        },
-        {
-          "NodeName": "PopContainerSet",
-          "InstanceName": "sm_bays_1"
-        }
-      ]
+      "PopContainerData": {
+        "Containers": [
+          {
+            "Name": "sm_factory_1_employment",
+            "Occupancies": [
+              {
+                "OccupiedById": 0,
+                "ReservedById": 1,
+                "ReservedByName": "Lila Greene"
+              },
+              {
+                "OccupiedById": 0,
+                "ReservedById": 2,
+                "ReservedByName": "Jelani Ashley"
+              },
+              {
+                "OccupiedById": 0,
+                "ReservedById": 3,
+                "ReservedByName": "Nasim Newman"
+              },
+              {
+                "OccupiedById": 0,
+                "ReservedById": 4,
+                "ReservedByName": "Fallon Parks"
+              },
+              {
+                "OccupiedById": 0,
+                "ReservedById": 5,
+                "ReservedByName": "Acton Richards"
+              },
+              {
+                "OccupiedById": 0,
+                "ReservedById": 6,
+                "ReservedByName": "Octavia Sweeney"
+              },
+              {
+                "OccupiedById": 7,
+                "ReservedById": 7,
+                "ReservedByName": "Gannon Kirk"
+              },
+              {
+                "OccupiedById": 0,
+                "ReservedById": 8,
+                "ReservedByName": "Neville Hammond"
+              },
+              {
+                "OccupiedById": 9,
+                "ReservedById": 9,
+                "ReservedByName": "Mira Walls"
+              },
+              {
+                "OccupiedById": 10,
+                "ReservedById": 10,
+                "ReservedByName": "Bell Decker"
+              }
+            ]
+          }
+        ]
+      }
     }
   ]
 },

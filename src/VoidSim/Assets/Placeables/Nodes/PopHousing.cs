@@ -63,7 +63,6 @@ namespace Assets.Placeables.Nodes
 	        {
 	            Type = _containerGenerationParams.Type,
 	            MaxCapacity = CurrentCapacity,
-	            Reserved = CurrentCount,
 	            Affectors = _containerGenerationParams.Affectors,
 	            PlaceableName = name,
 	            ActivityPrefix = _containerGenerationParams.ActivityPrefix

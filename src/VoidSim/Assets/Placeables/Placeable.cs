@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Assets.Controllers.GUI;
+using Assets.Placeables.Nodes;
 using Assets.Placeables.Placement;
 using Assets.Placeables.UI;
 using Assets.Scripts;
@@ -29,12 +29,16 @@ namespace Assets.Placeables
 		public LayerType Layer;
 	}
 
+    // specific fields for a node type, as well as polling each of them for the data (not done anywhere else), is not ideal
+    // however, the serialization system itself needs for each of these to be a full type
+    // this should get another pass once placeables/nodes/modules have been fleshed out further
 	public class PlaceableData
 	{
 		public string PlaceableName;
 		public string InstanceName;
 		public string HardPointName;
 		public Vector3Data Position;
+	    public PopContainerSetData PopContainerData;
 	}
 
 	/// <summary>
@@ -74,13 +78,16 @@ namespace Assets.Placeables
 
 		public PlaceableData GetData()
 		{
-			return new PlaceableData
+			var data = new PlaceableData
 			{
 				InstanceName = name,
 				PlaceableName = PlaceableName,
 				Position = transform.position,
 				HardPointName = HardPointName
 			};
+
+            _nodes.ForEach(i => i.AddToData(data));
+		    return data;
 		}
 
 		public void OnPointerClick(PointerEventData eventData)

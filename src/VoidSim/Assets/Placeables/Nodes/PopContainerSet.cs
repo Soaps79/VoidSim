@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts;
+using Assets.Scripts.Serialization;
 using Messaging;
 using UnityEngine;
 
@@ -11,11 +13,16 @@ namespace Assets.Placeables.Nodes
         public PopContainerSet PopContainerSet;
     }
 
+    public class PopContainerSetData
+    {
+        public List<PopContainerData> Containers;
+    }
+
     /// <summary>
     /// Provides containers for a Person's physical presence
     /// Placeables like the Lounge, where you will have both workers and patrons, require 2 groupings
     /// </summary>
-    public class PopContainerSet : PlaceableNode<PopContainerSet>
+    public class PopContainerSet : PlaceableNode<PopContainerSet>, ISerializeData<PopContainerSetData>
     {
         // for early debugging in editor
         [SerializeField] private PopContainer _employmentContainer;
@@ -43,17 +50,34 @@ namespace Assets.Placeables.Nodes
             {
                 _serviceContainer = container;
             }
+
+            if (_deserialized.ContainsKey(container.Name))
+            {
+                container.SetFromData(_deserialized[container.Name]);
+                _deserialized.Remove(container.Name);
+            }
+
             Containers.Add(container);
 
             if (OnContainersUpdated != null) OnContainersUpdated(Containers);
             return container;
         }
 
+        private readonly Dictionary<string, PopContainerData> _deserialized = new Dictionary<string, PopContainerData>();
+
         public override void Initialize(PlaceableData data)
         {
             var time = Locator.WorldClock.GetSeconds(_updateTime);
             var node = StopWatch.AddNode("apply_affectors", time);
             node.OnTick += UpdatePeople;
+
+            if (data != null && data.PopContainerData != null)
+            {
+                foreach (var popContainerData in data.PopContainerData.Containers)
+                {
+                    _deserialized.Add(popContainerData.Name, popContainerData);
+                }
+            }
         }
 
         public override void BroadcastPlacement()
@@ -67,5 +91,18 @@ namespace Assets.Placeables.Nodes
         }
 
         public override string NodeName { get { return "PopContainerSet"; } }
+
+        public override void AddToData(PlaceableData data)
+        {
+            data.PopContainerData = GetData();
+        }
+
+        public PopContainerSetData GetData()
+        {
+            return new PopContainerSetData
+            {
+                Containers = Containers.Select(i => i.GetData()).ToList()
+            };
+        }
     }
 }
