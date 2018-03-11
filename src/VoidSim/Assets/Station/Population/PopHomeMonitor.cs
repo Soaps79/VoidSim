@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Assets.Placeables;
 using Assets.Placeables.Nodes;
 using Assets.Scripts;
 using Assets.WorldMaterials;
@@ -102,17 +101,17 @@ namespace Assets.Station.Population
                 _needsHousing.AddRange(homeless);
             }
 
-            var homed = people.Except(homeless);
-            foreach (var person in homed)
-            {
-                // find their home if it is already in the scene,
-                if (_residentHousing.Any(i => i.name == person.Home))
-                    _residentHousing.First(i => i.name == person.Home).AddResident(person);
+            //var homed = people.Except(homeless);
+            //foreach (var person in homed)
+            //{
+            //    // find their home if it is already in the scene,
+            //    if (_residentHousing.Any(i => i.name == person.Home))
+            //        _residentHousing.First(i => i.name == person.Home).AddResident(person);
                 
-                // or put them aside for when the homes come in
-                else
-                    _deserialized.Add(person);
-            }
+            //    // or put them aside for when the homes come in
+            //    else
+            //        _deserialized.Add(person);
+            //}
         }
 
         public void HandleMessage(string type, MessageArgs args)
@@ -147,7 +146,7 @@ namespace Assets.Station.Population
             if (!waitingForHousing.Any())
                 return;
 
-            waitingForHousing.ForEach(home.AddResident);
+            waitingForHousing.ForEach(home.ResumeResident);
             _deserialized.RemoveAll(i => waitingForHousing.Contains(i));
         }
 

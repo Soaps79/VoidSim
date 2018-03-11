@@ -136,7 +136,9 @@ namespace Assets.Placeables.Nodes
         {
             var occupancy = CurrentOccupancy.FirstOrDefault(i => i.Id == person.OccupancyId);
             if (occupancy == null) return;
+            _actualOccupants++;
             occupancy.SetOccupant(person);
+            CheckUpdate();
         }
 
         public void RemovePerson(Person person)
@@ -165,6 +167,8 @@ namespace Assets.Placeables.Nodes
         {
             if(data.Occupancies.Count != CurrentOccupancy.Count)
                 throw new UnityException("PopContainer occupants count does not match the one from data");
+
+            _hasReserved = data.Occupancies.Any(i => i.ReservedById > 0);
 
             for (int i = 0; i < data.Occupancies.Count; i++)
             {

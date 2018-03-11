@@ -85,5 +85,16 @@ namespace Assets.Placeables.Nodes
                 _container.AddReserved(person);
 	        }
 	    }
+
+        // populates local list post-deserialization
+        // container and person are handled elsewhere
+	    public void ResumeResident(Person person)
+	    {
+	        if (!_housed.Contains(person))
+	        {
+	            _housed.Add(person);
+	            CurrentCount = _housed.Count;
+	        }
+        }
 	}
 }

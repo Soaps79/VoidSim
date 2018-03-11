@@ -297,7 +297,7 @@ namespace Assets.Station.Population
                     {
                         foreach (var person in _deserialized[container.Name])
                         {
-                            container.AddPerson(person);
+                            container.ResumePerson(person);
                         }
                         _deserialized.Remove(container.Name);
                     }
