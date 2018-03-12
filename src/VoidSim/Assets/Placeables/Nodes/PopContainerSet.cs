@@ -36,7 +36,7 @@ namespace Assets.Placeables.Nodes
         public readonly List<PopContainer> Containers = new List<PopContainer>();
 
         public Action<List<PopContainer>> OnContainersUpdated;
-
+        
         // creates a container, adds it to the list, returns it
         public PopContainer CreateContainer(PopContainerParams param)
         {
@@ -51,19 +51,25 @@ namespace Assets.Placeables.Nodes
                 _serviceContainer = container;
             }
 
-            if (_deserialized.ContainsKey(container.Name))
-            {
-                container.SetFromData(_deserialized[container.Name]);
-                _deserialized.Remove(container.Name);
-            }
-
             Containers.Add(container);
 
             if (OnContainersUpdated != null) OnContainersUpdated(Containers);
+            if (_deserialized.Any())
+                CheckForDeserialized();
+
             return container;
         }
 
-        private readonly Dictionary<string, PopContainerData> _deserialized = new Dictionary<string, PopContainerData>();
+        private void CheckForDeserialized()
+        {
+            foreach (var popContainer in Containers)
+            {
+                if (!_deserialized.ContainsKey(popContainer.Name)) continue;
+                popContainer.SetFromData(_deserialized[popContainer.Name]);
+                _deserialized.Remove(popContainer.Name);
+                if (!_deserialized.Any()) break;
+            }
+        }
 
         public override void Initialize(PlaceableData data)
         {
@@ -73,12 +79,12 @@ namespace Assets.Placeables.Nodes
 
             if (data != null && data.PopContainerData != null)
             {
-                foreach (var popContainerData in data.PopContainerData.Containers)
-                {
-                    _deserialized.Add(popContainerData.Name, popContainerData);
-                }
+                data.PopContainerData.Containers.ForEach(i => _deserialized.Add(i.Name, i));
+                CheckForDeserialized();
             }
         }
+
+        private readonly Dictionary<string, PopContainerData> _deserialized = new Dictionary<string, PopContainerData>();
 
         public override void BroadcastPlacement()
         {

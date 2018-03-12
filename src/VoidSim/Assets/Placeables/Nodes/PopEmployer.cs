@@ -79,6 +79,12 @@ namespace Assets.Placeables.Nodes
 		    UpdateEmployees();
 		}
 
+	    public void ResumeEmployee(Person person)
+	    {
+	        _employees.Add(person);
+	        UpdateEmployees();
+        }
+
 	    private void UpdateEmployees()
 	    {
 	        CurrentEmployeeCount = _employees.Count;

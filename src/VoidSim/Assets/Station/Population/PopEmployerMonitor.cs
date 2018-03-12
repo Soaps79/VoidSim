@@ -66,7 +66,7 @@ namespace Assets.Station.Population
 
 		private void HandleEmploymentUpdate()
 		{
-			if (CurrentUnemployed <= 0 || !_employers.Any(i => i.HasRoom))
+			if (!_unemployed.Any() || !_employers.Any(i => i.HasRoom))
 				return;
 
 			// making a queue as basic distribution
@@ -138,7 +138,7 @@ namespace Assets.Station.Population
 		private void HandleExistingEmployer(PopEmployer employer)
 		{
 		    var employees = _deserialized.Where(i => i.Employer == employer.name).ToList();
-            employees.ForEach(employer.AddEmployee);
+            employees.ForEach(employer.ResumeEmployee);
 		    _deserialized.RemoveAll(i => employees.Contains(i));
 		}
 
@@ -180,7 +180,8 @@ namespace Assets.Station.Population
 
 	    public void HandleDeserialization(List<Person> people)
 	    {
-	        _deserialized.AddRange(people);
+	        _unemployed.AddRange(people.Where(i => string.IsNullOrEmpty(i.Employer)));
+            _deserialized.AddRange(people.Except(_unemployed));
 	    }
 	}
 }

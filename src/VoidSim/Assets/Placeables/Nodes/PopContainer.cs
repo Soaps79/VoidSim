@@ -172,7 +172,7 @@ namespace Assets.Placeables.Nodes
 
             for (int i = 0; i < data.Occupancies.Count; i++)
             {
-                CurrentOccupancy[i].SetReserved(data.Occupancies[i].OccupiedById, data.Occupancies[i].ReservedByName);
+                CurrentOccupancy[i].SetFromData(data.Occupancies[i]);
             }
         }
 

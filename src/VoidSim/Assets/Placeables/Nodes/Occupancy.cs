@@ -8,6 +8,7 @@ namespace Assets.Placeables.Nodes
     [Serializable]
     public class OccupancyData
     {
+        public int Id;
         public int OccupiedById;
         public int ReservedById;
         public string ReservedByName;
@@ -68,10 +69,20 @@ namespace Assets.Placeables.Nodes
         }
 
         public Action<Occupancy> OnUpdate;
+
+        public void SetFromData(OccupancyData data)
+        {
+            Id = data.Id;
+            ReservedBy = data.ReservedById;
+            _reservedByName = data.ReservedByName;
+            CheckUpdate();
+        }
+
         public OccupancyData GetData()
         {
             return new OccupancyData
             {
+                Id = Id,
                 OccupiedById = OccupiedBy != null ? OccupiedBy.Id : 0,
                 ReservedById = ReservedBy,
                 ReservedByName = _reservedByName
