@@ -17,6 +17,7 @@ namespace Assets.Scripts
     public class CanvasManager : QScript, ICanvasManager
     {
         [SerializeField] private Canvas _prefabCanvas;
+        [SerializeField] private Camera _mainCamera;
         private readonly Dictionary<CanvasType, Canvas> _canvases = new Dictionary<CanvasType, Canvas>();
         private Canvas _mainCanvas;
 
@@ -27,14 +28,17 @@ namespace Assets.Scripts
 
             var canvas = Instantiate(_prefabCanvas, _mainCanvas.transform, false);
             canvas.name = "constant_update";
+            canvas.worldCamera = _mainCamera;
             _canvases.Add(CanvasType.ConstantUpdate, canvas);
 
             canvas = Instantiate(_prefabCanvas, _mainCanvas.transform, false);
             canvas.name = "medium_update";
+            canvas.worldCamera = _mainCamera;
             _canvases.Add(CanvasType.MediumUpdate, canvas);
 
             canvas = Instantiate(_prefabCanvas, _mainCanvas.transform, false);
             canvas.name = "low_update";
+            canvas.worldCamera = _mainCamera;
             _canvases.Add(CanvasType.LowUpdate, canvas);
         }
 
