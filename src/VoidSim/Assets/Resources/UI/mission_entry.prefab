@@ -285,6 +285,9 @@ MonoBehaviour:
   _nameText: {fileID: 114002015084797228}
   _infoIcon: {fileID: 114481504642975748}
   _canvasGroup: {fileID: 225644442116923426}
+  _particleSystem: {fileID: 198539499435592568, guid: ebfcb307cdf979d4fa2ee6e659edd006,
+    type: 2}
+  _waitBeforeFade: 0.5
 --- !u!114 &114560552578533764
 MonoBehaviour:
   m_ObjectHideFlags: 1

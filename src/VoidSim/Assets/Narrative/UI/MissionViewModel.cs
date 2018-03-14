@@ -16,11 +16,13 @@ namespace Assets.Narrative.UI
 		[SerializeField] private TMP_Text _nameText;
 		[SerializeField] private Image _infoIcon;
 		[SerializeField] private CanvasGroup _canvasGroup;
+	    [SerializeField] private ParticleSystem _particleSystem;
+	    [SerializeField] private float _waitBeforeFade;
 		private string _flavorText;
 
 		public void Initialize(Mission mission)
 		{
-			mission.OnComplete += HandleUpdateComplete;
+			mission.OnComplete += HandleMissionComplete;
 			foreach (var goal in mission.Goals)
 			{
 				var instance = Instantiate(_goalPrefab, _goalList.transform, false);
@@ -39,9 +41,16 @@ namespace Assets.Narrative.UI
             _canvasGroup.DOFade(1.0f, .5f);
         }
 
-		private void HandleUpdateComplete(Mission mission)
+		private void HandleMissionComplete(Mission mission)
 		{
-			_canvasGroup.DOFade(0, .75f).OnComplete(() => Destroy(gameObject));
+		    var particles = Instantiate(_particleSystem, transform.parent);
+            particles.transform.position = transform.position;
+            particles.transform.localScale = Vector3.one;
+
+		    StopWatch.AddNode("", _waitBeforeFade).OnTick += () =>
+		    {
+		        _canvasGroup.DOFade(0, .75f).OnComplete(() => Destroy(gameObject));
+		    };
 		}
 	}
 }

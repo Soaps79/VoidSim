@@ -24,6 +24,7 @@ namespace Assets.Scripts
         void Awake()
         {
             _mainCanvas = Instantiate(_prefabCanvas);
+            _mainCanvas.worldCamera = _mainCamera;
             _mainCanvas.name = "canvas_root";
 
             var canvas = Instantiate(_prefabCanvas, _mainCanvas.transform, false);
