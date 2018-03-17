@@ -5,7 +5,7 @@ using UIWidgets;
 
 namespace Assets.Station.UI
 {
-    public class PopulationListViewModel : ListViewCustom<PersonViewModel, Person>
+    public class PopulationListViewModel : ListViewCustom<PopulationListItemViewModel, Person>
     {
         public void UpdateList(List<Person> allPopulation)
         {

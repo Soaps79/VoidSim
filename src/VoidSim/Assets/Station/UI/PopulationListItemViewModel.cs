@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Assets.Station.UI
 {
-    public class PersonViewModel : ListViewItem, IViewData<Person>
+    public class PopulationListItemViewModel : ListViewItem, IViewData<Person>
     {
         public TMP_Text GenderText;
         public TMP_Text NameText;
@@ -42,7 +42,7 @@ namespace Assets.Station.UI
         private void SetPersonData(Person item)
         {
             if(item.Id != _person.Id)
-                throw new UnityException("List PersonViewModel UI object being populated by not its owner");
+                throw new UnityException("List PopulationListItemViewModel UI object being populated by not its owner");
             GenderText.text = item.IsMale ? "M" : "F";
             NameText.text = item.FirstName + " " + item.LastName;
             LocationText.text = item.CurrentActivity;
