@@ -28,39 +28,6 @@ namespace Assets.Editor
         }
 
         [Test]
-        public void QScript_IsAliveOnCreation()
-        {
-            Assert.IsTrue(_target.IsAlive);
-        }
-
-        [Test]
-        public void QScript_OnDeath_EventsFired()
-        {
-            var aliveChangedFired = false;
-
-            _target.AliveChanged += delegate { aliveChangedFired = true; };
-
-            Assert.IsFalse(aliveChangedFired);
-
-            _target.IsAlive = false;
-
-            Assert.IsTrue(aliveChangedFired);
-        }
-
-        [Test]
-        public void QScript_AliveChanged_EventsFired()
-        {
-            var aliveChangedCount = 0;
-
-            _target.AliveChanged += delegate { aliveChangedCount++; };
-            
-            _target.IsAlive = false;
-            _target.IsAlive = true;
-
-            Assert.AreEqual(2, aliveChangedCount);
-        }
-
-        [Test]
         public void QScript_OnUpdate_EventsFired()
         {
             var onNextUpdateCount = 0;
@@ -91,17 +58,6 @@ namespace Assets.Editor
         }
 
         [Test]
-        public void QScript_EnabledChanged_EventFired()
-        {
-            var enabledChangedCount = 0;
-
-            _target.EnableChanged += delegate { enabledChangedCount++; };
-
-            _target.IsEnabled = !_target.IsEnabled;
-            Assert.AreEqual(1, enabledChangedCount);
-        }
-
-        [Test]
         public void QScript_ClearAllDelegates()
         {
             var onNextUpdateCount = 0;
@@ -109,18 +65,12 @@ namespace Assets.Editor
             var enabledChangedCount = 0;
             var aliveChangedCount = 0;
 
-            _target.EnableChanged += delegate { enabledChangedCount++; };
             _target.OnNextUpdate += delegate { onNextUpdateCount++; };
             _target.OnEveryUpdate += delegate { onEveryUpdateCount++; };
-            _target.AliveChanged += delegate { aliveChangedCount++; };
-
+            
             _target.ClearAllDelegates();
 
             _target.MockUpdate(1);
-            _target.IsAlive = false;
-            _target.IsAlive = true;
-            _target.IsEnabled = false;
-            _target.IsEnabled = true;
 
             Assert.AreEqual(0, onNextUpdateCount);
             Assert.AreEqual(0, onEveryUpdateCount);

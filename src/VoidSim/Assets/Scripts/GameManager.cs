@@ -52,7 +52,7 @@ namespace Assets.Scripts
 			var messageHub = Locator.MessageHub as MessageHub;
 			if(messageHub == null)
 				throw new UnityException("MessageHub could not be found");
-			OnEveryUpdate += delta => messageHub.Update();
+			OnEveryUpdate += () => messageHub.Update();
 		}
 
 		void Awake()
@@ -162,7 +162,7 @@ namespace Assets.Scripts
 		}
 
 		// Update is called once per frame
-		private void UpdateKeyValueDisplayText(float delta)
+		private void UpdateKeyValueDisplayText()
 		{
 			_textGameObject.text = KeyValueDisplay.Instance.CurrentDisplayString();
 		}

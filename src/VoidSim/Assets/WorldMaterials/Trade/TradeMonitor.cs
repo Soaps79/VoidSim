@@ -37,7 +37,7 @@ namespace Assets.WorldMaterials.Trade
                 OnNextUpdate += HandleGameLoad;
 		}
 
-		private void HandleGameLoad(float f)
+		private void HandleGameLoad()
 		{
 			_activeManifests.Clear();
 			var data = _serializer.DeserializeData();
@@ -49,7 +49,7 @@ namespace Assets.WorldMaterials.Trade
 			}
 		}
 
-		private void UpdateTrades(float delta)
+		private void UpdateTrades()
 		{
 			if (!_activeManifests.Any())
 				return;

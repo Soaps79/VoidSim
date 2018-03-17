@@ -33,7 +33,7 @@ namespace QGame.GUI
         // can set the text periodically (or just once)
         public void SetText(string text)
         {
-            OnNextUpdate += (delta) => SetTextActual(text);
+            OnNextUpdate += () => SetTextActual(text);
         }
 
         // or you can bind it to refresh every frame
@@ -49,7 +49,7 @@ namespace QGame.GUI
             OnEveryUpdate = null;
         }
 
-        private void UpdateBoundProperty(float value)
+        private void UpdateBoundProperty()
         {
             _text.text = _binding().ToString();
         }

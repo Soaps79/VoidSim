@@ -153,7 +153,7 @@ namespace Assets.Logistics
 			_startingDistance = Vector2.Distance(transform.position, _berth.transform.position);
 		}
 
-		private void ScaleWithProximity(float obj)
+		private void ScaleWithProximity()
 		{
 			// currently scales proximity according to starting position
 			// should be made independent of that

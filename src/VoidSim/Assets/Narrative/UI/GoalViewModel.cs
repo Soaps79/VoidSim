@@ -19,7 +19,7 @@ namespace Assets.Narrative.UI
 			OnEveryUpdate += Refresh;
 		}
 
-		private void Refresh(float obj)
+		private void Refresh()
 		{
 			_nameDisplay.text = GetDisplayName(_goal);
 			_toggle.isOn = _goal.IsComplete;

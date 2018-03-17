@@ -49,7 +49,7 @@ namespace Assets.WorldMaterials.UI
 			if(_arrayPanel ==  null || _arrayContent == null)
 				throw new UnityException("PlayerCraftingArrayViewModel is missing components");
 
-			OnNextUpdate += f => FindBinder();
+			OnNextUpdate += FindBinder;
 		}
 
 		private void FindBinder()
@@ -100,7 +100,7 @@ namespace Assets.WorldMaterials.UI
 			}
 
 			if (!_hasAFactory && _children.Any())
-				OnNextUpdate += f => SignalFirstFactoryPlaced();
+				OnNextUpdate += SignalFirstFactoryPlaced;
 		}
 
 		// will open the UI panel if this is the first factory placed

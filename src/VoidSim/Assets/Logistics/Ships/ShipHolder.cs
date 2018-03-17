@@ -24,14 +24,14 @@ namespace Assets.Logistics.Ships
 			OnEveryUpdate += UpdateShips;
 		}
 
-		private void UpdateShips(float delta)
+		private void UpdateShips()
 		{
 			if (!_shipsOnHold.Any())
 				return;
 
-			foreach (var ship in _shipsOnHold)
+		    foreach (var ship in _shipsOnHold)
 			{
-				ship.Ticker.ElapsedTicks += delta;
+				ship.Ticker.ElapsedTicks += GetDelta();
 				if (ship.Ticker.IsComplete)
 					_shipstoRemove.Add(ship);
 			}

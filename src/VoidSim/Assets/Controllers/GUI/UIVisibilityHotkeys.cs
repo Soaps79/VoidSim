@@ -59,7 +59,7 @@ namespace Assets.Scripts.UIHelpers
 			return s;
 		}
 
-		void CheckForKeyPress(float delta)
+		void CheckForKeyPress()
 		{
 			foreach (var entry in _hotkeyTable)
 			{

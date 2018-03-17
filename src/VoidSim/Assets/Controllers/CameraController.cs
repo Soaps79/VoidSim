@@ -34,10 +34,8 @@ namespace Assets.Controllers
         /// </summary>
         private readonly Dictionary<string, Camera> _cameraMap = new Dictionary<string, Camera>();
 
-        protected override void OnStart()
+        void Start()
         {
-            base.OnStart();
-
             // start with FollowCamera by default
             FollowCamera.enabled = true;
             _prevCamera = _activeCamera = FollowCamera;

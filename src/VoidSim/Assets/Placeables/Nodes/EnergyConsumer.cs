@@ -46,7 +46,7 @@ namespace Assets.Placeables.Nodes
 	    // called any time the total consumption changes
         public event EventHandler OnAmountConsumedChanged;
 
-		protected override void OnStart()
+		void Start()
         {
 			// hook into efficiency system
 	        _affector = new EfficiencyAffector("Energy");

@@ -153,7 +153,7 @@ namespace Assets.Scripts
 			Locator.MessageHub.AddListener(this, GameMessages.GameSpeedChange);
 		}
 
-		private void CheckForKeypress(float value)
+		private void CheckForKeypress()
 		{
 			// passing pause here will toggle between pause and the last speed
 			if (Input.GetKeyDown(KeyCode.Space))
@@ -206,8 +206,9 @@ namespace Assets.Scripts
 			Locator.MessageHub.QueueMessage(GameMessages.GameSpeedChange, args);
 		}
 
-		private void UpdateClock(float delta)
+		private void UpdateClock()
 		{
+		    var delta = Time.deltaTime;
 			_elapsedMS += delta;
 			var realSecondsToGameMinute = (60 / _realSecondsToGameHour) * CurrentTimeScale;
 			AddMinutes(realSecondsToGameMinute * delta);

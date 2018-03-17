@@ -33,7 +33,7 @@ namespace Assets.Placeables.Placement
 		}
 
 		// handles user placing object or dismissing it
-		private void CheckForPlacementKeyPress(float obj)
+		private void CheckForPlacementKeyPress()
 		{
 			if (Input.GetButtonDown("Confirm"))
 			{

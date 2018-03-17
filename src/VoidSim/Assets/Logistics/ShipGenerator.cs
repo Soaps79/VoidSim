@@ -132,7 +132,7 @@ namespace Assets.Logistics
 		{
 			if (type == LogisticsMessages.ShipCreated && args != null)
 			{
-				OnNextUpdate += f => KickShip(args as ShipCreatedMessageArgs);
+				OnNextUpdate += () => KickShip(args as ShipCreatedMessageArgs);
 			}
 		}
 

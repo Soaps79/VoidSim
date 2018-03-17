@@ -26,7 +26,7 @@ namespace Assets.Controllers.GUI
 			OnEveryUpdate = UpdateSlider;
 		}
 
-		private void UpdateSlider(float obj)
+		private void UpdateSlider()
 		{
 			_slider.value = _func();
 		}

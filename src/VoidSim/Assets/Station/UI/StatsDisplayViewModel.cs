@@ -72,7 +72,7 @@ namespace Assets.Station.UI
             if (type != ProductSupplyMonitor.CreatedMessageType || providerArgs == null)
                 return;
 
-            OnNextUpdate += f => { AddMonitor(providerArgs.SupplyMonitor); };  
+            OnNextUpdate += () => { AddMonitor(providerArgs.SupplyMonitor); };  
         }
 
         private void AddMonitor(ProductSupplyMonitor supplyMonitor)
@@ -121,7 +121,7 @@ namespace Assets.Station.UI
                                  _worldClock.CurrentTime.Hour);
         }
 
-        private void UpdateValues(float delta)
+        private void UpdateValues()
         {
             _clockDisplay.text = GenerateCurrentTimeString();
 

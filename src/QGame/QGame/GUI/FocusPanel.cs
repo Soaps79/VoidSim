@@ -11,7 +11,7 @@ namespace QGame.GUI
     {
         private RectTransform _panel;
 
-        protected override void OnAwake()
+        void Awake()
         {
             _panel = GetComponent<RectTransform>();
         }

@@ -34,7 +34,7 @@ namespace Assets.Scripts.Scenes
 			OnEveryUpdate += CheckForClick;
 		}
 
-		private void CheckForClick(float obj)
+		private void CheckForClick()
 		{
 			if (!Input.GetMouseButtonUp(0))
 				return;

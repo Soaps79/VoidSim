@@ -71,7 +71,7 @@ namespace Assets.Station
 		    _scriptable = scriptable;
 			_inventory = inventory;
 			_inventory.OnProductsChanged += HandleInventoryProductChanged;
-            OnNextUpdate += f => _inventory.OnProductMaxAmountChanged += HandleInventoryMaxAmountChanged;
+            OnNextUpdate += () => _inventory.OnProductMaxAmountChanged += HandleInventoryMaxAmountChanged;
 
 			_populationProductId = ProductIdLookup.Population;
 			_currentCount = _inventory.GetProductCurrentAmount(_populationProductId);

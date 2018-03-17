@@ -16,7 +16,7 @@ namespace QGame.GUI
         private Vector2 _currentPointer;
         private Vector2 _previousPointer;
 
-        protected override void OnAwake()
+        void Awake()
         {
             _transform = transform.parent.GetComponent<RectTransform>();
         }

@@ -90,7 +90,7 @@ namespace Assets.Scripts.WorldMaterials
             if (_currentlyCrafting == null && _recipeQueue.Any())
             {
                 var first = _recipeQueue.First();
-                OnNextUpdate += delta => BeginCrafting(first);
+                OnNextUpdate += () => BeginCrafting(first);
                 _recipeQueue.RemoveAt(0);
             }
         }

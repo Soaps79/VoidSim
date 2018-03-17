@@ -37,7 +37,7 @@ namespace Assets.Controllers.GUI
 		}
 
 		// keypress just drives the toggle, which tells subscribers
-		private void CheckForVisibilityToggleKeypress(float obj)
+		private void CheckForVisibilityToggleKeypress()
 		{
 			if (Input.GetButtonDown(_axisName))
 			{

@@ -179,6 +179,7 @@ namespace QGame
 
         /// <summary>
         /// Returns true if there are there any actively running nodes
+        /// TODO: Tighten this up to be a maintained variable rather than check every frame
         /// </summary>
         public bool IsRunning()
         {

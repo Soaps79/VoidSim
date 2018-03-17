@@ -1,5 +1,6 @@
 ﻿using System;
 using Behaviors;
+using UnityEngine;
 
 namespace QGame
 {
@@ -11,77 +12,16 @@ namespace QGame
 
     public delegate void VoidILivingCallback(ILiving iLiving);
 
-    public abstract class QScript : OrderedEventBehavior, ILiving
+    public abstract class QScript : OrderedEventBehavior
     {
-        private bool _isAlive = true;
-        public Action<ILiving> AliveChanged { get; set; }
+        protected readonly StopWatch StopWatch = new StopWatch();
 
-        private BehaviorHolder _holder;
-        public BehaviorHolder Holder { get { return _holder; } }
-
-        public QScript()
+        protected override void OnUpdateStart()
         {
-            _holder = new BehaviorHolder(this);
-            EnableStopWatch();
-        }
-
-        protected StopWatch StopWatch;
-        public void EnableStopWatch()
-        {
-            if (StopWatch == null)
+            if (StopWatch.IsRunning())
             {
-                StopWatch = new StopWatch();
+                StopWatch.UpdateNodes(UseTimeModifier ? Time.deltaTime * TimeModifier : Time.deltaTime);
             }
-        }
-
-        public bool IsAlive
-        {
-            get { return _isAlive; }
-            set { _isAlive = TrySet(_isAlive, value, AliveChanged); }
-        }
-
-        public override void ClearAllDelegates()
-        {
-            base.ClearAllDelegates();
-
-            AliveChanged = null;
-        }
-
-        /// <summary>
-        /// Only fire event if the value is changed.
-        /// </summary>
-        /// <param name="currentValue">Current value</param>
-        /// <param name="newValue">Value to set</param>
-        /// <param name="onChangedCallback">Callback to fire if value is changed</param>
-        /// <returns>The value to set.</returns>
-        protected bool TrySet(bool currentValue, bool newValue, Action<ILiving> onChangedCallback)
-        {
-            if (currentValue != newValue)
-            {
-                currentValue = newValue;
-                if (onChangedCallback != null)
-                {
-                    onChangedCallback(this);
-                }
-            }
-
-            return currentValue;
-        }
-        
-        protected override void OnUpdateStart(float delta)
-        {
-            if (StopWatch != null)
-            {
-                StopWatch.UpdateNodes(delta);
-            }
-            base.OnUpdateStart(delta);
-        }
-
-        protected override void OnUpdate(float delta)
-        {
-            _holder.Update(delta);
-
-            base.OnUpdate(delta);
         }
     }
 }

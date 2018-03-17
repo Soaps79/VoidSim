@@ -24,10 +24,10 @@ namespace Assets.Scripts.UI
 			OnNextUpdate += SaveGame;
 		}
 
-		private void SaveGame(float obj)
+		private void SaveGame()
 		{
 			Locator.MessageHub.QueueMessage(GameMessages.PreSave, null);
-			OnNextUpdate += f => Locator.Serialization.WriteToFile(_filename);
+			OnNextUpdate += () => Locator.Serialization.WriteToFile(_filename);
 		}
 
 		public void LoadScene()

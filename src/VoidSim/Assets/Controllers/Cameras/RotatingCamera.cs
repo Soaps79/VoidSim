@@ -13,7 +13,7 @@ namespace Assets.Controllers.Cameras
 			OnEveryUpdate += RotateCamera;
 		}
 
-		private void RotateCamera(float obj)
+		private void RotateCamera()
 		{
 			Camera.transform.Rotate(Rotation);
 		}

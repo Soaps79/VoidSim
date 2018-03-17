@@ -47,7 +47,7 @@ namespace Assets.Narrative
 			_conversationsMonitor = gameObject.GetComponent<ConversationsMonitor>();
 		}
 
-		private void Initialize(float obj)
+		private void Initialize()
 		{
 			_canvas = Locator.CanvasManager.GetCanvas(CanvasType.MediumUpdate);
 

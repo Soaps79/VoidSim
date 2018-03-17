@@ -51,6 +51,9 @@
         }
     }
 
+    /// <summary>
+    /// This clock is broken. Will need Update fixed before using
+    /// </summary>
     public class WorldClock : SingletonBehavior<WorldClock>, IMessageListener
     {
         public float RealSecondsToGameHour;
@@ -147,11 +150,11 @@
             ServiceLocator.Get<IMessageHub>().QueueMessage(SpeedChangeMessageName, args);
         }
 
-        private void UpdateClock(float delta)
+        private void UpdateClock()
         {
-            _elapsedMS += delta;
-            var realSecondsToGameMinute = (60 / RealSecondsToGameHour) * CurrentTimeScale;
-            AddMinutes(realSecondsToGameMinute * delta);
+            //_elapsedMS += delta;
+            //var realSecondsToGameMinute = (60 / RealSecondsToGameHour) * CurrentTimeScale;
+            //AddMinutes(realSecondsToGameMinute * delta);
         }
 
         #region Time Increments

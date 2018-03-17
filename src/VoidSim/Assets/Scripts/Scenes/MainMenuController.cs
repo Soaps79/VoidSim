@@ -15,7 +15,7 @@ namespace Assets.Scripts.Scenes
 			OnEveryUpdate += CheckForMenuLoadButtonPress;
 		}
 
-		private void CheckForMenuLoadButtonPress(float obj)
+		private void CheckForMenuLoadButtonPress()
 		{
 			if (Input.GetButtonDown("Confirm"))
 			{

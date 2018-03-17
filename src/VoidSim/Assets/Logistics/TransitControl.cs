@@ -75,13 +75,13 @@ namespace Assets.Logistics
 
 		// move ships towards their destinations, inform the location when a ship arrives
 		// it is on the locations to direct the ships from there
-		private void UpdateEntries(float delta)
+		private void UpdateEntries()
 		{
 			if (!_entries.Any()) return;
 
-			foreach (var entry in _entries)
+		    foreach (var entry in _entries)
 			{
-				entry.Ship.Ticker.ElapsedTicks += delta;
+				entry.Ship.Ticker.ElapsedTicks += GetDelta();
 			}
 
 			var completed = _entries.Where(i => 

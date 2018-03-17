@@ -32,7 +32,7 @@ namespace Assets.Placeables.Placement
 		}
 
 		// placeable is stuck to cursor, checking for proximity to available hard points
-		private void CheckForSnap(float delta)
+		private void CheckForSnap()
 		{
 			var point = _availableHardPoints.FirstOrDefault(
 				i => Vector3.Distance(transform.position, i.transform.position) < _snapDistance);
@@ -48,7 +48,7 @@ namespace Assets.Placeables.Placement
 			OnEveryUpdate += CheckForUnsnap;
 		}
 
-		private void CheckForUnsnap(float delta)
+		private void CheckForUnsnap()
 		{
 			var mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 			if (Vector3.Distance(mousePosition, SnappedTo.transform.position) <= _snapDistance)
@@ -61,7 +61,7 @@ namespace Assets.Placeables.Placement
 		}
 
 		// keeps placebale stuck to mouse cursor
-		private void BindSpritePositionToMouseCursor(float delta)
+		private void BindSpritePositionToMouseCursor()
 		{
 			var mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 			mousePosition.z = 0;

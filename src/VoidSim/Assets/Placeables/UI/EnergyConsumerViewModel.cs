@@ -23,7 +23,7 @@ namespace Assets.Placeables.UI
 			_sliderFill = _slider.fillRect.GetComponent<Image>();
 		}
 
-		private void UpdateValues(float obj)
+		private void UpdateValues()
 		{
 			// if value has changed
 			if (Math.Abs(_lastValue - _consumer.CurrentFulfillment) < .01)
