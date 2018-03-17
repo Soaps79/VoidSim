@@ -17,7 +17,7 @@ namespace QGame
             OnEveryUpdate = null;
         }
 
-        void Update()
+        protected void Update()
         {
             HandleUpdate();
         }

@@ -6,7 +6,7 @@ namespace Assets.Scripts.Testing
     {
         public void MockUpdate(float delta)
         {
-            OnUpdate();
+            Update();
         }
     }
 }
