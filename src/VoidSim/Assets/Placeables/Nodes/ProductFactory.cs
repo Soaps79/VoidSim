@@ -78,7 +78,7 @@ namespace Assets.Placeables.Nodes
 
 		public float CurrentCraftRemainingAsZeroToOne()
 		{
-			return _container.CurrentCraftRemainingAsZeroToOne;
+			return _container.CurrentCraftElapsedAsZeroToOne;
 		}
 
 		// Factory binds to Inventory and initializes its container. Will begin crafting if InitialRecipe not null
@@ -275,7 +275,7 @@ namespace Assets.Placeables.Nodes
 				IsCrafting = IsCrafting,
 				IsBuying = IsBuying,
 				CurrentlyCraftingRecipeId = IsCrafting ? CurrentlyCrafting.Id : 0,
-				RemainingCraftTime = _container.CurrentCraftRemainingAsZeroToOne
+				RemainingCraftTime = _container.CurrentCraftElapsedAsZeroToOne
 			};
 		}
 	}

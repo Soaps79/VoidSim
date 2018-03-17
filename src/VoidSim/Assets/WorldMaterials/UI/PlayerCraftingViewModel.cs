@@ -80,7 +80,7 @@ namespace Assets.WorldMaterials.UI
 
             var slider = _activeCraft.Button.transform.GetComponentInChildren<Slider>();
             var binding = slider.gameObject.AddComponent<SliderBinding>();
-            binding.Initialize(() => _crafter.CurrentCraftRemainingAsZeroToOne);
+            binding.Initialize(() => _crafter.CurrentCraftElapsedAsZeroToOne);
         }
 
         private void BindToUI()

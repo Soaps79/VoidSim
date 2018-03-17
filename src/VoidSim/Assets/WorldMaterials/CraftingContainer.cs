@@ -49,7 +49,7 @@ namespace Assets.Scripts.WorldMaterials
 	    private string _lastIdName;
 
         public float CurrentQueueCount { get { return _recipeQueue.Count; } }
-        public float CurrentCraftRemainingAsZeroToOne
+        public float CurrentCraftElapsedAsZeroToOne
         {
             get
             {
