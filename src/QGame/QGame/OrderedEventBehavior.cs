@@ -14,7 +14,7 @@ namespace QGame
         public static float TimeModifier { get; set; } = 1.0f;
 
         /// <summary>
-        /// Used by any QScript to opt out of using time modification
+        /// Used to opt out of using time modification
         /// </summary>
         public bool UseTimeModifier { get; set; } = true;
 
@@ -42,6 +42,7 @@ namespace QGame
         {
             OnUpdateStart();
             UpdateCallbacks();
+            UpdateInternals();
             OnUpdate();
             OnUpdateEnd();
         }
@@ -58,6 +59,11 @@ namespace QGame
         /// The final function called in an Update cycle
         /// </summary>
         protected virtual void OnUpdateEnd() { }
+
+        /// <summary>
+        /// Used to expose an Update opportunity to internal QGame inheritants
+        /// </summary>
+        internal virtual void UpdateInternals() { }
 
         protected virtual void UpdateCallbacks()
         {

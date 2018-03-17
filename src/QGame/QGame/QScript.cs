@@ -4,11 +4,14 @@ using UnityEngine;
 
 namespace QGame
 {
+    /// <summary>
+    /// Wraps a MonoBehavior, adding in time modification functionality, update callbacks and a maintained StopWatch
+    /// </summary>
     public abstract class QScript : OrderedEventBehavior
     {
         protected readonly StopWatch StopWatch = new StopWatch();
 
-        protected override void OnUpdateStart()
+        internal override void UpdateInternals()
         {
             if (StopWatch.IsRunning())
             {
