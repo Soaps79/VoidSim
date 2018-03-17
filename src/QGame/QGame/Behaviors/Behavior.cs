@@ -2,7 +2,8 @@
 
 namespace Behaviors
 {
-	public delegate void BehaviorCallback(Behavior sender);
+    public delegate void VoidFloatCallback(float value);
+    public delegate void BehaviorCallback(Behavior sender);
 
 	/// <summary>
 	/// An instruction set for a parent object, an individual behavior.

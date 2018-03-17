@@ -8,6 +8,11 @@ namespace Assets.Scripts.Testing
         {
             Update();
         }
+
+        public void ClearCallbacks()
+        {
+            ClearUpdateCallbacks();
+        }
     }
 }
 

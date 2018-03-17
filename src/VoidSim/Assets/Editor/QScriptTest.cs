@@ -62,20 +62,16 @@ namespace Assets.Editor
         {
             var onNextUpdateCount = 0;
             var onEveryUpdateCount = 0;
-            var enabledChangedCount = 0;
-            var aliveChangedCount = 0;
 
             _target.OnNextUpdate += delegate { onNextUpdateCount++; };
             _target.OnEveryUpdate += delegate { onEveryUpdateCount++; };
             
-            _target.ClearAllDelegates();
+            _target.ClearCallbacks();
 
             _target.MockUpdate(1);
 
             Assert.AreEqual(0, onNextUpdateCount);
             Assert.AreEqual(0, onEveryUpdateCount);
-            Assert.AreEqual(0, enabledChangedCount);
-            Assert.AreEqual(0, aliveChangedCount);
         }
     }
 }

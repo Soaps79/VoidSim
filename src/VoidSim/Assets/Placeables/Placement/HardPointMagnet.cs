@@ -85,7 +85,7 @@ namespace Assets.Placeables.Placement
 			_toPlace = null;
 			SnappedTo = null;
 			_availableHardPoints.Clear();
-			ClearAllDelegates();
+            ClearUpdateCallbacks();
 		}
 	}
 }

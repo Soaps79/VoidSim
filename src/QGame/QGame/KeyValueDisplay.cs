@@ -9,7 +9,7 @@ namespace QGame
 	public interface IKeyValueDisplay
 	{
 		string CurrentDisplayString();
-		void Add(string name, ObjectCallback value);
+		void Add(string name, Func<object> value);
 		void Remove(string name);
 	}
 
@@ -17,12 +17,12 @@ namespace QGame
 	{
 		public string CurrentDisplayString()
 		{
-			string s = "NullKeyValueDisplay Accessed";
+			var s = "NullKeyValueDisplay Accessed";
 			Debug.Log(s);
 			return s;
 		}
 
-		public void Add(string name, ObjectCallback value)
+		public void Add(string name, Func<object> value)
 		{
 			Debug.Log("NullKeyValueDisplay Accessed");
 		}
@@ -38,16 +38,16 @@ namespace QGame
 		class KVDNode
 		{
 			public string Name;
-			public ObjectCallback Value;
+			public Func<object> Value;
 
-			public KVDNode(string name, ObjectCallback value)
+			public KVDNode(string name, Func<object> value)
 			{
 				this.Name = name;
 				this.Value = value;
 			}
 		}
 
-		List<KVDNode> kvpList = new List<KVDNode>();
+	    readonly List<KVDNode> kvpList = new List<KVDNode>();
 
 		#region Public Interface
 
@@ -63,16 +63,9 @@ namespace QGame
 			return s;
 		}
 
-		public void Add(string name, ObjectCallback value)
+	    public void Add(string name, Func<object> value)
 		{
-			//KVDNode node = kvpList.Find(
-			//    delegate(KVDNode k)
-			//    {
-			//        return k.Name == name;
-			//    }
-			//);
-
-			KVDNode node = kvpList.Find(k => k.Name == name);
+			var node = kvpList.Find(k => k.Name == name);
 
 			if (node == null)
 			{
@@ -86,18 +79,10 @@ namespace QGame
 		}
 
 		/// <summary>
-		/// Removes a value from display
+		/// Removes a value, by name, from display
 		/// </summary>
-		/// <param name="name"></param>
 		public void Remove(string name)
 		{
-			//KVDNode node = kvpList.Find(
-			//    delegate (KVDNode k)
-			//    {
-			//        return k.Name == name;
-			//    }
-			//);
-
 			var node = kvpList.Find(k => k.Name == name);
 
 			if (node != null)
