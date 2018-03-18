@@ -146,7 +146,9 @@ namespace Assets.WorldMaterials.Population
                 Id = Locator.LastId.GetNext(_lastIdName),
                 FirstName = isMale ? Pop(_maleNames) : Pop(_femaleNames),
                 LastName = Pop(_lastNames),
-                IsMale = isMale
+                IsMale = isMale,
+                PortraitSprite = isMale ? _malePortraits[Random.Range(0, _malePortraits.Count)]
+                    : _femalePortraits[Random.Range(0, _femalePortraits.Count)]
             };
 
             // match static data from SO with random values

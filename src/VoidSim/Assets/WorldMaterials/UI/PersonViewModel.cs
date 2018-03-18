@@ -3,6 +3,7 @@ using Assets.WorldMaterials.Population;
 using QGame;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.WorldMaterials.UI
 {
@@ -10,6 +11,8 @@ namespace Assets.WorldMaterials.UI
     {
         [SerializeField] private TMP_Text _nameText;
         [SerializeField] private TMP_Text _activityText;
+        [SerializeField] private TMP_Text _employerName;
+        [SerializeField] private Image _portrait;
 
         [SerializeField] private SliderBinding _foodSlider;
         [SerializeField] private SliderBinding _entSlider;
@@ -31,11 +34,14 @@ namespace Assets.WorldMaterials.UI
 
             _nameText.text = _person.FullName;
             _activityText.text = _person.CurrentActivity;
-
+            _employerName.text = string.IsNullOrEmpty(_person.Employer) ? "Unemployed" : _person.Employer;
+            
             _foodSlider.Initialize(() => 1);
             _entSlider.Initialize(_person.Wants.GetEntertainment);
             _restSlider.Initialize(_person.Wants.GetRest);
-            //_foodSlider.Initialize();
+
+            if (_person.PortraitSprite != null)
+                _portrait.sprite = _person.PortraitSprite;
         }
     }
 }
