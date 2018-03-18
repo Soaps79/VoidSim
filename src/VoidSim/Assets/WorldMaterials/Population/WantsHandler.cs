@@ -217,6 +217,16 @@ namespace Assets.WorldMaterials.Population
             return _needs.Values.ToList();
         }
 
+        public float GetRest()
+        {
+            return _needs[PersonNeedsType.Rest].Value;
+        }
+
+        public float GetEntertainment()
+        {
+            return _needs[PersonNeedsType.Entertainment].Value;
+        }
+
         public List<PersonNeedsData> GetData()
         {
             return _needs.Select(i => new PersonNeedsData

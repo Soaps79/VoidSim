@@ -32,6 +32,9 @@ namespace Assets.WorldMaterials.UI
             _nameText.text = _person.FullName;
             _activityText.text = _person.CurrentActivity;
 
+            _foodSlider.Initialize(() => 1);
+            _entSlider.Initialize(_person.Wants.GetEntertainment);
+            _restSlider.Initialize(_person.Wants.GetRest);
             //_foodSlider.Initialize();
         }
     }
