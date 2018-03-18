@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Serialization;
+using Assets.Scripts.UI;
 using Assets.Station;
 using Messaging;
 using QGame;
@@ -8,12 +9,6 @@ namespace Assets.Scripts
 {
 	public static class GameObjectExtensions
 	{
-		/// <summary>
-		/// Modelled after <see cref="Component"/> GetOrAddComponent{T}
-		/// 
-		/// Will return one of the default (and unlisted in editor)
-		/// game components on the game object.
-		/// </summary>
 		public static T GetOrAddComponent<T>(this GameObject go) where T : Component
 		{
 			var result = go.GetComponent<T>();
@@ -44,6 +39,7 @@ namespace Assets.Scripts
 		}
 	}
 
+    // wraps ServiceLocator for easy access within project
 	public static class Locator
 	{
 		public static ILastIdManager LastId
@@ -69,6 +65,11 @@ namespace Assets.Scripts
 	    public static ICanvasManager CanvasManager
 	    {
 	        get { return ServiceLocator.Get<ICanvasManager>(); }
+	    }
+
+	    public static IInfoPanelManager InfoPanelManager
+	    {
+	        get { return ServiceLocator.Get<IInfoPanelManager>(); }
 	    }
     }
 }

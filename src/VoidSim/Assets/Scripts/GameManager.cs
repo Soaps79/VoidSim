@@ -35,6 +35,8 @@ namespace Assets.Scripts
 		private MessageHub _messageHub;
 		private KeyValueDisplay _keyValueDisplay;
 
+	    [SerializeField] private InfoPanelManager _infoPanelManagerPrefab;
+
 		[SerializeField]
 		// Enabling setting in editor and exposing a static interface. there may be a better solution
 		// add to locator once it is generic
@@ -62,11 +64,23 @@ namespace Assets.Scripts
 				throw new UnityException("WorldClock cannot be found");
 			ServiceInitializer.Initialize<IWorldClock>(clock);
 
-		    var canvasManager = transform.GetComponentInChildren<CanvasManager>();
-		    ServiceLocator.Register<ICanvasManager>(canvasManager);
+		    SetupCanvasManager();
+		    SetupInfoPanelManager();
+		}
+
+	    private void SetupCanvasManager()
+	    {
+	        var canvasManager = transform.GetComponentInChildren<CanvasManager>();
+	        ServiceLocator.Register<ICanvasManager>(canvasManager);
+	    }
+
+	    private void SetupInfoPanelManager()
+	    {
+	        var mgr = Instantiate(_infoPanelManagerPrefab, transform);
+	        ServiceLocator.Register<IInfoPanelManager>(mgr);
         }
 
-		void Start()
+	    void Start()
 		{
 			UberDebug.LogChannel(LogChannels.Warning, "Initializing");
 			UberDebug.LogChannel(LogChannels.Trade, "Initializing");

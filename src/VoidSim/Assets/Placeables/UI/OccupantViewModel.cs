@@ -1,9 +1,8 @@
-﻿using System;
-using Assets.Placeables.Nodes;
-using Assets.WorldMaterials.Population;
-using QGame;
+﻿using Assets.Placeables.Nodes;
+using Assets.Scripts;
 using UIWidgets;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
 
@@ -27,6 +26,20 @@ namespace Assets.Placeables.UI
         {
             var trigger = GetComponent<BoundTooltipTrigger>();
             trigger.OnHoverActivate += HandleTooltipActivate;
+
+            onSelect.AddListener(HandleSelected);
+            onDeselect.AddListener(HandleDeselect);
+        }
+
+        private void HandleSelected(ListViewItem item)
+        {
+            if (!_occupancy.IsOccupied) return;
+            Locator.InfoPanelManager.AddPanel(_occupancy.OccupiedBy, transform.position);
+        }
+
+        private void HandleDeselect(ListViewItem item)
+        {
+            
         }
 
         private void HandleOccupancyUpdate(Occupancy obj)
