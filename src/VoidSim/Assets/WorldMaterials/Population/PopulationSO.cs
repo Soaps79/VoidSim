@@ -56,6 +56,9 @@ namespace Assets.WorldMaterials.Population
         public int MaxNamesLoaded;
         [Tooltip("Template needs for all Persons")]
         public List<PersonNeedsInfo> ResidentNeeds;
+
+        public List<Sprite> MalePortraits;
+        public List<Sprite> FemalePortraits;
     }
 
 	public class PopulationSO : ScriptableObject

@@ -20,11 +20,18 @@ namespace Assets.WorldMaterials.Population
         private readonly Dictionary<PersonNeedsType, PersonNeeds> _staticNeeds =
             new Dictionary<PersonNeedsType, PersonNeeds>();
 
+        private readonly List<Sprite> _malePortraits = new List<Sprite>();
+        private readonly List<Sprite> _femalePortraits = new List<Sprite>();
+
+
         public void Initialize(GenerationParams genParams)
         {
             _minNames = genParams.MinNamesLoaded;
             _maxNames = genParams.MaxNamesLoaded;
             _needsTemplate = genParams.ResidentNeeds.ToDictionary(i => i.Type); ;
+
+            _malePortraits.AddRange(genParams.MalePortraits);
+            _femalePortraits.AddRange(genParams.FemalePortraits);
 
             PopulateNameLists();
             PopulateStaticNeedsList();

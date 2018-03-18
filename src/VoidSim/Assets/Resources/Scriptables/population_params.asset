@@ -48,3 +48,34 @@ MonoBehaviour:
       MinTolerance: 0.3
       MinFulfillment: 0.8
       StartingWantToMove: 0.2
+    MalePortraits:
+    - {fileID: 21300000, guid: e7efd6d2cb89e854ba9160e303cdb13c, type: 3}
+    - {fileID: 21300002, guid: e7efd6d2cb89e854ba9160e303cdb13c, type: 3}
+    - {fileID: 21300004, guid: e7efd6d2cb89e854ba9160e303cdb13c, type: 3}
+    - {fileID: 21300006, guid: e7efd6d2cb89e854ba9160e303cdb13c, type: 3}
+    - {fileID: 21300008, guid: e7efd6d2cb89e854ba9160e303cdb13c, type: 3}
+    - {fileID: 21300010, guid: e7efd6d2cb89e854ba9160e303cdb13c, type: 3}
+    - {fileID: 21300012, guid: e7efd6d2cb89e854ba9160e303cdb13c, type: 3}
+    - {fileID: 21300014, guid: e7efd6d2cb89e854ba9160e303cdb13c, type: 3}
+    - {fileID: 21300016, guid: e7efd6d2cb89e854ba9160e303cdb13c, type: 3}
+    - {fileID: 21300018, guid: e7efd6d2cb89e854ba9160e303cdb13c, type: 3}
+    - {fileID: 21300020, guid: e7efd6d2cb89e854ba9160e303cdb13c, type: 3}
+    - {fileID: 21300022, guid: e7efd6d2cb89e854ba9160e303cdb13c, type: 3}
+    - {fileID: 21300024, guid: e7efd6d2cb89e854ba9160e303cdb13c, type: 3}
+    - {fileID: 21300026, guid: e7efd6d2cb89e854ba9160e303cdb13c, type: 3}
+    - {fileID: 21300028, guid: e7efd6d2cb89e854ba9160e303cdb13c, type: 3}
+    - {fileID: 21300030, guid: e7efd6d2cb89e854ba9160e303cdb13c, type: 3}
+    - {fileID: 21300032, guid: e7efd6d2cb89e854ba9160e303cdb13c, type: 3}
+    - {fileID: 21300034, guid: e7efd6d2cb89e854ba9160e303cdb13c, type: 3}
+    FemalePortraits:
+    - {fileID: 21300000, guid: 752bb113b13a42c4f83f97d5e737eca7, type: 3}
+    - {fileID: 21300002, guid: 752bb113b13a42c4f83f97d5e737eca7, type: 3}
+    - {fileID: 21300004, guid: 752bb113b13a42c4f83f97d5e737eca7, type: 3}
+    - {fileID: 21300006, guid: 752bb113b13a42c4f83f97d5e737eca7, type: 3}
+    - {fileID: 21300008, guid: 752bb113b13a42c4f83f97d5e737eca7, type: 3}
+    - {fileID: 21300010, guid: 752bb113b13a42c4f83f97d5e737eca7, type: 3}
+    - {fileID: 21300012, guid: 752bb113b13a42c4f83f97d5e737eca7, type: 3}
+    - {fileID: 21300014, guid: 752bb113b13a42c4f83f97d5e737eca7, type: 3}
+    - {fileID: 21300016, guid: 752bb113b13a42c4f83f97d5e737eca7, type: 3}
+    - {fileID: 21300018, guid: 752bb113b13a42c4f83f97d5e737eca7, type: 3}
+    - {fileID: 21300020, guid: 752bb113b13a42c4f83f97d5e737eca7, type: 3}

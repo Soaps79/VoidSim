@@ -53,4 +53,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _personPrefab: {fileID: 114844928923040522, guid: 9b0c34aa7f0deca498a737b4ce5f586b,
     type: 2}
-  _personOffset: {x: 0, y: 0, z: 0}
+  _personOffset: {x: -20, y: 20, z: 0}

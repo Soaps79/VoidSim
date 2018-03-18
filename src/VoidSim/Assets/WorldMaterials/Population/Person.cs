@@ -185,6 +185,8 @@ namespace Assets.WorldMaterials.Population
             }
         }
 
+        public Sprite PortraitSprite { get; set; }
+
         // serializing these so they're viewable in Unity editor
         [SerializeField] private int _id;
         [SerializeField] private string _firstName;
