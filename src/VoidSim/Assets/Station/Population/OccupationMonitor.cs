@@ -2,6 +2,7 @@
 using Assets.Placeables.Nodes;
 using Assets.Placeables.UI;
 using Assets.Scripts;
+using DG.Tweening;
 using Messaging;
 using QGame;
 using UnityEngine;
@@ -24,6 +25,8 @@ namespace Assets.Station.Population
         {
             var canvasTransform = Locator.CanvasManager.GetCanvas(CanvasType.Occupancy).transform;
             _canvasGroup = Instantiate(_canvasGroupPrefab, canvasTransform);
+            _canvasGroup.alpha = 0;
+            _canvasGroup.DOFade(1, .5f);
             Locator.MessageHub.AddListener(this, PopContainerSet.MessageName);
         }
 
