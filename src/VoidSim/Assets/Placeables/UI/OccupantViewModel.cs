@@ -44,6 +44,8 @@ namespace Assets.Placeables.UI
 
         private void HandleOccupancyUpdate(Occupancy obj)
         {
+            if (!obj.IsOccupied)
+                this.
             UpdateSprite();
         }
 

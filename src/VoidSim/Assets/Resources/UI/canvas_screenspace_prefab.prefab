@@ -26,7 +26,7 @@ GameObject:
   - component: {fileID: 114447802290044604}
   - component: {fileID: 114285944118373438}
   m_Layer: 0
-  m_Name: canvas_prefab
+  m_Name: canvas_screenspace_prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

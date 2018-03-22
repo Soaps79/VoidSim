@@ -22,7 +22,7 @@ namespace Assets.Station.Population
 
         void Start()
         {
-            var canvasTransform = GameObject.Find("GameUICanvas").transform;
+            var canvasTransform = Locator.CanvasManager.GetCanvas(CanvasType.Occupancy).transform;
             _canvasGroup = Instantiate(_canvasGroupPrefab, canvasTransform);
             Locator.MessageHub.AddListener(this, PopContainerSet.MessageName);
         }
