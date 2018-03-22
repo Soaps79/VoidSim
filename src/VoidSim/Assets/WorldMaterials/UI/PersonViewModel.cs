@@ -4,6 +4,7 @@ using QGame;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+#pragma warning disable 649
 
 namespace Assets.WorldMaterials.UI
 {
@@ -22,6 +23,11 @@ namespace Assets.WorldMaterials.UI
 
         public void SetData(Person person)
         {
+            if (_person != null)
+            {
+                _person.OnUpdate -= SetFromData;
+            }
+
             _person = person;
             SetFromData(_person);
             _person.OnUpdate += SetFromData;

@@ -1,10 +1,11 @@
-﻿using Assets.Placeables.Nodes;
+﻿using System;
+using Assets.Placeables.Nodes;
 using Assets.Scripts;
 using UIWidgets;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
+#pragma warning disable 649
 
 namespace Assets.Placeables.UI
 {
@@ -28,7 +29,6 @@ namespace Assets.Placeables.UI
             trigger.OnHoverActivate += HandleTooltipActivate;
 
             onSelect.AddListener(HandleSelected);
-            onDeselect.AddListener(HandleDeselect);
         }
 
         private void HandleSelected(ListViewItem item)
@@ -37,15 +37,8 @@ namespace Assets.Placeables.UI
             Locator.InfoPanelManager.AddPanel(_occupancy.OccupiedBy, transform.position);
         }
 
-        private void HandleDeselect(ListViewItem item)
-        {
-            
-        }
-
         private void HandleOccupancyUpdate(Occupancy obj)
         {
-            if (!obj.IsOccupied)
-                this.
             UpdateSprite();
         }
 

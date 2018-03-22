@@ -20,22 +20,25 @@ namespace Assets.Scripts
         [SerializeField] private Canvas _worldSpacePrefab;
         [SerializeField] private Camera _mainCamera;
         private readonly Dictionary<CanvasType, Canvas> _canvases = new Dictionary<CanvasType, Canvas>();
-        private Canvas _screenspace_root;
-        private Transform _worldspace_root;
+        
+        // figure out using Canvas here vs using Transform
+        private Canvas _screenspaceRoot;
+        private Transform _worldspaceRoot;
+        private Transform _uiRoot;
 
         void Awake()
         {
+            _uiRoot = new GameObject("ui_root").transform;
             CreateScreenSpaceCanvases();
             CreateWorldSpaceCanvases();
         }
 
         private void CreateWorldSpaceCanvases()
         {
-            _worldspace_root = new GameObject("worldspace_root").transform;
-            //_worldspace_root.worldCamera = _mainCamera;
-            //_worldspace_root.name = "worldspace_root";
+            _worldspaceRoot = new GameObject("worldspace_root").transform;
+            _worldspaceRoot.SetParent(_uiRoot);
 
-            var canvas = Instantiate(_worldSpacePrefab, _worldspace_root, false);
+            var canvas = Instantiate(_worldSpacePrefab, _worldspaceRoot, false);
             canvas.name = "occupancy";
             canvas.worldCamera = _mainCamera;
             _canvases.Add(CanvasType.Occupancy, canvas);
@@ -43,21 +46,21 @@ namespace Assets.Scripts
 
         private void CreateScreenSpaceCanvases()
         {
-            _screenspace_root = Instantiate(_screenSpacePrefab);
-            _screenspace_root.worldCamera = _mainCamera;
-            _screenspace_root.name = "screenspace_root";
+            _screenspaceRoot = Instantiate(_screenSpacePrefab, _uiRoot);
+            _screenspaceRoot.worldCamera = _mainCamera;
+            _screenspaceRoot.name = "screenspace_root";
 
-            var canvas = Instantiate(_screenSpacePrefab, _screenspace_root.transform, false);
+            var canvas = Instantiate(_screenSpacePrefab, _screenspaceRoot.transform, false);
             canvas.name = "constant_update";
             canvas.worldCamera = _mainCamera;
             _canvases.Add(CanvasType.ConstantUpdate, canvas);
 
-            canvas = Instantiate(_screenSpacePrefab, _screenspace_root.transform, false);
+            canvas = Instantiate(_screenSpacePrefab, _screenspaceRoot.transform, false);
             canvas.name = "medium_update";
             canvas.worldCamera = _mainCamera;
             _canvases.Add(CanvasType.MediumUpdate, canvas);
 
-            canvas = Instantiate(_screenSpacePrefab, _screenspace_root.transform, false);
+            canvas = Instantiate(_screenSpacePrefab, _screenspaceRoot.transform, false);
             canvas.name = "low_update";
             canvas.worldCamera = _mainCamera;
             _canvases.Add(CanvasType.LowUpdate, canvas);
