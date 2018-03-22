@@ -12,7 +12,7 @@ namespace Assets.Station.UI
 		[SerializeField] private float _travelTime;
 		[SerializeField] private GameColors _colors;
 
-		public void Initialize(GameObject canvas, int amount, bool wasBought, Vector3 position)
+		public void Initialize(Transform canvas, int amount, bool wasBought, Vector3 position)
 		{
 			var text = GetComponent<TMP_Text>();
 			transform.SetParent(canvas.transform, false);

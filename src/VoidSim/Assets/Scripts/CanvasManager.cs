@@ -6,7 +6,7 @@ namespace Assets.Scripts
 {
     public enum CanvasType
     {
-        ConstantUpdate, MediumUpdate, LowUpdate, Occupancy
+        ConstantUpdate, MediumUpdate, LowUpdate, Occupancy, GameText
     }
 
     public interface ICanvasManager
@@ -42,6 +42,11 @@ namespace Assets.Scripts
             canvas.name = "occupancy";
             canvas.worldCamera = _mainCamera;
             _canvases.Add(CanvasType.Occupancy, canvas);
+
+            canvas = Instantiate(_worldSpacePrefab, _worldspaceRoot, false);
+            canvas.name = "game_text";
+            canvas.worldCamera = _mainCamera;
+            _canvases.Add(CanvasType.GameText, canvas);
         }
 
         private void CreateScreenSpaceCanvases()

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Logistics;
+using Assets.Scripts;
 using Assets.Station.UI;
 using Assets.WorldMaterials;
 using Assets.WorldMaterials.Products;
@@ -149,10 +150,10 @@ namespace Assets.Station
 
 		private void CreateCompletionText(int amount, bool wasBought)
 		{
-            var canvas = GameObject.Find("GameUICanvas");
-			var text = Instantiate(_textPrefab);
-			//text.transform.position = Camera.main.WorldToScreenPoint(transform.position);
-			text.Initialize(canvas, amount, wasBought, transform.position);
+            var text = Instantiate(_textPrefab);
+			text.Initialize(
+                Locator.CanvasManager.GetCanvas(CanvasType.GameText).transform, 
+                amount, wasBought, transform.position);
 		}
 
 		// manifests are complete, tell the berth

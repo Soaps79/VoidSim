@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Placeables;
 using Assets.Placeables.Nodes;
 using Assets.Scripts;
 using Assets.Scripts.Serialization;
@@ -9,7 +8,6 @@ using Assets.WorldMaterials;
 using Assets.WorldMaterials.Products;
 using Assets.WorldMaterials.UI;
 using Messaging;
-using ModestTree;
 using QGame;
 using UnityEngine;
 
@@ -127,7 +125,8 @@ namespace Assets.Station
 			_purchasing.Clear();
 
 			var ingredients = new List<ProductAmount>();
-			Factories.Where(i => i.IsBuying && i.IsCrafting).ForEach(i => ingredients.AddRange(i.GetDayForecast()));
+			var factories = Factories.Where(i => i.IsBuying && i.IsCrafting).ToList();
+            factories.ForEach(i => ingredients.AddRange(i.GetDayForecast()));
 			foreach (var ingredient in ingredients)
 			{
 				if(!_purchasing.ContainsKey(ingredient.ProductId))

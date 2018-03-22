@@ -6,15 +6,14 @@ using Assets.WorldMaterials.Products;
 using Assets.WorldMaterials.Trade;
 using QGame;
 using UnityEngine;
-using Zenject;
 using WorldClock = Assets.Scripts.WorldClock;
 
 namespace Assets.Void
 {
 	public class VoidActor : QScript, ITransitLocation, ITraderDriver, IPopulationHost
 	{
-		[Inject] private WorldClock _worldClock;
-		[Inject] private ProductLookup _productLookup;
+		private IWorldClock _worldClock;
+		private ProductLookup _productLookup;
 
 		[SerializeField] private ProductValueLookup _valueLookup;
 		[SerializeField] private TraderRequestsSO _tradeRequests;
@@ -27,6 +26,8 @@ namespace Assets.Void
 		void Start()
 		{
 			_valueLookup = ProductValueLookup.Instance;
+		    _worldClock = Locator.WorldClock;
+		    _productLookup = ProductLookup.Instance;
 			InstantiateVoidTrader();
 			Locator.MessageHub.QueueMessage(LogisticsMessages.RegisterLocation, new TransitLocationMessageArgs{ TransitLocation = this });
 		}
@@ -40,7 +41,7 @@ namespace Assets.Void
 			_trader.Initialize(this, ClientName);
 			
 			_automater = go.AddComponent<ProductTradeAutomater>();
-			_automater.Initialize(_trader, _worldClock, _tradeRequests);
+			_automater.Initialize(_trader, Locator.WorldClock, _tradeRequests);
 		}
 
 		public void HandleProvideSuccess(TradeManifest manifest)

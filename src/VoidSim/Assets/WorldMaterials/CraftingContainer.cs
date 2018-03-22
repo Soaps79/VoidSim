@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.WorldMaterials.Products;
 using QGame;
 using UnityEngine;
-using Zenject;
 
 namespace Assets.Scripts.WorldMaterials
 {
@@ -31,7 +29,7 @@ namespace Assets.Scripts.WorldMaterials
         }
 
         public CraftingContainerInfo Info;
-        public WorldClock WorldClock;
+        public IWorldClock WorldClock;
 
         private readonly List<QueuedRecipe> _recipeQueue = new List<QueuedRecipe>();
         private QueuedRecipe _currentlyCrafting;

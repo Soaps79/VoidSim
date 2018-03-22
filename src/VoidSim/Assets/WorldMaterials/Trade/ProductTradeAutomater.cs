@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Assets.Scripts;
 using Assets.WorldMaterials.Products;
 using QGame;
 using TimeUnit = Assets.Scripts.TimeUnit;
@@ -27,7 +28,7 @@ namespace Assets.WorldMaterials.Trade
 
         private ProductTrader _trader;
 
-        public void Initialize(ProductTrader trader, WorldClock worldClock, TraderRequestsSO requests = null)
+        public void Initialize(ProductTrader trader, IWorldClock worldClock, TraderRequestsSO requests = null)
         {
             _trader = trader;
             InitializeRequestsTable();
@@ -59,7 +60,7 @@ namespace Assets.WorldMaterials.Trade
             }
         }
 
-        private void BindWorldClock(WorldClock worldClock)
+        private void BindWorldClock(IWorldClock worldClock)
         {
             worldClock.OnYearUp += HandleYearUp;
             worldClock.OnMonthUp += HandleMonthUp;

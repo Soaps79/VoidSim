@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Assets.Controllers.GUI;
 using Assets.Scripts;
-using Assets.Scripts.UI;
 using UnityEngine;
-using Zenject;
 using Object = UnityEngine.Object;
 
 namespace Assets.Placeables.UI

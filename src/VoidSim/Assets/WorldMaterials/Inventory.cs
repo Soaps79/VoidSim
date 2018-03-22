@@ -4,7 +4,6 @@ using System.Linq;
 using Assets.Scripts.Serialization;
 using Assets.WorldMaterials.Products;
 using QGame;
-using Zenject;
 
 namespace Assets.WorldMaterials
 {
@@ -47,8 +46,6 @@ namespace Assets.WorldMaterials
             public string Name;
             public int Id;
         }
-
-        public class Factory : Factory<Inventory> { }
 
         public Action OnInventoryChanged;
         public Action<int, int> OnProductsChanged;

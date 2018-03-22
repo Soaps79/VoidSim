@@ -14,9 +14,7 @@ using Assets.WorldMaterials.UI;
 using Messaging;
 using QGame;
 using UnityEngine;
-using Zenject;
 using TimeUnit = Assets.Scripts.TimeUnit;
-using WorldClock = Assets.Scripts.WorldClock;
 
 
 namespace Assets.Station
@@ -34,8 +32,8 @@ namespace Assets.Station
     {
         public const string ClientName = "Station";
 
-        [Inject] private WorldClock _worldClock;
-        [Inject] private ProductLookup _productLookup;
+        private IWorldClock _worldClock;
+        private ProductLookup _productLookup;
 
         [SerializeField] private InventoryScriptable _inventoryScriptable;
         [SerializeField] private PlaceablesLookup _placeablesLookup;
@@ -66,6 +64,8 @@ namespace Assets.Station
 	    void Start()
         {
 			Locator.MessageHub.AddListener(this, GameMessages.PreSave);
+            _worldClock = Locator.WorldClock;
+            _productLookup = ProductLookup.Instance;
 
 			MapLayers();
 	        InitializeHardPoints();
