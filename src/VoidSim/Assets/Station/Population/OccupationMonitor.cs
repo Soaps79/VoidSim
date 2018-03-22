@@ -6,6 +6,7 @@ using DG.Tweening;
 using Messaging;
 using QGame;
 using UnityEngine;
+#pragma warning disable 649
 
 namespace Assets.Station.Population
 {
@@ -17,6 +18,9 @@ namespace Assets.Station.Population
     {
         [SerializeField] private PopContainerSetViewModel _viewModelPrefab;
         [SerializeField] private CanvasGroup _canvasGroupPrefab;
+        [SerializeField] private bool _startHidden;
+        private bool _isVisible;
+
         private CanvasGroup _canvasGroup;
         [SerializeField] private List<PopContainerSetViewModel> _containers 
             = new List<PopContainerSetViewModel>();
@@ -26,8 +30,23 @@ namespace Assets.Station.Population
             var canvasTransform = Locator.CanvasManager.GetCanvas(CanvasType.Occupancy).transform;
             _canvasGroup = Instantiate(_canvasGroupPrefab, canvasTransform);
             _canvasGroup.alpha = 0;
-            _canvasGroup.DOFade(1, .5f);
+            _canvasGroup.gameObject.SetActive(false);
+            if(!_startHidden)
+                Show();
+            
             Locator.MessageHub.AddListener(this, PopContainerSet.MessageName);
+            OnEveryUpdate += CheckForKeypress;
+        }
+
+        private void CheckForKeypress()
+        {
+            if (Input.GetButtonDown("Population Display"))
+            {
+                if(_isVisible)
+                    Hide();
+                else
+                    Show();
+            }
         }
 
         public void HandleMessage(string type, MessageArgs args)
@@ -52,6 +71,21 @@ namespace Assets.Station.Population
         {
             _containers.Remove(viewModel);
             Destroy(viewModel.gameObject);
+        }
+
+        private void Show()
+        {
+            _canvasGroup.alpha = 0;
+            _canvasGroup.gameObject.SetActive(true);
+            _canvasGroup.DOFade(1, .5f);
+            _isVisible = true;
+        }
+
+        private void Hide()
+        {
+            _canvasGroup.DOFade(0, .5f)
+                .OnComplete(() => _canvasGroup.gameObject.SetActive(false));
+            _isVisible = false;
         }
 
         public string Name { get { return "OccupationMonitor"; } }

@@ -60,6 +60,7 @@ MonoBehaviour:
     type: 2}
   _canvasGroupPrefab: {fileID: 225841797129575816, guid: b02a07d533b3b0440ac87e251809eb45,
     type: 2}
+  _startHidden: 1
   _containers: []
 --- !u!114 &114195346340893394
 MonoBehaviour:
