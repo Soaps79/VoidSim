@@ -426,7 +426,6 @@ GameObject:
   - component: {fileID: 224507801476005274}
   - component: {fileID: 222412889781914944}
   - component: {fileID: 114901484073730154}
-  - component: {fileID: 114088110033425024}
   - component: {fileID: 114488213880326924}
   - component: {fileID: 114957882986682724}
   - component: {fileID: 114357815420921316}
@@ -764,17 +763,6 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   UnscaledTime: 0
---- !u!114 &114088110033425024
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1943827582228186}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a867c40ca7dec447878bedc30b4da53, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114120074171635916
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1808,8 +1796,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114088110033425024}
-        m_MethodName: ClosePanel
+      - m_Target: {fileID: 114844928923040522}
+        m_MethodName: Close
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

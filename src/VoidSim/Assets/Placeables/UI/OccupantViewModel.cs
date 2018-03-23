@@ -1,6 +1,7 @@
 ﻿using System;
 using Assets.Placeables.Nodes;
 using Assets.Scripts;
+using Assets.Station.Population;
 using UIWidgets;
 using UnityEngine;
 using UnityEngine.UI;
@@ -35,6 +36,8 @@ namespace Assets.Placeables.UI
         {
             if (!_occupancy.IsOccupied) return;
             Locator.InfoPanelManager.AddPanel(_occupancy.OccupiedBy, transform.position);
+            Locator.MessageHub.QueueMessage(PersonSelectedMessageArgs.MessageName, 
+                new PersonSelectedMessageArgs { Person = _occupancy.OccupiedBy, IsSelected = true });
         }
 
         private void HandleOccupancyUpdate(Occupancy obj)

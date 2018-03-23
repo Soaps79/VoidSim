@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Assets.Placeables.Nodes;
+using Assets.WorldMaterials.Population;
 using QGame;
 using UnityEngine;
 
@@ -46,6 +47,7 @@ namespace Assets.Placeables.UI
                 var viewmodel = Instantiate(_containerPrefab, _containerParent, false);
                 viewmodel.name = popContainer.Name;
                 viewmodel.Initialize(popContainer);
+                _containers.Add(viewmodel);
             }
         }
 
@@ -58,6 +60,11 @@ namespace Assets.Placeables.UI
             {
                 Destroy(child.gameObject);
             }
+        }
+
+        public void DeselectExcept(Person person)
+        {
+            _containers.ForEach(i => i.DeselectExcept(person));
         }
     }
 }

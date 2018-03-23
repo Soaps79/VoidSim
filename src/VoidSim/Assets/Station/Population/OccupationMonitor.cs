@@ -2,7 +2,7 @@
 using Assets.Placeables.Nodes;
 using Assets.Placeables.UI;
 using Assets.Scripts;
-using Assets.Scripts.UI;
+using Assets.WorldMaterials.Population;
 using DG.Tweening;
 using Messaging;
 using QGame;
@@ -11,9 +11,16 @@ using UnityEngine;
 
 namespace Assets.Station.Population
 {
+    public class PersonSelectedMessageArgs : MessageArgs
+    {
+        public static string MessageName = "PersonSelected";
+        public Person Person;
+        public bool IsSelected;
+    }
+
     /// <summary>
-    /// Monitors all pop containers
-    /// Stores references to containers as they are placed, handles instantiating their UI components
+    /// Monitors all pop containers, references stored within as they are placed in-game
+    /// Handles instantiating their UI components, and managing selection behavior for Persons
     /// </summary>
     public class OccupationMonitor : QScript, IMessageListener
     {
@@ -23,8 +30,10 @@ namespace Assets.Station.Population
         private bool _isVisible;
 
         private CanvasGroup _canvasGroup;
-        [SerializeField] private List<PopContainerSetViewModel> _containers 
+        [SerializeField] private readonly List<PopContainerSetViewModel> _containers 
             = new List<PopContainerSetViewModel>();
+
+        private Person _currentSelected;
 
         void Start()
         {
@@ -36,6 +45,7 @@ namespace Assets.Station.Population
                 Show();
             
             Locator.MessageHub.AddListener(this, PopContainerSet.MessageName);
+            Locator.MessageHub.AddListener(this, PersonSelectedMessageArgs.MessageName);
             OnEveryUpdate += CheckForKeypress;
         }
 
@@ -54,6 +64,9 @@ namespace Assets.Station.Population
         {
             if (type == PopContainerSet.MessageName && args != null)
                 HandleContainer(args as PopContainerSetMessageArgs);
+
+            if (type == PersonSelectedMessageArgs.MessageName && args != null)
+                HandleSelection(args as PersonSelectedMessageArgs);
         }
 
         private void HandleContainer(PopContainerSetMessageArgs args)
@@ -72,6 +85,41 @@ namespace Assets.Station.Population
         {
             _containers.Remove(viewModel);
             Destroy(viewModel.gameObject);
+        }
+
+        // Person UI selection works as follows:
+        // Selection made in Occupancy UI - PersonSelected message sent and recieved here
+        // Containers notified to make sure it is the only one selected
+        // Monitor hooks into person (and saves into _currentSelected) to know when they move
+        // When person moves, HandleSelectedPersonLocationChange is called, which triggers another container notify
+        // when person panel is closed, monitor unhooks from _currentSelected, and notifies containers to deselect all
+        private void HandleSelection(PersonSelectedMessageArgs args)
+        {
+            if(args == null)
+                throw new UnityException("PersonSelectedMessage fired with bad data");
+
+            // disconnect and null current selection
+            if (_currentSelected != null)
+            {
+                _currentSelected.OnLocationChange -= HandleSelectedPersonLocationChange;
+                _currentSelected = null;
+            }
+
+            // hook into new person if there is one
+            if (args.IsSelected)
+            {
+                _currentSelected = args.Person;
+                _currentSelected.OnLocationChange += HandleSelectedPersonLocationChange;
+            }
+
+            // flush the container UI's
+            _containers.ForEach(i => i.DeselectExcept(_currentSelected));
+        }
+
+        private void HandleSelectedPersonLocationChange(Person person)
+        {
+            // if passing null, containers will deselect all
+            _containers.ForEach(i => i.DeselectExcept(person));
         }
 
         private void Show()

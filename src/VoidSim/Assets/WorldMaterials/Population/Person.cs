@@ -204,6 +204,7 @@ namespace Assets.WorldMaterials.Population
         [SerializeField] private List<PersonNeedsValue> _needsList = new List<PersonNeedsValue>();
         
         public Action<Person> OnUpdate;
+        public Action<Person> OnLocationChange;
 
         private void CheckUpdateCallback()
         {
@@ -247,6 +248,8 @@ namespace Assets.WorldMaterials.Population
         public void HandleLocationChange(PopContainerDetails details)
         {
             Wants.HandleLocationChange(details);
+            if (OnLocationChange != null)
+                OnLocationChange(this);
         }
 
         private void UpdateDebugOutput()

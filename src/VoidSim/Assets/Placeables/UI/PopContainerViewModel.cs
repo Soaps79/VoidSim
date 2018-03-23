@@ -1,4 +1,5 @@
 ﻿using Assets.Placeables.Nodes;
+using Assets.WorldMaterials.Population;
 using UIWidgets;
 using UnityEngine;
 
@@ -29,6 +30,21 @@ namespace Assets.Placeables.UI
             var width = Layout.GridConstraintCount * (itemWidth + Layout.Spacing.x) + Layout.GetMarginLeft() + Layout.GetMarginRight();
             var height = rows * (itemHeight + Layout.Spacing.y) + Layout.GetMarginTop() + Layout.GetMarginBottom();
             rect.sizeDelta = new Vector2(width, height);
+        }
+
+        public void DeselectExcept(Person person)
+        {
+            for (var i = 0; i < DataSource.Count; i++)
+            {
+                if (person != null 
+                    && DataSource[i].IsOccupied 
+                    && DataSource[i].OccupiedBy.Id == person.Id)
+                {
+                    Select(i);
+                }
+                else
+                    Deselect(i);
+            }
         }
     }
 }

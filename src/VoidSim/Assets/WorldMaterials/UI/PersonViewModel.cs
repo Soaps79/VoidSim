@@ -1,4 +1,6 @@
 ﻿using Assets.Controllers.GUI;
+using Assets.Scripts;
+using Assets.Station.Population;
 using Assets.WorldMaterials.Population;
 using QGame;
 using TMPro;
@@ -48,6 +50,13 @@ namespace Assets.WorldMaterials.UI
 
             if (_person.PortraitSprite != null)
                 _portrait.sprite = _person.PortraitSprite;
+        }
+
+        public void Close()
+        {
+            Locator.MessageHub.QueueMessage(PersonSelectedMessageArgs.MessageName, 
+                new PersonSelectedMessageArgs { Person = _person, IsSelected = false });
+            gameObject.SetActive(false);
         }
     }
 }
