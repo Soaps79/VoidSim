@@ -33,7 +33,6 @@ namespace Assets.Placeables
 		void Start()
 		{
 			Locator.MessageHub.AddListener(this, PlaceableMessages.PlaceablePlaced);
-			PlaceableUIFactory.Initialize(CenterUI);
 
 			if(_serializer.HasDataFor(this, "Placeables"))
 				HandleLoadingPlaceables();

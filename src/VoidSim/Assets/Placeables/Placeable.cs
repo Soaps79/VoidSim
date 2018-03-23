@@ -107,7 +107,7 @@ namespace Assets.Placeables
 			}
 			else
 			{
-				PlaceableUIFactory.ToggleUI(this);
+				Locator.InfoPanelManager.AddPanel(this);
 			}
 		}
 	}

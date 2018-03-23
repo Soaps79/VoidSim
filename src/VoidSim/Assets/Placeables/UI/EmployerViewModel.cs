@@ -3,6 +3,7 @@ using Assets.Placeables.Nodes;
 using QGame;
 using UnityEngine;
 using UnityEngine.UI;
+#pragma warning disable 649
 
 namespace Assets.Placeables.UI
 {
@@ -46,5 +47,10 @@ namespace Assets.Placeables.UI
 			popIcon.gameObject.SetActive(true);
 			_icons.Add(popIcon);
 		}
-	}
+
+	    void OnDestroy()
+	    {
+	        _employer.OnEmployeesChanged -= HandleEmployeeChanged;
+        }
+    }
 }
