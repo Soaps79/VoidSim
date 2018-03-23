@@ -14,6 +14,9 @@ namespace Assets.Scripts
         Canvas GetCanvas(CanvasType type);
     }
 
+    /// <summary>
+    /// This class handles the creation and references of the game's canvases
+    /// </summary>
     public class CanvasManager : QScript, ICanvasManager
     {
         [SerializeField] private Canvas _screenSpacePrefab;
@@ -35,6 +38,7 @@ namespace Assets.Scripts
 
         private void CreateWorldSpaceCanvases()
         {
+            // creates worldspace_root and all known worldspace canvases
             _worldspaceRoot = new GameObject("worldspace_root").transform;
             _worldspaceRoot.SetParent(_uiRoot);
 
@@ -51,6 +55,7 @@ namespace Assets.Scripts
 
         private void CreateScreenSpaceCanvases()
         {
+            // creates screenspace_root and all known screenspace canvases
             _screenspaceRoot = Instantiate(_screenSpacePrefab, _uiRoot);
             _screenspaceRoot.worldCamera = _mainCamera;
             _screenspaceRoot.name = "screenspace_root";

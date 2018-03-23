@@ -1,8 +1,4 @@
-﻿using System;
-using Assets.Placeables;
-using Assets.Placeables.Nodes;
-using Assets.WorldMaterials.Population;
-using Assets.WorldMaterials.UI;
+﻿using Assets.WorldMaterials.Population;
 using QGame;
 using UnityEngine;
 
@@ -13,26 +9,23 @@ namespace Assets.Scripts.UI
         void AddPanel(Person person, Vector3 clickLocation);
     }
 
+    /// <summary>
+    /// Serves as an interface exposed to the project for manipulating information panels.
+    /// </summary>
     public class InfoPanelManager : QScript, IInfoPanelManager
     {
-        [SerializeField] private PersonViewModel _personPrefab;
-        [SerializeField] private Vector3 _personOffset;
-        private PersonViewModel _personInstance;
-        private Canvas _personCanvas;
+        private PersonPanelManager _personManager;
 
         void Start()
         {
-            _personCanvas = Locator.CanvasManager.GetCanvas(CanvasType.ConstantUpdate);
-            _personInstance = Instantiate(_personPrefab, _personCanvas.transform, false);
-            _personInstance.name = "PersonViewModel";
-            _personInstance.gameObject.SetActive(false);
+            _personManager = transform.GetComponentInChildren<PersonPanelManager>();
+            if(_personManager == null)
+                throw new UnityException("InfoPanelManager could not find its PersonPanel");
         }
 
         public void AddPanel(Person person, Vector3 clickLocation)
         {
-            _personInstance.SetData(person);
-            _personInstance.transform.position = clickLocation + _personOffset;
-            _personInstance.gameObject.SetActive(true);
+            _personManager.AddPanel(person, clickLocation);
         }
     }
 }
