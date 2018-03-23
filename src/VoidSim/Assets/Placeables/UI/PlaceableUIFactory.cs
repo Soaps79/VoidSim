@@ -39,21 +39,23 @@ namespace Assets.Placeables.UI
 			var canvas = Locator.CanvasManager.GetCanvas(CanvasType.ConstantUpdate);
             var viewModelInstance = GameObject.Instantiate(_scriptable.ViewModel, canvas.transform, false);
 			viewModelInstance.Bind(placeable);
-			var position = GetUiObjectPosition(placeable.transform);
-			viewModelInstance.transform.position = position;
-			var close = viewModelInstance.GetComponent<ClosePanelButton>();
+            var position = GetUiObjectPosition(placeable.transform);
+            viewModelInstance.transform.position = position;
+            var close = viewModelInstance.GetComponent<ClosePanelButton>();
 			if (close != null)
 				close.OnClose += () => { DisableUI(placeable.name); };
 		}
 
 		private static Vector2 GetUiObjectPosition(Transform placeableTransform)
 		{
-			const float distance = 300f;
-			var placeablePoint = Camera.main.WorldToScreenPoint(placeableTransform.position);
-			var stationPoint = Camera.main.WorldToScreenPoint(_centerPoint.position);
+			const float distance = 40f;
+			var placeablePoint = placeableTransform.position;
+			var stationPoint = _centerPoint.position;
 
 			var direction = placeablePoint - stationPoint;
-			return stationPoint + (direction.normalized * distance);
+		    var offset = direction.normalized * distance;
+
+            return stationPoint + offset;
 		}
 
 		// destroy the UI item
