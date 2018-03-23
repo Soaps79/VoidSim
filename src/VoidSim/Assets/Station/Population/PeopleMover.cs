@@ -70,7 +70,7 @@ namespace Assets.Station.Population
                 {
                     var person = hasNoLocation[i];
                     // the ready to work loop will pick these people up
-                    if (person.Wants.IsRequesting(PopContainerType.Employment) && !string.IsNullOrEmpty(person.Employer))
+                    if (person.Wants.IsRequesting(PersonWantsType.Work) && !string.IsNullOrEmpty(person.Employer))
                         continue;
 
                     if(!string.IsNullOrEmpty(person.Home))
@@ -82,7 +82,7 @@ namespace Assets.Station.Population
             yield return null;
 
             // if they are ready to work, find their job and send them there
-            var readyToWork = _control.AllPopulation.Where(i => i.Wants.IsRequesting(PopContainerType.Employment)).ToList();
+            var readyToWork = _control.AllPopulation.Where(i => i.Wants.IsRequesting(PersonWantsType.Work)).ToList();
             yield return null;
 
             if (readyToWork.Any())
@@ -104,7 +104,7 @@ namespace Assets.Station.Population
             yield return null;
 
             // if they need fulfillment, try and find it
-            var wantsToMove = _control.AllPopulation.Where(i => i.Wants.IsRequesting(PopContainerType.Fulfillment)).ToList();
+            var wantsToMove = _control.AllPopulation.Where(i => i.Wants.IsRequesting(PersonWantsType.Fulfillment)).ToList();
             yield return null;
 
             if (wantsToMove.Any())
@@ -112,7 +112,7 @@ namespace Assets.Station.Population
                 for (int i = 0; i < wantsToMove.Count; i++)
                 {
                     var person = wantsToMove[i];
-                    var needs = person.Wants.GetRequested(PopContainerType.Fulfillment) as FulfillmentWant;
+                    var needs = person.Wants.GetRequested(PersonWantsType.Fulfillment) as FulfillmentWant;
                     if(needs == null)
                         throw new UnityException("Person want handler passing around bad data");
 

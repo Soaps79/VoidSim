@@ -8,6 +8,12 @@ using Random = UnityEngine.Random;
 
 namespace Assets.WorldMaterials.Population
 {
+    [Serializable]
+    public enum PersonWantsType
+    {
+        Fulfillment, Movement, Work
+    }
+
     public class NeedsValue
     {
         public PersonNeedsType Type;
@@ -16,7 +22,7 @@ namespace Assets.WorldMaterials.Population
 
     public interface IPersonWant
     {
-        PopContainerType Type { get; }
+        PersonWantsType Type { get; }
         string GetDisplayName { get; }
         bool IsActive { get; set; }
     }
@@ -26,7 +32,7 @@ namespace Assets.WorldMaterials.Population
     /// </summary>
     public class FulfillmentWant : IPersonWant
     {
-        public PopContainerType Type { get { return PopContainerType.Fulfillment; } }
+        public PersonWantsType Type { get { return PersonWantsType.Fulfillment; } }
 
         public string GetDisplayName
         {
@@ -48,7 +54,7 @@ namespace Assets.WorldMaterials.Population
     public class TransportWant : IPersonWant
     {
         public string ClientName;
-        public PopContainerType Type { get { return PopContainerType.Transport; } }
+        public PersonWantsType Type { get { return PersonWantsType.Movement; } }
         public string GetDisplayName { get { return "Requesting transport"; } }
         public bool IsActive { get; set; }
     }
@@ -58,7 +64,7 @@ namespace Assets.WorldMaterials.Population
     /// </summary>
     public class GoToWorkWant : IPersonWant
     {
-        public PopContainerType Type { get { return PopContainerType.Employment; } }
+        public PersonWantsType Type { get { return PersonWantsType.Work; } }
         public string GetDisplayName { get { return "Ready to work"; } }
         public bool IsActive { get; set; }
     }
@@ -78,14 +84,14 @@ namespace Assets.WorldMaterials.Population
 
         public bool IsAtWork { get; private set; }
 
-        private readonly Dictionary<PopContainerType, IPersonWant> _wants = new Dictionary<PopContainerType, IPersonWant>();
+        private readonly Dictionary<PersonWantsType, IPersonWant> _wants = new Dictionary<PersonWantsType, IPersonWant>();
         private static Dictionary<PersonNeedsType, PersonNeeds> _staticNeeds;
 
         public WantsHandler()
         {
-            _wants.Add(PopContainerType.Employment, new GoToWorkWant());
-            _wants.Add(PopContainerType.Fulfillment, new FulfillmentWant());
-            _wants.Add(PopContainerType.Transport, new TransportWant());
+            _wants.Add(PersonWantsType.Work, new GoToWorkWant());
+            _wants.Add(PersonWantsType.Fulfillment, new FulfillmentWant());
+            _wants.Add(PersonWantsType.Movement, new TransportWant());
         }
 
         public float OverallMood { get; private set; }
@@ -131,7 +137,7 @@ namespace Assets.WorldMaterials.Population
         {
             if (details.Type == PopContainerType.Employment)
             {
-                _wants[PopContainerType.Employment].IsActive = false;
+                _wants[PersonWantsType.Work].IsActive = false;
                 IsAtWork = true;
             }
             else
@@ -175,12 +181,12 @@ namespace Assets.WorldMaterials.Population
             return false;
         }
 
-        public bool IsRequesting(PopContainerType type)
+        public bool IsRequesting(PersonWantsType type)
         {
             return _wants[type].IsActive;
         }
 
-        public IPersonWant GetRequested(PopContainerType type)
+        public IPersonWant GetRequested(PersonWantsType type)
         {
             return _wants[type];
         }
@@ -188,17 +194,17 @@ namespace Assets.WorldMaterials.Population
         public void AssessNeeds()
         {
             // employment and transport are dominant needs until they are fulfilled
-            if (_wants[PopContainerType.Employment].IsActive || _wants[PopContainerType.Transport].IsActive)
+            if (_wants[PersonWantsType.Work].IsActive || _wants[PersonWantsType.Movement].IsActive)
                 return;
 
             // if the Person is already trying to fulfill, don't bother with the random check again
-            var isAlreadyTryingToFulfill = _wants[PopContainerType.Fulfillment].IsActive;
-            _wants[PopContainerType.Fulfillment].IsActive = false;
+            var isAlreadyTryingToFulfill = _wants[PersonWantsType.Fulfillment].IsActive;
+            _wants[PersonWantsType.Fulfillment].IsActive = false;
             RefreshUnfulfilledNeeds();
 
             if (_unfulfilledNeeds.Any() && (isAlreadyTryingToFulfill || CheckWantsToFulfill(Random.value)))
             {
-                var service = _wants[PopContainerType.Fulfillment] as FulfillmentWant;
+                var service = _wants[PersonWantsType.Fulfillment] as FulfillmentWant;
                 service.UnfulfilledNeeds.Clear();
                 service.UnfulfilledNeeds.AddRange(_unfulfilledNeeds.ToList());
                 service.IsActive = true;
@@ -208,7 +214,7 @@ namespace Assets.WorldMaterials.Population
             // if no needs require attention, make sure the world knows person is ready to work
             if (!IsAtWork && CheckReadyToWork(Random.value))
             {
-                _wants[PopContainerType.Employment].IsActive = true;
+                _wants[PersonWantsType.Work].IsActive = true;
             }
         }
 
