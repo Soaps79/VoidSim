@@ -9,9 +9,10 @@ using Random = UnityEngine.Random;
 namespace Assets.WorldMaterials.Population
 {
     [Serializable]
+    // Each of these types has a corresponding IPersonWant implementation
     public enum PersonWantsType
     {
-        Fulfillment, Movement, Work
+        Fulfillment, Transport, Work
     }
 
     public class NeedsValue
@@ -20,6 +21,7 @@ namespace Assets.WorldMaterials.Population
         public float Amount;
     }
 
+    // Holds common fields for all possible Wants
     public interface IPersonWant
     {
         PersonWantsType Type { get; }
@@ -54,13 +56,13 @@ namespace Assets.WorldMaterials.Population
     public class TransportWant : IPersonWant
     {
         public string ClientName;
-        public PersonWantsType Type { get { return PersonWantsType.Movement; } }
+        public PersonWantsType Type { get { return PersonWantsType.Transport; } }
         public string GetDisplayName { get { return "Requesting transport"; } }
         public bool IsActive { get; set; }
     }
 
     /// <summary>
-    /// Indicates that the Person's Needs are ulfilled and they are ready to work
+    /// Indicates that the Person's Needs are fulfilled and they are ready to work
     /// </summary>
     public class GoToWorkWant : IPersonWant
     {
@@ -91,7 +93,7 @@ namespace Assets.WorldMaterials.Population
         {
             _wants.Add(PersonWantsType.Work, new GoToWorkWant());
             _wants.Add(PersonWantsType.Fulfillment, new FulfillmentWant());
-            _wants.Add(PersonWantsType.Movement, new TransportWant());
+            _wants.Add(PersonWantsType.Transport, new TransportWant());
         }
 
         public float OverallMood { get; private set; }
@@ -194,7 +196,7 @@ namespace Assets.WorldMaterials.Population
         public void AssessNeeds()
         {
             // employment and transport are dominant needs until they are fulfilled
-            if (_wants[PersonWantsType.Work].IsActive || _wants[PersonWantsType.Movement].IsActive)
+            if (_wants[PersonWantsType.Work].IsActive || _wants[PersonWantsType.Transport].IsActive)
                 return;
 
             // if the Person is already trying to fulfill, don't bother with the random check again
