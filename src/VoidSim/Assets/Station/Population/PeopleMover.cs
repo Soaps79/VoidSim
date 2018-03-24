@@ -131,8 +131,6 @@ namespace Assets.Station.Population
             var elapsed = Time.time - startTime;
             if(elapsed > _tickTime)
                 throw new UnityException("PeopleMover took longer to move people than its given tickTime, problems coming.");
-
-            UberDebug.LogChannel(LogChannels.Performance, string.Format("PeopleMoverUpdate Total: {0}", elapsed));
         }
 
         private PopContainerDetails _details = new PopContainerDetails();
