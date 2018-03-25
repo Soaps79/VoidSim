@@ -58,6 +58,13 @@ namespace Assets.Placeables.Nodes
 	            PlaceableName = InstanceName,
 	            ActivityPrefix = _containerGenerationParams.ActivityPrefix
 	        });
+	        _container.OnUpdate += HandleContainerUpdate;
+            HandleContainerUpdate();
+	    }
+
+	    private void HandleContainerUpdate()
+	    {
+	        _countAffector.Efficiency = (float)_container.CurrentOccupantCount / MaxEmployeeCount;
         }
 
 	    public override void BroadcastPlacement()
@@ -88,7 +95,6 @@ namespace Assets.Placeables.Nodes
 	    private void UpdateEmployees()
 	    {
 	        CurrentEmployeeCount = _employees.Count;
-	        _countAffector.Efficiency = (float) CurrentEmployeeCount / MaxEmployeeCount;
 	        if (OnEmployeesChanged != null)
 	            OnEmployeesChanged();
 	    }

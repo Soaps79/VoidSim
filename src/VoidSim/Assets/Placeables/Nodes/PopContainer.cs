@@ -56,7 +56,10 @@ namespace Assets.Placeables.Nodes
 
         [SerializeField] private bool _hasReserved;
         [SerializeField] private int _reservedCount;
+
+        public int CurrentOccupantCount {  get { return _actualOccupants; } }
         [SerializeField] private int _actualOccupants;
+
         public bool HasRoom { get { return _actualOccupants < MaxCapacity; } }
 
         public Action OnUpdate;
