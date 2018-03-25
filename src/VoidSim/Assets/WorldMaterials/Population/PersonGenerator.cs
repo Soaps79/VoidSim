@@ -20,8 +20,7 @@ namespace Assets.WorldMaterials.Population
         private readonly Dictionary<PersonNeedsType, PersonNeeds> _staticNeeds =
             new Dictionary<PersonNeedsType, PersonNeeds>();
 
-        private readonly List<Sprite> _malePortraits = new List<Sprite>();
-        private readonly List<Sprite> _femalePortraits = new List<Sprite>();
+        private readonly PortraitManager _portraitManager = new PortraitManager();
 
 
         public void Initialize(GenerationParams genParams)
@@ -30,8 +29,8 @@ namespace Assets.WorldMaterials.Population
             _maxNames = genParams.MaxNamesLoaded;
             _needsTemplate = genParams.ResidentNeeds.ToDictionary(i => i.Type); ;
 
-            _malePortraits.AddRange(genParams.MalePortraits);
-            _femalePortraits.AddRange(genParams.FemalePortraits);
+            _portraitManager.AddMaleSprites(genParams.MalePortraits);
+            _portraitManager.AddFemaleSprites(genParams.FemalePortraits);
 
             PopulateNameLists();
             PopulateStaticNeedsList();
@@ -147,8 +146,8 @@ namespace Assets.WorldMaterials.Population
                 FirstName = isMale ? Pop(_maleNames) : Pop(_femaleNames),
                 LastName = Pop(_lastNames),
                 IsMale = isMale,
-                PortraitSprite = isMale ? _malePortraits[Random.Range(0, _malePortraits.Count)]
-                    : _femalePortraits[Random.Range(0, _femalePortraits.Count)]
+                PortraitSprite = isMale ? _portraitManager.GetNextMale()
+                    : _portraitManager.GetNextFemale()
             };
 
             // match static data from SO with random values
