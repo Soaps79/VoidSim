@@ -271,7 +271,7 @@ namespace Assets.Placeables.Nodes
 		{
 			return new ProductFactoryData
 			{
-				Name = name,
+				Name = InstanceName,
 				IsCrafting = IsCrafting,
 				IsBuying = IsBuying,
 				CurrentlyCraftingRecipeId = IsCrafting ? CurrentlyCrafting.Id : 0,

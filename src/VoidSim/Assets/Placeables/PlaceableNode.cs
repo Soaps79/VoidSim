@@ -10,7 +10,7 @@ namespace Assets.Placeables
 		void BroadcastPlacement();
 		string NodeName { get; }
 		void HandleRemove();
-		string Name { get; set; }
+		string InstanceName { get; }
 	}
 
     public abstract class PlaceableNode<T> : QScript, IPlaceableNode where T: PlaceableNode<T>
@@ -33,10 +33,14 @@ namespace Assets.Placeables
 	    public abstract void BroadcastPlacement();
 	    public abstract string NodeName { get; }
 
-	    public string Name
+	    private string _instanceName;
+	    public string InstanceName
 	    {
-	        get { return name; }
-	        set { name = value; }
+	        get {
+                if (string.IsNullOrEmpty(_instanceName))
+                    _instanceName = name;
+                return _instanceName;
+            }
 	    }
 	}
 }

@@ -55,7 +55,7 @@ namespace Assets.Placeables.Nodes
 	            Type = PopContainerType.Employment,
 	            MaxCapacity = MaxEmployeeCount,
 	            Affectors = _containerGenerationParams.Affectors,
-	            PlaceableName = name,
+	            PlaceableName = InstanceName,
 	            ActivityPrefix = _containerGenerationParams.ActivityPrefix
 	        });
         }
@@ -73,7 +73,7 @@ namespace Assets.Placeables.Nodes
 
 		public void AddEmployee(Person person)
 		{
-		    person.Employer = name;
+		    person.Employer = InstanceName;
             _employees.Add(person);
             _container.AddReserved(person);
 		    UpdateEmployees();
@@ -95,7 +95,7 @@ namespace Assets.Placeables.Nodes
 
 	    public void RemoveEmployee(Person person)
 	    {
-	        if (person.Employer != name)
+	        if (person.Employer != InstanceName)
 	            return;
 
 	        person.Employer = string.Empty;

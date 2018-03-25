@@ -40,7 +40,7 @@ namespace Assets.Placeables.Nodes
         // creates a container, adds it to the list, returns it
         public PopContainer CreateContainer(PopContainerParams param)
         {
-            var container = new PopContainer(param) {Name = (name + "_" + param.Type).ToLower()};
+            var container = new PopContainer(param) {Name = (InstanceName + "_" + param.Type).ToLower()};
 
             if (param.Type == PopContainerType.Employment)
             {

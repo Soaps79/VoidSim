@@ -2,7 +2,6 @@
 using System.Linq;
 using Assets.Placeables.Nodes;
 using Assets.Placeables.Placement;
-using Assets.Placeables.UI;
 using Assets.Scripts;
 using Assets.Scripts.Serialization;
 using Assets.Station;

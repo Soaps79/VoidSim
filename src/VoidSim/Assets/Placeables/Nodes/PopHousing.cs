@@ -64,7 +64,7 @@ namespace Assets.Placeables.Nodes
 	            Type = _containerGenerationParams.Type,
 	            MaxCapacity = CurrentCapacity,
 	            Affectors = _containerGenerationParams.Affectors,
-	            PlaceableName = name,
+	            PlaceableName = InstanceName,
 	            ActivityPrefix = _containerGenerationParams.ActivityPrefix
 	        });
         }
@@ -79,7 +79,7 @@ namespace Assets.Placeables.Nodes
 	    {
 	        if (!_housed.Contains(person))
 	        {
-	            person.Home = name;
+	            person.Home = InstanceName;
 	            _housed.Add(person);
 	            CurrentCount = _housed.Count;
                 _container.AddReserved(person);

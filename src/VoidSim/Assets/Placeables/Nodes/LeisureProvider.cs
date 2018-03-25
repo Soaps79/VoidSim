@@ -28,7 +28,7 @@ namespace Assets.Placeables.Nodes
 	            Type = PopContainerType.Fulfillment,
 	            MaxCapacity = CurrentCapacity,
 	            Affectors = _containerGenerationParams.Affectors,
-	            PlaceableName = name,
+	            PlaceableName = InstanceName,
 	            ActivityPrefix = _containerGenerationParams.ActivityPrefix
 	        });
         }
@@ -38,9 +38,6 @@ namespace Assets.Placeables.Nodes
 			Locator.MessageHub.QueueMessage(MessageName, new LeisureProviderMessageArgs { LeisureProvider = this });
 		}
 
-		public override string NodeName
-		{
-			get { return "LeisureProvider"; }
-		}
+		public override string NodeName { get { return "LeisureProvider"; } }
 	}
 }

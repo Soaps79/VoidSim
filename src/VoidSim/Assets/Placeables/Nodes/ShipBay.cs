@@ -19,7 +19,7 @@ namespace Assets.Placeables.Nodes
 			Berths = gameObject.GetComponentsInChildren<ShipBerth>().ToList();
 			foreach (var shipBerth in Berths)
 			{
-				shipBerth.name = string.Format("{0}_{1}", name, shipBerth.Index);
+				shipBerth.Name = string.Format("{0}_{1}", InstanceName, shipBerth.Index);
 				shipBerth.Initialize();
 			}
 			BerthCount = Berths.Count;

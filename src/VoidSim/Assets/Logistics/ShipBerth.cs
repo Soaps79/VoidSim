@@ -40,6 +40,17 @@ namespace Assets.Logistics
 
 		[SerializeField] private SpriteRenderer _indicator;
 
+	    private string _name;
+	    public string Name
+	    {
+	        get { return _name; }
+	        set
+	        {
+	            name = value;
+	            _name = value;
+	        }
+	    }
+
 		public BerthState State
 		{
 			get { return _state; }
