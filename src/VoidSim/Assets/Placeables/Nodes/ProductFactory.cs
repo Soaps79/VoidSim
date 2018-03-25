@@ -205,8 +205,8 @@ namespace Assets.Placeables.Nodes
 		private void StoreProductAndRestartCrafting(Recipe recipe)
 		{
 			StoreResult(recipe);
-			SwitchCurrentCraftingTo(recipe);
-			if (OnCraftComplete != null)
+            StartCrafting(recipe);
+            if (OnCraftComplete != null)
 				OnCraftComplete(recipe);
 		}
 
