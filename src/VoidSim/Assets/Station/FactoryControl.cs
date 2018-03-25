@@ -109,7 +109,7 @@ namespace Assets.Station
 		{
 			if (_deserialized.Any())
 			{
-				var resume = _deserialized.FirstOrDefault(i => i.Name == factory.name);
+				var resume = _deserialized.FirstOrDefault(i => i.Name == factory.InstanceName);
 				if (resume != null)
 				{
 					factory.Resume(resume);

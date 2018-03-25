@@ -120,7 +120,7 @@ namespace Assets.Station.Population
 			employer.RegisterMood(_employerAffector);
 			_employers.Add(employer);
 
-			if (_deserialized.Any(i => i.Employer == employer.name))
+			if (_deserialized.Any(i => i.Employer == employer.InstanceName))
 				HandleExistingEmployer(employer);
 			else
 				HandleNewEmployer(employer);
@@ -137,7 +137,7 @@ namespace Assets.Station.Population
 
 		private void HandleExistingEmployer(PopEmployer employer)
 		{
-		    var employees = _deserialized.Where(i => i.Employer == employer.name).ToList();
+		    var employees = _deserialized.Where(i => i.Employer == employer.InstanceName).ToList();
             employees.ForEach(employer.ResumeEmployee);
 		    _deserialized.RemoveAll(i => employees.Contains(i));
 		}
@@ -171,7 +171,7 @@ namespace Assets.Station.Population
 	        var employed = people.Except(unemployed);
 	        foreach (var person in employed)
 	        {
-	            var employer = _employers.FirstOrDefault(i => i.name == person.Employer);
+	            var employer = _employers.FirstOrDefault(i => i.InstanceName == person.Employer);
                 if(employer != null)
                     employer.AddEmployee(person);
 	        }

@@ -52,7 +52,7 @@ namespace Assets.Station
 
 		private void HandleShipBayRemove(ShipBay shipBay)
 		{
-			var names = shipBay.Berths.Select(i => i.name);
+			var names = shipBay.Berths.Select(i => i.Name);
 			var bays = _cargoBays.Where(i => names.Contains(i.Name)).ToList();
 			if (!bays.Any()) return;
 			foreach (var cargoBay in bays)

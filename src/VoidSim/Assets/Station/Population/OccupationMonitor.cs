@@ -75,7 +75,7 @@ namespace Assets.Station.Population
                 throw new UnityException("PopContainerMonitor given bad message data");
 
             var viewModel = Instantiate(_viewModelPrefab, _canvasGroup.transform);
-            viewModel.name = args.PopContainerSet.name;
+            viewModel.name = args.PopContainerSet.InstanceName;
             viewModel.Initialize(args.PopContainerSet);
             _containers.Add(viewModel);
             args.PopContainerSet.OnRemove += set => OnRemove(viewModel);

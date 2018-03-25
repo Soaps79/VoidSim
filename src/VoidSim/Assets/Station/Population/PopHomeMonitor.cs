@@ -81,11 +81,11 @@ namespace Assets.Station.Population
             var residents = persons.Where(i => i.IsResident);
             foreach (var resident in residents)
             {
-                if (string.IsNullOrEmpty(resident.Home) || _residentHousing.All(i => i.name != resident.Home))
+                if (string.IsNullOrEmpty(resident.Home) || _residentHousing.All(i => i.InstanceName != resident.Home))
                     _needsHousing.Add(resident);
                 else
                 {
-                    var home = _residentHousing.FirstOrDefault(i => i.name == resident.Home);
+                    var home = _residentHousing.FirstOrDefault(i => i.InstanceName == resident.Home);
                     if(home != null)
                         home.AddResident(resident);
                 }
@@ -142,7 +142,7 @@ namespace Assets.Station.Population
         // place in home and remove them from waiting list if so
         private void CheckDeserialized(PopHousing home)
         {
-            var waitingForHousing = _deserialized.Where(i => i.Home == home.name).ToList();
+            var waitingForHousing = _deserialized.Where(i => i.Home == home.InstanceName).ToList();
             if (!waitingForHousing.Any())
                 return;
 
@@ -154,7 +154,7 @@ namespace Assets.Station.Population
         private void HandleHousingRemove(PopHousing housing)
         {
             _residentHousing.Remove(housing);
-            var homeless = _allPopulation.Where(i => i.Home == housing.name);
+            var homeless = _allPopulation.Where(i => i.Home == housing.InstanceName);
             _needsHousing.AddRange(homeless);
             UpdateCapacity();
         }

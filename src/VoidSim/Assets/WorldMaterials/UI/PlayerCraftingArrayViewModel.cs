@@ -49,7 +49,8 @@ namespace Assets.WorldMaterials.UI
 			if(_arrayPanel ==  null || _arrayContent == null)
 				throw new UnityException("PlayerCraftingArrayViewModel is missing components");
 
-            StopWatch.AddNode("node", .1f).OnTick += FindBinder;
+            OnNextUpdate += FindBinder;
+            //StopWatch.AddNode("node", .1f).OnTick += FindBinder;
 		}
 
 		private void FindBinder()

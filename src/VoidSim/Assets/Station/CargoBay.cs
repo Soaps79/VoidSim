@@ -59,8 +59,8 @@ namespace Assets.Station
 		// take on berth's name, hook into docking actions
 		private void InitializeBerth()
 		{
-			Name = _berth.name;
-			name = _berth.name;
+			Name = _berth.Name;
+			name = _berth.Name;
 			_berth.OnShipDock += HandleShipDock;
 		}
 
