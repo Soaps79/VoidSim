@@ -46,8 +46,9 @@ namespace Assets.Scripts
 		public static IProductLookup ProductLookup { get { return _lkpActual; } }
 
 		public static string KeyValueTextName = "KeyValueText";
+	    private Camera _camera;
 
-		public GameManager()
+	    public GameManager()
 		{
 			ServiceInitializer.Initialize();
 
@@ -63,6 +64,8 @@ namespace Assets.Scripts
 			if (clock == null)
 				throw new UnityException("WorldClock cannot be found");
 			ServiceInitializer.Initialize<IWorldClock>(clock);
+
+		    _camera = Camera.main;
 
 		    SetupCanvasManager();
 		    SetupInfoPanelManager();
@@ -135,7 +138,8 @@ namespace Assets.Scripts
 		private void BindMouseMovementToKvd()
 		{
 			KeyValueDisplay.Instance.Add("MousePos", () => Input.mousePosition.ToString());
-		}
+		    KeyValueDisplay.Instance.Add("MouseViewportPos", () => _camera.WorldToViewportPoint(Input.mousePosition).ToString());
+        }
 
 		private void InititalizeDebugDisplay()
 		{

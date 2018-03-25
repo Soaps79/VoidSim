@@ -17,17 +17,13 @@ namespace Assets.Placeables.UI
         
         private PopContainerSet _containerSet;
         private readonly List<PopContainerViewModel> _containers = new List<PopContainerViewModel>();
+        private Camera _camera;
 
         public void Initialize(PopContainerSet containerSet)
         {
             _containerSet = containerSet;
             _containerSet.OnContainersUpdated += UpdateContainers;
-            transform.position = new Vector3 
-                    { 
-                       x = containerSet.transform.position.x + _offset.x,
-                       y = containerSet.transform.position.y + _offset.y,
-                       z = transform.position.z
-                    };
+            _camera = Camera.main;
             UpdateContainers(containerSet.Containers);
         }
 
@@ -42,13 +38,29 @@ namespace Assets.Placeables.UI
         private void RedrawContainers(List<PopContainer> containers)
         {
             ClearExisting();
+            var width = 0.0f;
+            var height = 0.0f;
+
             foreach (var popContainer in containers)
             {
                 var viewmodel = Instantiate(_containerPrefab, _containerParent, false);
                 viewmodel.name = popContainer.Name;
                 viewmodel.Initialize(popContainer);
                 _containers.Add(viewmodel);
+
+                //var rect = viewmodel.GetComponent<RectTransform>();
+                //width += rect.rect.size.x;
+                //height += rect.rect.size.y;
             }
+
+            var offset = _camera.WorldToScreenPoint(new Vector3(width, height, 0));
+
+            (transform as RectTransform).position = new Vector3
+            {
+                x = _containerSet.transform.position.x  + _offset.x,
+                y = _containerSet.transform.position.y  + _offset.y,
+                z = transform.position.z
+            };
         }
 
         private void ClearExisting()
