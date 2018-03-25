@@ -183,6 +183,7 @@ namespace Assets.WorldMaterials.Population
             foreach (var personData in personDatas)
             {
                 var person = new Person(personData);
+                person.PortraitSprite = _portraitManager.GetSprite(personData.PortraitName);
                 var needs = new List<PersonNeedsValue>();
                 foreach (var need in personData.Needs)
                 {

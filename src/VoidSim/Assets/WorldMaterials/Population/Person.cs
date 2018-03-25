@@ -21,6 +21,7 @@ namespace Assets.WorldMaterials.Population
         public string Employer;
         public string CurrentlyOccupying;
         public int OccupancyId;
+        public string PortraitName;
         public List<PersonNeedsData> Needs;
     }
 
@@ -271,6 +272,7 @@ namespace Assets.WorldMaterials.Population
                 Employer = Employer,
                 CurrentlyOccupying = CurrentlyOccupying,
                 OccupancyId = OccupancyId,
+                PortraitName = PortraitSprite.name,
                 Needs = Wants.GetData()
             };
         }
