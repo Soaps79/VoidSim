@@ -32,8 +32,8 @@ MonoBehaviour:
     ResidentNeeds:
     - Type: 0
       DisplayName: Rest
-      MinInitialValue: 0.25
-      MaxInitialValue: 0.85
+      MinInitialValue: 0.8
+      MaxInitialValue: 0.95
       MinValue: 0
       MaxValue: 1.25
       MinTolerance: 0.3
@@ -41,8 +41,8 @@ MonoBehaviour:
       StartingWantToMove: 0.2
     - Type: 1
       DisplayName: Entertainment
-      MinInitialValue: 0.25
-      MaxInitialValue: 0.85
+      MinInitialValue: 0.8
+      MaxInitialValue: 0.95
       MinValue: 0
       MaxValue: 1.25
       MinTolerance: 0.3

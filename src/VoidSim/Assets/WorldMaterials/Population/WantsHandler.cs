@@ -247,7 +247,7 @@ namespace Assets.WorldMaterials.Population
         public bool CheckReadyToWork(float rand)
         {
             // no needs below 1.0, go to work
-            if (!_needs.Values.All(i => i.Value >= 1.0))
+            if (_needs.Values.All(i => i.Value >= 1.0))
                 return true;
 
             PersonNeedsValue lowest = null;
@@ -266,11 +266,12 @@ namespace Assets.WorldMaterials.Population
             if (lowest == null)
                 return true;
 
-            // check its chance against the random number given
-            var chanceRange = 1.0f - _staticNeeds[lowest.Type].StartWantingToMove;
-            var range = 1.0f - _staticNeeds[lowest.Type].MinFulfillment;
+            if (lowest.Value < _staticNeeds[lowest.Type].MinFulfillment)
+                return false;
 
-            var chance = chanceRange + Mathf.Lerp(0, chanceRange, (lowest.Value - _staticNeeds[lowest.Type].MinFulfillment) / range);
+            var range = 1.0f - _staticNeeds[lowest.Type].MinFulfillment;
+            var fulfilled = lowest.Value - _staticNeeds[lowest.Type].MinFulfillment;
+            var chance = fulfilled / range;
             return chance > rand;
         }
 
