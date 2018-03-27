@@ -129,7 +129,7 @@ MonoBehaviour:
     Type: 1
     Affectors:
     - Type: 0
-      Value: 0.03
+      Value: 0.08
     - Type: 1
       Value: 0.01
     ActivityPrefix: Resting
@@ -148,21 +148,25 @@ MonoBehaviour:
   _employmentContainer:
     Type: 0
     MaxCapacity: 0
-    Reserved: 0
     Name: 
     ActivityPrefix: 
-    CurrentOccupants: []
+    CurrentOccupancy: []
     Affectors: []
     PlaceableName: 
+    _hasReserved: 0
+    _reservedCount: 0
+    _actualOccupants: 0
   _serviceContainer:
     Type: 0
     MaxCapacity: 0
-    Reserved: 0
     Name: 
     ActivityPrefix: 
-    CurrentOccupants: []
+    CurrentOccupancy: []
     Affectors: []
     PlaceableName: 
+    _hasReserved: 0
+    _reservedCount: 0
+    _actualOccupants: 0
   _updateTime:
     TimeUnit: 0
     Length: 4
