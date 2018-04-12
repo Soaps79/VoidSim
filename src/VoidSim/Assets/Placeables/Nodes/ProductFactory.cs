@@ -85,7 +85,7 @@ namespace Assets.Placeables.Nodes
 		public void Initialize(Inventory inventory, ProductLookup productLookup)
 		{
 			_inventory = inventory;
-			_inventory.OnProductsChanged += CheckForRestart;
+			_inventory.Products.OnProductsChanged += CheckForRestart;
 
 			_productLookup = productLookup;
 			if (_container == null)
@@ -148,7 +148,7 @@ namespace Assets.Placeables.Nodes
 		private void CheckForRestart(int productId, int amount)
 		{
 			if (!_isOutOfProduct || 
-				CurrentlyCrafting.Ingredients.Any(i => !_inventory.HasProduct(i.ProductId, productId)))
+				CurrentlyCrafting.Ingredients.Any(i => !_inventory.Products.HasProduct(i.ProductId, productId)))
 				return;
 
 			_isOutOfProduct = false;
@@ -197,7 +197,7 @@ namespace Assets.Placeables.Nodes
 		{
 			foreach (var ingredient in CurrentlyCrafting.Ingredients)
 			{
-				_inventory.TryAddProduct(ingredient.ProductId, ingredient.Quantity);
+				_inventory.Products.TryAddProduct(ingredient.ProductId, ingredient.Quantity);
 			}
 		}
 
@@ -230,7 +230,7 @@ namespace Assets.Placeables.Nodes
 		{
 			foreach (var ingredient in recipe.Ingredients)
 			{
-				if (_inventory.HasProduct(ingredient.ProductId, ingredient.Quantity))
+				if (_inventory.Products.HasProduct(ingredient.ProductId, ingredient.Quantity))
 					continue;
 
 				Debug.Log(string.Format("Automated container ran out of Product {0}", ingredient.ProductId));
@@ -239,7 +239,7 @@ namespace Assets.Placeables.Nodes
 
 			foreach (var ingredient in recipe.Ingredients)
 			{
-				_inventory.TryRemoveProduct(ingredient.ProductId, ingredient.Quantity);
+				_inventory.Products.TryRemoveProduct(ingredient.ProductId, ingredient.Quantity);
 			}
 			return true;
 		}
@@ -249,7 +249,7 @@ namespace Assets.Placeables.Nodes
 		{
 			foreach (var result in recipe.Results)
 			{
-				_inventory.TryAddProduct(result.ProductId, result.Quantity);
+				_inventory.Products.TryAddProduct(result.ProductId, result.Quantity);
 			}
 		}
 

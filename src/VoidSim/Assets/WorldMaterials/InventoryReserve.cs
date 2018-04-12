@@ -56,7 +56,7 @@ namespace Assets.WorldMaterials
 
             foreach (var productAmount in _reserveEntries.Where(i => i.ShouldConsume))
             {
-                var current = _inventory.GetProductCurrentAmount(productAmount.ProductId);
+                var current = _inventory.Products.GetProductCurrentAmount(productAmount.ProductId);
                 var amount = productAmount.Amount;
                 if (_holdProducts.ContainsKey(productAmount.ProductId))
                     amount -= _holdProducts[productAmount.ProductId];
@@ -73,7 +73,7 @@ namespace Assets.WorldMaterials
 
             foreach (var productAmount in _reserveEntries.Where(i => i.ShouldProvide))
             {
-                var current = _inventory.GetProductCurrentAmount(productAmount.ProductId);
+                var current = _inventory.Products.GetProductCurrentAmount(productAmount.ProductId);
                 var amount = productAmount.Amount;
                 if (_holdProducts.ContainsKey(productAmount.ProductId))
                     amount -= _holdProducts[productAmount.ProductId];

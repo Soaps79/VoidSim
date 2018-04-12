@@ -245,10 +245,10 @@ namespace Assets.Station
 		        _inventory.Initialize(_inventoryScriptable, _productLookup, true);
 
 	        var product = _productLookup.GetProduct("Credits");
-            _inventory.SetProductMaxAmount(product.ID, 1000000);
+            _inventory.Products.SetProductMaxAmount(product.ID, 1000000);
 
             product = _productLookup.GetProduct("Energy");
-            _inventory.SetProductMaxAmount(product.ID, 1000000);
+            _inventory.Products.SetProductMaxAmount(product.ID, 1000000);
 
             _inventoryReserve = new InventoryReserve();
             _inventoryReserve.Initialize(_inventory);

@@ -16,14 +16,14 @@ namespace Assets.Narrative.Goals
 		public AccumulateProductTracker()
 		{
 			_inventory = GameObject.Find("station_inventory").GetComponent<Inventory>();
-			_inventory.OnProductsChanged += HandleProductupdate;
+			_inventory.Products.OnProductsChanged += HandleProductupdate;
 		}
 
 		// set goal elapsed to current inventory level
 		// if goal is complete, complete it
 		protected override void OnGoalAdded(ProductGoal goal)
 		{
-			goal.ElapsedAmount = _inventory.GetProductCurrentAmount(goal.ProductId);
+			goal.ElapsedAmount = _inventory.Products.GetProductCurrentAmount(goal.ProductId);
 			if(goal.ElapsedAmount > goal.TotalAmount)
 				goal.TriggerComplete(true);
 		}

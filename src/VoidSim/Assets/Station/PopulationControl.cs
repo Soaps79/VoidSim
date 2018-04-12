@@ -70,11 +70,11 @@ namespace Assets.Station
 		{
 		    _scriptable = scriptable;
 			_inventory = inventory;
-			_inventory.OnProductsChanged += HandleInventoryProductChanged;
-            OnNextUpdate += () => _inventory.OnProductMaxAmountChanged += HandleInventoryMaxAmountChanged;
+			_inventory.Products.OnProductsChanged += HandleInventoryProductChanged;
+            OnNextUpdate += () => _inventory.Products.OnProductMaxAmountChanged += HandleInventoryMaxAmountChanged;
 
 			_populationProductId = ProductIdLookup.Population;
-			_currentCount = _inventory.GetProductCurrentAmount(_populationProductId);
+			_currentCount = _inventory.Products.GetProductCurrentAmount(_populationProductId);
 			_baseCapacity = scriptable.BaseCapacity;
 
 			// still temporary values until system is worked out
@@ -93,7 +93,7 @@ namespace Assets.Station
 				LoadFromFile();
 			else
 				LoadFromScriptable();
-			_inventory.SetProductMaxAmount(_populationProductId, scriptable.BaseCapacity);
+			_inventory.Products.SetProductMaxAmount(_populationProductId, scriptable.BaseCapacity);
 
 			InitializeProductTrader();
 
@@ -134,7 +134,7 @@ namespace Assets.Station
 
 	    private void LoadFromScriptable()
 		{
-			_inventory.TryAddProduct(_populationProductId, _scriptable.InitialCount);
+			_inventory.Products.TryAddProduct(_populationProductId, _scriptable.InitialCount);
 		    var people = _personGenerator.GeneratePeople(_scriptable.InitialCount);
             // move this into scriptable? maybe a percentage?
 		    people.ForEach(i => i.IsResident = true);
@@ -157,7 +157,7 @@ namespace Assets.Station
 
 		    var people = _personGenerator.DeserializePopulation(_deserialized.Population);
 
-            if(_inventory.GetProductCurrentAmount(ProductIdLookup.Population) != people.Count())
+            if(_inventory.Products.GetProductCurrentAmount(ProductIdLookup.Population) != people.Count())
 				throw new UnityException("PopControl data not matching station inventory");
 	        AllPopulation.AddRange(people);
 		    _peopleHandlers.ForEach(i => i.HandleDeserialization(people));
@@ -184,13 +184,13 @@ namespace Assets.Station
 			if (productId != _populationProductId)
 				return;
 
-			_currentCount = _inventory.GetProductCurrentAmount(_populationProductId);
+			_currentCount = _inventory.Products.GetProductCurrentAmount(_populationProductId);
 		}
 
 		// checks to see if inventory has room for more pop (discounting those already in transit)
 		private void UpdateTradeRequest()
 		{
-			var remaining = _inventory.GetProductRemainingSpace(_populationProductId);
+			var remaining = _inventory.Products.GetProductRemainingSpace(_populationProductId);
 			remaining -= _inboundPopulation;
 			_trader.SetConsume(new ProductAmount
 			{

@@ -102,8 +102,8 @@ namespace Assets.WorldMaterials.Products
 
         private void UpdateSupply(object sender, EventArgs e)
         {
-            _currentSupply = _inventory.GetProductCurrentAmount(Product.ID);
-            _currentMax = _inventory.GetProductMaxAmount(Product.ID);
+            _currentSupply = _inventory.Products.GetProductCurrentAmount(Product.ID);
+            _currentMax = _inventory.Products.GetProductMaxAmount(Product.ID);
         }
 
         public string GetAmountOutput()

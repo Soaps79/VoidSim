@@ -123,7 +123,7 @@ namespace Assets.WorldMaterials.UI
             foreach (var button in _recipeButtons)
             {
                 if (!button.Recipe.Ingredients.All(
-                    ingredient => _inventory.HasProduct(ingredient.ProductId, ingredient.Quantity)))
+                    ingredient => _inventory.Products.HasProduct(ingredient.ProductId, ingredient.Quantity)))
                 {
                     button.Button.interactable = false;
                 }
@@ -143,7 +143,7 @@ namespace Assets.WorldMaterials.UI
 
 	        foreach (var result in recipe.Results)
 	        {
-		        _inventory.TryAddProduct(result.ProductId, result.Quantity);
+		        _inventory.Products.TryAddProduct(result.ProductId, result.Quantity);
 			}
 			_queuedButtons.Remove(button);
             Destroy(button.Button.gameObject);
@@ -154,7 +154,7 @@ namespace Assets.WorldMaterials.UI
         {
             foreach (var ingredient in recipe.Ingredients)
             {
-                if(_inventory.TryRemoveProduct(ingredient.ProductId, ingredient.Quantity) < ingredient.Quantity)
+                if(_inventory.Products.TryRemoveProduct(ingredient.ProductId, ingredient.Quantity) < ingredient.Quantity)
                     Debug.Log("Craft button requested good is could not afford");
             }
             var button = CreateQueuedButton(recipe);

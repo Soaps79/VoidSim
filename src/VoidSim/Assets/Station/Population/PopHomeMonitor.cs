@@ -166,7 +166,7 @@ namespace Assets.Station.Population
             OccupiedCapacity = _residentHousing.Sum(i => i.CurrentCount);
 
             if(previousMax != MaxCapacity)
-                _inventory.SetProductMaxAmount(ProductIdLookup.Population, MaxCapacity);
+                _inventory.Products.SetProductMaxAmount(ProductIdLookup.Population, MaxCapacity);
         }
 
         public string Name { get { return "PopHomeMonitor"; } }

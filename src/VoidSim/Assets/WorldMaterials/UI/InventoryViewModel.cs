@@ -35,7 +35,7 @@ namespace Assets.WorldMaterials.UI
         public void BindToInventory(Inventory inventory, InventoryScriptable inventoryScriptable, PlaceablesLookup placeablesLookup, InventoryReserve inventoryReserve, UserPlacement userPlacement)
         {
             _inventory = inventory;
-            _inventory.OnProductsChanged += UpdateProductEntry;
+            _inventory.Products.OnProductsChanged += UpdateProductEntry;
             _placeablesLookup = placeablesLookup;
             _inventoryReserve = inventoryReserve;
 
@@ -82,7 +82,7 @@ namespace Assets.WorldMaterials.UI
 
         private void DrawProductEntries()
         {
-            foreach (var entryInfo in _inventory.GetProductEntries())
+            foreach (var entryInfo in _inventory.Products.GetProductEntries())
             {
                 if (_productsToIgnore.Contains(entryInfo.Product.Category))
                     continue;
@@ -135,7 +135,7 @@ namespace Assets.WorldMaterials.UI
 	        if (entry == null)
 				return;
 
-	        entry.SetAmount(_inventory.GetProductCurrentAmount(productId));
+	        entry.SetAmount(_inventory.Products.GetProductCurrentAmount(productId));
 	        entry.PulseColorFrom(amountChanged > 0 ? _increaseColor : _decreaseColor, _pulseTime);
         }
 

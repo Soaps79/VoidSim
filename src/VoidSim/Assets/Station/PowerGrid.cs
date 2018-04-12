@@ -70,7 +70,7 @@ namespace Assets.Station
 
             if (HasShortage)
             {
-                if (_inventory.HasProduct(_energyProduct.ID, (int) _currentTotalDemand))
+                if (_inventory.Products.HasProduct(_energyProduct.ID, (int) _currentTotalDemand))
                 {
                     HasShortage = false;
                 }
@@ -78,7 +78,7 @@ namespace Assets.Station
 
 			foreach (var consumer in _consumers)
             {
-                if (_inventory.TryRemoveProduct(_energyProduct.ID, (int) consumer.TotalAmountConsumed) < consumer.TotalAmountConsumed)
+                if (_inventory.Products.TryRemoveProduct(_energyProduct.ID, (int) consumer.TotalAmountConsumed) < consumer.TotalAmountConsumed)
                     HasShortage = true;
             }
         }

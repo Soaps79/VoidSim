@@ -39,7 +39,7 @@ namespace Assets.Station
 		        foreach (var missionRewardAmount in args.Mission.Scriptable.Rewards)
 		        {
 		            if (_products.ContainsKey(missionRewardAmount.Name))
-		                _inventory.TryAddProduct(_products[missionRewardAmount.Name].ID, missionRewardAmount.Amount);
+		                _inventory.Products.TryAddProduct(_products[missionRewardAmount.Name].ID, missionRewardAmount.Amount);
 		        }
 		    }
 		}

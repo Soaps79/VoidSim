@@ -95,20 +95,20 @@ namespace Assets.Station
 				if (AmountPerTick > _productIn.Amount)
 				{
 					_reserve.AdjustHold(_productIn.ProductId, -_productIn.Amount);
-					_inventory.TryAddProduct(_productIn.ProductId, _productIn.Amount);
+					_inventory.Products.TryAddProduct(_productIn.ProductId, _productIn.Amount);
 					_productIn.Amount = 0;
 				}
 				else
 				{
 					_reserve.AdjustHold(_productIn.ProductId, -AmountPerTick);
-					_inventory.TryAddProduct(_productIn.ProductId, AmountPerTick);
+					_inventory.Products.TryAddProduct(_productIn.ProductId, AmountPerTick);
 					_productIn.Amount -= AmountPerTick;
 				}
 
 				if (_productIn.Amount <= 0)
 				{
 					var manifest = _manifestsIn.Dequeue();
-					_inventory.TryRemoveProduct(_creditsProductID, manifest.Currency);
+					_inventory.Products.TryRemoveProduct(_creditsProductID, manifest.Currency);
 					_manifestBook.Close(manifest.Id);
 					CreateCompletionText(manifest.Currency, true);
 					CheckNextIncoming();
@@ -122,20 +122,20 @@ namespace Assets.Station
 				if (AmountPerTick > _productOut.Amount)
 				{
 					_reserve.AdjustHold(_productOut.ProductId, _productOut.Amount);
-					_inventory.TryRemoveProduct(_productOut.ProductId, _productOut.Amount);
+					_inventory.Products.TryRemoveProduct(_productOut.ProductId, _productOut.Amount);
 					_productOut.Amount = 0;
 				}
 				else
 				{
 					_reserve.AdjustHold(_productOut.ProductId, AmountPerTick);
-					_inventory.TryRemoveProduct(_productOut.ProductId, AmountPerTick);
+					_inventory.Products.TryRemoveProduct(_productOut.ProductId, AmountPerTick);
 					_productOut.Amount -= AmountPerTick;
 				}
 
 				if (_productOut.Amount <= 0)
 				{
 					var manifest = _manifestsOut.Dequeue();
-					_inventory.TryAddProduct(_creditsProductID, manifest.Currency);
+					_inventory.Products.TryAddProduct(_creditsProductID, manifest.Currency);
 					_manifestBook.Close(manifest.Id);
 					CreateCompletionText(manifest.Currency, false);
 					CheckNextOutgoing();
