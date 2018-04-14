@@ -10,20 +10,11 @@ namespace Assets.WorldMaterials
 	[Serializable]
 	public class InventoryData
 	{
-		public List<InventoryProductEntryData> Products;
+	    public ProductInventoryData Products;
 		public List<InventoryPlaceableData> Placeables;
-		public int DefaultProductCapacity;
 	}
 
-	[Serializable]
-	public class InventoryProductEntryData
-	{
-		public string ProductName;
-		public int Amount;
-		public int MaxAmount;
-	}
-
-	[Serializable]
+    [Serializable]
 	public class InventoryPlaceableData
 	{
 		public int Id;
@@ -76,7 +67,8 @@ namespace Assets.WorldMaterials
 
         public void Initialize(InventoryData data, IProductLookup productLookup, bool addAllEntries)
         {
-            Products.Initialize(data, productLookup, addAllEntries);
+            InitializeProductInventory();
+            Products.Initialize(data.Products, productLookup, addAllEntries);
             data.Placeables.ForEach(i => AddPlaceable(i.PlaceableName));
         }
 
@@ -105,25 +97,15 @@ namespace Assets.WorldMaterials
 	    public InventoryData GetData()
 	    {
 			// convert products and placeables to their data types
-		    var products = Products.GetProductEntries().Select(i => new InventoryProductEntryData
-		    {
-			    ProductName = i.Product.Name,
-			    Amount = i.Amount,
-			    MaxAmount = i.MaxAmount
-		    }).ToList();
-
-		    var placeables = Placeables.Select(i => new InventoryPlaceableData
-		    {
-			    Id = i.Id,
-			    PlaceableName = i.Name
-		    }).ToList();
-
 		    var data = new InventoryData
 		    {
-			    Products = products,
-			    Placeables = placeables,
-                DefaultProductCapacity = Products.DefaultProductCapacity
-		    };
+			    Products = Products.GetData(),
+			    Placeables = Placeables.Select(i => new InventoryPlaceableData
+			    {
+			        Id = i.Id,
+			        PlaceableName = i.Name
+			    }).ToList()
+            };
 
 		    return data;
 		}

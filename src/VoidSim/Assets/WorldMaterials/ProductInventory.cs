@@ -1,11 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.Serialization;
 using Assets.WorldMaterials.Products;
 
 namespace Assets.WorldMaterials
 {
-    public class ProductInventory
+    [Serializable]
+    public class ProductInventoryData
+    {
+        public List<ProductInventoryEntryData> Products;
+        public int DefaultProductCapacity;
+    }
+
+    [Serializable]
+    public class ProductInventoryEntryData
+    {
+        public string ProductName;
+        public int Amount;
+        public int MaxAmount;
+    }
+
+    /// <summary>
+    /// Container to manage Product stores for any game entity
+    /// </summary>
+    public class ProductInventory : ISerializeData<ProductInventoryData>
     {
         [Serializable]
         public class InventoryProductEntry
@@ -24,7 +43,7 @@ namespace Assets.WorldMaterials
 
         public int DefaultProductCapacity { get; set; }
 
-        // only use for UI
+        // only use for UI and serialization
         public List<InventoryProductEntry> GetProductEntries()
         {
             return _productTable.Values.ToList();
@@ -164,7 +183,7 @@ namespace Assets.WorldMaterials
             LoadFromScriptable(inventoryScriptable);
         }
 
-        public void Initialize(InventoryData data, IProductLookup productLookup, bool addAllEntries)
+        public void Initialize(ProductInventoryData data, IProductLookup productLookup, bool addAllEntries)
         {
             Initialize(productLookup, addAllEntries);
             LoadFromData(data);
@@ -184,7 +203,7 @@ namespace Assets.WorldMaterials
             }
         }
 
-        private void LoadFromData(InventoryData data)
+        private void LoadFromData(ProductInventoryData data)
         {
             DefaultProductCapacity = data.DefaultProductCapacity;
             foreach (var entry in data.Products)
@@ -207,5 +226,18 @@ namespace Assets.WorldMaterials
             }
         }
 
+        public ProductInventoryData GetData()
+        {
+            return new ProductInventoryData()
+            {
+                DefaultProductCapacity = DefaultProductCapacity,
+                Products = GetProductEntries().Select(i => new ProductInventoryEntryData
+                {
+                    ProductName = i.Product.Name,
+                    Amount = i.Amount,
+                    MaxAmount = i.MaxAmount
+                }).ToList()
+            };
+        }
     }
 }
