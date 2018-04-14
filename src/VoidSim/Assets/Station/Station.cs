@@ -251,7 +251,7 @@ namespace Assets.Station
             _stationInventory.Products.SetProductMaxAmount(product.ID, 1000000);
 
             _inventoryReserve = new InventoryReserve();
-            _inventoryReserve.Initialize(_stationInventory);
+            _inventoryReserve.Initialize(_stationInventory.Products);
         }
 
         private void InstantiateTrader()
