@@ -16,7 +16,7 @@ namespace Assets.WorldMaterials.UI
     /// Listens for product factory created messages, and adds UI elements for the ones that come through with IsInPlayerArray true.
     /// Creates a ProductFactoryViewModel for each entry, which handles binding an individual factory to the controls.
     /// </summary>
-    public class PlayerCraftingArrayViewModel : QScript
+    public class ProductFactoryGroupViewModel : QScript
     {
         [SerializeField] private Image _arrayPrefab;
         [SerializeField] private Image _factoryPrefab;
@@ -47,7 +47,7 @@ namespace Assets.WorldMaterials.UI
             _arrayPanel = Instantiate(_arrayPrefab, canvas.transform, false);
             _arrayContent = _arrayPanel.transform.Find("content_holder").GetComponent<Image>();
 			if(_arrayPanel ==  null || _arrayContent == null)
-				throw new UnityException("PlayerCraftingArrayViewModel is missing components");
+				throw new UnityException("ProductFactoryGroupViewModel is missing components");
 
             OnNextUpdate += FindBinder;
             //StopWatch.AddNode("node", .1f).OnTick += FindBinder;
@@ -60,22 +60,6 @@ namespace Assets.WorldMaterials.UI
 			    throw new UnityException("player crafting could not find toggle binder");
 			_panelToggleBinder = go.GetComponent<ToggleButtonPressBinder>();
 		}
-
-	    //     private void HandleFactoryAdd(ProductFactoryMessageArgs args)
-   //     {   
-   //         if (args == null || args.ProductFactory == null || !args.ProductFactory.IsInPlayerArray) return;
-
-   //         var go = Instantiate(_factoryPrefab, _arrayContent.transform, false);
-   //         var viewmodel = go.gameObject.GetOrAddComponent<ProductFactoryViewModel>();
-   //         viewmodel.Bind(args.ProductFactory);
-			
-
-			//// Open the UI panel if this is the first factory, tis brittle
-   //         if (!_hasAFactory)
-   //         {
-	  //          SignalFirstFactoryPlaced();
-   //         }
-   //     }
 
 	    private void RefreshFactories()
 	    {

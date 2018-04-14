@@ -56,7 +56,7 @@ namespace Assets.Station
 			var go = (GameObject)Instantiate(Resources.Load("Views/player_crafting_array_viewmodel"));
 			go.transform.SetParent(transform);
 			go.name = "player_crafting_array_viewmodel";
-			var viewModel = go.GetComponent<PlayerCraftingArrayViewModel>();
+			var viewModel = go.GetComponent<ProductFactoryGroupViewModel>();
 			viewModel.Bind(this);
 			if(_serializer.HasDataFor(this, _collectionName))
 				Load();
