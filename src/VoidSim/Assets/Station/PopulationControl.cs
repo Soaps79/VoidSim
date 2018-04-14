@@ -37,7 +37,7 @@ namespace Assets.Station
 
 	    // Population is currently stored in the Station's inventory as a Product
 		// Allows it to be handled by trade, cargo, etc
-		private WorldMaterials.StationInventory _stationInventory;
+		private ProductInventory _productInventory;
 		private int _populationProductId;
 		
 		// When there is room for more population, 
@@ -66,15 +66,15 @@ namespace Assets.Station
 
 	    //public Action<List<Person>, bool> OnPopulationUpdated;
 
-	    public void Initialize(WorldMaterials.StationInventory stationInventory, PopulationSO scriptable)
+	    public void Initialize(ProductInventory stationInventory, PopulationSO scriptable)
 		{
 		    _scriptable = scriptable;
-			_stationInventory = stationInventory;
-			_stationInventory.Products.OnProductsChanged += HandleInventoryProductChanged;
-            OnNextUpdate += () => _stationInventory.Products.OnProductMaxAmountChanged += HandleInventoryMaxAmountChanged;
+			_productInventory = stationInventory;
+			_productInventory.OnProductsChanged += HandleInventoryProductChanged;
+            OnNextUpdate += () => _productInventory.OnProductMaxAmountChanged += HandleInventoryMaxAmountChanged;
 
 			_populationProductId = ProductIdLookup.Population;
-			_currentCount = _stationInventory.Products.GetProductCurrentAmount(_populationProductId);
+			_currentCount = _productInventory.GetProductCurrentAmount(_populationProductId);
 			_baseCapacity = scriptable.BaseCapacity;
 
 			// still temporary values until system is worked out
@@ -93,7 +93,7 @@ namespace Assets.Station
 				LoadFromFile();
 			else
 				LoadFromScriptable();
-			_stationInventory.Products.SetProductMaxAmount(_populationProductId, scriptable.BaseCapacity);
+			_productInventory.SetProductMaxAmount(_populationProductId, scriptable.BaseCapacity);
 
 			InitializeProductTrader();
 
@@ -128,13 +128,13 @@ namespace Assets.Station
 	    private void InitializeHouser()
 	    {
 	        var houser = GetComponent<PopHomeMonitor>();
-	        houser.Initialize(this, _stationInventory.Products, _scriptable);
+	        houser.Initialize(this, _productInventory, _scriptable);
 	        _peopleHandlers.Add(houser);
 	    }
 
 	    private void LoadFromScriptable()
 		{
-			_stationInventory.Products.TryAddProduct(_populationProductId, _scriptable.InitialCount);
+			_productInventory.TryAddProduct(_populationProductId, _scriptable.InitialCount);
 		    var people = _personGenerator.GeneratePeople(_scriptable.InitialCount);
             // move this into scriptable? maybe a percentage?
 		    people.ForEach(i => i.IsResident = true);
@@ -157,7 +157,7 @@ namespace Assets.Station
 
 		    var people = _personGenerator.DeserializePopulation(_deserialized.Population);
 
-            if(_stationInventory.Products.GetProductCurrentAmount(ProductIdLookup.Population) != people.Count())
+            if(_productInventory.GetProductCurrentAmount(ProductIdLookup.Population) != people.Count())
 				throw new UnityException("PopControl data not matching station inventory");
 	        AllPopulation.AddRange(people);
 		    _peopleHandlers.ForEach(i => i.HandleDeserialization(people));
@@ -184,13 +184,13 @@ namespace Assets.Station
 			if (productId != _populationProductId)
 				return;
 
-			_currentCount = _stationInventory.Products.GetProductCurrentAmount(_populationProductId);
+			_currentCount = _productInventory.GetProductCurrentAmount(_populationProductId);
 		}
 
 		// checks to see if inventory has room for more pop (discounting those already in transit)
 		private void UpdateTradeRequest()
 		{
-			var remaining = _stationInventory.Products.GetProductRemainingSpace(_populationProductId);
+			var remaining = _productInventory.GetProductRemainingSpace(_populationProductId);
 			remaining -= _inboundPopulation;
 			_trader.SetConsume(new ProductAmount
 			{

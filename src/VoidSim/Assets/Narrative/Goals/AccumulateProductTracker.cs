@@ -11,19 +11,19 @@ namespace Assets.Narrative.Goals
 	public class AccumulateProductTracker : ProductGoalTrackerBase
 	{
 		public override GoalType GoalType { get { return GoalType.AccumulateProduct; } }
-		private readonly StationInventory _stationInventory;
+		private readonly ProductInventory _stationInventory;
 
 		public AccumulateProductTracker()
 		{
-			_stationInventory = GameObject.Find("station_inventory").GetComponent<StationInventory>();
-			_stationInventory.Products.OnProductsChanged += HandleProductupdate;
+			_stationInventory = GameObject.Find("station_inventory").GetComponent<StationInventory>().Products;
+			_stationInventory.OnProductsChanged += HandleProductupdate;
 		}
 
 		// set goal elapsed to current inventory level
 		// if goal is complete, complete it
 		protected override void OnGoalAdded(ProductGoal goal)
 		{
-			goal.ElapsedAmount = _stationInventory.Products.GetProductCurrentAmount(goal.ProductId);
+			goal.ElapsedAmount = _stationInventory.GetProductCurrentAmount(goal.ProductId);
 			if(goal.ElapsedAmount > goal.TotalAmount)
 				goal.TriggerComplete(true);
 		}

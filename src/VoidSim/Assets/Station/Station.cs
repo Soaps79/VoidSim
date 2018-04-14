@@ -180,7 +180,7 @@ namespace Assets.Station
         {
             _populationControl = Instantiate(_popControlPrefab, _layers[LayerType.Core].transform);
             _populationControl.name = "population_control";
-            _populationControl.Initialize(_stationInventory,_popScriptable);
+            _populationControl.Initialize(_stationInventory.Products,_popScriptable);
 	        _populationControl.IgnoreNeeds = _ignoreMoodInitial;
         }
 
@@ -208,7 +208,7 @@ namespace Assets.Station
             go.transform.SetParent(_layers[LayerType.Core].transform);
             go.name = "player_crafting_viewmodel";
             var viewmodel = go.GetOrAddComponent<PlayerCraftingViewModel>();
-            viewmodel.Bind(_productLookup.GetRecipes(), _crafter, _stationInventory);
+            viewmodel.Bind(_productLookup.GetRecipes(), _crafter, _stationInventory.Products);
         }
 
         private void BindFactoryControl()
