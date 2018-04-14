@@ -252,9 +252,6 @@ namespace Assets.Station
 
             _inventoryReserve = new InventoryReserve();
             _inventoryReserve.Initialize(_stationInventory);
-
-	        var stationInventory = go.AddComponent<StationInventory>();
-			stationInventory.Initialize(_stationInventory);
         }
 
         private void InstantiateTrader()
