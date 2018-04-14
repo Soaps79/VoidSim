@@ -122,7 +122,7 @@ namespace Assets.Station
                     SupplyMonitor = new ProductSupplyMonitor(new ProductSupplyMonitor.Data
                     {
                         Product = product,
-                        StationInventory = _stationInventory,
+                        ProductInventory = _stationInventory.Products,
                         SupplyUpdatefrequency = TimeUnit.Hour,
                         ChangeUpdateFrequency = TimeUnit.Day,
                         Mode = ProductSupplyDisplayMode.Difference
@@ -139,7 +139,7 @@ namespace Assets.Station
                     SupplyMonitor = new ProductSupplyMonitor(new ProductSupplyMonitor.Data
                     {
                         Product = product,
-                        StationInventory = _stationInventory,
+                        ProductInventory = _stationInventory.Products,
                         SupplyUpdatefrequency = TimeUnit.Hour,
                         ChangeUpdateFrequency = TimeUnit.Day,
                         Mode = ProductSupplyDisplayMode.OutOfMax,
@@ -157,7 +157,7 @@ namespace Assets.Station
                     SupplyMonitor = new ProductSupplyMonitor(new ProductSupplyMonitor.Data
                     {
                         Product = product,
-                        StationInventory = _stationInventory,
+                        ProductInventory = _stationInventory.Products,
                         SupplyUpdatefrequency = TimeUnit.Hour,
                         ChangeUpdateFrequency = TimeUnit.Day,
                         Mode = ProductSupplyDisplayMode.SupplyOnly,
@@ -277,7 +277,7 @@ namespace Assets.Station
             var go = (GameObject)Instantiate(Resources.Load("Views/inventory_viewmodel"));
             go.transform.SetParent(_layers[LayerType.Core].transform);
             go.name = "inventory_viewmodel";
-            var viewmodel = go.GetOrAddComponent<InventoryViewModel>();
+            var viewmodel = go.GetOrAddComponent<StationInventoryViewModel>();
             viewmodel.BindToInventory(_stationInventory, _inventoryScriptable, _placeablesLookup, _inventoryReserve, _userPlacement);
         }
 

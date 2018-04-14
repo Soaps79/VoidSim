@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 namespace Assets.WorldMaterials.UI
 {
-    public class InventoryViewModel : MonoBehaviour
+    public class StationInventoryViewModel : MonoBehaviour
     {
         [SerializeField] private Image _productEntryPrefab;
         [SerializeField] private Button _placeableEntryPrefab;
