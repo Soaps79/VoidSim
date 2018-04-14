@@ -173,7 +173,7 @@ namespace Assets.Station
             go.name = "power_grid";
             go.transform.SetParent(_layers[LayerType.Core].transform);
             var grid = go.GetOrAddComponent<PowerGrid>();
-            grid.Initialize(_stationInventory);
+            grid.Initialize(_stationInventory.Products);
         }
 
         private void InstantiatePopulationControl()
@@ -217,7 +217,7 @@ namespace Assets.Station
 	        go.transform.SetParent(_layers[LayerType.Core].transform);
             go.name = "factory_control";
 	        var control = go.AddComponent<FactoryControl>();
-			control.Initialize(_stationInventory, _productLookup, _inventoryReserve);
+			control.Initialize(_stationInventory.Products, _productLookup, _inventoryReserve);
 		}
 
 		private void InstantiateCargoControl()
@@ -225,7 +225,7 @@ namespace Assets.Station
 	        var cargo = Instantiate(_cargoControlPrefab);
             cargo.transform.SetParent(_layers[LayerType.Core].transform);
             cargo.name = "cargo_control";
-            cargo.Initialize(_stationInventory, _inventoryReserve, _populationControl);
+            cargo.Initialize(_stationInventory.Products, _inventoryReserve, _populationControl);
         }
 
         // centralized inventory for the station

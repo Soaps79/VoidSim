@@ -25,7 +25,7 @@ namespace Assets.Station
 	/// </summary>
 	public class FactoryControl : QScript, IMessageListener, ISerializeData<FactoryControlData>
 	{
-		private WorldMaterials.StationInventory _stationInventory;
+		private ProductInventory _stationInventory;
 		private ProductLookup _productLookup;
 		public List<ProductFactory> Factories = new List<ProductFactory>();
 
@@ -46,7 +46,7 @@ namespace Assets.Station
 
 		private const string _collectionName = "FactoryControl";
 
-		public void Initialize(WorldMaterials.StationInventory stationInventory, ProductLookup lookup, InventoryReserve reserve)
+		public void Initialize(ProductInventory stationInventory, ProductLookup lookup, InventoryReserve reserve)
 		{
 			_stationInventory = stationInventory;
 			_productLookup = lookup;

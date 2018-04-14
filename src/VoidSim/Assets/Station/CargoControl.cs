@@ -14,7 +14,7 @@ namespace Assets.Station
 {
 	public class CargoControl : QScript, IMessageListener
 	{
-		private WorldMaterials.StationInventory _stationInventory;
+		private ProductInventory _stationInventory;
 		private InventoryReserve _reserve;
 
 		private readonly List<CargoBay> _cargoBays = new List<CargoBay>();
@@ -28,7 +28,7 @@ namespace Assets.Station
 			Locator.MessageHub.AddListener(this, LogisticsMessages.ShipBerthsUpdated);
 		}
 
-		public void Initialize(WorldMaterials.StationInventory stationInventory, InventoryReserve reserve, PopulationControl popControl)
+		public void Initialize(ProductInventory stationInventory, InventoryReserve reserve, PopulationControl popControl)
 		{
 			_stationInventory = stationInventory;
 			_reserve = reserve;

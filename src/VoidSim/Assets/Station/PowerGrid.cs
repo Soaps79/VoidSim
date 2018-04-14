@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Placeables;
 using Assets.Placeables.Nodes;
 using Assets.Scripts;
 using Assets.WorldMaterials;
@@ -9,7 +8,6 @@ using Assets.WorldMaterials.Products;
 using UnityEngine;
 using Messaging;
 using QGame;
-using WorldClock = Assets.Scripts.WorldClock;
 
 namespace Assets.Station
 {
@@ -22,7 +20,7 @@ namespace Assets.Station
     {
         public const string ENERGY_PRODUCT_NAME = "Energy";
 
-        private WorldMaterials.StationInventory _stationInventory;
+        private ProductInventory _stationInventory;
         private IWorldClock _worldClock;
         private readonly List<EnergyConsumer> _consumers = new List<EnergyConsumer>();
         private Product _energyProduct;
@@ -41,7 +39,7 @@ namespace Assets.Station
             Locator.MessageHub.AddListener(this, ProductFactory.MessageName);
         }
 
-        public void Initialize(WorldMaterials.StationInventory stationInventory)
+        public void Initialize(ProductInventory stationInventory)
         {
             _stationInventory = stationInventory;
             if (_worldClock == null)
@@ -70,7 +68,7 @@ namespace Assets.Station
 
             if (HasShortage)
             {
-                if (_stationInventory.Products.HasProduct(_energyProduct.ID, (int) _currentTotalDemand))
+                if (_stationInventory.HasProduct(_energyProduct.ID, (int) _currentTotalDemand))
                 {
                     HasShortage = false;
                 }
@@ -78,7 +76,7 @@ namespace Assets.Station
 
 			foreach (var consumer in _consumers)
             {
-                if (_stationInventory.Products.TryRemoveProduct(_energyProduct.ID, (int) consumer.TotalAmountConsumed) < consumer.TotalAmountConsumed)
+                if (_stationInventory.TryRemoveProduct(_energyProduct.ID, (int) consumer.TotalAmountConsumed) < consumer.TotalAmountConsumed)
                     HasShortage = true;
             }
         }
