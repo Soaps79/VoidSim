@@ -10,7 +10,7 @@ namespace Assets.Editor
 {
     public class InventoryTests : MonoBehaviour
     {
-        private Inventory _inventory;
+        private ProductInventory _productInventory;
         private MockProductLookup _lookup;
         private InventoryScriptable _scriptable;
 
@@ -22,10 +22,10 @@ namespace Assets.Editor
         public void SetUp()
         {
             var go = new GameObject(string.Format("TestObject-{0}", DateTime.Now.Millisecond));
-            _inventory = go.AddComponent<Inventory>();
+            _productInventory = new ProductInventory();
             _lookup = go.AddComponent<MockProductLookup>();
 
-            _lookup.AddProduct(new Product { Category = ProductCategory.Raw, ID = ProductId, Name = ProductName });
+            _lookup.AddProduct(new Product {Category = ProductCategory.Raw, ID = ProductId, Name = ProductName});
 
             _scriptable = ScriptableObject.CreateInstance<InventoryScriptable>();
             _scriptable.Products = new List<ProductEntryInfo>();
@@ -36,7 +36,7 @@ namespace Assets.Editor
         [TearDown]
         public void TearDown()
         {
-            _inventory = null;
+            _productInventory = null;
         }
 
         [Test]
@@ -44,13 +44,13 @@ namespace Assets.Editor
         {
             const int amount = 10;
 
-            _inventory.Initialize(_scriptable, _lookup);
+            _productInventory.Initialize(_scriptable, _lookup);
 
-            var initial = _inventory.Products.GetProductCurrentAmount(ProductId);
-            _inventory.Products.SetProductMaxAmount(1, 1000);
-            var remainder = _inventory.Products.TryAddProduct(ProductId, amount);
+            var initial = _productInventory.GetProductCurrentAmount(ProductId);
+            _productInventory.SetProductMaxAmount(1, 1000);
+            var remainder = _productInventory.TryAddProduct(ProductId, amount);
 
-            var current = _inventory.Products.GetProductCurrentAmount(ProductId);
+            var current = _productInventory.GetProductCurrentAmount(ProductId);
 
             Assert.AreEqual(0, initial);
             Assert.AreEqual(0, remainder);
@@ -62,10 +62,10 @@ namespace Assets.Editor
         {
             const int difference = 100;
 
-            _inventory.Initialize(_scriptable, _lookup);
+            _productInventory.Initialize(_scriptable, _lookup);
 
-            var remainder = _inventory.Products.TryAddProduct(ProductId, MaxAmount + difference);
-            var current = _inventory.Products.GetProductCurrentAmount(ProductId);
+            var remainder = _productInventory.TryAddProduct(ProductId, MaxAmount + difference);
+            var current = _productInventory.GetProductCurrentAmount(ProductId);
 
             Assert.AreEqual(difference, remainder);
             Assert.AreEqual(MaxAmount, current);
@@ -77,12 +77,12 @@ namespace Assets.Editor
             const int max = 40;
             const int amount = 100;
 
-            _inventory.Initialize(_scriptable, _lookup);
-            _inventory.Products.SetProductMaxAmount(1, max);
+            _productInventory.Initialize(_scriptable, _lookup);
+            _productInventory.SetProductMaxAmount(1, max);
 
-            var remainder = _inventory.Products.TryAddProduct(ProductId, amount);
-            var current = _inventory.Products.GetProductCurrentAmount(ProductId);
-            var currentMax = _inventory.Products.GetProductMaxAmount(ProductId);
+            var remainder = _productInventory.TryAddProduct(ProductId, amount);
+            var current = _productInventory.GetProductCurrentAmount(ProductId);
+            var currentMax = _productInventory.GetProductMaxAmount(ProductId);
 
             Assert.AreEqual(amount - max, remainder);
             Assert.AreEqual(max, current);
@@ -94,11 +94,11 @@ namespace Assets.Editor
         {
             const int amount = 100;
 
-            _scriptable.Products.Add(new ProductEntryInfo { ProductName = ProductName, Amount = amount });
-            _inventory.Initialize(_scriptable, _lookup);
+            _scriptable.Products.Add(new ProductEntryInfo {ProductName = ProductName, Amount = amount});
+            _productInventory.Initialize(_scriptable, _lookup);
 
-            var removed = _inventory.Products.TryRemoveProduct(ProductId, amount);
-            var current = _inventory.Products.GetProductCurrentAmount(ProductId);
+            var removed = _productInventory.TryRemoveProduct(ProductId, amount);
+            var current = _productInventory.GetProductCurrentAmount(ProductId);
 
             Assert.AreEqual(amount, removed);
             Assert.AreEqual(0, current);
@@ -110,11 +110,11 @@ namespace Assets.Editor
             const int available = 100;
             const int amount = 1000;
 
-            _scriptable.Products.Add(new ProductEntryInfo { ProductName = ProductName, Amount = available });
-            _inventory.Initialize(_scriptable, _lookup);
+            _scriptable.Products.Add(new ProductEntryInfo {ProductName = ProductName, Amount = available});
+            _productInventory.Initialize(_scriptable, _lookup);
 
-            var removed = _inventory.Products.TryRemoveProduct(ProductId, amount);
-            var current = _inventory.Products.GetProductCurrentAmount(ProductId);
+            var removed = _productInventory.TryRemoveProduct(ProductId, amount);
+            var current = _productInventory.GetProductCurrentAmount(ProductId);
 
             Assert.AreEqual(available, removed);
             Assert.AreEqual(0, current);
@@ -127,21 +127,18 @@ namespace Assets.Editor
 
             var callbackId = 0;
             var callbackAmount = 0;
-            var callbackBaseHappened = false;
 
-            _inventory.Initialize(_scriptable, _lookup);
-            _inventory.OnInventoryChanged += () => callbackBaseHappened = true;
-            _inventory.Products.OnProductsChanged += (i, a) =>
+            _productInventory.Initialize(_scriptable, _lookup);
+            _productInventory.OnProductsChanged += (i, a) =>
             {
                 callbackId = i;
                 callbackAmount = a;
             };
 
-            _inventory.Products.TryAddProduct(ProductId, amount);
+            _productInventory.TryAddProduct(ProductId, amount);
 
             Assert.AreEqual(ProductId, callbackId);
             Assert.AreEqual(amount, callbackAmount);
-            Assert.IsTrue(callbackBaseHappened);
         }
 
         [Test]
@@ -151,21 +148,54 @@ namespace Assets.Editor
 
             var callbackId = 0;
             var callbackAmount = 0;
-            var callbackBaseHappened = false;
 
-            _scriptable.Products.Add(new ProductEntryInfo { ProductName = ProductName, Amount = amount });
-            _inventory.Initialize(_scriptable, _lookup);
-            _inventory.OnInventoryChanged += () => callbackBaseHappened = true;
-            _inventory.Products.OnProductsChanged += (i, a) =>
+            _scriptable.Products.Add(new ProductEntryInfo {ProductName = ProductName, Amount = amount});
+            _productInventory.Initialize(_scriptable, _lookup);
+            _productInventory.OnProductsChanged += (i, a) =>
             {
                 callbackId = i;
                 callbackAmount = a;
             };
 
-            _inventory.Products.TryRemoveProduct(ProductId, amount);
+            _productInventory.TryRemoveProduct(ProductId, amount);
 
             Assert.AreEqual(ProductId, callbackId);
             Assert.AreEqual(-amount, callbackAmount);
+        }
+
+        [Test]
+        public void Callback_Remove_ParentInventoryCallbackIsCalled()
+        {
+            const int amount = 100;
+            var callbackBaseHappened = false;
+
+            var go = new GameObject();
+            var inventory = go.AddComponent<Inventory>();
+            _scriptable.Products.Add(new ProductEntryInfo {ProductName = ProductName, Amount = amount});
+            inventory.Initialize(_scriptable, _lookup);
+            var productInventory = inventory.Products;
+
+            inventory.OnInventoryChanged += () => callbackBaseHappened = true;
+            productInventory.TryRemoveProduct(ProductId, amount);
+
+            Assert.IsTrue(callbackBaseHappened);
+        }
+
+        [Test]
+        public void Callback_Add_ParentInventoryCallbackIsCalled()
+        {
+            const int amount = 100;
+            var callbackBaseHappened = false;
+
+            var go = new GameObject();
+            var inventory = go.AddComponent<Inventory>();
+            _scriptable.Products.Add(new ProductEntryInfo {ProductName = ProductName, Amount = amount});
+            inventory.Initialize(_scriptable, _lookup);
+            var productInventory = inventory.Products;
+
+            inventory.OnInventoryChanged += () => callbackBaseHappened = true;
+            productInventory.TryAddProduct(ProductId, amount);
+
             Assert.IsTrue(callbackBaseHappened);
         }
     }
