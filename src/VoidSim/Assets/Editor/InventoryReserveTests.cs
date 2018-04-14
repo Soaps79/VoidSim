@@ -11,7 +11,7 @@ namespace Assets.Editor
 {
     public class InventoryReserveTests
     {
-        private Inventory _inventory;
+        private StationInventory _stationInventory;
         private MockProductLookup _lookup;
         private InventoryScriptable _scriptable;
         private InventoryReserve _reserve;
@@ -24,7 +24,7 @@ namespace Assets.Editor
         public void SetUp()
         {
             var go = new GameObject(string.Format("TestObject-{0}", DateTime.Now.Millisecond));
-            _inventory = go.AddComponent<Inventory>();
+            _stationInventory = go.AddComponent<StationInventory>();
             _lookup = go.AddComponent<MockProductLookup>();
             
             _lookup.AddProduct(new Product { Category = ProductCategory.Raw, ID = ProductId, Name = ProductName });
@@ -33,17 +33,17 @@ namespace Assets.Editor
             _scriptable.Products = new List<ProductEntryInfo>();
             _scriptable.Placeables = new List<string>();
             _scriptable.ProductMaxAmount = MaxAmount;
-            _inventory.Initialize(_scriptable, _lookup);
+            _stationInventory.Initialize(_scriptable, _lookup);
 
             _reserve = new InventoryReserve();
-            _reserve.Initialize(_inventory);
+            _reserve.Initialize(_stationInventory);
             _reserve.AddReservation(ProductId, 0, false, false);
         }
 
         [TearDown]
         public void TearDown()
         {
-            _inventory = null;
+            _stationInventory = null;
             _lookup = null;
             _scriptable = null;
             _reserve = null;
@@ -58,7 +58,7 @@ namespace Assets.Editor
             var status = _reserve.GetProductStatus(ProductId);
             var before = _reserve.GetProvideProducts().FirstOrDefault(i => i.ProductId == ProductId);
 
-            _inventory.Products.TryAddProduct(ProductId, amount);
+            _stationInventory.Products.TryAddProduct(ProductId, amount);
 
             var after = _reserve.GetProvideProducts().FirstOrDefault(i => i.ProductId == ProductId);
 
@@ -77,10 +77,10 @@ namespace Assets.Editor
             const int amount = 100;
             const int removed = 40;
             _reserve.SetProvide(ProductId, true);
-            _inventory.Products.TryAddProduct(ProductId, amount);
+            _stationInventory.Products.TryAddProduct(ProductId, amount);
 
             var before = _reserve.GetProvideProducts().FirstOrDefault(i => i.ProductId == ProductId);
-            _inventory.Products.TryRemoveProduct(ProductId, 40);
+            _stationInventory.Products.TryRemoveProduct(ProductId, 40);
             var after = _reserve.GetProvideProducts().FirstOrDefault(i => i.ProductId == ProductId);
 
             Assert.IsNotNull(before);
@@ -93,10 +93,10 @@ namespace Assets.Editor
         {
             const int amount = 100;
             _reserve.SetProvide(ProductId, true);
-            _inventory.Products.TryAddProduct(ProductId, amount);
+            _stationInventory.Products.TryAddProduct(ProductId, amount);
 
             var before = _reserve.GetProvideProducts().FirstOrDefault(i => i.ProductId == ProductId);
-            _inventory.Products.TryRemoveProduct(ProductId, amount);
+            _stationInventory.Products.TryRemoveProduct(ProductId, amount);
             var after = _reserve.GetProvideProducts().FirstOrDefault(i => i.ProductId == ProductId);
 
             Assert.IsNotNull(before);
@@ -134,7 +134,7 @@ namespace Assets.Editor
             _reserve.SetAmount(ProductId, amount);
 
             var before = _reserve.GetConsumeProducts().FirstOrDefault(i => i.ProductId == ProductId);
-            _inventory.Products.TryAddProduct(ProductId, fulfilled);
+            _stationInventory.Products.TryAddProduct(ProductId, fulfilled);
             var after = _reserve.GetConsumeProducts().FirstOrDefault(i => i.ProductId == ProductId);
 
             Assert.IsNotNull(before);
@@ -150,7 +150,7 @@ namespace Assets.Editor
             _reserve.SetAmount(ProductId, amount);
 
             var before = _reserve.GetConsumeProducts().FirstOrDefault(i => i.ProductId == ProductId);
-            _inventory.Products.TryAddProduct(ProductId, amount);
+            _stationInventory.Products.TryAddProduct(ProductId, amount);
             var after = _reserve.GetConsumeProducts().FirstOrDefault(i => i.ProductId == ProductId);
 
             Assert.IsNotNull(before);
@@ -184,7 +184,7 @@ namespace Assets.Editor
             const int holdAmount = 40;
 
             _reserve.SetProvide(ProductId, true);
-            _inventory.Products.TryAddProduct(ProductId, invAmount);
+            _stationInventory.Products.TryAddProduct(ProductId, invAmount);
             _reserve.SetAmount(ProductId, 0);
 
             var before = _reserve.GetProvideProducts().FirstOrDefault(i => i.ProductId == ProductId);
@@ -205,7 +205,7 @@ namespace Assets.Editor
             const int holdAmount = 20;
 
             _reserve.SetProvide(ProductId, true);
-            _inventory.Products.TryAddProduct(ProductId, invAmount);
+            _stationInventory.Products.TryAddProduct(ProductId, invAmount);
             _reserve.SetAmount(ProductId, 0);
 
             var before = _reserve.GetProvideProducts().FirstOrDefault(i => i.ProductId == ProductId);

@@ -13,12 +13,12 @@ namespace Assets.Station
 {
 	public class StationInventory : QScript, IMessageListener
 	{
-		private Inventory _inventory;
+		private WorldMaterials.StationInventory _stationInventory;
 		private Dictionary<string, Product> _products;
 
-		public void Initialize(Inventory inventory)
+		public void Initialize(WorldMaterials.StationInventory stationInventory)
 		{
-			_inventory = inventory;
+			_stationInventory = stationInventory;
 			Locator.MessageHub.AddListener(this, Mission.MessageName);
 			_products = ProductLookup.Instance.GetProducts().ToDictionary(i => i.Name);
 		}
@@ -39,7 +39,7 @@ namespace Assets.Station
 		        foreach (var missionRewardAmount in args.Mission.Scriptable.Rewards)
 		        {
 		            if (_products.ContainsKey(missionRewardAmount.Name))
-		                _inventory.Products.TryAddProduct(_products[missionRewardAmount.Name].ID, missionRewardAmount.Amount);
+		                _stationInventory.Products.TryAddProduct(_products[missionRewardAmount.Name].ID, missionRewardAmount.Amount);
 		        }
 		    }
 		}

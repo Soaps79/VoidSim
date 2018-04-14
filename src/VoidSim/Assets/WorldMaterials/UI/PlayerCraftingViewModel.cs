@@ -48,7 +48,7 @@ namespace Assets.WorldMaterials.UI
         private List<Recipe> _recipes;
         private CraftingContainer _crafter;
 
-        private Inventory _inventory;
+        private StationInventory _stationInventory;
 
         private readonly List<RecipeButton> _queuedButtons = new List<RecipeButton>();
         private readonly List<RecipeButton> _recipeButtons = new List<RecipeButton>();
@@ -57,7 +57,7 @@ namespace Assets.WorldMaterials.UI
         /// <summary>
         /// Typically called by the owner of the CraftingContainer
         /// </summary>
-        public void Bind(List<Recipe> recipes, CraftingContainer crafter, Inventory inventory)
+        public void Bind(List<Recipe> recipes, CraftingContainer crafter, StationInventory stationInventory)
         {
             _crafter = crafter;
             _crafter.OnCraftingQueued += OnCraftingQueued;
@@ -66,8 +66,8 @@ namespace Assets.WorldMaterials.UI
 
             _recipes = recipes;
 
-            _inventory = inventory;
-            _inventory.OnInventoryChanged += SetCanAffordOnButtons;
+            _stationInventory = stationInventory;
+            _stationInventory.OnInventoryChanged += SetCanAffordOnButtons;
 
             BindToUI();
         }
@@ -123,7 +123,7 @@ namespace Assets.WorldMaterials.UI
             foreach (var button in _recipeButtons)
             {
                 if (!button.Recipe.Ingredients.All(
-                    ingredient => _inventory.Products.HasProduct(ingredient.ProductId, ingredient.Quantity)))
+                    ingredient => _stationInventory.Products.HasProduct(ingredient.ProductId, ingredient.Quantity)))
                 {
                     button.Button.interactable = false;
                 }
@@ -143,7 +143,7 @@ namespace Assets.WorldMaterials.UI
 
 	        foreach (var result in recipe.Results)
 	        {
-		        _inventory.Products.TryAddProduct(result.ProductId, result.Quantity);
+		        _stationInventory.Products.TryAddProduct(result.ProductId, result.Quantity);
 			}
 			_queuedButtons.Remove(button);
             Destroy(button.Button.gameObject);
@@ -154,7 +154,7 @@ namespace Assets.WorldMaterials.UI
         {
             foreach (var ingredient in recipe.Ingredients)
             {
-                if(_inventory.Products.TryRemoveProduct(ingredient.ProductId, ingredient.Quantity) < ingredient.Quantity)
+                if(_stationInventory.Products.TryRemoveProduct(ingredient.ProductId, ingredient.Quantity) < ingredient.Quantity)
                     Debug.Log("Craft button requested good is could not afford");
             }
             var button = CreateQueuedButton(recipe);

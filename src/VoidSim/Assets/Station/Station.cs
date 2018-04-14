@@ -45,7 +45,7 @@ namespace Assets.Station
         [SerializeField] private PopulationControl _popControlPrefab;
 
 		private CraftingContainer _crafter;
-        private Inventory _inventory;
+        private WorldMaterials.StationInventory _stationInventory;
 
 	    private readonly CollectionSerializer<InventoryData> _inventorySerializer
 		    = new CollectionSerializer<InventoryData>();
@@ -105,7 +105,7 @@ namespace Assets.Station
         {
             foreach (var layer in _layers)
             {
-                layer.Value.Initialize(this, _inventory);
+                layer.Value.Initialize(this, _stationInventory);
             }
         }
 
@@ -122,7 +122,7 @@ namespace Assets.Station
                     SupplyMonitor = new ProductSupplyMonitor(new ProductSupplyMonitor.Data
                     {
                         Product = product,
-                        Inventory = _inventory,
+                        StationInventory = _stationInventory,
                         SupplyUpdatefrequency = TimeUnit.Hour,
                         ChangeUpdateFrequency = TimeUnit.Day,
                         Mode = ProductSupplyDisplayMode.Difference
@@ -139,7 +139,7 @@ namespace Assets.Station
                     SupplyMonitor = new ProductSupplyMonitor(new ProductSupplyMonitor.Data
                     {
                         Product = product,
-                        Inventory = _inventory,
+                        StationInventory = _stationInventory,
                         SupplyUpdatefrequency = TimeUnit.Hour,
                         ChangeUpdateFrequency = TimeUnit.Day,
                         Mode = ProductSupplyDisplayMode.OutOfMax,
@@ -157,7 +157,7 @@ namespace Assets.Station
                     SupplyMonitor = new ProductSupplyMonitor(new ProductSupplyMonitor.Data
                     {
                         Product = product,
-                        Inventory = _inventory,
+                        StationInventory = _stationInventory,
                         SupplyUpdatefrequency = TimeUnit.Hour,
                         ChangeUpdateFrequency = TimeUnit.Day,
                         Mode = ProductSupplyDisplayMode.SupplyOnly,
@@ -173,14 +173,14 @@ namespace Assets.Station
             go.name = "power_grid";
             go.transform.SetParent(_layers[LayerType.Core].transform);
             var grid = go.GetOrAddComponent<PowerGrid>();
-            grid.Initialize(_inventory);
+            grid.Initialize(_stationInventory);
         }
 
         private void InstantiatePopulationControl()
         {
             _populationControl = Instantiate(_popControlPrefab, _layers[LayerType.Core].transform);
             _populationControl.name = "population_control";
-            _populationControl.Initialize(_inventory,_popScriptable);
+            _populationControl.Initialize(_stationInventory,_popScriptable);
 	        _populationControl.IgnoreNeeds = _ignoreMoodInitial;
         }
 
@@ -208,7 +208,7 @@ namespace Assets.Station
             go.transform.SetParent(_layers[LayerType.Core].transform);
             go.name = "player_crafting_viewmodel";
             var viewmodel = go.GetOrAddComponent<PlayerCraftingViewModel>();
-            viewmodel.Bind(_productLookup.GetRecipes(), _crafter, _inventory);
+            viewmodel.Bind(_productLookup.GetRecipes(), _crafter, _stationInventory);
         }
 
         private void BindFactoryControl()
@@ -217,7 +217,7 @@ namespace Assets.Station
 	        go.transform.SetParent(_layers[LayerType.Core].transform);
             go.name = "factory_control";
 	        var control = go.AddComponent<FactoryControl>();
-			control.Initialize(_inventory, _productLookup, _inventoryReserve);
+			control.Initialize(_stationInventory, _productLookup, _inventoryReserve);
 		}
 
 		private void InstantiateCargoControl()
@@ -225,7 +225,7 @@ namespace Assets.Station
 	        var cargo = Instantiate(_cargoControlPrefab);
             cargo.transform.SetParent(_layers[LayerType.Core].transform);
             cargo.name = "cargo_control";
-            cargo.Initialize(_inventory, _inventoryReserve, _populationControl);
+            cargo.Initialize(_stationInventory, _inventoryReserve, _populationControl);
         }
 
         // centralized inventory for the station
@@ -234,27 +234,27 @@ namespace Assets.Station
             var go = new GameObject();
             go.transform.SetParent(_layers[LayerType.Core].transform);
             go.name = "station_inventory";
-            _inventory = go.GetOrAddComponent<Inventory>();
-            if (_inventory == null || _inventoryScriptable == null)
+            _stationInventory = go.GetOrAddComponent<WorldMaterials.StationInventory>();
+            if (_stationInventory == null || _inventoryScriptable == null)
                 throw new UnityException("Station inventory missing a dependency");
 
 			// check to see if game is loading, if not, use presets from scripable object
-	        if (_inventorySerializer.HasDataFor(_inventory, "StationInventory"))
-		        _inventory.Initialize(_inventorySerializer.DeserializeData(), _productLookup, true);
+	        if (_inventorySerializer.HasDataFor(_stationInventory, "StationInventory"))
+		        _stationInventory.Initialize(_inventorySerializer.DeserializeData(), _productLookup, true);
 	        else
-		        _inventory.Initialize(_inventoryScriptable, _productLookup, true);
+		        _stationInventory.Initialize(_inventoryScriptable, _productLookup, true);
 
 	        var product = _productLookup.GetProduct("Credits");
-            _inventory.Products.SetProductMaxAmount(product.ID, 1000000);
+            _stationInventory.Products.SetProductMaxAmount(product.ID, 1000000);
 
             product = _productLookup.GetProduct("Energy");
-            _inventory.Products.SetProductMaxAmount(product.ID, 1000000);
+            _stationInventory.Products.SetProductMaxAmount(product.ID, 1000000);
 
             _inventoryReserve = new InventoryReserve();
-            _inventoryReserve.Initialize(_inventory);
+            _inventoryReserve.Initialize(_stationInventory);
 
 	        var stationInventory = go.AddComponent<StationInventory>();
-			stationInventory.Initialize(_inventory);
+			stationInventory.Initialize(_stationInventory);
         }
 
         private void InstantiateTrader()
@@ -263,7 +263,7 @@ namespace Assets.Station
 	        go.name = "station_trader";
             go.transform.SetParent(_layers[LayerType.Core].transform);
             var trader = go.AddComponent<StationTrader>();
-			trader.Initialize(_inventory, _inventoryReserve, _populationControl);
+			trader.Initialize(_stationInventory, _inventoryReserve, _populationControl);
 		}
 
 	    private void InstantiateUserPlacement()
@@ -281,7 +281,7 @@ namespace Assets.Station
             go.transform.SetParent(_layers[LayerType.Core].transform);
             go.name = "inventory_viewmodel";
             var viewmodel = go.GetOrAddComponent<InventoryViewModel>();
-            viewmodel.BindToInventory(_inventory, _inventoryScriptable, _placeablesLookup, _inventoryReserve, _userPlacement);
+            viewmodel.BindToInventory(_stationInventory, _inventoryScriptable, _placeablesLookup, _inventoryReserve, _userPlacement);
         }
 
 	    public void HandleMessage(string type, MessageArgs args)

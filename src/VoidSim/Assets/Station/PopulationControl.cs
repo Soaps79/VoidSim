@@ -37,7 +37,7 @@ namespace Assets.Station
 
 	    // Population is currently stored in the Station's inventory as a Product
 		// Allows it to be handled by trade, cargo, etc
-		private Inventory _inventory;
+		private WorldMaterials.StationInventory _stationInventory;
 		private int _populationProductId;
 		
 		// When there is room for more population, 
@@ -66,22 +66,22 @@ namespace Assets.Station
 
 	    //public Action<List<Person>, bool> OnPopulationUpdated;
 
-	    public void Initialize(Inventory inventory, PopulationSO scriptable)
+	    public void Initialize(WorldMaterials.StationInventory stationInventory, PopulationSO scriptable)
 		{
 		    _scriptable = scriptable;
-			_inventory = inventory;
-			_inventory.Products.OnProductsChanged += HandleInventoryProductChanged;
-            OnNextUpdate += () => _inventory.Products.OnProductMaxAmountChanged += HandleInventoryMaxAmountChanged;
+			_stationInventory = stationInventory;
+			_stationInventory.Products.OnProductsChanged += HandleInventoryProductChanged;
+            OnNextUpdate += () => _stationInventory.Products.OnProductMaxAmountChanged += HandleInventoryMaxAmountChanged;
 
 			_populationProductId = ProductIdLookup.Population;
-			_currentCount = _inventory.Products.GetProductCurrentAmount(_populationProductId);
+			_currentCount = _stationInventory.Products.GetProductCurrentAmount(_populationProductId);
 			_baseCapacity = scriptable.BaseCapacity;
 
 			// still temporary values until system is worked out
 			CurrentQualityOfLife = 10;
 
 			// establish sub-objects
-			MoodManager = new MoodManager(scriptable.MoodParams, inventory);
+			MoodManager = new MoodManager(scriptable.MoodParams, stationInventory);
 		    _personGenerator.Initialize(scriptable.GenerationParams);
 
 		    InitializeEmployment();
@@ -93,7 +93,7 @@ namespace Assets.Station
 				LoadFromFile();
 			else
 				LoadFromScriptable();
-			_inventory.Products.SetProductMaxAmount(_populationProductId, scriptable.BaseCapacity);
+			_stationInventory.Products.SetProductMaxAmount(_populationProductId, scriptable.BaseCapacity);
 
 			InitializeProductTrader();
 
@@ -128,13 +128,13 @@ namespace Assets.Station
 	    private void InitializeHouser()
 	    {
 	        var houser = GetComponent<PopHomeMonitor>();
-	        houser.Initialize(this, _inventory, _scriptable);
+	        houser.Initialize(this, _stationInventory, _scriptable);
 	        _peopleHandlers.Add(houser);
 	    }
 
 	    private void LoadFromScriptable()
 		{
-			_inventory.Products.TryAddProduct(_populationProductId, _scriptable.InitialCount);
+			_stationInventory.Products.TryAddProduct(_populationProductId, _scriptable.InitialCount);
 		    var people = _personGenerator.GeneratePeople(_scriptable.InitialCount);
             // move this into scriptable? maybe a percentage?
 		    people.ForEach(i => i.IsResident = true);
@@ -157,7 +157,7 @@ namespace Assets.Station
 
 		    var people = _personGenerator.DeserializePopulation(_deserialized.Population);
 
-            if(_inventory.Products.GetProductCurrentAmount(ProductIdLookup.Population) != people.Count())
+            if(_stationInventory.Products.GetProductCurrentAmount(ProductIdLookup.Population) != people.Count())
 				throw new UnityException("PopControl data not matching station inventory");
 	        AllPopulation.AddRange(people);
 		    _peopleHandlers.ForEach(i => i.HandleDeserialization(people));
@@ -184,13 +184,13 @@ namespace Assets.Station
 			if (productId != _populationProductId)
 				return;
 
-			_currentCount = _inventory.Products.GetProductCurrentAmount(_populationProductId);
+			_currentCount = _stationInventory.Products.GetProductCurrentAmount(_populationProductId);
 		}
 
 		// checks to see if inventory has room for more pop (discounting those already in transit)
 		private void UpdateTradeRequest()
 		{
-			var remaining = _inventory.Products.GetProductRemainingSpace(_populationProductId);
+			var remaining = _stationInventory.Products.GetProductRemainingSpace(_populationProductId);
 			remaining -= _inboundPopulation;
 			_trader.SetConsume(new ProductAmount
 			{

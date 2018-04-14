@@ -20,7 +20,7 @@ namespace Assets.Station
 		private ShipBerth _berth;
 		private TrafficShip _ship;
 		private CargoManifestBook _manifestBook;
-		private Inventory _inventory;
+		private WorldMaterials.StationInventory _stationInventory;
 		private InventoryReserve _reserve;
 		private int _creditsProductID;
 
@@ -39,10 +39,10 @@ namespace Assets.Station
 
 	    public Action<CargoManifest> OnCargoManifestComplete;
 
-		public void Initialize(ShipBerth berth, Inventory inventory, InventoryReserve reserve, TransactionText textPrefab)
+		public void Initialize(ShipBerth berth, WorldMaterials.StationInventory stationInventory, InventoryReserve reserve, TransactionText textPrefab)
 		{
 			_berth = berth;
-			_inventory = inventory;
+			_stationInventory = stationInventory;
 			_reserve = reserve;
 			_textPrefab = textPrefab;
 
@@ -95,20 +95,20 @@ namespace Assets.Station
 				if (AmountPerTick > _productIn.Amount)
 				{
 					_reserve.AdjustHold(_productIn.ProductId, -_productIn.Amount);
-					_inventory.Products.TryAddProduct(_productIn.ProductId, _productIn.Amount);
+					_stationInventory.Products.TryAddProduct(_productIn.ProductId, _productIn.Amount);
 					_productIn.Amount = 0;
 				}
 				else
 				{
 					_reserve.AdjustHold(_productIn.ProductId, -AmountPerTick);
-					_inventory.Products.TryAddProduct(_productIn.ProductId, AmountPerTick);
+					_stationInventory.Products.TryAddProduct(_productIn.ProductId, AmountPerTick);
 					_productIn.Amount -= AmountPerTick;
 				}
 
 				if (_productIn.Amount <= 0)
 				{
 					var manifest = _manifestsIn.Dequeue();
-					_inventory.Products.TryRemoveProduct(_creditsProductID, manifest.Currency);
+					_stationInventory.Products.TryRemoveProduct(_creditsProductID, manifest.Currency);
 					_manifestBook.Close(manifest.Id);
 					CreateCompletionText(manifest.Currency, true);
 					CheckNextIncoming();
@@ -122,20 +122,20 @@ namespace Assets.Station
 				if (AmountPerTick > _productOut.Amount)
 				{
 					_reserve.AdjustHold(_productOut.ProductId, _productOut.Amount);
-					_inventory.Products.TryRemoveProduct(_productOut.ProductId, _productOut.Amount);
+					_stationInventory.Products.TryRemoveProduct(_productOut.ProductId, _productOut.Amount);
 					_productOut.Amount = 0;
 				}
 				else
 				{
 					_reserve.AdjustHold(_productOut.ProductId, AmountPerTick);
-					_inventory.Products.TryRemoveProduct(_productOut.ProductId, AmountPerTick);
+					_stationInventory.Products.TryRemoveProduct(_productOut.ProductId, AmountPerTick);
 					_productOut.Amount -= AmountPerTick;
 				}
 
 				if (_productOut.Amount <= 0)
 				{
 					var manifest = _manifestsOut.Dequeue();
-					_inventory.Products.TryAddProduct(_creditsProductID, manifest.Currency);
+					_stationInventory.Products.TryAddProduct(_creditsProductID, manifest.Currency);
 					_manifestBook.Close(manifest.Id);
 					CreateCompletionText(manifest.Currency, false);
 					CheckNextOutgoing();

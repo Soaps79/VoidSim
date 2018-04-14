@@ -25,7 +25,7 @@ namespace Assets.Station
 	/// </summary>
 	public class FactoryControl : QScript, IMessageListener, ISerializeData<FactoryControlData>
 	{
-		private Inventory _inventory;
+		private WorldMaterials.StationInventory _stationInventory;
 		private ProductLookup _productLookup;
 		public List<ProductFactory> Factories = new List<ProductFactory>();
 
@@ -46,9 +46,9 @@ namespace Assets.Station
 
 		private const string _collectionName = "FactoryControl";
 
-		public void Initialize(Inventory inventory, ProductLookup lookup, InventoryReserve reserve)
+		public void Initialize(WorldMaterials.StationInventory stationInventory, ProductLookup lookup, InventoryReserve reserve)
 		{
-			_inventory = inventory;
+			_stationInventory = stationInventory;
 			_productLookup = lookup;
 			_reserve = reserve;
 			Locator.MessageHub.AddListener(this, ProductFactory.MessageName);
@@ -80,7 +80,7 @@ namespace Assets.Station
 				throw new UnityException("Factory control recieved bad message data");
 
 			var factory = args.ProductFactory;
-			factory.Initialize(_inventory, _productLookup);
+			factory.Initialize(_stationInventory, _productLookup);
 			factory.OnIsBuyingchanged += RefreshPurchasing;
 			factory.OnCraftComplete += HandleCraftComplete;
 

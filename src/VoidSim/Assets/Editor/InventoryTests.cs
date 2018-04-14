@@ -170,7 +170,7 @@ namespace Assets.Editor
             var callbackBaseHappened = false;
 
             var go = new GameObject();
-            var inventory = go.AddComponent<Inventory>();
+            var inventory = go.AddComponent<StationInventory>();
             _scriptable.Products.Add(new ProductEntryInfo {ProductName = ProductName, Amount = amount});
             inventory.Initialize(_scriptable, _lookup);
             var productInventory = inventory.Products;
@@ -188,7 +188,7 @@ namespace Assets.Editor
             var callbackBaseHappened = false;
 
             var go = new GameObject();
-            var inventory = go.AddComponent<Inventory>();
+            var inventory = go.AddComponent<StationInventory>();
             _scriptable.Products.Add(new ProductEntryInfo {ProductName = ProductName, Amount = amount});
             inventory.Initialize(_scriptable, _lookup);
             var productInventory = inventory.Products;

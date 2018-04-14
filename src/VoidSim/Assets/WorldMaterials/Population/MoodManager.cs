@@ -17,15 +17,15 @@ namespace Assets.WorldMaterials.Population
 
 		private int _currentPopCount;
 
-		private Inventory _inventory;
+		private StationInventory _stationInventory;
 		private float _maxLeisureBonus;
 		private int _baseLeisure;
 		private LeisureTracker _leisureTracker;
 
-		public MoodManager(MoodParams moodParams, Inventory inventory)
+		public MoodManager(MoodParams moodParams, StationInventory stationInventory)
 		{
-			_inventory = inventory;
-			_inventory.Products.OnProductsChanged += HandleInventoryUpdate;
+			_stationInventory = stationInventory;
+			_stationInventory.Products.OnProductsChanged += HandleInventoryUpdate;
 
 			if (moodParams != null)
 				SetFromScriptable(moodParams);
@@ -79,7 +79,7 @@ namespace Assets.WorldMaterials.Population
 
 		private void UpdatePopCount()
 		{
-			_currentPopCount = _inventory.Products.GetProductCurrentAmount(ProductIdLookup.Population);
+			_currentPopCount = _stationInventory.Products.GetProductCurrentAmount(ProductIdLookup.Population);
 
 		}
 
@@ -87,7 +87,7 @@ namespace Assets.WorldMaterials.Population
 		{
 			var exact = _foodConsumedPerPop * _currentPopCount;
 			var need = (int)Math.Ceiling(exact);
-			var consumed = _inventory.Products.TryRemoveProduct(ProductIdLookup.Food, need);
+			var consumed = _stationInventory.Products.TryRemoveProduct(ProductIdLookup.Food, need);
 			if (consumed < need)
 			{
 				_foodAffector.Efficiency = consumed == 0 ? 0 : (float)consumed / need;
@@ -102,7 +102,7 @@ namespace Assets.WorldMaterials.Population
 		{
 			var exact = _waterConsumedPerPop * _currentPopCount;
 			var need = (int)Math.Ceiling(exact);
-			var consumed = _inventory.Products.TryRemoveProduct(ProductIdLookup.Water, need);
+			var consumed = _stationInventory.Products.TryRemoveProduct(ProductIdLookup.Water, need);
 			if (consumed < need)
 			{
 				_waterAffector.Efficiency = consumed == 0 ? 0 : (float)consumed / need;

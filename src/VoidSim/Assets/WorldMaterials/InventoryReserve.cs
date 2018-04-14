@@ -28,7 +28,7 @@ namespace Assets.WorldMaterials
             public bool ShouldProvide;
         }
 
-        [SerializeField] private Inventory _inventory;
+        [SerializeField] private StationInventory _stationInventory;
         private Dictionary<int, int> _holdProducts = new Dictionary<int, int>();
         private readonly List<Entry> _reserveEntries = new List<Entry>();
         private readonly List<ProductAmount> _toConsume = new List<ProductAmount>();
@@ -36,10 +36,10 @@ namespace Assets.WorldMaterials
 
 	    public Action OnReserveChanged;
 
-        public void Initialize(Inventory inventory)
+        public void Initialize(StationInventory stationInventory)
         {
-            _inventory = inventory;
-            _inventory.OnInventoryChanged += UpdateReserve;
+            _stationInventory = stationInventory;
+            _stationInventory.OnInventoryChanged += UpdateReserve;
         }
 
         // Updating of reserve lists happens in these three functions
@@ -56,7 +56,7 @@ namespace Assets.WorldMaterials
 
             foreach (var productAmount in _reserveEntries.Where(i => i.ShouldConsume))
             {
-                var current = _inventory.Products.GetProductCurrentAmount(productAmount.ProductId);
+                var current = _stationInventory.Products.GetProductCurrentAmount(productAmount.ProductId);
                 var amount = productAmount.Amount;
                 if (_holdProducts.ContainsKey(productAmount.ProductId))
                     amount -= _holdProducts[productAmount.ProductId];
@@ -73,7 +73,7 @@ namespace Assets.WorldMaterials
 
             foreach (var productAmount in _reserveEntries.Where(i => i.ShouldProvide))
             {
-                var current = _inventory.Products.GetProductCurrentAmount(productAmount.ProductId);
+                var current = _stationInventory.Products.GetProductCurrentAmount(productAmount.ProductId);
                 var amount = productAmount.Amount;
                 if (_holdProducts.ContainsKey(productAmount.ProductId))
                     amount -= _holdProducts[productAmount.ProductId];

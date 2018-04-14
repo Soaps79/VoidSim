@@ -24,7 +24,7 @@ namespace Assets.Station
         private InventoryReserve _reserve;
 
         [SerializeField] private ProductValueLookup _valueLookup;
-        [SerializeField] private Inventory _inventory;
+        [SerializeField] private WorldMaterials.StationInventory _stationInventory;
         private ProductTrader _trader;
         private WorldClock _worldClock;
 
@@ -33,10 +33,10 @@ namespace Assets.Station
 
 	    private PopulationControl _popControl;
 
-	    public void Initialize(Inventory inventory, InventoryReserve reserve, PopulationControl popControl)
+	    public void Initialize(WorldMaterials.StationInventory stationInventory, InventoryReserve reserve, PopulationControl popControl)
         {
-            _inventory = inventory;
-            _inventory.OnInventoryChanged += CheckForTrade;
+            _stationInventory = stationInventory;
+            _stationInventory.OnInventoryChanged += CheckForTrade;
             _reserve = reserve;
 	        _reserve.OnReserveChanged += CheckForTrade;
 	        _popControl = popControl;

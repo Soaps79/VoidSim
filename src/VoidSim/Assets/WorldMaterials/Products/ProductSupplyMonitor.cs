@@ -23,7 +23,7 @@ namespace Assets.WorldMaterials.Products
         public class Data
         {
             public Product Product;
-            public Inventory Inventory;
+            public StationInventory StationInventory;
             public TimeUnit SupplyUpdatefrequency;
             public TimeUnit ChangeUpdateFrequency;
             public ProductSupplyDisplayMode Mode;
@@ -33,7 +33,7 @@ namespace Assets.WorldMaterials.Products
         public const string CreatedMessageType = "ProductSupplyMonitor created";
 
         public Product Product { get; private set; }
-        private Inventory _inventory;
+        private StationInventory _stationInventory;
         private TimeUnit _supplyUpdatefrequency;
         private TimeUnit _changeUpdateFrequency;
 
@@ -48,7 +48,7 @@ namespace Assets.WorldMaterials.Products
         public ProductSupplyMonitor(Data data)
         {
             Product = data.Product;
-            _inventory = data.Inventory;
+            _stationInventory = data.StationInventory;
             _supplyUpdatefrequency = data.SupplyUpdatefrequency;
             _changeUpdateFrequency = data.ChangeUpdateFrequency;
 
@@ -102,8 +102,8 @@ namespace Assets.WorldMaterials.Products
 
         private void UpdateSupply(object sender, EventArgs e)
         {
-            _currentSupply = _inventory.Products.GetProductCurrentAmount(Product.ID);
-            _currentMax = _inventory.Products.GetProductMaxAmount(Product.ID);
+            _currentSupply = _stationInventory.Products.GetProductCurrentAmount(Product.ID);
+            _currentMax = _stationInventory.Products.GetProductMaxAmount(Product.ID);
         }
 
         public string GetAmountOutput()

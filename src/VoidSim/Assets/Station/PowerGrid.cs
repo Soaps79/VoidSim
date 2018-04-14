@@ -22,7 +22,7 @@ namespace Assets.Station
     {
         public const string ENERGY_PRODUCT_NAME = "Energy";
 
-        private Inventory _inventory;
+        private WorldMaterials.StationInventory _stationInventory;
         private IWorldClock _worldClock;
         private readonly List<EnergyConsumer> _consumers = new List<EnergyConsumer>();
         private Product _energyProduct;
@@ -41,9 +41,9 @@ namespace Assets.Station
             Locator.MessageHub.AddListener(this, ProductFactory.MessageName);
         }
 
-        public void Initialize(Inventory inventory)
+        public void Initialize(WorldMaterials.StationInventory stationInventory)
         {
-            _inventory = inventory;
+            _stationInventory = stationInventory;
             if (_worldClock == null)
             {
                 _worldClock = Locator.WorldClock;
@@ -70,7 +70,7 @@ namespace Assets.Station
 
             if (HasShortage)
             {
-                if (_inventory.Products.HasProduct(_energyProduct.ID, (int) _currentTotalDemand))
+                if (_stationInventory.Products.HasProduct(_energyProduct.ID, (int) _currentTotalDemand))
                 {
                     HasShortage = false;
                 }
@@ -78,7 +78,7 @@ namespace Assets.Station
 
 			foreach (var consumer in _consumers)
             {
-                if (_inventory.Products.TryRemoveProduct(_energyProduct.ID, (int) consumer.TotalAmountConsumed) < consumer.TotalAmountConsumed)
+                if (_stationInventory.Products.TryRemoveProduct(_energyProduct.ID, (int) consumer.TotalAmountConsumed) < consumer.TotalAmountConsumed)
                     HasShortage = true;
             }
         }
@@ -154,7 +154,7 @@ namespace Assets.Station
 		        return;
 
 	        // power plant resposible for initializing power providers
-			factory.Initialize(_inventory, ProductLookup.Instance);
+			factory.Initialize(_stationInventory, ProductLookup.Instance);
         }
 
         public string Name

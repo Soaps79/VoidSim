@@ -13,16 +13,16 @@ namespace Assets.Station
 	public class StationLayer : QScript, IMessageListener
 	{
 		private Station _parentStation;
-		private Inventory _inventory;
+		private WorldMaterials.StationInventory _stationInventory;
 		public LayerType LayerType;
 		private IHardPointGroup _hardPoints;
 		private SpriteRenderer _sprite;
 		private bool _isFaded;
 
-		public void Initialize(Station parentStation, Inventory inventory)
+		public void Initialize(Station parentStation, WorldMaterials.StationInventory stationInventory)
 		{
 			_parentStation = parentStation;
-			_inventory = inventory;
+			_stationInventory = stationInventory;
 			_sprite = GetComponent<SpriteRenderer>();
 			InitializeHardpoints();
 		}

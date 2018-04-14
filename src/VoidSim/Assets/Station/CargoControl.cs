@@ -14,7 +14,7 @@ namespace Assets.Station
 {
 	public class CargoControl : QScript, IMessageListener
 	{
-		private Inventory _inventory;
+		private WorldMaterials.StationInventory _stationInventory;
 		private InventoryReserve _reserve;
 
 		private readonly List<CargoBay> _cargoBays = new List<CargoBay>();
@@ -28,9 +28,9 @@ namespace Assets.Station
 			Locator.MessageHub.AddListener(this, LogisticsMessages.ShipBerthsUpdated);
 		}
 
-		public void Initialize(Inventory inventory, InventoryReserve reserve, PopulationControl popControl)
+		public void Initialize(WorldMaterials.StationInventory stationInventory, InventoryReserve reserve, PopulationControl popControl)
 		{
-			_inventory = inventory;
+			_stationInventory = stationInventory;
 			_reserve = reserve;
 			_popControl = popControl;
 		}
@@ -67,7 +67,7 @@ namespace Assets.Station
 			var go = new GameObject();
 			var cargoBay = go.AddComponent<CargoBay>();
 			cargoBay.transform.SetParent(transform, true);
-			cargoBay.Initialize(berth, _inventory, _reserve, _textPrefab);
+			cargoBay.Initialize(berth, _stationInventory, _reserve, _textPrefab);
 			_cargoBays.Add(cargoBay);
 		    if (_popControl != null)
 		        cargoBay.OnCargoManifestComplete += _popControl.HandleManifestComplete;

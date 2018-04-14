@@ -31,12 +31,12 @@ namespace Assets.Station.Population
 
         public int MaxCapacity;
         public int OccupiedCapacity;
-        private Inventory _inventory;
+        private WorldMaterials.StationInventory _stationInventory;
 
         [SerializeField] private TimeLength _updateFrequency;
         private int _initialCapacity;
 
-        public void Initialize(PopulationControl control, Inventory inventory, PopulationSO scriptable)
+        public void Initialize(PopulationControl control, WorldMaterials.StationInventory stationInventory, PopulationSO scriptable)
         {
             var time = Locator.WorldClock.GetSeconds(_updateFrequency);
             var node = StopWatch.AddNode(_nodeName, time);
@@ -44,7 +44,7 @@ namespace Assets.Station.Population
 
             _allPopulation = control.AllPopulation;
             Locator.MessageHub.AddListener(this, PopHousing.MessageName);
-            _inventory = inventory;
+            _stationInventory = stationInventory;
             _initialCapacity = scriptable.BaseCapacity;
         }
 
@@ -166,7 +166,7 @@ namespace Assets.Station.Population
             OccupiedCapacity = _residentHousing.Sum(i => i.CurrentCount);
 
             if(previousMax != MaxCapacity)
-                _inventory.Products.SetProductMaxAmount(ProductIdLookup.Population, MaxCapacity);
+                _stationInventory.Products.SetProductMaxAmount(ProductIdLookup.Population, MaxCapacity);
         }
 
         public string Name { get { return "PopHomeMonitor"; } }

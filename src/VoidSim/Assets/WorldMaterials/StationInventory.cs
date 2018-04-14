@@ -21,7 +21,7 @@ namespace Assets.WorldMaterials
 		public string PlaceableName;
 	}
 
-	public class Inventory : QScript, ISerializeData<InventoryData>
+	public class StationInventory : QScript, ISerializeData<InventoryData>
     {
 		[Serializable]
         public class InventoryPlaceableEntry

@@ -25,17 +25,17 @@ namespace Assets.WorldMaterials.UI
 
 		private Transform _productContentHolder;
         private Transform _placeablesContentHolder;
-        private Inventory _inventory;
+        private StationInventory _stationInventory;
         private InventoryReserve _inventoryReserve;
         private readonly List<ProductEntryBinder> _productEntryList = new List<ProductEntryBinder>();
         private readonly List<Button> _placeableEntryList = new List<Button>();
         private PlaceablesLookup _placeablesLookup;
         private UserPlacement _userPlacement;
 
-        public void BindToInventory(Inventory inventory, InventoryScriptable inventoryScriptable, PlaceablesLookup placeablesLookup, InventoryReserve inventoryReserve, UserPlacement userPlacement)
+        public void BindToInventory(StationInventory stationInventory, InventoryScriptable inventoryScriptable, PlaceablesLookup placeablesLookup, InventoryReserve inventoryReserve, UserPlacement userPlacement)
         {
-            _inventory = inventory;
-            _inventory.Products.OnProductsChanged += UpdateProductEntry;
+            _stationInventory = stationInventory;
+            _stationInventory.Products.OnProductsChanged += UpdateProductEntry;
             _placeablesLookup = placeablesLookup;
             _inventoryReserve = inventoryReserve;
 
@@ -51,7 +51,7 @@ namespace Assets.WorldMaterials.UI
             if(id <= 0)
                 return;
 
-            _inventory.TryRemovePlaceable(id);
+            _stationInventory.TryRemovePlaceable(id);
             ClearPlaceableEntries();
             DrawPlaceableEntries();
         }
@@ -82,7 +82,7 @@ namespace Assets.WorldMaterials.UI
 
         private void DrawProductEntries()
         {
-            foreach (var entryInfo in _inventory.Products.GetProductEntries())
+            foreach (var entryInfo in _stationInventory.Products.GetProductEntries())
             {
                 if (_productsToIgnore.Contains(entryInfo.Product.Category))
                     continue;
@@ -105,7 +105,7 @@ namespace Assets.WorldMaterials.UI
 		// items that can be picked up from inventory and placed in game
         private void DrawPlaceableEntries()
         {
-	        foreach (var placeable in _inventory.Placeables)
+	        foreach (var placeable in _stationInventory.Placeables)
             {
                 var scriptable = _placeablesLookup.Placeables.FirstOrDefault(i => i.ProductName == placeable.Name );
 
@@ -135,7 +135,7 @@ namespace Assets.WorldMaterials.UI
 	        if (entry == null)
 				return;
 
-	        entry.SetAmount(_inventory.Products.GetProductCurrentAmount(productId));
+	        entry.SetAmount(_stationInventory.Products.GetProductCurrentAmount(productId));
 	        entry.PulseColorFrom(amountChanged > 0 ? _increaseColor : _decreaseColor, _pulseTime);
         }
 

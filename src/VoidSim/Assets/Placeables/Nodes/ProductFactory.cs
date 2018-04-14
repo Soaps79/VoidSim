@@ -44,7 +44,7 @@ namespace Assets.Placeables.Nodes
 		[SerializeField] private string _containerType;
 		private readonly List<Recipe> _recipes = new List<Recipe>();
 		private int _currentCraftQueueId;
-		private Inventory _inventory;
+		private StationInventory _stationInventory;
 		public EfficiencyModule EfficiencyModule { get; private set; }
 
 		// these next fields assigned in unity editor / prefab
@@ -82,10 +82,10 @@ namespace Assets.Placeables.Nodes
 		}
 
 		// Factory binds to Inventory and initializes its container. Will begin crafting if InitialRecipe not null
-		public void Initialize(Inventory inventory, ProductLookup productLookup)
+		public void Initialize(StationInventory stationInventory, ProductLookup productLookup)
 		{
-			_inventory = inventory;
-			_inventory.Products.OnProductsChanged += CheckForRestart;
+			_stationInventory = stationInventory;
+			_stationInventory.Products.OnProductsChanged += CheckForRestart;
 
 			_productLookup = productLookup;
 			if (_container == null)
@@ -148,7 +148,7 @@ namespace Assets.Placeables.Nodes
 		private void CheckForRestart(int productId, int amount)
 		{
 			if (!_isOutOfProduct || 
-				CurrentlyCrafting.Ingredients.Any(i => !_inventory.Products.HasProduct(i.ProductId, productId)))
+				CurrentlyCrafting.Ingredients.Any(i => !_stationInventory.Products.HasProduct(i.ProductId, productId)))
 				return;
 
 			_isOutOfProduct = false;
@@ -197,7 +197,7 @@ namespace Assets.Placeables.Nodes
 		{
 			foreach (var ingredient in CurrentlyCrafting.Ingredients)
 			{
-				_inventory.Products.TryAddProduct(ingredient.ProductId, ingredient.Quantity);
+				_stationInventory.Products.TryAddProduct(ingredient.ProductId, ingredient.Quantity);
 			}
 		}
 
@@ -230,7 +230,7 @@ namespace Assets.Placeables.Nodes
 		{
 			foreach (var ingredient in recipe.Ingredients)
 			{
-				if (_inventory.Products.HasProduct(ingredient.ProductId, ingredient.Quantity))
+				if (_stationInventory.Products.HasProduct(ingredient.ProductId, ingredient.Quantity))
 					continue;
 
 				Debug.Log(string.Format("Automated container ran out of Product {0}", ingredient.ProductId));
@@ -239,7 +239,7 @@ namespace Assets.Placeables.Nodes
 
 			foreach (var ingredient in recipe.Ingredients)
 			{
-				_inventory.Products.TryRemoveProduct(ingredient.ProductId, ingredient.Quantity);
+				_stationInventory.Products.TryRemoveProduct(ingredient.ProductId, ingredient.Quantity);
 			}
 			return true;
 		}
@@ -249,7 +249,7 @@ namespace Assets.Placeables.Nodes
 		{
 			foreach (var result in recipe.Results)
 			{
-				_inventory.Products.TryAddProduct(result.ProductId, result.Quantity);
+				_stationInventory.Products.TryAddProduct(result.ProductId, result.Quantity);
 			}
 		}
 
