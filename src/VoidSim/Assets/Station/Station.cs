@@ -260,7 +260,7 @@ namespace Assets.Station
 	        go.name = "station_trader";
             go.transform.SetParent(_layers[LayerType.Core].transform);
             var trader = go.AddComponent<StationTrader>();
-			trader.Initialize(_stationInventory, _inventoryReserve, _populationControl);
+			trader.Initialize(_stationInventory.Products, _inventoryReserve);
 		}
 
 	    private void InstantiateUserPlacement()

@@ -128,7 +128,7 @@ namespace Assets.Station
 	    private void InitializeHouser()
 	    {
 	        var houser = GetComponent<PopHomeMonitor>();
-	        houser.Initialize(this, _stationInventory, _scriptable);
+	        houser.Initialize(this, _stationInventory.Products, _scriptable);
 	        _peopleHandlers.Add(houser);
 	    }
 

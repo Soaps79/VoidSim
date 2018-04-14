@@ -24,22 +24,19 @@ namespace Assets.Station
         private InventoryReserve _reserve;
 
         [SerializeField] private ProductValueLookup _valueLookup;
-        [SerializeField] private WorldMaterials.StationInventory _stationInventory;
+        [SerializeField] private ProductInventory _stationInventory;
         private ProductTrader _trader;
         private WorldClock _worldClock;
 
 	    private readonly CollectionSerializer<InventoryReserveData> _serializer
 		    = new CollectionSerializer<InventoryReserveData>();
 
-	    private PopulationControl _popControl;
-
-	    public void Initialize(WorldMaterials.StationInventory stationInventory, InventoryReserve reserve, PopulationControl popControl)
+	    public void Initialize(ProductInventory stationInventory, InventoryReserve reserve)
         {
             _stationInventory = stationInventory;
-            _stationInventory.OnInventoryChanged += CheckForTrade;
+            _stationInventory.OnProductsChanged += HandleProductsChanged;
             _reserve = reserve;
 	        _reserve.OnReserveChanged += CheckForTrade;
-	        _popControl = popControl;
 
             BindToTrader();
             _valueLookup = ProductValueLookup.Instance;
@@ -48,7 +45,7 @@ namespace Assets.Station
 		        HandleGameLoad();
         }
 
-	    private void BindToTrader()
+        private void BindToTrader()
         {
             _trader = gameObject.AddComponent<ProductTrader>();
 			_trader.Initialize(this, Station.ClientName);
@@ -92,6 +89,11 @@ namespace Assets.Station
         {
 			_reserve.AdjustHold(manifest.ProductId, manifest.AmountTotal);
 			CheckForTrade();
+        }
+
+        private void HandleProductsChanged(int productId, int amount)
+        {
+            CheckForTrade();
         }
 
         private void CheckForTrade()
