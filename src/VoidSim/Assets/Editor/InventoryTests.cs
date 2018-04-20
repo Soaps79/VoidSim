@@ -69,6 +69,7 @@ namespace Assets.Editor
 
             Assert.AreEqual(0, _productInventory.GetProductRemainingSpace(ProductId));
             Assert.AreEqual(difference, remainder);
+            Assert.IsTrue(_productInventory.IsFull);
             Assert.AreEqual(MaxAmount, current);
         }
 
@@ -84,6 +85,7 @@ namespace Assets.Editor
             var current = _productInventory.GetProductCurrentAmount(ProductId);
 
             Assert.AreEqual(difference, remainder);
+            Assert.IsFalse(_productInventory.IsFull);
             Assert.AreEqual(MaxAmount, current);
         }
 
@@ -115,6 +117,7 @@ namespace Assets.Editor
             
             var remainder = _productInventory.TryAddProduct(ProductId, MaxAmount + difference);
 
+            Assert.IsTrue(_productInventory.IsFull);
             Assert.AreEqual(0, _productInventory.GetProductRemainingSpace(ProductId));
             Assert.AreEqual(difference, remainder);
         }
@@ -133,6 +136,7 @@ namespace Assets.Editor
             // test that both products were able to add
             Assert.AreEqual(0, remainderOne);
             Assert.AreEqual(0, remainderTwo);
+            Assert.IsTrue(_productInventory.IsFull);
 
             remainderOne = _productInventory.TryAddProduct(ProductId, amount);
             remainderTwo = _productInventory.TryAddProduct(ProductId + 1, amount);
@@ -154,6 +158,7 @@ namespace Assets.Editor
 
             var remainder = _productInventory.TryAddProduct(ProductId, maxAmount + difference);
 
+            Assert.IsTrue(_productInventory.IsFull);
             Assert.AreEqual(difference, remainder);
         }
 
@@ -162,8 +167,8 @@ namespace Assets.Editor
         {
             const int amount = 100;
 
-            _scriptable.Products.Add(new ProductEntryInfo {ProductName = ProductName, Amount = amount});
             _productInventory.Initialize(_scriptable, _lookup);
+            _productInventory.TryAddProduct(ProductId, amount);
 
             var removed = _productInventory.TryRemoveProduct(ProductId, amount);
             var current = _productInventory.GetProductCurrentAmount(ProductId);
@@ -178,8 +183,8 @@ namespace Assets.Editor
             const int available = 100;
             const int amount = 1000;
 
-            _scriptable.Products.Add(new ProductEntryInfo {ProductName = ProductName, Amount = available});
             _productInventory.Initialize(_scriptable, _lookup);
+            _productInventory.TryAddProduct(ProductId, available);
 
             var removed = _productInventory.TryRemoveProduct(ProductId, amount);
             var current = _productInventory.GetProductCurrentAmount(ProductId);
@@ -196,6 +201,7 @@ namespace Assets.Editor
 
             var remaining = _productInventory.GetProductRemainingSpace(ProductId);
             Assert.AreEqual(MaxAmount, remaining);
+            Assert.IsFalse(_productInventory.IsFull);
         }
 
         [Test]
@@ -206,6 +212,7 @@ namespace Assets.Editor
 
             var remaining = _productInventory.GetProductRemainingSpace(ProductId);
             Assert.AreEqual(MaxAmount, remaining);
+            Assert.IsFalse(_productInventory.IsFull);
         }
 
         [Test]
@@ -218,6 +225,7 @@ namespace Assets.Editor
             var remaining = _productInventory.GetProductRemainingSpace(ProductId);
 
             Assert.AreEqual(half, remaining);
+            Assert.IsFalse(_productInventory.IsFull);
         }
 
         [Test]
@@ -231,6 +239,7 @@ namespace Assets.Editor
             var remaining = _productInventory.GetProductRemainingSpace(ProductId);
 
             Assert.AreEqual(half, remaining);
+            Assert.IsFalse(_productInventory.IsFull);
         }
 
         [Test]

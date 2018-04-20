@@ -44,12 +44,17 @@ namespace Assets.WorldMaterials
 
         public int DefaultProductCapacity { get; set; }
         public int MaxGlobalAmount { get; private set; }
-        public int CurrentGlobalCount { get; private set; }
+        public int CurrentTotalCount { get; private set; }
+        public int CurrentTotalRemaining { get; private set; }
         public bool IsFull { get; private set; }
 
         private void UpdateGlobalCount()
         {
-            CurrentGlobalCount = _productTable.Values.Sum(i => i.Amount);
+            CurrentTotalCount = _productTable.Values.Sum(i => i.Amount);
+            CurrentTotalRemaining = MaxGlobalAmount > 0
+                ? MaxGlobalAmount - CurrentTotalCount
+                : _productTable.Values.Sum(i => i.MaxAmount - i.Amount);
+            IsFull = CurrentTotalRemaining == 0;
         }
 
         // only use for UI and serialization
@@ -76,7 +81,7 @@ namespace Assets.WorldMaterials
             // we can deposit the lesser of global and individual product free space
             var productFreeSpace = _productTable[productId].MaxAmount - _productTable[productId].Amount;
             var freeSpace = MaxGlobalAmount > 0 
-                ? Mathf.Min(MaxGlobalAmount - CurrentGlobalCount, productFreeSpace) 
+                ? Mathf.Min(MaxGlobalAmount - CurrentTotalCount, productFreeSpace) 
                 : productFreeSpace;
 
             amountConsumed = Mathf.Min(freeSpace, amount);
