@@ -58,11 +58,27 @@ namespace Assets.Editor
         }
 
         [Test]
-        public void MaxAmount_IsHonored()
+        public void ProductMaxAmount_Alone_IsHonored()
         {
             const int difference = 100;
 
             _productInventory.Initialize(_scriptable, _lookup);
+
+            var remainder = _productInventory.TryAddProduct(ProductId, MaxAmount + difference);
+            var current = _productInventory.GetProductCurrentAmount(ProductId);
+
+            Assert.AreEqual(0, _productInventory.GetProductRemainingSpace(ProductId));
+            Assert.AreEqual(difference, remainder);
+            Assert.AreEqual(MaxAmount, current);
+        }
+
+        [Test]
+        public void ProductMaxAmount_WithGlobalMax_IsHonored()
+        {
+            const int difference = 100;
+
+            _productInventory.Initialize(_scriptable, _lookup);
+            _productInventory.SetGlobalMax(MaxAmount + difference);
 
             var remainder = _productInventory.TryAddProduct(ProductId, MaxAmount + difference);
             var current = _productInventory.GetProductCurrentAmount(ProductId);
@@ -72,7 +88,7 @@ namespace Assets.Editor
         }
 
         [Test]
-        public void MaxAmount_CanBeSet()
+        public void ProductMaxAmount_CanBeSet()
         {
             const int max = 40;
             const int amount = 100;
@@ -87,6 +103,58 @@ namespace Assets.Editor
             Assert.AreEqual(amount - max, remainder);
             Assert.AreEqual(max, current);
             Assert.AreEqual(max, currentMax);
+        }
+
+        [Test]
+        public void GlobalMaxAmount_Alone_IsHonored_SingleProduct()
+        {
+            const int difference = 10;
+
+            _productInventory.Initialize(_scriptable, _lookup);
+            _productInventory.SetGlobalMax(MaxAmount);
+            
+            var remainder = _productInventory.TryAddProduct(ProductId, MaxAmount + difference);
+
+            Assert.AreEqual(0, _productInventory.GetProductRemainingSpace(ProductId));
+            Assert.AreEqual(difference, remainder);
+        }
+
+        [Test]
+        public void GlobalMaxAmount_Alone_IsHonored_MultipleProducts()
+        {
+            var amount = MaxAmount / 2;
+
+            _productInventory.Initialize(_scriptable, _lookup);
+            _productInventory.SetGlobalMax(MaxAmount);
+
+            var remainderOne = _productInventory.TryAddProduct(ProductId, amount);
+            var remainderTwo = _productInventory.TryAddProduct(ProductId + 1, amount);
+
+            // test that both products were able to add
+            Assert.AreEqual(0, remainderOne);
+            Assert.AreEqual(0, remainderTwo);
+
+            remainderOne = _productInventory.TryAddProduct(ProductId, amount);
+            remainderTwo = _productInventory.TryAddProduct(ProductId + 1, amount);
+
+            // test that both were denid adding more
+            Assert.AreEqual(amount, remainderOne);
+            Assert.AreEqual(amount, remainderTwo);
+        }
+
+        [Test]
+        public void GlobalMaxAmount_WithProductMax_IsHonored()
+        {
+            const int maxAmount = 50;
+            const int difference = 10;
+
+            _productInventory.Initialize(_scriptable, _lookup);
+            _productInventory.SetProductMaxAmount(ProductId, maxAmount + difference);
+            _productInventory.SetGlobalMax(maxAmount);
+
+            var remainder = _productInventory.TryAddProduct(ProductId, maxAmount + difference);
+
+            Assert.AreEqual(difference, remainder);
         }
 
         [Test]
@@ -118,6 +186,51 @@ namespace Assets.Editor
 
             Assert.AreEqual(available, removed);
             Assert.AreEqual(0, current);
+        }
+
+        [Test]
+        public void RemainingSpace_NoneUsed_Product()
+        {
+            _productInventory.Initialize(_scriptable, _lookup);
+            _productInventory.SetProductMaxAmount(ProductId, MaxAmount);
+
+            var remaining = _productInventory.GetProductRemainingSpace(ProductId);
+            Assert.AreEqual(MaxAmount, remaining);
+        }
+
+        [Test]
+        public void RemainingSpace_NoneUsed_Global()
+        {
+            _productInventory.Initialize(_scriptable, _lookup);
+            _productInventory.SetGlobalMax(MaxAmount);
+
+            var remaining = _productInventory.GetProductRemainingSpace(ProductId);
+            Assert.AreEqual(MaxAmount, remaining);
+        }
+
+        [Test]
+        public void RemainingSpace_SomeUsed_Product()
+        {
+            _productInventory.Initialize(_scriptable, _lookup);
+
+            var half = MaxAmount / 2;
+            _productInventory.TryAddProduct(ProductId, half);
+            var remaining = _productInventory.GetProductRemainingSpace(ProductId);
+
+            Assert.AreEqual(half, remaining);
+        }
+
+        [Test]
+        public void RemainingSpace_SomeUsed_Global()
+        {
+            _productInventory.Initialize(_scriptable, _lookup);
+            _productInventory.SetGlobalMax(MaxAmount);
+
+            var half = MaxAmount / 2;
+            _productInventory.TryAddProduct(ProductId, half);
+            var remaining = _productInventory.GetProductRemainingSpace(ProductId);
+
+            Assert.AreEqual(half, remaining);
         }
 
         [Test]

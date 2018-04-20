@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Serialization;
 using Assets.WorldMaterials.Products;
+using UnityEngine;
 
 namespace Assets.WorldMaterials
 {
@@ -42,6 +43,14 @@ namespace Assets.WorldMaterials
         private IProductLookup _productLookup;
 
         public int DefaultProductCapacity { get; set; }
+        public int MaxGlobalAmount { get; private set; }
+        public int CurrentGlobalCount { get; private set; }
+        public bool IsFull { get; private set; }
+
+        private void UpdateGlobalCount()
+        {
+            CurrentGlobalCount = _productTable.Values.Sum(i => i.Amount);
+        }
 
         // only use for UI and serialization
         public List<InventoryProductEntry> GetProductEntries()
@@ -64,12 +73,17 @@ namespace Assets.WorldMaterials
 
             var amountConsumed = amount;
 
-            // if there is not room for amount, only consume what we can
-            if (_productTable[productId].Amount + amount > _productTable[productId].MaxAmount)
-                amountConsumed = _productTable[productId].MaxAmount - _productTable[productId].Amount;
+            // we can deposit the lesser of global and individual product free space
+            var productFreeSpace = _productTable[productId].MaxAmount - _productTable[productId].Amount;
+            var freeSpace = MaxGlobalAmount > 0 
+                ? Mathf.Min(MaxGlobalAmount - CurrentGlobalCount, productFreeSpace) 
+                : productFreeSpace;
+
+            amountConsumed = Mathf.Min(freeSpace, amount);
 
             // add to inventory
             _productTable[productId].Amount += amountConsumed;
+            UpdateGlobalCount();
 
             if (OnProductsChanged != null)
                 OnProductsChanged(productId, amountConsumed);
@@ -130,6 +144,8 @@ namespace Assets.WorldMaterials
                 product.Amount -= amount;
             }
 
+            UpdateGlobalCount();
+
             // tell the world and return the difference
             if (OnProductsChanged != null)
                 OnProductsChanged(product.Product.ID, -amountConsumed);
@@ -167,7 +183,7 @@ namespace Assets.WorldMaterials
         public int GetProductRemainingSpace(int productId)
         {
             if (!_productTable.ContainsKey(productId))
-                return 0;
+                return DefaultProductCapacity;
 
             // return the remaining space, if there is any
             return _productTable[productId].MaxAmount > _productTable[productId].Amount ?
@@ -238,6 +254,11 @@ namespace Assets.WorldMaterials
                     MaxAmount = i.MaxAmount
                 }).ToList()
             };
+        }
+
+        public void SetGlobalMax(int maxAmount)
+        {
+            MaxGlobalAmount = maxAmount;
         }
     }
 }
