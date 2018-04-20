@@ -61,13 +61,21 @@ namespace Assets.Editor
         public void ProductMaxAmount_Alone_IsHonored()
         {
             const int difference = 100;
+            const int half = MaxAmount / 2;
 
             _productInventory.Initialize(_scriptable, _lookup);
 
-            var remainder = _productInventory.TryAddProduct(ProductId, MaxAmount + difference);
-            var current = _productInventory.GetProductCurrentAmount(ProductId);
+            _productInventory.TryAddProduct(ProductId, half);
+            var remainder = _productInventory.GetProductRemainingSpace(ProductId);
 
-            Assert.AreEqual(0, _productInventory.GetProductRemainingSpace(ProductId));
+            Assert.AreEqual(half, remainder);
+            Assert.IsFalse(_productInventory.IsFull);
+
+            remainder = _productInventory.TryAddProduct(ProductId, half + difference);
+            var current = _productInventory.GetProductCurrentAmount(ProductId);
+            var remaining = _productInventory.GetProductRemainingSpace(ProductId);
+
+            Assert.AreEqual(0, remaining);
             Assert.AreEqual(difference, remainder);
             Assert.IsTrue(_productInventory.IsFull);
             Assert.AreEqual(MaxAmount, current);
@@ -218,9 +226,9 @@ namespace Assets.Editor
         [Test]
         public void RemainingSpace_SomeUsed_Product()
         {
-            _productInventory.Initialize(_scriptable, _lookup);
+            const int half = MaxAmount / 2;
 
-            var half = MaxAmount / 2;
+            _productInventory.Initialize(_scriptable, _lookup);
             _productInventory.TryAddProduct(ProductId, half);
             var remaining = _productInventory.GetProductRemainingSpace(ProductId);
 
@@ -231,10 +239,10 @@ namespace Assets.Editor
         [Test]
         public void RemainingSpace_SomeUsed_Global()
         {
+            const int half = MaxAmount / 2;
+
             _productInventory.Initialize(_scriptable, _lookup);
             _productInventory.SetGlobalMax(MaxAmount);
-
-            var half = MaxAmount / 2;
             _productInventory.TryAddProduct(ProductId, half);
             var remaining = _productInventory.GetProductRemainingSpace(ProductId);
 
