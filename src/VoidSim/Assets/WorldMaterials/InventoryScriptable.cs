@@ -20,7 +20,6 @@ namespace Assets.WorldMaterials
         public static PlaceablesLookup PlaceablesLookup;
         public static string[] ProductNames;
         public List<string> Placeables;
-        public List<ProductCategory> ProductsToIgnore;
 
         public List<ProductEntryInfo> Products;
 

@@ -7,6 +7,7 @@ using Assets.Scripts;
 using Assets.WorldMaterials.Products;
 using UnityEngine;
 using UnityEngine.UI;
+#pragma warning disable 649
 
 namespace Assets.WorldMaterials.UI
 {
@@ -16,12 +17,10 @@ namespace Assets.WorldMaterials.UI
         [SerializeField] private Button _placeableEntryPrefab;
 	    [SerializeField] private Toggle _removePrefab;
         [SerializeField] private Image _inventoryPanelPrefab;
-        [SerializeField] private readonly List<ProductCategory> _productsToIgnore = new List<ProductCategory>();
+        [SerializeField] private List<ProductCategory> _productsToIgnore;
 	    [SerializeField] private Color _increaseColor;
 	    [SerializeField] private Color _decreaseColor;
 	    [SerializeField] private float _pulseTime;
-	    [SerializeField] private Sprite _removeSprite;
-	    private Color _normalColor;
 
 		private Transform _productContentHolder;
         private Transform _placeablesContentHolder;
@@ -32,7 +31,7 @@ namespace Assets.WorldMaterials.UI
         private PlaceablesLookup _placeablesLookup;
         private UserPlacement _userPlacement;
 
-        public void BindToInventory(StationInventory stationInventory, InventoryScriptable inventoryScriptable, PlaceablesLookup placeablesLookup, InventoryReserve inventoryReserve, UserPlacement userPlacement)
+        public void BindToInventory(StationInventory stationInventory, PlaceablesLookup placeablesLookup, InventoryReserve inventoryReserve, UserPlacement userPlacement)
         {
             _stationInventory = stationInventory;
             _stationInventory.Products.OnProductsChanged += UpdateProductEntry;
@@ -41,8 +40,6 @@ namespace Assets.WorldMaterials.UI
 
 	        _userPlacement = userPlacement;
 	        _userPlacement.OnPlacementComplete += HandlePlacementComplete;
-
-			UpdateIgnoreList(inventoryScriptable);
             BindToUI();
         }
 
@@ -54,14 +51,6 @@ namespace Assets.WorldMaterials.UI
             _stationInventory.TryRemovePlaceable(id);
             ClearPlaceableEntries();
             DrawPlaceableEntries();
-        }
-
-        private void UpdateIgnoreList(InventoryScriptable inventoryScriptable)
-        {
-            var products = ProductLookup.Instance.GetProducts()
-                .Where(i => inventoryScriptable.ProductsToIgnore.Contains(i.Category));
-            _productsToIgnore.Clear();
-            _productsToIgnore.AddRange(products.Select(i => i.Category).ToList());
         }
 
         private void BindToUI()

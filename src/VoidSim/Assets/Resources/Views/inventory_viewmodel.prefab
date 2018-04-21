@@ -74,7 +74,7 @@ MonoBehaviour:
     type: 2}
   _inventoryPanelPrefab: {fileID: 114508144025922512, guid: 340206acaf326b54db1495146e1cb062,
     type: 2}
-  _increaseColor: {r: 0.4865917, g: 0.9191176, b: 0.52536964, a: 1}
+  _productsToIgnore: 0200000003000000
+  _increaseColor: {r: 0.36634946, g: 0.8897059, b: 0.41327083, a: 1}
   _decreaseColor: {r: 0.7794118, g: 0.42409173, b: 0.42409173, a: 1}
   _pulseTime: 0.5
-  _removeSprite: {fileID: 21300014, guid: 0292be98de478244b8e9b7e62a559597, type: 3}

@@ -15,6 +15,7 @@ using Messaging;
 using QGame;
 using UnityEngine;
 using TimeUnit = Assets.Scripts.TimeUnit;
+#pragma warning disable 649
 
 
 namespace Assets.Station
@@ -43,8 +44,9 @@ namespace Assets.Station
 	    [SerializeField] private PopulationSO _popScriptable;
 	    [SerializeField] private UserPlacement _userPlacementPrefab;
         [SerializeField] private PopulationControl _popControlPrefab;
+        [SerializeField] private StationInventoryViewModel _inventoryViewmodelPrefab;
 
-		private CraftingContainer _crafter;
+        private CraftingContainer _crafter;
         private WorldMaterials.StationInventory _stationInventory;
 
 	    private readonly CollectionSerializer<InventoryData> _inventorySerializer
@@ -81,7 +83,7 @@ namespace Assets.Station
 
             InstantiateCargoControl();
 
-            TestPowerGrid();
+            SetupPower();
             RegisterSupplyMonitors();
 
             InitializeLayers();
@@ -167,10 +169,9 @@ namespace Assets.Station
         }
 
         // instantiate a PowerGrid
-        private void TestPowerGrid()
+        private void SetupPower()
         {
-            var go = new GameObject();
-            go.name = "power_grid";
+            var go = new GameObject {name = "power_grid"};
             go.transform.SetParent(_layers[LayerType.Core].transform);
             var grid = go.GetOrAddComponent<PowerGrid>();
             grid.Initialize(_stationInventory.Products);
@@ -274,11 +275,9 @@ namespace Assets.Station
         // convert editor-friendly objects to more usable dictionary
         private void BindInventoryToUI()
         {
-            var go = (GameObject)Instantiate(Resources.Load("Views/inventory_viewmodel"));
-            go.transform.SetParent(_layers[LayerType.Core].transform);
-            go.name = "inventory_viewmodel";
-            var viewmodel = go.GetOrAddComponent<StationInventoryViewModel>();
-            viewmodel.BindToInventory(_stationInventory, _inventoryScriptable, _placeablesLookup, _inventoryReserve, _userPlacement);
+            var viewmodel = Instantiate(_inventoryViewmodelPrefab, _layers[LayerType.Core].transform);
+            viewmodel.name = "inventory_viewmodel";
+            viewmodel.BindToInventory(_stationInventory, _placeablesLookup, _inventoryReserve, _userPlacement);
         }
 
 	    public void HandleMessage(string type, MessageArgs args)

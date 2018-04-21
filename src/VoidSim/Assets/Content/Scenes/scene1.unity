@@ -1952,12 +1952,12 @@ Prefab:
     - target: {fileID: 224337550640712236, guid: 7580feb122e119045b7b12321dbcdc2a,
         type: 2}
       propertyPath: m_LocalPosition.x
-      value: 127.81999
+      value: 127.819984
       objectReference: {fileID: 0}
     - target: {fileID: 224337550640712236, guid: 7580feb122e119045b7b12321dbcdc2a,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 2.4699936
+      value: 2.469986
       objectReference: {fileID: 0}
     - target: {fileID: 1887455403154080, guid: 7580feb122e119045b7b12321dbcdc2a, type: 2}
       propertyPath: m_IsActive
@@ -4289,6 +4289,8 @@ MonoBehaviour:
   _userPlacementPrefab: {fileID: 114154944144341472, guid: 641fac229d76b74499a20792aeb018ce,
     type: 2}
   _popControlPrefab: {fileID: 114272786897615986, guid: e919ea561cf4d8d40b847c8a88d888de,
+    type: 2}
+  _inventoryViewmodelPrefab: {fileID: 114772480311870510, guid: fde23d13377a5b5428437e93dc2a4372,
     type: 2}
   _initialLayers:
   - {fileID: 1192252418}
@@ -6979,12 +6981,12 @@ Prefab:
     - target: {fileID: 224156052781830228, guid: 1fc7c3453a85b9d41b9b164fa3294e1e,
         type: 2}
       propertyPath: m_LocalPosition.x
-      value: 127.819984
+      value: 127.81999
       objectReference: {fileID: 0}
     - target: {fileID: 224156052781830228, guid: 1fc7c3453a85b9d41b9b164fa3294e1e,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 2.469986
+      value: 2.4699936
       objectReference: {fileID: 0}
     - target: {fileID: 1364436687230358, guid: 1fc7c3453a85b9d41b9b164fa3294e1e, type: 2}
       propertyPath: m_IsActive
