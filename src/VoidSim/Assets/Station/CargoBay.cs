@@ -39,10 +39,10 @@ namespace Assets.Station
 
 	    public Action<CargoManifest> OnCargoManifestComplete;
 
-		public void Initialize(ShipBerth berth, ProductInventory stationInventory, InventoryReserve reserve, TransactionText textPrefab)
+		public void Initialize(ShipBerth berth, ProductInventory inventory, InventoryReserve reserve, TransactionText textPrefab)
 		{
 			_berth = berth;
-			_inventory = stationInventory;
+			_inventory = inventory;
 			_reserve = reserve;
 			_textPrefab = textPrefab;
 
