@@ -49,7 +49,7 @@ namespace Assets.Station
         private void BindToTrader()
         {
             _trader = gameObject.AddComponent<ProductTrader>();
-			_trader.Initialize(this, Station.ClientName);
+			_trader.Initialize(this, Station.ClientName, true);
         }
 
 		private void HandleGameLoad()
@@ -70,19 +70,6 @@ namespace Assets.Station
 	    public void HandleProvideSuccess(TradeManifest manifest)
         {
             _reserve.AdjustHold(manifest.ProductId, -manifest.AmountTotal);
-
-            // request cargo for trade
-            Locator.MessageHub.QueueMessage(LogisticsMessages.CargoRequested, new CargoRequestedMessageArgs
-            {
-                Manifest = new CargoManifest(manifest)
-                {
-                    Seller = Station.ClientName,
-                    Buyer = manifest.Consumer,
-                    Currency = _valueLookup.GetValueOfProductAmount(manifest.ProductId, manifest.AmountTotal),
-                    ProductAmount = new ProductAmount { ProductId = manifest.ProductId, Amount = manifest.AmountTotal }
-                }
-            });
-
             CheckForTrade();
         }
 

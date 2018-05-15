@@ -21,8 +21,8 @@ namespace Assets.Logistics.Transit
 	public class CargoManifest : ISerializeData<CargoManifestData>
 	{
 		public int Id;
-		public string Buyer;
-		public string Seller;
+		public string Receiver;
+		public string Shipper;
 		public ProductAmount ProductAmount;
 		public int Currency;
 		public int TradeManifestId;
@@ -36,8 +36,8 @@ namespace Assets.Logistics.Transit
 		public CargoManifest(CargoManifestData data)
 		{
 			Id = data.Id;
-			Buyer = data.Buyer;
-			Seller = data.Seller;
+			Receiver = data.Buyer;
+			Shipper = data.Seller;
 			ProductAmount = new ProductAmount(data.ProductId, data.ProductAmount);
 			Currency = data.Currency;
 			TradeManifestId = data.TradeManifestId;
@@ -56,8 +56,8 @@ namespace Assets.Logistics.Transit
 			return new CargoManifestData
 			{
 				Id = Id,
-				Buyer = Buyer,
-				Seller = Seller,
+				Buyer = Receiver,
+				Seller = Shipper,
 				ProductId = ProductAmount.ProductId,
 				ProductAmount = ProductAmount.Amount,
 				Currency = Currency,
@@ -78,12 +78,12 @@ namespace Assets.Logistics.Transit
 
 		public List<CargoManifest> GetBuyerManifests(string clientName)
 		{
-			return ActiveManifests.Where(i => i.Buyer == clientName).ToList();
+			return ActiveManifests.Where(i => i.Receiver == clientName).ToList();
 		}
 
 		public List<CargoManifest> GetSellerManifests(string clientName)
 		{
-			return ActiveManifests.Where(i => i.Seller == clientName).ToList();
+			return ActiveManifests.Where(i => i.Shipper == clientName).ToList();
 		}
 
 		public CargoManifestBook()

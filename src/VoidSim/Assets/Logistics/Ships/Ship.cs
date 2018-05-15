@@ -70,7 +70,7 @@ namespace Assets.Logistics.Ships
 			ManifestBook.Add(manifest);
 
 			var s = string.Format("{0} given manifest {1}:\t {2} to {3}\t {4} x{5}", Name, manifest.Id,
-				manifest.Seller, manifest.Buyer, manifest.ProductAmount.ProductId, manifest.ProductAmount.Amount);
+				manifest.Shipper, manifest.Receiver, manifest.ProductAmount.ProductId, manifest.ProductAmount.Amount);
 			UberDebug.LogChannel(LogChannels.Trade, s);
 		}
 

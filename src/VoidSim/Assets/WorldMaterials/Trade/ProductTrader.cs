@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Logistics;
+using Assets.Logistics.Transit;
 using Assets.Scripts;
 using Assets.WorldMaterials.Products;
 using Messaging;
@@ -38,8 +40,11 @@ namespace Assets.WorldMaterials.Trade
         public Action<TradeManifest> OnProvideMatch;
         public Action<TradeManifest> OnConsumeMatch;
 
-		public void Initialize(ITraderDriver driver, string clientName)
+	    public bool RequestCargoOnProvide { get; private set; }
+
+		public void Initialize(ITraderDriver driver, string clientName, bool requestCargoOnProvide = false)
 		{
+		    RequestCargoOnProvide = requestCargoOnProvide;
 			Providing = new List<ProductAmount>();
 			Consuming = new List<ProductAmount>();
 			Driver = driver;
@@ -54,6 +59,24 @@ namespace Assets.WorldMaterials.Trade
 
 	        if (OnProvideMatch != null)
 		        OnProvideMatch(manifest);
+
+            if(RequestCargoOnProvide)
+                RequestCargo(manifest);
+        }
+
+	    private static void RequestCargo(TradeManifest manifest)
+	    {
+	        // request cargo for trade
+	        Locator.MessageHub.QueueMessage(LogisticsMessages.CargoRequested, new CargoRequestedMessageArgs
+	        {
+	            Manifest = new CargoManifest(manifest)
+	            {
+	                Shipper = manifest.Provider,
+	                Receiver = manifest.Consumer,
+	                ProductAmount = new ProductAmount
+                        { ProductId = manifest.ProductId, Amount = manifest.AmountTotal }
+	            }
+	        });
         }
 
         public void HandleConsumeSuccess(TradeManifest manifest)

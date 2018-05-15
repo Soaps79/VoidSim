@@ -39,7 +39,7 @@ namespace Assets.Void
 			go.transform.SetParent(transform);
 			go.name = "void_trader";
 			_trader = go.AddComponent<ProductTrader>();
-			_trader.Initialize(this, ClientName);
+			_trader.Initialize(this, ClientName, true);
 			
 			_automater = go.AddComponent<ProductTradeAutomater>();
 			_automater.Initialize(_trader, Locator.WorldClock, _tradeRequests);
@@ -47,17 +47,7 @@ namespace Assets.Void
 
 		public void HandleProvideSuccess(TradeManifest manifest)
 		{
-			// request cargo for trade
-			Locator.MessageHub.QueueMessage(LogisticsMessages.CargoRequested, new CargoRequestedMessageArgs
-			{
-				Manifest = new CargoManifest(manifest)
-				{
-					Seller = ClientName,
-					Buyer = manifest.Consumer,
-					Currency = _valueLookup.GetValueOfProductAmount(manifest.ProductId, manifest.AmountTotal),
-					ProductAmount = new ProductAmount { ProductId = manifest.ProductId, Amount = manifest.AmountTotal }
-				}
-			});
+			
 		}
 
 		public string ClientName { get { return _clientName; } }

@@ -168,7 +168,7 @@ namespace Assets.Station
 		{
 			_trader = gameObject.AddComponent<ProductTrader>();
 		    _trader.OnResume += HandleNewManifest;
-			_trader.Initialize(this, Station.ClientName);
+			_trader.Initialize(this, Station.ClientName, true);
 			UpdateTradeRequest();
 		}
 
@@ -243,19 +243,9 @@ namespace Assets.Station
 			return true;
 		}
 
-		// request cargo passage for pop
 		public void HandleProvideSuccess(TradeManifest manifest)
 		{
-			Locator.MessageHub.QueueMessage(LogisticsMessages.CargoRequested, new CargoRequestedMessageArgs
-			{
-				Manifest = new CargoManifest(manifest)
-				{
-					Seller = Station.ClientName,
-					Buyer = manifest.Consumer,
-					Currency = 0,
-					ProductAmount = new ProductAmount { ProductId = _populationProductId, Amount = manifest.AmountTotal }
-				}
-			});
+
 		}
 
 	    public void HandleConsumeSuccess(TradeManifest manifest)
