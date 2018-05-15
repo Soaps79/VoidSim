@@ -3,7 +3,7 @@ using System.Linq;
 using Assets.Logistics.Ships;
 using UnityEngine;
 
-namespace Assets.Logistics
+namespace Assets.Logistics.Transit
 {
 	public static class CargoCarrierFinder
 	{

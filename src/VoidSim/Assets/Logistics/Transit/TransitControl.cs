@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Logistics.Ships;
 using Assets.Scripts;
@@ -7,9 +6,8 @@ using Messaging;
 using QGame;
 using UnityEngine;
 using TimeLength = Assets.Scripts.TimeLength;
-using WorldClock = Assets.Scripts.WorldClock;
 
-namespace Assets.Logistics
+namespace Assets.Logistics.Transit
 {
 	public interface ITransitLocation
 	{

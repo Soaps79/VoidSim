@@ -1,5 +1,6 @@
 ﻿using Assets.Logistics;
 using Assets.Logistics.Ships;
+using Assets.Logistics.Transit;
 using Assets.Scripts;
 using Assets.WorldMaterials.Population;
 using Assets.WorldMaterials.Products;

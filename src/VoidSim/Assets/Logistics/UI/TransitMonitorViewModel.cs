@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Assets.Logistics.Ships;
+using Assets.Logistics.Transit;
 using Assets.Scripts;
 using QGame;
 using UnityEngine;

@@ -1,4 +1,5 @@
 ﻿using Assets.Logistics;
+using Assets.Logistics.Transit;
 using Assets.Scripts;
 using Assets.Scripts.Serialization;
 using Assets.WorldMaterials;

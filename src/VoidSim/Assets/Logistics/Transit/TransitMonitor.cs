@@ -5,13 +5,11 @@ using Assets.Logistics.Ships;
 using Assets.Logistics.UI;
 using Assets.Scripts;
 using Assets.Scripts.Serialization;
-using Assets.WorldMaterials.Trade;
 using Messaging;
-using Newtonsoft.Json;
 using QGame;
 using UnityEngine;
 
-namespace Assets.Logistics
+namespace Assets.Logistics.Transit
 {
 	public class TransitMonitorData
 	{

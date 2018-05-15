@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Logistics;
+using Assets.Logistics.Transit;
 using Assets.Scripts;
 using Assets.Station.UI;
 using Assets.WorldMaterials;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Assets.Controllers.GUI;
 using Assets.Logistics.Ships;
+using Assets.Logistics.Transit;
 using QGame;
 using TMPro;
 using UnityEngine;

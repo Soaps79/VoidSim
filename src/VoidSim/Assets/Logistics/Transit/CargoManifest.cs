@@ -5,7 +5,7 @@ using Assets.Scripts.Serialization;
 using Assets.WorldMaterials.Products;
 using Assets.WorldMaterials.Trade;
 
-namespace Assets.Logistics
+namespace Assets.Logistics.Transit
 {
 	public class CargoManifestData
 	{
