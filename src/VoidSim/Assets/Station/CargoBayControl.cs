@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace Assets.Station
 {
-	public class CargoControl : QScript, IMessageListener
+	public class CargoBayControl : QScript, IMessageListener
 	{
 		private ProductInventory _stationInventory;
 		private InventoryReserve _reserve;
@@ -44,7 +44,7 @@ namespace Assets.Station
 		private void HandleShipBerthUpdate(ShipBerthsMessageArgs args)
 		{
 			if (args == null)
-				throw new UnityException("CargoControl got bad berths message args");
+				throw new UnityException("CargoBayControl got bad berths message args");
 
 			args.Berths.ForEach(CreateCargoBay);
 			args.ShipBay.OnRemove += HandleShipBayRemove;
@@ -76,6 +76,6 @@ namespace Assets.Station
 				OnBayAdded(cargoBay);
 		}
 
-		public string Name { get { return "CargoControl"; } }
+		public string Name { get { return "CargoBayControl"; } }
 	}
 }

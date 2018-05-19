@@ -4282,7 +4282,7 @@ MonoBehaviour:
     type: 2}
   _placeablesLookup: {fileID: 11400000, guid: f805e93f4a80edc47916aa669bf7c19f, type: 2}
   _voidTradeRequests: {fileID: 11400000, guid: 7d947a633fc96884aa52b58009038e9d, type: 2}
-  _cargoControlPrefab: {fileID: 114166193650585450, guid: 2a11a610a8e4ed8418a75d773be7bebf,
+  _cargoBayControlPrefab: {fileID: 114166193650585450, guid: 2a11a610a8e4ed8418a75d773be7bebf,
     type: 2}
   _ignoreMoodInitial: 0
   _popScriptable: {fileID: 11400000, guid: 72023609f81d78e4486b42c0013b4ed2, type: 2}

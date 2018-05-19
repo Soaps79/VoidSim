@@ -39,7 +39,7 @@ namespace Assets.Station
         [SerializeField] private InventoryScriptable _inventoryScriptable;
         [SerializeField] private PlaceablesLookup _placeablesLookup;
         [SerializeField] private TraderRequestsSO _voidTradeRequests;
-	    [SerializeField] private CargoControl _cargoControlPrefab;
+	    [SerializeField] private CargoBayControl _cargoBayControlPrefab;
 	    [SerializeField] private bool _ignoreMoodInitial;
 	    [SerializeField] private PopulationSO _popScriptable;
 	    [SerializeField] private UserPlacement _userPlacementPrefab;
@@ -223,7 +223,7 @@ namespace Assets.Station
 
 		private void InstantiateCargoControl()
         {
-	        var cargo = Instantiate(_cargoControlPrefab);
+	        var cargo = Instantiate(_cargoBayControlPrefab);
             cargo.transform.SetParent(_layers[LayerType.Core].transform);
             cargo.name = "cargo_control";
             cargo.Initialize(_stationInventory.Products, _inventoryReserve, _populationControl);
