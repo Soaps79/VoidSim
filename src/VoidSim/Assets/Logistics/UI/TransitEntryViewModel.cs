@@ -32,14 +32,11 @@ namespace Assets.Logistics.UI
 
 		private Ship _ship;
 		private SliderBinding _sliderBinding;
-		private TransitControl _control;
 
 
 		// Ship is designed to expose anything needed for its UI rep
-		public void Bind(Ship ship, TransitControl control)
+		public void Bind(Ship ship)
 		{
-			_control = control;
-
 			// hook into ship
 			_ship = ship;
 			_ship.OnHoldBegin += BeginTraffic;
@@ -74,9 +71,7 @@ namespace Assets.Logistics.UI
 		{
 			TickerPanel.SetActive(false);
 
-			var loc = _control.GetTransitLocation(_ship.Navigation.CurrentDestination);
-
-			if (loc.IsSimpleHold)
+			if (_ship.Status == ShipStatus.Hold)
 			{
 				BeginHold();
 				return;

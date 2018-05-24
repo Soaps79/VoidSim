@@ -46,6 +46,11 @@ namespace Assets.Logistics.Ships
 		public TrafficShip TrafficShip { get; private set; }
 		public string Name { get; set; }
 
+		public bool CanTakeCargo(CargoManifest manifest)
+		{
+			return true;
+		}
+
 		public Action OnHoldBegin;
 		public Action OnTransitBegin;
 		public Ticker Ticker = new Ticker();

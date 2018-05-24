@@ -13,23 +13,24 @@ namespace Assets.Logistics.Ships
 		[SerializeField] private TimeLength _shipDelayTime;
 		private float _shipDelaySeconds;
 
-		private readonly List<Ship> _shipsOnHold = new List<Ship>();
+		public List<Ship> ShipsOnHold { get; private set; }
 		private readonly List<Ship> _shipstoRemove = new List<Ship>();
 
-		public int Count {  get { return _shipsOnHold.Count; } }
+		public int Count {  get { return ShipsOnHold.Count; } }
 
 		void Start()
 		{
+			ShipsOnHold = new List<Ship>();
 			_shipDelaySeconds = Locator.WorldClock.GetSeconds(_shipDelayTime);
 			OnEveryUpdate += UpdateShips;
 		}
 
 		private void UpdateShips()
 		{
-			if (!_shipsOnHold.Any())
+			if (!ShipsOnHold.Any())
 				return;
 
-		    foreach (var ship in _shipsOnHold)
+		    foreach (var ship in ShipsOnHold)
 			{
 				ship.Ticker.ElapsedTicks += GetDelta();
 				if (ship.Ticker.IsComplete)
@@ -39,7 +40,7 @@ namespace Assets.Logistics.Ships
 			if (!_shipstoRemove.Any())
 				return;
 
-			_shipsOnHold.RemoveAll(i => _shipstoRemove.Contains(i));
+			ShipsOnHold.RemoveAll(i => _shipstoRemove.Contains(i));
 			_shipstoRemove.ForEach(i => i.CompleteTraffic());
 			_shipstoRemove.Clear();
 		}
@@ -49,14 +50,23 @@ namespace Assets.Logistics.Ships
 			if(!isResume)
 				ship.Ticker.Reset(_shipDelaySeconds);
 			ship.BeginHold(null, null);
-			_shipsOnHold.Add(ship);
+			ShipsOnHold.Add(ship);
 		}
 
 		public List<Ship> ReleaseShips()
 		{
-			var list = _shipsOnHold.ToList();
-			_shipsOnHold.Clear();
+			var list = ShipsOnHold.ToList();
+			ShipsOnHold.Clear();
 			return list;
 		}
+
+	    public List<Ship> RemoveShips(int count)
+	    {
+	        var toRemove = Mathf.Min(ShipsOnHold.Count, count);
+
+            var toReturn = ShipsOnHold.GetRange(0, toRemove);
+            ShipsOnHold.RemoveRange(0, toRemove);
+	        return toReturn;
+	    }
 	}
 }

@@ -540,6 +540,8 @@ GameObject:
   - component: {fileID: 184362405}
   - component: {fileID: 184362406}
   - component: {fileID: 184362402}
+  - component: {fileID: 184362408}
+  - component: {fileID: 184362407}
   m_Layer: 0
   m_Name: Logistics
   m_TagString: Untagged
@@ -585,7 +587,6 @@ Transform:
   m_Children:
   - {fileID: 1844121031}
   - {fileID: 99872252}
-  - {fileID: 1800383587}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -603,7 +604,6 @@ MonoBehaviour:
   EntryLeft: {fileID: 1844121031}
   EntryRight: {fileID: 99872252}
   VarianceY: 8
-  _holder: {fileID: 1800383588}
 --- !u!114 &184362406
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -616,8 +616,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _transitControl: {fileID: 184362402}
-  _trafficControl: {fileID: 184362405}
   _cargoShip: {fileID: 1141777610797510, guid: ba319d03c281b8847867636ca0ca0c99, type: 2}
+--- !u!114 &184362407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 184362401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c73104e23c34785a3b5ab563092844d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isSimpleHold: 0
+  _clientName: Station
+--- !u!114 &184362408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 184362401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0071963ef5c84e84aa7bae66085ac3cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _shipDelayTime:
+    TimeUnit: 2
+    Length: 5
 --- !u!1001 &188410891
 Prefab:
   m_ObjectHideFlags: 0
@@ -1450,6 +1476,8 @@ GameObject:
   m_Component:
   - component: {fileID: 265325959}
   - component: {fileID: 265325958}
+  - component: {fileID: 265325961}
+  - component: {fileID: 265325960}
   m_Layer: 0
   m_Name: VoidActor
   m_TagString: Untagged
@@ -1470,7 +1498,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _valueLookup: {fileID: 0}
   _tradeRequests: {fileID: 11400000, guid: 7d947a633fc96884aa52b58009038e9d, type: 2}
-  _holder: {fileID: 416572259}
+  _shipHolder: {fileID: 0}
 --- !u!4 &265325959
 Transform:
   m_ObjectHideFlags: 0
@@ -1480,11 +1508,37 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 3.2501106, y: -2.5446525, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 416572258}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &265325960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 265325957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c73104e23c34785a3b5ab563092844d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isSimpleHold: 0
+  _clientName: Void
+--- !u!114 &265325961
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 265325957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0071963ef5c84e84aa7bae66085ac3cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _shipDelayTime:
+    TimeUnit: 2
+    Length: 5
 --- !u!1 &294099295
 GameObject:
   m_ObjectHideFlags: 0
@@ -1804,49 +1858,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _filename: gamesave
   LoadOnStart: 0
---- !u!1 &416572257
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 416572258}
-  - component: {fileID: 416572259}
-  m_Layer: 0
-  m_Name: ship_holder
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &416572258
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 416572257}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 160.19196, y: 524.3355, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 265325959}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &416572259
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 416572257}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0071963ef5c84e84aa7bae66085ac3cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _shipDelayTime:
-    TimeUnit: 2
-    Length: 2
 --- !u!4 &433613091
 Transform:
   m_ObjectHideFlags: 0
@@ -9179,49 +9190,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cc496f00db942243adbbebc9949cc19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1800383586
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1800383587}
-  - component: {fileID: 1800383588}
-  m_Layer: 0
-  m_Name: ship_holder
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1800383587
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1800383586}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 160.19196, y: 524.3355, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 184362404}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1800383588
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1800383586}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0071963ef5c84e84aa7bae66085ac3cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _shipDelayTime:
-    TimeUnit: 2
-    Length: 3
 --- !u!1001 &1806438770
 Prefab:
   m_ObjectHideFlags: 0

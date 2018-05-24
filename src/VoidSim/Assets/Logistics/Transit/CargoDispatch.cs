@@ -1,12 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Logistics.Ships;
+using Logistics.Transit;
+using QGame;
 using UnityEngine;
 
 namespace Assets.Logistics.Transit
 {
-	public static class CargoCarrierFinder
+	[RequireComponent(typeof(TransitLocation))]
+	public class CargoDispatch : QScript
 	{
+		private readonly List<CargoManifest> _awaitingDispatch = new List<CargoManifest>();
+		private List<Ship> _ships;
+		private TransitLocation _transitLocation;
+
+		private void Start()
+		{
+			_transitLocation = GetComponent<TransitLocation>();
+		}
+
 		public static Ship FindCarrier(List<Ship> ships, CargoManifest manifest)
 		{
 			var ship = FindShipHeadingTo(ships, manifest);

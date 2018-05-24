@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Logistics.Ships;
-using Assets.Logistics.Transit;
 using Assets.Placeables.Nodes;
 using Assets.Scripts;
 using Assets.Scripts.Serialization;
+using Logistics.Transit;
 using Messaging;
-using Newtonsoft.Json;
 using QGame;
 using UnityEngine;
 
@@ -17,7 +16,11 @@ namespace Assets.Logistics
 		public List<ShipBerthData> Berths;
 	}
 
-	public class TrafficControl : QScript, IMessageListener, ITransitLocation, ISerializeData<TrafficControlData>
+    [RequireComponent(typeof(TransitLocation))]
+    [RequireComponent(typeof(ShipHolder))]
+    // Handles ships in the Station's airspace
+    // Give ships waypoints for their approach and departure
+	public class TrafficControl : QScript, IMessageListener, ILocationDriver, ISerializeData<TrafficControlData>
 	{
 		public string ClientName { get { return "Station"; } }
 
@@ -34,43 +37,37 @@ namespace Assets.Logistics
 		// and feeding it to the berths as they are placed
 		private List<ShipBerthData> _deserialized = new List<ShipBerthData>();
 
-		// hold was originally used to handle arrivals before berths were placed
-		// should also be used for when all berths are full
-		[SerializeField] private ShipHolder _holder;
-
 
 		private readonly CollectionSerializer<TrafficControlData> _serializer
 			= new CollectionSerializer<TrafficControlData>();
 
-		void Start()
+	    private TransitLocation _location;
+
+	    void Start()
 		{
-			Locator.MessageHub.AddListener(this, LogisticsMessages.ShipBerthsUpdated);
-			// Locator.MessageHub.AddListener(this, GameMessages.PreSave);
-			Locator.MessageHub.QueueMessage(LogisticsMessages.RegisterLocation, 
-				new TransitLocationMessageArgs { TransitLocation = this });
+
+		    BindToLocation();
+		    Locator.MessageHub.AddListener(this, LogisticsMessages.ShipBerthsUpdated);
 
 			if (_serializer.HasDataFor(this, "TrafficControl"))
 				Load();
 		}
 
-		public void Load()
+        // Ships will arrive at _location, which this class is driving
+	    private void BindToLocation()
+	    {
+	        _location = GetComponent<TransitLocation>();
+	        _location.RegisterDriver(this);
+	        _location.OnResume += Resume;
+	    }
+
+	    public void Load()
 		{
 			var data = _serializer.DeserializeData();
 			_deserialized.AddRange(data.Berths);
 		}
 
-		public void OnTransitArrival(TransitControl.Entry entry)
-		{
-			if (!_berths.Any())
-			{
-				// this is temp, shouldn't be a thing eventually
-				_holder.BeginHold(entry.Ship);
-				Debug.Log("Ship arrived before berths placed");
-			}
-
-			FindBerthAndAssignToShip(entry.Ship);
-		}
-
+        // Finds the first empty berth of the ship's size and pairs them up
 		private void FindBerthAndAssignToShip(Ship ship)
 		{
 			var berth = _berths.FirstOrDefault(i => i.ShipSize == ship.Size && !i.IsInUse);
@@ -81,7 +78,7 @@ namespace Assets.Logistics
 			}
 
 			berth.State = BerthState.Reserved;
-			List<Vector3> waypoints = GenerateWayPoints(berth);
+			var waypoints = GenerateWayPoints(berth);
 			ship.BeginHold(berth, waypoints);
 			ship.TrafficShip.transform.SetParent(transform, true);
 			_shipsInTraffic.Add(ship);
@@ -114,19 +111,8 @@ namespace Assets.Logistics
 			return start;
 		}
 
-		public void OnTransitDeparture(TransitControl.Entry entry)
-		{
-			_shipsInTraffic.Remove(entry.Ship);
-		}
-
 		public void Resume(Ship ship)
 		{
-			if (ship.Status == ShipStatus.Hold)
-			{
-				_holder.BeginHold(ship, true);
-				return;
-			}
-
 			if (ship.Status == ShipStatus.Traffic && ship.TrafficShip != null )
 			{
 				ship.TrafficShip.transform.SetParent(transform, true);
@@ -188,19 +174,13 @@ namespace Assets.Logistics
 					_deserialized.Remove(toFind);
 				}
 			}
-			if (isFirst && _holder.Count > 0)
+            // this will work for the first placement of berths when ships are on hold, 
+            // but will need love to work for arrivals > berth count queueing
+			if (isFirst && _location.HasShipsOnHold())
 			{
-				// I don't think this has ever been tested, was meant as placeholder
-				RemoveShipsFromHold();
-			}
-		}
-
-		private void RemoveShipsFromHold()
-		{
-			var ships = _holder.ReleaseShips();
-			foreach (var ship in ships)
-			{
-				FindBerthAndAssignToShip(ship);
+			    var count = _berths.Count(i => !i.IsInUse);
+			    var ships = _location.GetShipsFromHold(count);
+                ships.ForEach(FindBerthAndAssignToShip);
 			}
 		}
 
@@ -212,5 +192,14 @@ namespace Assets.Logistics
 				Berths = _berths.Select(i => i.GetData()).ToList()
 			};
 		}
+
+	    public bool TryHandleArrival(Ship ship)
+	    {
+	        if (_berths.All(i => i.IsInUse))
+	            return false;
+
+            FindBerthAndAssignToShip(ship);
+	        return true;
+	    }
 	}
 }

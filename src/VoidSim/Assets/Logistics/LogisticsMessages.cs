@@ -2,6 +2,7 @@
 using Assets.Logistics.Ships;
 using Assets.Logistics.Transit;
 using Assets.Placeables.Nodes;
+using Logistics.Transit;
 using Messaging;
 
 namespace Assets.Logistics
@@ -17,7 +18,7 @@ namespace Assets.Logistics
 
     public class TransitLocationMessageArgs : MessageArgs
     {
-        public ITransitLocation TransitLocation;
+        public TransitLocation TransitLocation;
     }
 
     public class ShipCreatedMessageArgs : MessageArgs

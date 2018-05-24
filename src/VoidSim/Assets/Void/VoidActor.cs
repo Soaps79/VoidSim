@@ -1,24 +1,21 @@
-﻿using Assets.Logistics;
-using Assets.Logistics.Ships;
-using Assets.Logistics.Transit;
+﻿using Assets.Logistics.Ships;
 using Assets.Scripts;
 using Assets.WorldMaterials.Population;
 using Assets.WorldMaterials.Products;
 using Assets.WorldMaterials.Trade;
 using QGame;
 using UnityEngine;
-using WorldClock = Assets.Scripts.WorldClock;
 
 namespace Assets.Void
 {
-	public class VoidActor : QScript, ITransitLocation, ITraderDriver, IPopulationHost
+	public class VoidActor : QScript, ITraderDriver, IPopulationHost
 	{
 		private IWorldClock _worldClock;
 		private ProductLookup _productLookup;
 
 		[SerializeField] private ProductValueLookup _valueLookup;
 		[SerializeField] private TraderRequestsSO _tradeRequests;
-		[SerializeField] private ShipHolder _holder;
+		[SerializeField] private ShipHolder _shipHolder;
 		
 		private const string _clientName = "Void";
 		private ProductTradeAutomater _automater;
@@ -30,7 +27,7 @@ namespace Assets.Void
 		    _worldClock = Locator.WorldClock;
 		    _productLookup = ProductLookup.Instance;
 			InstantiateVoidTrader();
-			Locator.MessageHub.QueueMessage(LogisticsMessages.RegisterLocation, new TransitLocationMessageArgs{ TransitLocation = this });
+//			Locator.MessageHub.QueueMessage(LogisticsMessages.RegisterLocation, new TransitLocationMessageArgs{ TransitLocation = this });
 		}
 
 		private void InstantiateVoidTrader()
@@ -39,7 +36,7 @@ namespace Assets.Void
 			go.transform.SetParent(transform);
 			go.name = "void_trader";
 			_trader = go.AddComponent<ProductTrader>();
-			_trader.Initialize(this, ClientName, true);
+			_trader.Initialize(this, _clientName, true);
 			
 			_automater = go.AddComponent<ProductTradeAutomater>();
 			_automater.Initialize(_trader, Locator.WorldClock, _tradeRequests);
@@ -50,21 +47,27 @@ namespace Assets.Void
 			
 		}
 
-		public string ClientName { get { return _clientName; } }
-		public void OnTransitArrival(TransitControl.Entry entry)
-		{
-			_holder.BeginHold(entry.Ship);
-		}
-
-		public void OnTransitDeparture(TransitControl.Entry entry)
-		{
-			
-		}
-
-		public void Resume(Ship ship)
-		{
-			_holder.BeginHold(ship, true);
-		}
+//		public string ClientName { get { return _clientName; } }
+//		public void OnTransitArrival(TransitControl.Entry entry)
+//		{
+//			_shipHolder.BeginHold(entry.Ship);
+//		}
+//
+//		public void OnTransitDeparture(TransitControl.Entry entry)
+//		{
+//			
+//		}
+//
+//		public void HandleCargoRequested(CargoManifest manifest)
+//		{
+//			var ships = _shipHolder.ShipsOnHold.Where(i => i.CanTakeCargo(manifest));
+//			
+//		}
+//
+//		public void Resume(Ship ship)
+//		{
+//			_shipHolder.BeginHold(ship, true);
+//		}
 
 		public bool IsSimpleHold { get { return true; } }
 

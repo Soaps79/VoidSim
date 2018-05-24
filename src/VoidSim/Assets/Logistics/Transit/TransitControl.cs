@@ -2,6 +2,7 @@
 using System.Linq;
 using Assets.Logistics.Ships;
 using Assets.Scripts;
+using Logistics.Transit;
 using Messaging;
 using QGame;
 using UnityEngine;
@@ -9,50 +10,30 @@ using TimeLength = Assets.Scripts.TimeLength;
 
 namespace Assets.Logistics.Transit
 {
-	public interface ITransitLocation
-	{
-		string ClientName { get; }
-		void OnTransitArrival(TransitControl.Entry entry);
-		void OnTransitDeparture(TransitControl.Entry entry);
-		void Resume(Ship ship);
-		bool IsSimpleHold { get; }
-	}
-
-	public class EmptyTransitLocation : ITransitLocation
-	{
-		public string ClientName { get { return "EmptyTransitLocation"; } }
-		public void OnTransitArrival(TransitControl.Entry entry) { }
-		public void OnTransitDeparture(TransitControl.Entry entry) { }
-		public void Resume(Ship ship) { }
-		public bool IsSimpleHold { get { return true; } }
-	}
-
 	public class TransitControl : QScript, IMessageListener
 	{
-		/// <summary>
-		/// Trying a new pattern:
-		/// Management classes have an embedded public class simply called Entry.
-		/// Made because this project has a lot of classes that have a list of XEntry, 
-		/// seeing if there's reusable pieces to come of it
-		/// </summary>
+		// Trying a new pattern:
+		// Management classes have an embedded public class simply called Entry.
+		// Made because this project has a lot of classes that have a list of XEntry, 
+		// seeing if there's reusable pieces to come of it
 		public class Entry
 		{
 			public int Id;
-			public ITransitLocation TravelingTo;
-			public ITransitLocation TravelingFrom;
+			public TransitLocation TravelingTo;
+			public TransitLocation TravelingFrom;
 			public Ship Ship;
 		}
 
-		private readonly Dictionary<string, ITransitLocation> _locations = new Dictionary<string, ITransitLocation>();
+		private readonly Dictionary<string, TransitLocation> _locations = new Dictionary<string, TransitLocation>();
 		[SerializeField] private TimeLength _journeyTime;
 		private float _journeySeconds;
 
-		public List<ITransitLocation> GetTransitLocations()
+		public List<TransitLocation> GetTransitLocations()
 		{
 			return _locations.Values.ToList();
 		}
 
-		public ITransitLocation GetTransitLocation(string locationName)
+		public TransitLocation GetTransitLocation(string locationName)
 		{
 			return _locations.ContainsKey(locationName) ? _locations[locationName] : null;
 		}
@@ -90,7 +71,7 @@ namespace Assets.Logistics.Transit
 
 			foreach (var entry in completed)
 			{
-				entry.TravelingTo.OnTransitArrival(entry);
+				entry.TravelingTo.HandleTransitArrival(entry.Ship);
 			}
 			_entries.RemoveAll(i => completed.Contains(i));
 		}
@@ -141,10 +122,10 @@ namespace Assets.Logistics.Transit
 				Ship = args.Ship
 			};
 			_entries.Add(entry);
-			source.OnTransitDeparture(entry);
+			source.HandleTransitDeparture(entry.Ship);
 		}
 
-		private float CalculateTravelTime(ITransitLocation from, ITransitLocation to)
+		private float CalculateTravelTime(TransitLocation from, TransitLocation to)
 		{
 			return _journeySeconds;
 		}

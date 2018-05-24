@@ -25,7 +25,6 @@ namespace Assets.Logistics.Transit
 	{
 		private readonly List<Ship> _ships = new List<Ship>();
 		[SerializeField] private TransitControl _transitControl;
-		[SerializeField] private TrafficControl _trafficControl;
 
 		[SerializeField] private GameObject _cargoShip;
 		public Action<Ship> OnShipAdded;
@@ -92,7 +91,7 @@ namespace Assets.Logistics.Transit
 			var manifests = _manifestsBacklog.ToList();
 			foreach (var manifest in manifests)
 			{
-				var ship = CargoCarrierFinder.FindCarrier(_ships, manifest);
+				var ship = CargoDispatch.FindCarrier(_ships, manifest);
 				if (ship == null)
 					continue;
 				ship.AddManifest(manifest);
@@ -131,7 +130,7 @@ namespace Assets.Logistics.Transit
 
 			args.Manifest.Id = Locator.LastId.GetNext("manifest");
 
-			var ship = CargoCarrierFinder.FindCarrier(_ships, args.Manifest);
+			var ship = CargoDispatch.FindCarrier(_ships, args.Manifest);
 			if (ship == null)
 				_manifestsBacklog.Add(args.Manifest);
 			else
@@ -146,7 +145,7 @@ namespace Assets.Logistics.Transit
 			go.transform.SetParent(transform);
 			go.name = "transit_monitor_viewmodel";
 			var viewmodel = go.GetOrAddComponent<TransitMonitorViewModel>();
-			viewmodel.Initialize(this, _transitControl);
+			viewmodel.Initialize(this);
 		}
 
 		public string Name { get { return "TransitMonitor"; } }

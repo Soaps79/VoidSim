@@ -13,7 +13,6 @@ namespace Assets.Logistics.UI
 		[SerializeField] private GameObject _entryPrefab;
 		[SerializeField] private Image _panelPrefab;
 		private TransitMonitor _monitor;
-		private TransitControl _control;
 		
 		private Dictionary<string, TransitEntryViewModel> _entries = new Dictionary<string, TransitEntryViewModel>();
 		private Image _panel;
@@ -22,9 +21,8 @@ namespace Assets.Logistics.UI
 		public Color TransitColor;
 		public Color HoldColor;
 
-		public void Initialize(TransitMonitor monitor, TransitControl control)
+		public void Initialize(TransitMonitor monitor)
 		{
-			_control = control;
 			if(monitor == null)
 				throw new UnityException("TransitMonitorViewModel got bad init data");
 			_monitor = monitor;
@@ -48,7 +46,7 @@ namespace Assets.Logistics.UI
 			var entry = go.GetComponent<TransitEntryViewModel>();
 			entry.HoldColor = HoldColor;
 			entry.TransitColor = TransitColor;
-			entry.Bind(ship, _control);
+			entry.Bind(ship);
 			_entries.Add(ship.Name, entry);
 		}
 	}
