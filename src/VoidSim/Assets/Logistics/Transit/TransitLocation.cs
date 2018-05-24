@@ -11,13 +11,14 @@ using UnityEngine;
 namespace Logistics.Transit
 {
     // LocationDrivers are objects who are given the first shot at handling ships arriving at the Location
-    // Otherwise, ships will be placed on a simple hold
     public interface ILocationDriver
     {
         bool TryHandleArrival(Ship ship);
     }
 
     [RequireComponent(typeof(ShipHolder))]
+    // Serves as a node in the transit system
+    // If no driver registered or driver does not want to receive ship, will place on hold
     public class TransitLocation : QScript
     {
         [SerializeField] private bool _isSimpleHold;
@@ -25,9 +26,9 @@ namespace Logistics.Transit
         private ShipHolder _holder;
         private readonly List<ILocationDriver> _drivers = new List<ILocationDriver>();
 
-        public bool IsSimpleHold { get { return _isSimpleHold;  } }
         public string ClientName { get { return _clientName;  } }
 
+        // does this need to be public? It used to...
         public List<Ship> Ships = new List<Ship>();
 
         private void Awake()
@@ -41,6 +42,9 @@ namespace Logistics.Transit
                 LogisticsMessages.RegisterLocation, new TransitLocationMessageArgs{ TransitLocation = this });
         }
 
+
+        // This class's interface is wonky
+        // Make a decision between triggering callbacks and calling the driver and stick with it 
         public Action<Ship> OnTransitArrival;
         // offer ship to drivers, otherwise put it on hold
         public void HandleTransitArrival(Ship ship)
@@ -48,19 +52,20 @@ namespace Logistics.Transit
             Ships.Add(ship);
             if (!_drivers.Any(i => i.TryHandleArrival(ship)))
                 _holder.BeginHold(ship);
-            if (OnTransitArrival != null) OnTransitArrival(ship);
+            OnTransitArrival?.Invoke(ship);
         }
 
         public Action<Ship> OnTransitDeparture;
+        // Not sure if anyone will ever care about Departure directly, but feels wrong to not expose this
         public void HandleTransitDeparture(Ship ship)
         {
             Ships.Remove(ship);
-            if (OnTransitDeparture != null) OnTransitDeparture(ship);
+            OnTransitDeparture?.Invoke(ship);
         }
 
         public void HandleCargoRequested(CargoManifest manifest)
         {
-            
+            // Implement me during Distribution v1
         }
 
         public Action<Ship> OnResume;
@@ -78,6 +83,7 @@ namespace Logistics.Transit
             if (OnResume != null) OnResume(ship);
         }
 
+        // TODO: Give another pass to the driver > transitlocation > holder relationship
         public bool HasShipsOnHold()
         {
             return _holder.Count > 0;
@@ -86,11 +92,6 @@ namespace Logistics.Transit
         public List<Ship> GetShipsFromHold(int count)
         {
             return _holder.RemoveShips(count);
-        }
-
-        public List<Ship> GetShipList()
-        {
-            return Ships;
         }
 
         public void RegisterDriver(ILocationDriver locationDriver)

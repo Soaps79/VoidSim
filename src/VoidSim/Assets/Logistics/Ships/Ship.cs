@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Assets.Logistics.Transit;
 using Assets.Scripts;
 using Assets.Scripts.Serialization;
 using Assets.WorldMaterials.Products;
 using Assets.WorldMaterials.Trade;
-using Messaging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using UnityEngine;
@@ -103,9 +101,8 @@ namespace Assets.Logistics.Ships
 				Status = ShipStatus.Hold;
 			}
 
-			if (OnHoldBegin != null)
-				OnHoldBegin();
-			return true;
+            OnHoldBegin?.Invoke();
+            return true;
 		}
 
 		private void CreateTrafficShip()

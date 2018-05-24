@@ -26,17 +26,14 @@ namespace Assets.Logistics
 
 		public Transform EntryLeft;
 		public Transform EntryRight;
-		public float VarianceY;
+	    [Tooltip("Largest possible Y offset from ship entry points")]
+        public float VarianceY;
 
 		private readonly List<ShipBerth> _berths = new List<ShipBerth>();
-		// do something with this
-		private readonly Queue<Ship> _queuedShips = new Queue<Ship>();
-		private readonly List<Ship> _shipsInTraffic = new List<Ship>();
 
 		// this class deals with persistence by holding onto the data,
 		// and feeding it to the berths as they are placed
 		private List<ShipBerthData> _deserialized = new List<ShipBerthData>();
-
 
 		private readonly CollectionSerializer<TrafficControlData> _serializer
 			= new CollectionSerializer<TrafficControlData>();
@@ -68,20 +65,14 @@ namespace Assets.Logistics
 		}
 
         // Finds the first empty berth of the ship's size and pairs them up
+        // Assumes that the presence of an empty berth is already confirmed (will need love when diff ship sizes are put into play)
 		private void FindBerthAndAssignToShip(Ship ship)
 		{
 			var berth = _berths.FirstOrDefault(i => i.ShipSize == ship.Size && !i.IsInUse);
-			if (berth == null)
-			{
-				_queuedShips.Enqueue(ship);
-				return;
-			}
-
 			berth.State = BerthState.Reserved;
 			var waypoints = GenerateWayPoints(berth);
 			ship.BeginHold(berth, waypoints);
 			ship.TrafficShip.transform.SetParent(transform, true);
-			_shipsInTraffic.Add(ship);
 		}
 
 		private List<Vector3> GenerateWayPoints(ShipBerth berth)
@@ -111,6 +102,7 @@ namespace Assets.Logistics
 			return start;
 		}
 
+        // called after game load, meaning ship already has its waypoints and is in motion
 		public void Resume(Ship ship)
 		{
 			if (ship.Status == ShipStatus.Traffic && ship.TrafficShip != null )
@@ -133,6 +125,8 @@ namespace Assets.Logistics
 				HandleBerthsUpdate(args as ShipBerthsMessageArgs);
 		}
 
+        // A ShipBay is a placeable with an array of Berths
+        // Hook into Bay, add its berths, see if any ships are wiating for one
 		private void HandleBerthsUpdate(ShipBerthsMessageArgs args)
 		{
 			if(args == null || !args.Berths.Any())
@@ -144,35 +138,34 @@ namespace Assets.Logistics
 
 		private void HandleShipBayRemove(ShipBay shipBay)
 		{
+            // using names is currently the most reliable way to match berths
 			var names = shipBay.Berths.Select(i => i.name);
 			var berths = _berths.Where(i => names.Contains(i.name)).ToList();
 
 			foreach (var shipBerth in berths)
 			{
-				var ship = _shipsInTraffic.FirstOrDefault(
+                // if any ships are headed to the berth, tell them to leave
+				var ship = _location.Ships.FirstOrDefault(
 					i => i.TrafficShip.BerthName == shipBerth.name 
 					&& (i.TrafficShip.Phase == TrafficPhase.Approaching || i.TrafficShip.Phase == TrafficPhase.Docked));
-				if(ship != null)
-					ship.TrafficShip.BeginEarlyDeparture();
-
-				_berths.Remove(shipBerth);
+			    ship?.TrafficShip.BeginEarlyDeparture();
+			    _berths.Remove(shipBerth);
 			}
 		}
 
-		private void AddBerths(List<ShipBerth> berths)
+        // Adds berths and checks if any ships are waiting for one
+		private void AddBerths(IEnumerable<ShipBerth> berths)
 		{
 			var isFirst = !_berths.Any();
 			foreach (var berth in berths)
 			{
 				_berths.Add(berth);
 
-				if (_deserialized.Any())
-				{
-					var toFind = _deserialized.FirstOrDefault(i => i.Name == berth.name);
-					if (toFind != null)
-						berth.SetFromData(toFind);
-					_deserialized.Remove(toFind);
-				}
+			    if (!_deserialized.Any()) continue;
+			    var toFind = _deserialized.FirstOrDefault(i => i.Name == berth.name);
+			    if (toFind != null)
+			        berth.SetFromData(toFind);
+			    _deserialized.Remove(toFind);
 			}
             // this will work for the first placement of berths when ships are on hold, 
             // but will need love to work for arrivals > berth count queueing
@@ -184,8 +177,9 @@ namespace Assets.Logistics
 			}
 		}
 
-		public string Name { get { return "TrafficControl"; } }
-		public TrafficControlData GetData()
+		public string Name => "TrafficControl";
+
+	    public TrafficControlData GetData()
 		{
 			return new TrafficControlData
 			{
@@ -193,6 +187,7 @@ namespace Assets.Logistics
 			};
 		}
 
+        // if there is an open berth, send ship to it, otherwise let location put ship on hold
 	    public bool TryHandleArrival(Ship ship)
 	    {
 	        if (_berths.All(i => i.IsInUse))
