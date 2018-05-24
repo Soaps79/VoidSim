@@ -52,7 +52,7 @@ public class DialogueChainEditorWindow : EditorWindow
         }
 
 
-        if (e.type == EventType.mouseDown)
+        if (e.type == EventType.MouseDown)
         {
             selectedNode = GetSelectedNode();
 
