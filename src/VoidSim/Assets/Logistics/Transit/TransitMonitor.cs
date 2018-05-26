@@ -25,8 +25,7 @@ namespace Assets.Logistics.Transit
 	{
 		private readonly List<Ship> _ships = new List<Ship>();
 		[SerializeField] private TransitControl _transitControl;
-
-		[SerializeField] private GameObject _cargoShip;
+	    [SerializeField] private ShipSOLookup _shipLookup;
 		public Action<Ship> OnShipAdded;
 		private readonly List<CargoManifest> _manifestsBacklog = new List<CargoManifest>();
 
@@ -61,11 +60,10 @@ namespace Assets.Logistics.Transit
 				var ship = new Ship { Name = shipData.Name };
 				var navigation = new ShipNavigation(shipData.Navigation);
 
-				var lookup = ScriptableObject.Instantiate(Resources.Load("Ships/ship_lookup")) as ShipSOLookup;
-				if (lookup == null)
-					throw new UnityException("TransitMonitor could not find ship lookup");
+				if (_shipLookup == null)
+					throw new UnityException("TransitMonitor missing its ship lookup");
 
-				var scriptable = lookup.GetShips().FirstOrDefault(i => i.name == shipData.SOName);
+				var scriptable = _shipLookup.GetShips().FirstOrDefault(i => i.name == shipData.SOName);
 				if (scriptable == null)
 					throw new UnityException(string.Format("ShipGenerator cannot find SO named {0}", shipData.SOName));
 

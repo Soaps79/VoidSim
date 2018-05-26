@@ -17,7 +17,6 @@ namespace Assets.Logistics
 	}
 
     [RequireComponent(typeof(TransitLocation))]
-    [RequireComponent(typeof(ShipHolder))]
     // Handles ships in the Station's airspace
     // Give ships waypoints for their approach and departure
 	public class TrafficControl : QScript, IMessageListener, ILocationDriver, ISerializeData<TrafficControlData>

@@ -8846,6 +8846,7 @@ GameObject:
   - component: {fileID: 1564975707}
   - component: {fileID: 1564975706}
   - component: {fileID: 1564975705}
+  - component: {fileID: 1564975708}
   m_Layer: 0
   m_Name: Transit
   m_TagString: Untagged
@@ -8906,6 +8907,19 @@ MonoBehaviour:
   _journeyTime:
     TimeUnit: 2
     Length: 2
+--- !u!114 &1564975708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1564975703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 338cdebc9518c1e479fbbf6490c57e08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _transitControl: {fileID: 1564975707}
+  _shipLookup: {fileID: 11400000, guid: a4b4fccd4e9e18d498e2020102fe937b, type: 2}
 --- !u!224 &1599810819 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 224253421787927418, guid: fa6b65bc28bdd5d4f979387c0efb0cc1,
@@ -9745,7 +9759,6 @@ GameObject:
   - component: {fileID: 2110913139}
   - component: {fileID: 2110913138}
   - component: {fileID: 2110913137}
-  - component: {fileID: 2110913140}
   m_Layer: 0
   m_Name: Traffic
   m_TagString: Untagged
@@ -9805,21 +9818,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _shipDelayTime:
-    TimeUnit: 0
-    Length: 0
---- !u!114 &2110913140
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2110913135}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 338cdebc9518c1e479fbbf6490c57e08, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _transitControl: {fileID: 0}
-  _cargoShip: {fileID: 1141777610797510, guid: ba319d03c281b8847867636ca0ca0c99, type: 2}
+    TimeUnit: 2
+    Length: 2
 --- !u!1001 &2111345833
 Prefab:
   m_ObjectHideFlags: 0

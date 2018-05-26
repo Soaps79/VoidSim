@@ -29,14 +29,18 @@
 
 		public bool IsComplete { get { return ElapsedTicks >= TotalTicks; } }
 
-		public void Reset(float newTotal = 0)
+		public void Reset(float newTotal)
 		{
 			ElapsedTicks = 0;
-			if (newTotal != 0)
-				TotalTicks = newTotal;
+            TotalTicks = newTotal;
 		}
 
-		public TickerData GetData()
+	    public void Reset()
+	    {
+			ElapsedTicks = 0;
+        }
+
+        public TickerData GetData()
 		{
 			return new TickerData
 			{
