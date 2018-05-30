@@ -74,6 +74,7 @@ namespace Assets.WorldMaterials.Products
 		public string Name;
 		[JsonConverter(typeof(StringEnumConverter))]
 		public ProductCategory Category;
+	    public Color Color;
 
 		public Sprite Icon;
 

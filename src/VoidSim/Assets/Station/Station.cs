@@ -46,6 +46,9 @@ namespace Assets.Station
         [SerializeField] private PopulationControl _popControlPrefab;
         [SerializeField] private StationInventoryViewModel _inventoryViewmodelPrefab;
 
+        [SerializeField] private bool _isTestingInventory;
+        [SerializeField] private InventoryGridViewModel _inventoryGridPrefab;
+
         private CraftingContainer _crafter;
         private WorldMaterials.StationInventory _stationInventory;
 
@@ -278,6 +281,14 @@ namespace Assets.Station
             var viewmodel = Instantiate(_inventoryViewmodelPrefab, _layers[LayerType.Core].transform);
             viewmodel.name = "inventory_viewmodel";
             viewmodel.BindToInventory(_stationInventory, _placeablesLookup, _inventoryReserve, _userPlacement);
+
+            if (_isTestingInventory)
+            {
+                var tileview = Instantiate(_inventoryGridPrefab,
+                    Locator.CanvasManager.GetCanvas(CanvasType.LowUpdate).transform);
+                tileview.name = "inventory_gridview";
+                tileview.UpdateList(_stationInventory.Products);
+            }
         }
 
 	    public void HandleMessage(string type, MessageArgs args)

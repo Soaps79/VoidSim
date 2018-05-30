@@ -28,6 +28,11 @@ namespace Assets.WorldMaterials.Editor
 
             position.x += 60;
 
+            var colorRect = new Rect(position.x, position.y, 100, position.height);
+            EditorGUI.PropertyField(colorRect, property.FindPropertyRelative("Color"), GUIContent.none);
+
+            position.x += 100;
+
             var iconRect = new Rect(position.x, position.y, 80, position.height);
             EditorGUI.PropertyField(iconRect, property.FindPropertyRelative("IconSprite"), GUIContent.none);
 

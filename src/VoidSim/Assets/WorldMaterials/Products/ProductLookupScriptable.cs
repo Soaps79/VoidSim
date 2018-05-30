@@ -43,6 +43,7 @@ namespace Assets.WorldMaterials.Products
         public string Name;
         public Sprite IconSprite;
         public ProductCategory Category;
+        public Color Color;
     }
 
     public class ProductLookupScriptable : ScriptableObject
