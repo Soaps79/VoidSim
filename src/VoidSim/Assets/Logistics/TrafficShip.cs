@@ -6,6 +6,7 @@ using Assets.Logistics.Transit;
 using Assets.Logistics.UI;
 using Assets.Scripts;
 using Assets.Scripts.Serialization;
+using Assets.WorldMaterials;
 using DG.Tweening;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -58,9 +59,10 @@ namespace Assets.Logistics
 		private float _lastMovementBeginTime;
 		private Vector3 _targetRotation;
 		public string BerthName { get; private set; }
+	    public ProductInventory Inventory { get; private set; }
 
-		// replace with state machine
-		private TrafficPhase _phase;
+        // replace with state machine
+        private TrafficPhase _phase;
 
 		public TrafficPhase Phase
 		{
@@ -95,6 +97,7 @@ namespace Assets.Logistics
 		public void Initialize(Ship parent, ShipBerth berth, List<Vector3> waypoints)
 		{
 			_parent = parent;
+		    Inventory = parent.Inventory;
 			SetName();
 			_berth = berth;
 			_waypoints = waypoints;
@@ -110,7 +113,7 @@ namespace Assets.Logistics
 			Phase = TrafficPhase.None;
 		}
 
-		private void SetName()
+	    private void SetName()
 		{
 			name = "traffic_" + _parent.Name;
 		}

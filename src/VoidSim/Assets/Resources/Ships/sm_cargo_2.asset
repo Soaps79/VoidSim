@@ -15,6 +15,7 @@ MonoBehaviour:
   MaxScale: 1
   MinTravelTime: 25
   MaxTravelTime: 30
+  MaxCargo: 200
   Sprite: {fileID: 21300002, guid: 553e15eef7349b94996602782634dc87, type: 3}
   TrafficShipPrefab: {fileID: 114334291841919498, guid: 45d10c68d7c33f14ab32d71e80ce5c5e,
     type: 2}

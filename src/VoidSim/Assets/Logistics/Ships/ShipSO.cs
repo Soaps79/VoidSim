@@ -8,6 +8,7 @@ namespace Assets.Logistics.Ships
 		public float MaxScale;
 		public float MinTravelTime;
 		public float MaxTravelTime;
+	    public int MaxCargo;
 		public Sprite Sprite;
 		public TrafficShip TrafficShipPrefab;
 

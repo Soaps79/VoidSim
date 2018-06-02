@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Assets.Logistics.Transit;
 using Assets.Scripts;
 using Assets.Scripts.Serialization;
+using Assets.WorldMaterials;
 using Assets.WorldMaterials.Products;
 using Assets.WorldMaterials.Trade;
 using Newtonsoft.Json;
@@ -38,6 +39,7 @@ namespace Assets.Logistics.Ships
 		public int MaxCapacity { get; private set; }
 		public int CurrentSpaceUsed { get; private set; }
 		public List<ProductAmount> ProductCargo = new List<ProductAmount>();
+	    public ProductInventory Inventory;
 
 		public CargoManifestBook ManifestBook = new CargoManifestBook();
 		public ShipNavigation Navigation { get; private set; }
@@ -57,13 +59,17 @@ namespace Assets.Logistics.Ships
 		public void SetScriptable(ShipSO scriptable)
 		{
 			_scriptable = scriptable;
-		}
+		    Inventory = new ProductInventory();
+            Inventory.SetGlobalMax(scriptable.MaxCargo);
+		    Inventory.DefaultProductCapacity = 1000;
+		    Inventory.Initialize(ProductLookup.Instance, false);
+        }
 
 		public void Initialize(ShipNavigation navigation)
 		{
 			Navigation = navigation;
 			Navigation.ParentShip = this;
-		}
+        }
 
 		public void AddManifest(CargoManifest manifest)
 		{

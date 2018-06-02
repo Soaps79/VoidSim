@@ -287,7 +287,7 @@ namespace Assets.Station
                 var tileview = Instantiate(_inventoryGridPrefab,
                     Locator.CanvasManager.GetCanvas(CanvasType.LowUpdate).transform);
                 tileview.name = "inventory_gridview";
-                tileview.UpdateList(_stationInventory.Products);
+                tileview.BindToInventory(_stationInventory.Products);
             }
         }
 

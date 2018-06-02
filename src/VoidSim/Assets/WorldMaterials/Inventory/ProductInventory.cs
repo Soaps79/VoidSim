@@ -210,7 +210,7 @@ namespace Assets.WorldMaterials
             LoadFromData(data);
         }
 
-        private void Initialize(IProductLookup lookup, bool addAllEntries)
+        public void Initialize(IProductLookup lookup, bool addAllEntries)
         {
             _productTable.Clear();
             _productLookup = lookup;

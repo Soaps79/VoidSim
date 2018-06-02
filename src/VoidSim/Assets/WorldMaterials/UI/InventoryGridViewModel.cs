@@ -17,13 +17,21 @@ namespace Assets.WorldMaterials.UI
     public class InventoryGridViewModel : TileViewCustom<InventoryGridItemViewModel, InventoryGridTile>
     {
         [SerializeField] private int TileAmount;
+        private ProductInventory _inventory;
 
-        public void UpdateList(ProductInventory inventory)
+        public void BindToInventory(ProductInventory inventory)
+        {
+            _inventory = inventory;
+            _inventory.OnProductsChanged += UpdateGrid;
+            UpdateGrid(0, 0);
+        }
+
+        private void UpdateGrid(int arg1, int arg2)
         {
             if (TileAmount <= 0)
                 throw new UnityException("InventoryGrid tried to initialize with no cell count");
 
-            var products = inventory.GetProductEntries().Where(i => i.Product.Category != ProductCategory.Core);
+            var products = _inventory.GetProductEntries().Where(i => i.Product.Category != ProductCategory.Core);
             var observable = new ObservableList<InventoryGridTile>();
             foreach (var product in products)
             {
@@ -40,9 +48,9 @@ namespace Assets.WorldMaterials.UI
                 }        
             }
 
-            if (inventory.MaxGlobalAmount > 0)
+            if (_inventory.MaxGlobalAmount > 0)
             {
-                var totalCells = inventory.MaxGlobalAmount > 0 ? inventory.MaxGlobalAmount / TileAmount : 0;
+                var totalCells = _inventory.MaxGlobalAmount > 0 ? _inventory.MaxGlobalAmount / TileAmount : 0;
                 var freeCells = totalCells - observable.Count;
                 if (freeCells > 0)
                 {
