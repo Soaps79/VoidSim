@@ -59,16 +59,18 @@ namespace Assets.Logistics.Ships
 		public void SetScriptable(ShipSO scriptable)
 		{
 			_scriptable = scriptable;
-		    Inventory = new ProductInventory();
-            Inventory.SetGlobalMax(scriptable.MaxCargo);
-		    Inventory.DefaultProductCapacity = 1000;
-		    Inventory.Initialize(ProductLookup.Instance, false);
         }
 
 		public void Initialize(ShipNavigation navigation)
 		{
 			Navigation = navigation;
 			Navigation.ParentShip = this;
+
+		    Inventory = new ProductInventory();
+            if(_scriptable != null)
+		        Inventory.SetGlobalMax(_scriptable.MaxCargo);
+		    Inventory.DefaultProductCapacity = 1000;
+		    Inventory.Initialize(ProductLookup.Instance, false);
         }
 
 		public void AddManifest(CargoManifest manifest)

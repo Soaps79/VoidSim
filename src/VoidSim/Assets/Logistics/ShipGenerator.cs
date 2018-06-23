@@ -123,11 +123,6 @@ namespace Assets.Logistics
 			navigation.CycleLocations();
 			ship.Initialize(navigation);
 
-
-		    ship.Inventory.TryAddProduct(1, 20);
-		    ship.Inventory.TryAddProduct(4, 20);
-		    ship.Inventory.TryAddProduct(5, 20);
-
             _toLaunch.Remove(entry);
 
 			Locator.MessageHub.QueueMessage(LogisticsMessages.ShipCreated, new ShipCreatedMessageArgs { Ship = ship });

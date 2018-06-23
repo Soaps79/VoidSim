@@ -13,10 +13,22 @@ namespace Assets.Logistics.Transit
 		private readonly List<CargoManifest> _awaitingDispatch = new List<CargoManifest>();
 		private List<Ship> _ships;
 		private TransitLocation _transitLocation;
+		private readonly List<CargoManifest> _manifestBacklog = new List<CargoManifest>();
 
 		private void Start()
 		{
 			_transitLocation = GetComponent<TransitLocation>();
+		    _transitLocation.OnTransitArrival += HandleShipArrival;
+		}
+
+	    private void HandleShipArrival(Ship ship)
+	    {
+	        throw new System.NotImplementedException();
+	    }
+
+	    public void HandleCargoRequested(CargoManifest manifest)
+		{
+			_manifestBacklog.Add(manifest);
 		}
 
 		public static Ship FindCarrier(List<Ship> ships, CargoManifest manifest)

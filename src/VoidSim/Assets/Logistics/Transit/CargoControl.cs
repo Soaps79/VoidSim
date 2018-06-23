@@ -10,8 +10,8 @@ namespace Logistics.Transit
 {
     public class CargoControl : QScript, IMessageListener
     {
-        private readonly Dictionary<string, TransitLocation> _locations 
-            = new Dictionary<string, TransitLocation>();
+        private readonly Dictionary<string, CargoDispatch> _cargoDispatches 
+            = new Dictionary<string, CargoDispatch>();
         
         private void Start()
         {
@@ -30,19 +30,22 @@ namespace Logistics.Transit
 
         private void HandleCargoRequested(CargoRequestedMessageArgs args)
         {
-            if(args == null || !_locations.ContainsKey(args.TravelingFrom))
+            if(args == null || !_cargoDispatches.ContainsKey(args.TravelingFrom))
                 throw new UnityException("CargoControl got bad args");
             
-            _locations[args.TravelingFrom].HandleCargoRequested(args.Manifest);
+            _cargoDispatches[args.TravelingFrom].HandleCargoRequested(args.Manifest);
         }
         
         private void HandleLocationRegistered(TransitLocationMessageArgs args)
         {
             if(args == null || args.TransitLocation == null)
                 throw new UnityException("CargoControl received bad TransitLocation args");
+
+            var cargoDispatch = args.TransitLocation.GetComponent<CargoDispatch>();
+            if (cargoDispatch == null) return;
             
-            if(!_locations.ContainsKey(args.TransitLocation.ClientName))
-                _locations.Add(args.TransitLocation.ClientName, args.TransitLocation);
+            if(!_cargoDispatches.ContainsKey(args.TransitLocation.ClientName))
+                _cargoDispatches.Add(args.TransitLocation.ClientName, cargoDispatch);
         }
 
         public string Name
