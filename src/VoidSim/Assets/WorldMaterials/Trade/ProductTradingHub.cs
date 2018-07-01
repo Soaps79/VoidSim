@@ -152,8 +152,9 @@ namespace Assets.WorldMaterials.Trade
                 {
                     Shipper = manifest.Provider,
                     Receiver = manifest.Consumer,
-                    ProductAmount = new ProductAmount
-                        { ProductId = manifest.ProductId, Amount = manifest.AmountTotal },
+                    ProductId = manifest.ProductId,
+                    TotalAmount = manifest.AmountTotal,
+                    RemainingAmount = manifest.AmountTotal,
                     Currency = ProductValueLookup.Instance.GetValueOfProductAmount(manifest.ProductId, manifest.AmountTotal)
                 }
             });

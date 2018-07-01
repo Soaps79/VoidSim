@@ -202,8 +202,8 @@ namespace Assets.Station
 			if (_manifestsIn.Any())
 			{
 				_productIn = new ProductAmount(
-					_manifestsIn.Peek().ProductAmount.ProductId,
-					_manifestsIn.Peek().ProductAmount.Amount);
+					_manifestsIn.Peek().ProductId,
+					_manifestsIn.Peek().RemainingAmount);
 				_isUnloadingIn = true;
 			}
 			else
@@ -218,8 +218,8 @@ namespace Assets.Station
 			if (_manifestsOut.Any())
 			{
 				_productOut = new ProductAmount(
-					_manifestsOut.Peek().ProductAmount.ProductId,
-					_manifestsOut.Peek().ProductAmount.Amount);
+					_manifestsOut.Peek().ProductId,
+					_manifestsOut.Peek().RemainingAmount);
 				_isUnloadingOut = true;
 			}
 			else

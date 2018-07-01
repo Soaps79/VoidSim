@@ -11,7 +11,8 @@ namespace Assets.Logistics.Transit
 		public string Buyer;
 		public string Seller;
 		public int ProductId;
-		public int ProductAmount;
+		public int RemainingAmount;
+	    public int TotalAmount;
 		public int Currency;
 	}
 
@@ -19,16 +20,30 @@ namespace Assets.Logistics.Transit
 	{
 		public string Receiver;
 		public string Shipper;
-		public ProductAmount ProductAmount;
+        public int ProductId;
+	    public int RemainingAmount;
+	    public int TotalAmount;
 		public int Currency;
 
 		public CargoManifest() { }
+
+	    public CargoManifest(CargoManifest other)
+	    {
+	        Receiver = other.Receiver;
+	        Shipper = other.Shipper;
+	        ProductId = other.ProductId;
+	        RemainingAmount = other.RemainingAmount;
+	        TotalAmount = other.TotalAmount;
+	        Currency = other.Currency;
+        }
 
 		public CargoManifest(CargoManifestData data)
 		{
 			Receiver = data.Buyer;
 			Shipper = data.Seller;
-			ProductAmount = new ProductAmount(data.ProductId, data.ProductAmount);
+			ProductId = data.ProductId;
+            RemainingAmount = data.RemainingAmount;
+		    TotalAmount = data.TotalAmount;
 			Currency = data.Currency;
 		}
 
@@ -38,8 +53,9 @@ namespace Assets.Logistics.Transit
 			{
 				Buyer = Receiver,
 				Seller = Shipper,
-				ProductId = ProductAmount.ProductId,
-				ProductAmount = ProductAmount.Amount,
+				ProductId = ProductId,
+                TotalAmount = TotalAmount,
+                RemainingAmount = RemainingAmount,
 				Currency = Currency
 			};
 		}

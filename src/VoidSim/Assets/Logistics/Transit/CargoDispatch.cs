@@ -37,33 +37,25 @@ namespace Assets.Logistics.Transit
 	                TryDistributeProduct(cargoManifest);
 	        }
 
-	        _manifestBacklog.RemoveAll(i => i.ProductAmount.Amount <= 0);
+	        _manifestBacklog.RemoveAll(i => i.RemainingAmount <= 0);
 	    }
 
-	    private ProductAmount _toDistribute;
-        private void TryDistributeProduct(CargoManifest manifest)
+	    private void TryDistributeProduct(CargoManifest manifest)
         {
-            _toDistribute = manifest.ProductAmount;
-	        var first = _attemptingDistribution.FirstOrDefault(
-	            i => i.IsEmpty() && i.CanPickupProductThisStop(_toDistribute.ProductId) > _toDistribute.Amount);
+            var first = _attemptingDistribution.FirstOrDefault(
+	            i => i.IsEmpty() && i.CanPickupProductThisStop(manifest.ProductId) > manifest.RemainingAmount);
 
 	        if (first != null)
 	        {
-	            first.ManifestBook.Add(new CargoManifest
-                {
-                    Currency = manifest.Currency,
-                    ProductAmount = new ProductAmount(manifest.ProductAmount),
-                    Receiver = manifest.Receiver,
-                    Shipper = manifest.Shipper
-                });
-	            _toDistribute.Amount = 0;
+	            first.ManifestBook.Add(new CargoManifest(manifest));
+	            manifest.RemainingAmount = 0;
                 return;
 	        }
 
-	        for (int i = 0; i < _attemptingDistribution.Count; i++)
+	        for (var i = 0; i < _attemptingDistribution.Count; i++)
 	        {
-	            _toDistribute.Amount = _attemptingDistribution[i].CanPickupProductThisStop(_toDistribute.ProductId);
-	            if (_toDistribute.Amount <= 0) break;
+	            manifest.RemainingAmount = _attemptingDistribution[i].CanPickupProductThisStop(manifest.ProductId);
+	            if (manifest.RemainingAmount <= 0) break;
 	        }
 	    }
 

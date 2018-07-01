@@ -282,10 +282,10 @@ namespace Assets.Station
 
 	    public void HandleManifestComplete(CargoManifest manifest)
 	    {
-	        if (manifest.ProductAmount.ProductId != _populationProductId)
+	        if (manifest.ProductId != _populationProductId)
 	            return;
 
-	        var people = _personGenerator.GeneratePeople(manifest.ProductAmount.Amount);
+	        var people = _personGenerator.GeneratePeople(manifest.RemainingAmount);
             people.ForEach(i => i.IsResident = true);
             AddPopulation(people);
 	    }

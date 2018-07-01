@@ -29,10 +29,10 @@ namespace Assets.Logistics.Transit
         public int CanPickupProductThisStop(int productId)
         {
             var nextDelivery = ManifestBook.GetBuyerManifests(Navigation.CurrentDestination)
-                .Where(i => i.ProductAmount.ProductId == productId).Sum(j => j.ProductAmount.Amount);
+                .Where(i => i.ProductId == productId).Sum(j => j.RemainingAmount);
 
             var remainingPickup = ManifestBook.GetSellerManifests(Navigation.CurrentDestination)
-                .Sum(j => j.ProductAmount.Amount);
+                .Sum(j => j.RemainingAmount);
 
             return _inventory.GetProductRemainingSpace(productId) + nextDelivery - remainingPickup;
         }
