@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Logistics;
+using Assets.Logistics.Transit;
 using Assets.Scripts;
 using Assets.WorldMaterials.Products;
 using Messaging;
@@ -113,6 +115,9 @@ namespace Assets.WorldMaterials.Trade
 
                             provider.HandleProvideSuccess(info);
                             consumer.HandleConsumeSuccess(info);
+
+                            // this should be moved out to a driver when this class is made more generic
+                            RequestCargo(info);
 							Locator.MessageHub.QueueMessage(TradeMessages.TradeAccepted, new TradeCreatedMessageArgs { TradeManifest = info });
                         }
 
@@ -138,7 +143,23 @@ namespace Assets.WorldMaterials.Trade
 
 		}
 
-		private void PruneTraderList()
+        private static void RequestCargo(TradeManifest manifest)
+        {
+            // request cargo for trade
+            Locator.MessageHub.QueueMessage(LogisticsMessages.CargoRequested, new CargoRequestedMessageArgs
+            {
+                Manifest = new CargoManifest
+                {
+                    Shipper = manifest.Provider,
+                    Receiver = manifest.Consumer,
+                    ProductAmount = new ProductAmount
+                        { ProductId = manifest.ProductId, Amount = manifest.AmountTotal },
+                    Currency = ProductValueLookup.Instance.GetValueOfProductAmount(manifest.ProductId, manifest.AmountTotal)
+                }
+            });
+        }
+
+        private void PruneTraderList()
         {
             foreach (var trader in _traders)
             {

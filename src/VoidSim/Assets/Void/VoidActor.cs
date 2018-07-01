@@ -36,7 +36,7 @@ namespace Assets.Void
 			go.transform.SetParent(transform);
 			go.name = "void_trader";
 			_trader = go.AddComponent<ProductTrader>();
-			_trader.Initialize(this, _clientName, true);
+			_trader.Initialize(this, _clientName);
 			
 			_automater = go.AddComponent<ProductTradeAutomater>();
 			_automater.Initialize(_trader, Locator.WorldClock, _tradeRequests);

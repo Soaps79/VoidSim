@@ -168,7 +168,7 @@ namespace Assets.Station
 		{
 			_trader = gameObject.AddComponent<ProductTrader>();
 		    _trader.OnResume += HandleNewManifest;
-			_trader.Initialize(this, Station.ClientName, true);
+			_trader.Initialize(this, Station.ClientName);
 			UpdateTradeRequest();
 		}
 

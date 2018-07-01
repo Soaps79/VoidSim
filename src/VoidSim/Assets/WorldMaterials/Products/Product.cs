@@ -21,6 +21,12 @@ namespace Assets.WorldMaterials.Products
 
 		public ProductAmount() { }
 
+	    public ProductAmount(ProductAmount copy)
+	    {
+	        ProductId = copy.ProductId;
+	        Amount = copy.Amount;
+	    }
+
 		public ProductAmount(int id, int amount)
 		{
 			ProductId = id;

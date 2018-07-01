@@ -49,7 +49,7 @@ namespace Assets.Station
         private void BindToTrader()
         {
             _trader = gameObject.AddComponent<ProductTrader>();
-			_trader.Initialize(this, Station.ClientName, true);
+			_trader.Initialize(this, Station.ClientName);
         }
 
 		private void HandleGameLoad()

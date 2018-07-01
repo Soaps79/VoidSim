@@ -41,9 +41,10 @@ namespace Assets.Logistics.Ships
 		public List<ProductAmount> ProductCargo = new List<ProductAmount>();
 	    public ProductInventory Inventory;
 
-		public CargoManifestBook ManifestBook = new CargoManifestBook();
+		public CargoManifestBook ManifestBook;
 		public ShipNavigation Navigation { get; private set; }
 		public TrafficShip TrafficShip { get; private set; }
+        public CargoCarrier CargoCarrier { get; private set; } = new CargoCarrier();
 		public string Name { get; set; }
 
 		public bool CanTakeCargo(CargoManifest manifest)
@@ -71,19 +72,22 @@ namespace Assets.Logistics.Ships
 		        Inventory.SetGlobalMax(_scriptable.MaxCargo);
 		    Inventory.DefaultProductCapacity = 1000;
 		    Inventory.Initialize(ProductLookup.Instance, false);
+
+            ManifestBook = new CargoManifestBook();
+            CargoCarrier.Initialize(Inventory, Navigation, ManifestBook);
         }
 
-		public void AddManifest(CargoManifest manifest)
-		{
-			if (manifest == null)
-				return;
+		//public void AddManifest(CargoManifest manifest)
+		//{
+		//	if (manifest == null)
+		//		return;
 
-			ManifestBook.Add(manifest);
+		//	ManifestBook.Add(manifest);
 
-			var s = string.Format("{0} given manifest {1}:\t {2} to {3}\t {4} x{5}", Name, manifest.Id,
-				manifest.Shipper, manifest.Receiver, manifest.ProductAmount.ProductId, manifest.ProductAmount.Amount);
-			UberDebug.LogChannel(LogChannels.Trade, s);
-		}
+		//	var s = string.Format("{0} given manifest {1}:\t {2} to {3}\t {4} x{5}", Name, manifest.Id,
+		//		manifest.Shipper, manifest.Receiver, manifest.ProductAmount.ProductId, manifest.ProductAmount.Amount);
+		//	UberDebug.LogChannel(LogChannels.Trade, s);
+		//}
 
 		public void CompleteVisit()
 		{
@@ -137,13 +141,8 @@ namespace Assets.Logistics.Ships
 			Navigation = navigation;
 			Navigation.ParentShip = this;
 			Ticker = new Ticker(data.Ticker);
-			ManifestBook = new CargoManifestBook(data.ManifestBook);
-
-			// possibly a better place to put this
-			foreach (var manifest in ManifestBook.ActiveManifests)
-			{
-				manifest.TradeManifest = TradeMonitor.Instance.GetTradeManifest(manifest.TradeManifestId);
-			}
+		    ManifestBook = new CargoManifestBook(data.ManifestBook);
+            CargoCarrier.Initialize(Inventory, Navigation, ManifestBook);
 
 			Status = data.Status;
 			if (Status == ShipStatus.Traffic)

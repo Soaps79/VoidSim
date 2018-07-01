@@ -40,12 +40,9 @@ namespace Assets.WorldMaterials.Trade
         public Action<TradeManifest> OnProvideMatch;
         public Action<TradeManifest> OnConsumeMatch;
 
-	    public bool RequestCargoOnProvide { get; private set; }
-
-		public void Initialize(ITraderDriver driver, string clientName, bool requestCargoOnProvide = false)
+		public void Initialize(ITraderDriver driver, string clientName)
 		{
-		    RequestCargoOnProvide = requestCargoOnProvide;
-			Providing = new List<ProductAmount>();
+		    Providing = new List<ProductAmount>();
 			Consuming = new List<ProductAmount>();
 			Driver = driver;
 			ClientName = clientName;
@@ -59,27 +56,9 @@ namespace Assets.WorldMaterials.Trade
 
 	        if (OnProvideMatch != null)
 		        OnProvideMatch(manifest);
-
-            if(RequestCargoOnProvide)
-                RequestCargo(manifest);
         }
 
-	    private static void RequestCargo(TradeManifest manifest)
-	    {
-	        // request cargo for trade
-	        Locator.MessageHub.QueueMessage(LogisticsMessages.CargoRequested, new CargoRequestedMessageArgs
-	        {
-	            Manifest = new CargoManifest(manifest)
-	            {
-	                Shipper = manifest.Provider,
-	                Receiver = manifest.Consumer,
-	                ProductAmount = new ProductAmount
-                        { ProductId = manifest.ProductId, Amount = manifest.AmountTotal }
-	            }
-	        });
-        }
-
-        public void HandleConsumeSuccess(TradeManifest manifest)
+	    public void HandleConsumeSuccess(TradeManifest manifest)
         {
 			if (Driver != null)
 				Driver.HandleConsumeSuccess(manifest);

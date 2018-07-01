@@ -1,0 +1,68 @@
+TradingHub
+/* Eventually?
+trade driver of ProductMatcher
+	listens for ProductTraders created
+bots will have their own driver, or ProductTrader declares a 'channel'?
+*/
+
+ProductMatcher (currently ProductTradingHub)
+// make generic to use for both trades between actors and station moving stock
+// will eventually do passive vs active
+maintain list of providers and requesters
+connect providers with requesters
+// *** do now:
+trigger OnMatchMade()
+	trading hub queues cargo transit request
+
+
+
+
+determine best ship
+find all ships with consumer as destination
+
+
+who maintains list of transactions awaiting distro?
+
+
+
+
+
+
+maintain list of carriers
+
+maintain list of ships
+maintain list of bots
+
+
+determine list of best carriers
+
+
+CargoDistribution
+is carrier empty
+can carrier hold product
+ship - if provider == next stop, handle capacity as if goods destined for stop will be gone
+
+how to handle 'can carrier go to'?
+how to handle 
+
+is carrier going to consumer loc?
+	ship returns is in nav list
+	bot ??? 
+
+carrier::handle()
+	ship - add to inv
+	bot - add nav loc, add to inv
+
+
+
+	
+
+
+
+distribute amongst list
+
+
+
+
+
+

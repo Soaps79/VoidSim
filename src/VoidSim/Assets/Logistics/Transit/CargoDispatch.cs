@@ -1,37 +1,73 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Logistics.Ships;
-using Logistics.Transit;
+using Assets.Scripts;
+using Assets.WorldMaterials.Products;
+using Messaging;
 using QGame;
 using UnityEngine;
 
 namespace Assets.Logistics.Transit
 {
-	[RequireComponent(typeof(TransitLocation))]
-	public class CargoDispatch : QScript
+    public class CargoDispatch : QScript, IMessageListener
 	{
-		private readonly List<CargoManifest> _awaitingDispatch = new List<CargoManifest>();
-		private List<Ship> _ships;
-		private TransitLocation _transitLocation;
+		private readonly List<CargoCarrier> _carriers = new List<CargoCarrier>();
 		private readonly List<CargoManifest> _manifestBacklog = new List<CargoManifest>();
 
 		private void Start()
 		{
-			_transitLocation = GetComponent<TransitLocation>();
-		    _transitLocation.OnTransitArrival += HandleShipArrival;
+			Locator.MessageHub.AddListener(this, LogisticsMessages.ShipCreated);
+		    Locator.MessageHub.AddListener(this, LogisticsMessages.CargoRequested);
+		    var node = StopWatch.AddNode("cargo check", 5.0f);
+		    node.OnTick += CheckDistribution;
 		}
 
-	    private void HandleShipArrival(Ship ship)
+        private readonly List<CargoCarrier> _attemptingDistribution = new List<CargoCarrier>(10);
+	    private void CheckDistribution()
 	    {
-	        throw new System.NotImplementedException();
+	        if (!_manifestBacklog.Any())
+	            return;
+
+            foreach (var cargoManifest in _manifestBacklog)
+	        {
+                // try to distribute to all carriers heading to provider
+	            _attemptingDistribution.Clear();
+                _attemptingDistribution.AddRange(_carriers.Where(i => cargoManifest.Receiver.Equals(i.Navigation.CurrentDestination)));
+	            if (_attemptingDistribution.Any())
+	                TryDistributeProduct(cargoManifest);
+	        }
+
+	        _manifestBacklog.RemoveAll(i => i.ProductAmount.Amount <= 0);
 	    }
 
-	    public void HandleCargoRequested(CargoManifest manifest)
-		{
-			_manifestBacklog.Add(manifest);
-		}
+	    private ProductAmount _toDistribute;
+        private void TryDistributeProduct(CargoManifest manifest)
+        {
+            _toDistribute = manifest.ProductAmount;
+	        var first = _attemptingDistribution.FirstOrDefault(
+	            i => i.IsEmpty() && i.CanPickupProductThisStop(_toDistribute.ProductId) > _toDistribute.Amount);
 
-		public static Ship FindCarrier(List<Ship> ships, CargoManifest manifest)
+	        if (first != null)
+	        {
+	            first.ManifestBook.Add(new CargoManifest
+                {
+                    Currency = manifest.Currency,
+                    ProductAmount = new ProductAmount(manifest.ProductAmount),
+                    Receiver = manifest.Receiver,
+                    Shipper = manifest.Shipper
+                });
+	            _toDistribute.Amount = 0;
+                return;
+	        }
+
+	        for (int i = 0; i < _attemptingDistribution.Count; i++)
+	        {
+	            _toDistribute.Amount = _attemptingDistribution[i].CanPickupProductThisStop(_toDistribute.ProductId);
+	            if (_toDistribute.Amount <= 0) break;
+	        }
+	    }
+
+	    public static Ship FindCarrier(List<Ship> ships, CargoManifest manifest)
 		{
 			var ship = FindShipHeadingTo(ships, manifest);
 			//if (ship == null)
@@ -51,5 +87,33 @@ namespace Assets.Logistics.Transit
 			var valid = ships.Where(i => i.Navigation.CurrentDestination == manifest.Shipper).ToList();
 			return valid.Any() ? valid[Random.Range(0, valid.Count - 1)] : null;
 		}
+
+		public void HandleMessage(string type, MessageArgs args)
+		{
+		    if (type == LogisticsMessages.ShipCreated && args != null)
+				HandleShipCreated(args as ShipCreatedMessageArgs);
+
+		    if (type == LogisticsMessages.CargoRequested && args != null)
+		        HandleCargoRequested(args as CargoRequestedMessageArgs);
+        }
+
+		private void HandleShipCreated(ShipCreatedMessageArgs args)
+		{
+			if(args == null)
+				throw new UnityException("CargoDispatch given bad ship created args");
+
+			_carriers.Add(args.Ship.CargoCarrier);
+		}
+
+	    public void HandleCargoRequested(CargoRequestedMessageArgs args)
+	    {
+	        if (args == null || args.Manifest == null)
+	            throw new UnityException("CargoDispatch given bad cargo request");
+
+	        _manifestBacklog.Add(args.Manifest);
+	    }
+
+
+        public string Name => "CargoDispatch";
 	}
 }

@@ -35,10 +35,9 @@ namespace Assets.Logistics.Transit
 		void Start()
 		{
 			Locator.MessageHub.AddListener(this, LogisticsMessages.ShipCreated);
-			Locator.MessageHub.AddListener(this, LogisticsMessages.CargoRequested);
 			BindToUI();
-			var node = StopWatch.AddNode("check_backlog", 5);
-			node.OnTick += HandleManifestsBacklog;
+			//var node = StopWatch.AddNode("check_backlog", 5);
+			//node.OnTick += HandleManifestsBacklog;
 			if (_serializer.HasDataFor(this, "ShipMonitor"))
 				HandleGameLoad();
 		}
@@ -81,29 +80,26 @@ namespace Assets.Logistics.Transit
 			}
 		}
 
-		private void HandleManifestsBacklog()
-		{
-			if (!_manifestsBacklog.Any())
-				return;
+		//private void HandleManifestsBacklog()
+		//{
+		//	if (!_manifestsBacklog.Any())
+		//		return;
 
-			var manifests = _manifestsBacklog.ToList();
-			foreach (var manifest in manifests)
-			{
-				var ship = CargoDispatch.FindCarrier(_ships, manifest);
-				if (ship == null)
-					continue;
-				ship.AddManifest(manifest);
-				_manifestsBacklog.Remove(manifest);
-			}
-		}
+		//	var manifests = _manifestsBacklog.ToList();
+		//	foreach (var manifest in manifests)
+		//	{
+		//		var ship = CargoDispatch.FindCarrier(_ships, manifest);
+		//		if (ship == null)
+		//			continue;
+		//		ship.AddManifest(manifest);
+		//		_manifestsBacklog.Remove(manifest);
+		//	}
+		//}
 
 		public void HandleMessage(string type, MessageArgs args)
 		{
 			if (type == LogisticsMessages.ShipCreated && args != null)
 				HandleShipCreated(args as ShipCreatedMessageArgs);
-
-			else if (type == LogisticsMessages.CargoRequested && args != null)
-				HandleCargoRequested(args as CargoRequestedMessageArgs);
 		}
 
 		private void HandleShipCreated(ShipCreatedMessageArgs args)
@@ -119,22 +115,6 @@ namespace Assets.Logistics.Transit
 		{
 			if (OnShipAdded != null)
 				OnShipAdded(ship);
-		}
-
-		private void HandleCargoRequested(CargoRequestedMessageArgs args)
-		{
-			if (args == null)
-				throw new UnityException("TransitMonitor recieved bad cargo request args");
-
-			args.Manifest.Id = Locator.LastId.GetNext("manifest");
-
-			var ship = CargoDispatch.FindCarrier(_ships, args.Manifest);
-			if (ship == null)
-				_manifestsBacklog.Add(args.Manifest);
-			else
-			{
-				ship.AddManifest(args.Manifest);
-			}
 		}
 
 		private void BindToUI()

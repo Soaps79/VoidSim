@@ -38,7 +38,7 @@ namespace Assets.Station
 		private ProductAmount _productOut;
 		private TransactionText _textPrefab;
 
-	    public Action<CargoManifest> OnCargoManifestComplete;
+		public Action<CargoManifest> OnCargoManifestComplete;
 
 		public void Initialize(ShipBerth berth, ProductInventory inventory, InventoryReserve reserve, TransactionText textPrefab)
 		{
@@ -91,7 +91,7 @@ namespace Assets.Station
 		// removes manifest from book, and checks for a new one
 		private void TickUnloads()
 		{
-		    if (_isUnloadingIn)
+			if (_isUnloadingIn)
 			{
 				if (AmountPerTick > _productIn.Amount)
 				{
@@ -110,11 +110,11 @@ namespace Assets.Station
 				{
 					var manifest = _manifestsIn.Dequeue();
 					_inventory.TryRemoveProduct(_creditsProductID, manifest.Currency);
-					_manifestBook.Close(manifest.Id);
+					_manifestBook.Complete(manifest);
 					CreateCompletionText(manifest.Currency, true);
 					CheckNextIncoming();
-                    if(OnCargoManifestComplete != null)
-                        OnCargoManifestComplete(manifest);
+					if(OnCargoManifestComplete != null)
+						OnCargoManifestComplete(manifest);
 				}
 			}
 
@@ -137,24 +137,26 @@ namespace Assets.Station
 				{
 					var manifest = _manifestsOut.Dequeue();
 					_inventory.TryAddProduct(_creditsProductID, manifest.Currency);
-					_manifestBook.Close(manifest.Id);
+					_manifestBook.Complete(manifest);
 					CreateCompletionText(manifest.Currency, false);
 					CheckNextOutgoing();
-				    if (OnCargoManifestComplete != null)
-				        OnCargoManifestComplete(manifest);
-                }
+					if (OnCargoManifestComplete != null)
+						OnCargoManifestComplete(manifest);
+				}
 			}
 
 			if (!_isUnloadingIn && !_isUnloadingOut)
+			{
 				CompleteUnload();
+			} 
 		}
 
 		private void CreateCompletionText(int amount, bool wasBought)
 		{
-            var text = Instantiate(_textPrefab);
+			var text = Instantiate(_textPrefab);
 			text.Initialize(
-                Locator.CanvasManager.GetCanvas(CanvasType.GameText).transform, 
-                amount, wasBought, transform.position);
+				Locator.CanvasManager.GetCanvas(CanvasType.GameText).transform, 
+				amount, wasBought, transform.position);
 		}
 
 		// manifests are complete, tell the berth
@@ -177,10 +179,22 @@ namespace Assets.Station
 			CheckNextIncoming();
 			CheckNextOutgoing();
 
+			_manifestBook.OnManifestAdded += HandleManifestAdded;
+
 			if (_isUnloadingIn || _isUnloadingOut)
 				_berth.State = BerthState.Transfer;
 
 			StopWatch[_stopwatchName].Reset();
+		}
+
+		private void HandleManifestAdded(CargoManifest manifest)
+		{
+			if (manifest.Shipper != Station.ClientName)
+				return;
+
+			_manifestsOut.Enqueue(manifest);
+            if(!_isUnloadingOut)
+                CheckNextOutgoing();
 		}
 
 		private void CheckNextIncoming()

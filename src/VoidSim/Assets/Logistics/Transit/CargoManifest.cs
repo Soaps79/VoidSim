@@ -3,65 +3,44 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Serialization;
 using Assets.WorldMaterials.Products;
-using Assets.WorldMaterials.Trade;
 
 namespace Assets.Logistics.Transit
 {
 	public class CargoManifestData
 	{
-		public int Id;
 		public string Buyer;
 		public string Seller;
 		public int ProductId;
 		public int ProductAmount;
 		public int Currency;
-		public int TradeManifestId;
 	}
 
 	public class CargoManifest : ISerializeData<CargoManifestData>
 	{
-		public int Id;
 		public string Receiver;
 		public string Shipper;
 		public ProductAmount ProductAmount;
 		public int Currency;
-		public int TradeManifestId;
-		public TradeManifest TradeManifest;
 
-		public CargoManifest(TradeManifest manifest)
-		{
-			TradeManifest = manifest;
-		}
+		public CargoManifest() { }
 
 		public CargoManifest(CargoManifestData data)
 		{
-			Id = data.Id;
 			Receiver = data.Buyer;
 			Shipper = data.Seller;
 			ProductAmount = new ProductAmount(data.ProductId, data.ProductAmount);
 			Currency = data.Currency;
-			TradeManifestId = data.TradeManifestId;
 		}
 
-		public bool Close()
-		{
-			if (TradeManifest == null)
-				return false;
-
-			TradeManifest.CompleteAmount(ProductAmount.Amount, Currency);
-			return true;
-		}
 		public CargoManifestData GetData()
 		{
 			return new CargoManifestData
 			{
-				Id = Id,
 				Buyer = Receiver,
 				Seller = Shipper,
 				ProductId = ProductAmount.ProductId,
 				ProductAmount = ProductAmount.Amount,
-				Currency = Currency,
-				TradeManifestId = TradeManifest.Id
+				Currency = Currency
 			};
 		}
 	}
@@ -75,6 +54,7 @@ namespace Assets.Logistics.Transit
 	{
 		public List<CargoManifest> ActiveManifests { get; private set; }
 		public Action OnContentsUpdated;
+		public Action<CargoManifest> OnManifestAdded;
 
 		public List<CargoManifest> GetBuyerManifests(string clientName)
 		{
@@ -106,21 +86,18 @@ namespace Assets.Logistics.Transit
 			CheckCallback();
 		}
 
-		public void Close(int id)
+		public void Complete(CargoManifest manifest)
 		{
-			var manifest = ActiveManifests.FirstOrDefault(i => i.Id == id);
-			if (manifest == null)
+			if (!ActiveManifests.Contains(manifest))
 				return;
-
+			
 			ActiveManifests.Remove(manifest);
-			manifest.Close();
 			CheckCallback();
 		}
 
 		private void CheckCallback()
 		{
-			if (OnContentsUpdated != null)
-				OnContentsUpdated();
+			OnContentsUpdated?.Invoke();
 		}
 
 
