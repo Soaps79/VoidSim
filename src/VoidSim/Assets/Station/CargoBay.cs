@@ -172,7 +172,6 @@ namespace Assets.Station
 
             _manifestBook.Complete(manifest);
 	        CreateCompletionText(manifest.Currency, wasBought);
-            Locator.MessageHub.QueueMessage(LogisticsMessages.CargoCompleted, new CargoCompletedMessageArgs{ Manifest = manifest });
         }
 
         private void CreateCompletionText(int amount, bool wasBought)

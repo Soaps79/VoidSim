@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts;
 using Assets.Scripts.Serialization;
 using Assets.WorldMaterials.Products;
 
@@ -108,10 +109,11 @@ namespace Assets.Logistics.Transit
 				return;
 			
 			ActiveManifests.Remove(manifest);
-			CheckCallback();
+            CheckCallback();
+		    Locator.MessageHub.QueueMessage(LogisticsMessages.CargoCompleted, new CargoCompletedMessageArgs { Manifest = manifest });
 		}
 
-		private void CheckCallback()
+        private void CheckCallback()
 		{
 			OnContentsUpdated?.Invoke();
 		}
