@@ -1574,7 +1574,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _filename: gamesave
-  LoadOnStart: 0
+  LoadOnStart: 1
 --- !u!224 &423457872 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 224228779039918296, guid: a5e1125c53a7a394dab67027a3f7cef4,
@@ -8872,6 +8872,7 @@ GameObject:
   - component: {fileID: 1564975706}
   - component: {fileID: 1564975705}
   - component: {fileID: 1564975708}
+  - component: {fileID: 1564975709}
   m_Layer: 0
   m_Name: Transit
   m_TagString: Untagged
@@ -8945,6 +8946,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _transitControl: {fileID: 1564975707}
   _shipLookup: {fileID: 11400000, guid: a4b4fccd4e9e18d498e2020102fe937b, type: 2}
+--- !u!114 &1564975709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1564975703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac47d052280492247bfb190aab152f6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1599810819 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 224253421787927418, guid: fa6b65bc28bdd5d4f979387c0efb0cc1,

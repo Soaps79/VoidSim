@@ -21,7 +21,6 @@ MonoBehaviour:
   - Basic Needs
   - Small Lounge
   - Base Housing
-  ProductsToIgnore: 0200000003000000
   Products:
   - ProductName: Iron
     Amount: 100
