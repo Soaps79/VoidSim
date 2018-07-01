@@ -12,6 +12,7 @@ using UnityEngine;
 
 namespace Assets.Station
 {
+    // Handles transferring goods between the station and a ship
 	public class CargoBay : QScript
 	{
 		public string Name { get; private set; }
@@ -39,8 +40,9 @@ namespace Assets.Station
 		private TransactionText _textPrefab;
 
 		public Action<CargoManifest> OnCargoManifestComplete;
+	    private ProductInventory _shipInventory;
 
-		public void Initialize(ShipBerth berth, ProductInventory inventory, InventoryReserve reserve, TransactionText textPrefab)
+	    public void Initialize(ShipBerth berth, ProductInventory inventory, InventoryReserve reserve, TransactionText textPrefab)
 		{
 			_berth = berth;
 			_inventory = inventory;
@@ -78,6 +80,7 @@ namespace Assets.Station
 		{
 			_ship = ship;
 			_manifestBook = ship.ManifestBook;
+		    _shipInventory = ship.Inventory;
 
 			if(_ship == null || _manifestBook == null)
 				throw new UnityException(string.Format("CargoBay {0} received bad ship.", Name));
@@ -95,26 +98,24 @@ namespace Assets.Station
 			{
 				if (AmountPerTick > _productIn.Amount)
 				{
-					_reserve.AdjustHold(_productIn.ProductId, -_productIn.Amount);
-					_inventory.TryAddProduct(_productIn.ProductId, _productIn.Amount);
-					_productIn.Amount = 0;
+					_reserve.AdjustHold(_productIn.ProductId, -_productIn.Amount, false);
+				    TransferToLocal(_productIn.ProductId, _productIn.Amount);
+				    _productIn.Amount = 0;
 				}
 				else
 				{
-					_reserve.AdjustHold(_productIn.ProductId, -AmountPerTick);
-					_inventory.TryAddProduct(_productIn.ProductId, AmountPerTick);
+					_reserve.AdjustHold(_productIn.ProductId, -AmountPerTick, false);
+					TransferToLocal(_productIn.ProductId, AmountPerTick);
 					_productIn.Amount -= AmountPerTick;
 				}
 
 				if (_productIn.Amount <= 0)
 				{
-					var manifest = _manifestsIn.Dequeue();
-					_inventory.TryRemoveProduct(_creditsProductID, manifest.Currency);
-					CompleteManifest(manifest);
+                    var manifest = _manifestsIn.Dequeue();
+					CompleteManifest(manifest, true);
 					CheckNextIncoming();
-					if(OnCargoManifestComplete != null)
-						OnCargoManifestComplete(manifest);
-				}
+                    OnCargoManifestComplete?.Invoke(manifest);
+                }
 			}
 
 			if (_isUnloadingOut)
@@ -122,21 +123,20 @@ namespace Assets.Station
 				if (AmountPerTick > _productOut.Amount)
 				{
 					_reserve.AdjustHold(_productOut.ProductId, _productOut.Amount);
-					_inventory.TryRemoveProduct(_productOut.ProductId, _productOut.Amount);
+					TransferToShip(_productOut.ProductId, _productOut.Amount);
 					_productOut.Amount = 0;
 				}
 				else
 				{
 					_reserve.AdjustHold(_productOut.ProductId, AmountPerTick);
-					_inventory.TryRemoveProduct(_productOut.ProductId, AmountPerTick);
+					TransferToShip(_productOut.ProductId, AmountPerTick);
 					_productOut.Amount -= AmountPerTick;
 				}
 
 				if (_productOut.Amount <= 0)
 				{
 					var manifest = _manifestsOut.Dequeue();
-					_inventory.TryAddProduct(_creditsProductID, manifest.Currency);
-					CompleteManifest(manifest);
+					CompleteManifest(manifest, false);
 					CheckNextOutgoing();
                     OnCargoManifestComplete?.Invoke(manifest);
                 }
@@ -148,10 +148,30 @@ namespace Assets.Station
 			} 
 		}
 
-	    private void CompleteManifest(CargoManifest manifest)
+        // move product from visting ship to local inventory
+	    private void TransferToLocal(int productId, int productAmount)
 	    {
-	        _manifestBook.Complete(manifest);
-	        CreateCompletionText(manifest.Currency, true);
+	        _shipInventory.TryRemoveProduct(productId, productAmount);
+	        _inventory.TryAddProduct(productId, productAmount);
+        }
+
+        // move product from local inventory to visiting ship
+	    private void TransferToShip(int productId, int productAmount)
+	    {
+	        _inventory.TryRemoveProduct(productId, productAmount);
+	        _shipInventory.TryAddProduct(productId, productAmount);
+	    }
+
+        private void CompleteManifest(CargoManifest manifest, bool wasBought)
+	    {
+            // handle currency transfer. If currency starts being tracked for other actors, it will have to be addressed here
+            if(wasBought)
+	            _inventory.TryRemoveProduct(_creditsProductID, manifest.Currency);
+            else
+                _inventory.TryAddProduct(_creditsProductID, manifest.Currency);
+
+            _manifestBook.Complete(manifest);
+	        CreateCompletionText(manifest.Currency, wasBought);
             Locator.MessageHub.QueueMessage(LogisticsMessages.CargoCompleted, new CargoCompletedMessageArgs{ Manifest = manifest });
         }
 

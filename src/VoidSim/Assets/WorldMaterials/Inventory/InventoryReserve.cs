@@ -150,13 +150,14 @@ namespace Assets.WorldMaterials
             UpdateReserve();
         }
 
-        public void AdjustHold(int productId, int amount)
+        public void AdjustHold(int productId, int amount, bool triggerUpdate = true)
         {
             if (!_holdProducts.ContainsKey(productId))
                 _holdProducts.Add(productId, 0);
 
             _holdProducts[productId] += amount;
-            UpdateReserve();
+            if(triggerUpdate)
+                UpdateReserve();
         }
 
 	    public void SetFromData(InventoryReserveData data)

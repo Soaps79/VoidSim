@@ -30,6 +30,8 @@ namespace Assets.Logistics
 		public string Name;
 	}
 
+    // This represents a spot where a ship can land in the Transit system,
+    // as well as its representation on-screen
 	public class ShipBerth : QScript, ISerializeData<ShipBerthData>
 	{
 		public ShipSize ShipSize;
