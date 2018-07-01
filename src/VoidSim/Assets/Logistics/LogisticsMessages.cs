@@ -12,7 +12,8 @@ namespace Assets.Logistics
         public const string RegisterLocation = "RegisterTransitLocation";
         public const string ShipCreated = "ShipCreated";
         public const string TransitRequested = "TransitRequested";
-        public const string CargoRequested = "CargoRequested";
+        public const string CargoTransitRequested = "CargoTransitRequested";
+        public const string CargoCompleted = "CargoCompleted";
         public const string ShipBerthsUpdated = "ShipBerthsUpdated";
     }
 
@@ -38,10 +39,15 @@ namespace Assets.Logistics
         public Ship Ship;
     }
 
-    public class CargoRequestedMessageArgs : MessageArgs
+    public class CargoTransitRequestedMessageArgs : MessageArgs
     {
         public string TravelingTo;
         public string TravelingFrom;
+        public CargoManifest Manifest;
+    }
+
+    public class CargoCompletedMessageArgs : MessageArgs
+    {
         public CargoManifest Manifest;
     }
 

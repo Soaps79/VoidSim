@@ -110,8 +110,7 @@ namespace Assets.Station
 				{
 					var manifest = _manifestsIn.Dequeue();
 					_inventory.TryRemoveProduct(_creditsProductID, manifest.Currency);
-					_manifestBook.Complete(manifest);
-					CreateCompletionText(manifest.Currency, true);
+					CompleteManifest(manifest);
 					CheckNextIncoming();
 					if(OnCargoManifestComplete != null)
 						OnCargoManifestComplete(manifest);
@@ -137,12 +136,10 @@ namespace Assets.Station
 				{
 					var manifest = _manifestsOut.Dequeue();
 					_inventory.TryAddProduct(_creditsProductID, manifest.Currency);
-					_manifestBook.Complete(manifest);
-					CreateCompletionText(manifest.Currency, false);
+					CompleteManifest(manifest);
 					CheckNextOutgoing();
-					if (OnCargoManifestComplete != null)
-						OnCargoManifestComplete(manifest);
-				}
+                    OnCargoManifestComplete?.Invoke(manifest);
+                }
 			}
 
 			if (!_isUnloadingIn && !_isUnloadingOut)
@@ -151,7 +148,14 @@ namespace Assets.Station
 			} 
 		}
 
-		private void CreateCompletionText(int amount, bool wasBought)
+	    private void CompleteManifest(CargoManifest manifest)
+	    {
+	        _manifestBook.Complete(manifest);
+	        CreateCompletionText(manifest.Currency, true);
+            Locator.MessageHub.QueueMessage(LogisticsMessages.CargoCompleted, new CargoCompletedMessageArgs{ Manifest = manifest });
+        }
+
+        private void CreateCompletionText(int amount, bool wasBought)
 		{
 			var text = Instantiate(_textPrefab);
 			text.Initialize(

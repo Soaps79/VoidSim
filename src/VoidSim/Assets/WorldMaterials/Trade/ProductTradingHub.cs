@@ -146,7 +146,7 @@ namespace Assets.WorldMaterials.Trade
         private static void RequestCargo(TradeManifest manifest)
         {
             // request cargo for trade
-            Locator.MessageHub.QueueMessage(LogisticsMessages.CargoRequested, new CargoRequestedMessageArgs
+            Locator.MessageHub.QueueMessage(LogisticsMessages.CargoTransitRequested, new CargoTransitRequestedMessageArgs
             {
                 Manifest = new CargoManifest
                 {

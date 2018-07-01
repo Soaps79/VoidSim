@@ -17,7 +17,7 @@ namespace Assets.Logistics.Transit
 		private void Start()
 		{
 			Locator.MessageHub.AddListener(this, LogisticsMessages.ShipCreated);
-		    Locator.MessageHub.AddListener(this, LogisticsMessages.CargoRequested);
+		    Locator.MessageHub.AddListener(this, LogisticsMessages.CargoTransitRequested);
 		    var node = StopWatch.AddNode("cargo check", 5.0f);
 		    node.OnTick += CheckDistribution;
 		}
@@ -85,8 +85,8 @@ namespace Assets.Logistics.Transit
 		    if (type == LogisticsMessages.ShipCreated && args != null)
 				HandleShipCreated(args as ShipCreatedMessageArgs);
 
-		    if (type == LogisticsMessages.CargoRequested && args != null)
-		        HandleCargoRequested(args as CargoRequestedMessageArgs);
+		    if (type == LogisticsMessages.CargoTransitRequested && args != null)
+		        HandleCargoRequested(args as CargoTransitRequestedMessageArgs);
         }
 
 		private void HandleShipCreated(ShipCreatedMessageArgs args)
@@ -97,7 +97,7 @@ namespace Assets.Logistics.Transit
 			_carriers.Add(args.Ship.CargoCarrier);
 		}
 
-	    public void HandleCargoRequested(CargoRequestedMessageArgs args)
+	    public void HandleCargoRequested(CargoTransitRequestedMessageArgs args)
 	    {
 	        if (args == null || args.Manifest == null)
 	            throw new UnityException("CargoDispatch given bad cargo request");
