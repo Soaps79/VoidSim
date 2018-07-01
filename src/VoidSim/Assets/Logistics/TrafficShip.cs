@@ -251,6 +251,7 @@ namespace Assets.Logistics
 		public void Initialize(Ship parent, TrafficShipData data)
 		{
 			_parent = parent;
+		    Inventory = parent.Inventory;
 			SetName();
 			_waypoints = new List<Vector3>();
 			_startingDistance = data.StartingDistance;

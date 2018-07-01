@@ -27,6 +27,7 @@ namespace Assets.Logistics.Ships
 		public ShipNavigationData Navigation;
 		public CargoManifestBookData ManifestBook;
 		public TrafficShipData TrafficShipData;
+	    public ProductInventoryData InventoryData;
 	}
 
 	public class Ship : ISerializeData<ShipData>
@@ -39,7 +40,7 @@ namespace Assets.Logistics.Ships
 		public int MaxCapacity { get; private set; }
 		public int CurrentSpaceUsed { get; private set; }
 		public List<ProductAmount> ProductCargo = new List<ProductAmount>();
-	    public ProductInventory Inventory;
+	    public ProductInventory Inventory = new ProductInventory();
 
 		public CargoManifestBook ManifestBook;
 		public ShipNavigation Navigation { get; private set; }
@@ -67,8 +68,7 @@ namespace Assets.Logistics.Ships
 			Navigation = navigation;
 			Navigation.ParentShip = this;
 
-		    Inventory = new ProductInventory();
-            if(_scriptable != null)
+		    if(_scriptable != null)
 		        Inventory.SetGlobalMax(_scriptable.MaxCargo);
 		    Inventory.DefaultProductCapacity = 1000;
 		    Inventory.Initialize(ProductLookup.Instance, false);
@@ -77,26 +77,13 @@ namespace Assets.Logistics.Ships
             CargoCarrier.Initialize(Inventory, Navigation, ManifestBook);
         }
 
-		//public void AddManifest(CargoManifest manifest)
-		//{
-		//	if (manifest == null)
-		//		return;
-
-		//	ManifestBook.Add(manifest);
-
-		//	var s = string.Format("{0} given manifest {1}:\t {2} to {3}\t {4} x{5}", Name, manifest.Id,
-		//		manifest.Shipper, manifest.Receiver, manifest.ProductAmount.ProductId, manifest.ProductAmount.Amount);
-		//	UberDebug.LogChannel(LogChannels.Trade, s);
-		//}
-
 		public void CompleteVisit()
 		{
 			Navigation.CompleteDestination();
 			Status = ShipStatus.Transit;
-			// needs to be here for initial use
-			if (OnTransitBegin != null)
-				OnTransitBegin();
-		}
+            // needs to be here for initial use
+            OnTransitBegin?.Invoke();
+        }
 
 		// This could probably be named better... as of now, Traffic is like a specialized Hold
 		public bool BeginHold(ShipBerth shipBerth, List<Vector3> waypoints)
@@ -141,6 +128,7 @@ namespace Assets.Logistics.Ships
 			Navigation = navigation;
 			Navigation.ParentShip = this;
 			Ticker = new Ticker(data.Ticker);
+            Inventory.Initialize(data.InventoryData, ProductLookup.Instance, false);
 		    ManifestBook = new CargoManifestBook(data.ManifestBook);
             CargoCarrier.Initialize(Inventory, Navigation, ManifestBook);
 
@@ -166,9 +154,8 @@ namespace Assets.Logistics.Ships
 				Ticker = Ticker.GetData(),
 				Navigation = Navigation.GetData(),
 				ManifestBook = ManifestBook.GetData(),
-				TrafficShipData = Status == ShipStatus.Traffic ? TrafficShip.GetData() : null
-				// need to serialize cargo manifests
-				// need to serialize ticker
+				TrafficShipData = Status == ShipStatus.Traffic ? TrafficShip.GetData() : null,
+                InventoryData = Inventory.GetData()
 			};
 		}
 		#endregion
