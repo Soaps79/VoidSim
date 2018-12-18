@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts;
 using Assets.Scripts.Serialization;
+using Assets.WorldMaterials.Products;
 using Messaging;
-using Newtonsoft.Json;
 using QGame;
 using UnityEngine;
+#pragma warning disable 649
 
 namespace Assets.WorldMaterials.Trade
 {
@@ -16,6 +17,11 @@ namespace Assets.WorldMaterials.Trade
 	}
 
     // TODO: Does this really have to be a singleton?
+    /// <summary>
+    /// Monitors trade
+    /// Currently holds manifests and handles their persistence, but this seems broken
+    /// Handling debug output for Trade channel
+    /// </summary>
 	public class TradeMonitor : SingletonBehavior<TradeMonitor>, IMessageListener, ISerializeData<TradeMonitorData>
 	{
 		private readonly List<TradeManifest> _activeManifests = new List<TradeManifest>();
@@ -24,8 +30,9 @@ namespace Assets.WorldMaterials.Trade
         private readonly CollectionSerializer<TradeMonitorData> _serializer
 			= new CollectionSerializer<TradeMonitorData>();
 
+	    [SerializeField] private bool _isLogging;
+
 		public Action<TradeManifest> OnTradeComplete;
-	    private readonly Dictionary<string, ProductTrader> _traders = new Dictionary<string, ProductTrader>();
 
 	    void Start()
 		{
@@ -35,6 +42,9 @@ namespace Assets.WorldMaterials.Trade
 
             if (_serializer.HasDataFor(this, "TradeMonitor", true))
                 OnNextUpdate += HandleGameLoad;
+
+            if(_isLogging)
+                UberDebug.LogChannel(LogChannels.Performance, "Trade logging enabled");
 		}
 
 		private void HandleGameLoad()
@@ -63,15 +73,6 @@ namespace Assets.WorldMaterials.Trade
 				complete.ForEach(i => OnTradeComplete(i));
 			}
 			_activeManifests.RemoveAll(i => i.Status == TradeStatus.Complete);
-		}
-
-		public TradeManifest GetTradeManifest(int id)
-		{
-			var manifest =_activeManifests.FirstOrDefault(i => i.Id == id);
-			if(manifest == null)
-				UberDebug.LogChannel(LogChannels.Trade, "Unknown manifest requested from TradeMonitor");
-
-			return manifest;
 		}
 
 		public void HandleMessage(string type, MessageArgs args)
@@ -108,8 +109,13 @@ namespace Assets.WorldMaterials.Trade
 		{
 			if(args == null)
 				throw new UnityException("TradeMonitor recieved bad trade message args");
+		    if (_isLogging)
+		    {
+		        var product = ProductLookup.Instance.GetProduct(args.TradeManifest.ProductId);
+		        UberDebug.LogChannel(LogChannels.Trade, $"{args.TradeManifest.Provider} sold {args.TradeManifest.AmountTotal} {product.Name}");
+            }
 
-			if(_activeManifests.TrueForAll(i => i.Id != args.TradeManifest.Id))
+            if (_activeManifests.TrueForAll(i => i.Id != args.TradeManifest.Id))
 				_activeManifests.Add(args.TradeManifest);
 		}
 

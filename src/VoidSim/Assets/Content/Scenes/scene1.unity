@@ -2342,6 +2342,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bfc29f7a2b250c4191d1506d956d805, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isLogging: 1
 --- !u!1 &505407549
 GameObject:
   m_ObjectHideFlags: 0
@@ -5268,6 +5269,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22b6ea038facf4945a331984cc7f7a92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _tradeInterval:
+    TimeUnit: 3
+    Length: 1
 --- !u!4 &1185737117
 Transform:
   m_ObjectHideFlags: 0

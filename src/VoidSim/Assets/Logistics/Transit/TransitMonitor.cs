@@ -8,6 +8,7 @@ using Assets.Scripts.Serialization;
 using Messaging;
 using QGame;
 using UnityEngine;
+#pragma warning disable 649
 
 namespace Assets.Logistics.Transit
 {
@@ -19,7 +20,6 @@ namespace Assets.Logistics.Transit
 	/// <summary>
 	/// This class knows of all entities using the transit system. It is responsible for:
 	/// Persisting any objects in transit
-	/// Distributing Cargo requests
 	/// </summary>
 	public class TransitMonitor : QScript, IMessageListener, ISerializeData<TransitMonitorData>
 	{
@@ -27,7 +27,6 @@ namespace Assets.Logistics.Transit
 		[SerializeField] private TransitControl _transitControl;
 	    [SerializeField] private ShipSOLookup _shipLookup;
 		public Action<Ship> OnShipAdded;
-		private readonly List<CargoManifest> _manifestsBacklog = new List<CargoManifest>();
 
 		private readonly CollectionSerializer<TransitMonitorData> _serializer
 			= new CollectionSerializer<TransitMonitorData>();
@@ -35,9 +34,7 @@ namespace Assets.Logistics.Transit
 		void Start()
 		{
 			Locator.MessageHub.AddListener(this, LogisticsMessages.ShipCreated);
-			BindToUI();
-			//var node = StopWatch.AddNode("check_backlog", 5);
-			//node.OnTick += HandleManifestsBacklog;
+			BindToUi();
 			if (_serializer.HasDataFor(this, "ShipMonitor"))
 				HandleGameLoad();
 		}
@@ -64,7 +61,7 @@ namespace Assets.Logistics.Transit
 
 				var scriptable = _shipLookup.GetShips().FirstOrDefault(i => i.name == shipData.SOName);
 				if (scriptable == null)
-					throw new UnityException(string.Format("ShipGenerator cannot find SO named {0}", shipData.SOName));
+					throw new UnityException($"TransitMonitor cannot find Ship SO named {shipData.SOName}");
 
 				ship.SetScriptable(scriptable);
 				ship.Initialize(navigation, shipData);
@@ -72,6 +69,8 @@ namespace Assets.Logistics.Transit
 				if (ship.Status == ShipStatus.Hold || ship.Status == ShipStatus.Traffic)
 				{
 					var loc = locations.FirstOrDefault(i => i.ClientName == ship.Navigation.CurrentDestination);
+                    if(loc == null)
+                        throw new UnityException($"Ship loaded with unknown destination: {ship.Navigation.CurrentDestination}");
 					loc.Resume(ship);
 				}
 
@@ -79,22 +78,6 @@ namespace Assets.Logistics.Transit
 					LogisticsMessages.ShipCreated, new ShipCreatedMessageArgs { Ship = ship, IsExisting = true });
 			}
 		}
-
-		//private void HandleManifestsBacklog()
-		//{
-		//	if (!_manifestsBacklog.Any())
-		//		return;
-
-		//	var manifests = _manifestsBacklog.ToList();
-		//	foreach (var manifest in manifests)
-		//	{
-		//		var ship = CargoDispatch.FindCarrier(_ships, manifest);
-		//		if (ship == null)
-		//			continue;
-		//		ship.AddManifest(manifest);
-		//		_manifestsBacklog.Remove(manifest);
-		//	}
-		//}
 
 		public void HandleMessage(string type, MessageArgs args)
 		{
@@ -113,11 +96,10 @@ namespace Assets.Logistics.Transit
 
 		private void CheckOnShipAdded(Ship ship)
 		{
-			if (OnShipAdded != null)
-				OnShipAdded(ship);
-		}
+            OnShipAdded?.Invoke(ship);
+        }
 
-		private void BindToUI()
+		private void BindToUi()
 		{
 			var go = (GameObject)Instantiate(Resources.Load("Views/transit_monitor_viewmodel"));
 			go.transform.SetParent(transform);
@@ -126,8 +108,9 @@ namespace Assets.Logistics.Transit
 			viewmodel.Initialize(this);
 		}
 
-		public string Name { get { return "TransitMonitor"; } }
-		public TransitMonitorData GetData()
+		public string Name => "TransitMonitor";
+
+	    public TransitMonitorData GetData()
 		{
 			return new TransitMonitorData {Ships = _ships.Select(i => i.GetData()).ToList()};
 		}

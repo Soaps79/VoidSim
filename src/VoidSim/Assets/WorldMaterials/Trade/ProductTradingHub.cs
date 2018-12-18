@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Logistics;
 using Assets.Logistics.Transit;
@@ -27,6 +26,7 @@ namespace Assets.WorldMaterials.Trade
     public class ProductTradingHub : QScript, IMessageListener
     {
         private readonly List<ProductTrader> _traders = new List<ProductTrader>();
+        [SerializeField] private Scripts.TimeLength _tradeInterval;
         
         void Start()
         {
@@ -34,7 +34,8 @@ namespace Assets.WorldMaterials.Trade
 	        SceneManager.sceneLoaded += ClearLists;
 
             // TODO: re-assess when to tick trades
-            var node =  StopWatch.AddNode("CheckForTrades", 5);
+            var time = Locator.WorldClock.GetSeconds(_tradeInterval);
+            var node =  StopWatch.AddNode("1", time);
             node.OnTick += CheckForTrades;
         }
 
