@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Logistics.Ships;
+using Assets.Logistics.Transit;
 using Assets.Placeables.Nodes;
 using Assets.Scripts;
 using Assets.Scripts.Serialization;
@@ -195,5 +196,7 @@ namespace Assets.Logistics
             FindBerthAndAssignToShip(ship);
 	        return true;
 	    }
+
+	    public void HandleManifest(CargoManifest manifest) { }         
 	}
 }

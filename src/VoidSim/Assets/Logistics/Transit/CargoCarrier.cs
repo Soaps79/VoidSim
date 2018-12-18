@@ -36,5 +36,11 @@ namespace Assets.Logistics.Transit
 
             return _inventory.GetProductRemainingSpace(productId) + nextDelivery - remainingPickup;
         }
+
+        public void AddManifestAndProduct(CargoManifest manifest)
+        {
+            ManifestBook.Add(manifest);
+            _inventory.TryAddProduct(manifest.ProductId, manifest.RemainingAmount);
+        }
     }
 }

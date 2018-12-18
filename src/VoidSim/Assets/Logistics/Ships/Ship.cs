@@ -57,6 +57,7 @@ namespace Assets.Logistics.Ships
 		public Action OnTransitBegin;
 		public Ticker Ticker = new Ticker();
 		private ShipSO _scriptable;
+	    public int ManifestCount;
 
 		public void SetScriptable(ShipSO scriptable)
 		{
@@ -75,7 +76,8 @@ namespace Assets.Logistics.Ships
 
             ManifestBook = new CargoManifestBook();
             CargoCarrier.Initialize(Inventory, Navigation, ManifestBook);
-        }
+		    ManifestBook.OnContentsUpdated += () => { ManifestCount = ManifestBook.ActiveManifests.Count; };
+		}
 
 		public void CompleteVisit()
 		{

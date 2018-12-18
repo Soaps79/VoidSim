@@ -27,6 +27,7 @@ namespace Assets.Logistics.Transit
 		private readonly Dictionary<string, TransitLocation> _locations = new Dictionary<string, TransitLocation>();
 		[SerializeField] private TimeLength _journeyTime;
 		private float _journeySeconds;
+	    [SerializeField] private List<Ship> _ships = new List<Ship>();
 
 		public List<TransitLocation> GetTransitLocations()
 		{
@@ -50,7 +51,8 @@ namespace Assets.Logistics.Transit
 			_journeySeconds = Locator.WorldClock.GetSeconds(_journeyTime);
 			Locator.MessageHub.AddListener(this, LogisticsMessages.RegisterLocation);
 			Locator.MessageHub.AddListener(this, LogisticsMessages.TransitRequested);
-		}
+		    Locator.MessageHub.AddListener(this, LogisticsMessages.ShipCreated);
+        }
 
 		// move ships towards their destinations, inform the location when a ship arrives
 		// it is on the locations to direct the ships from there
@@ -83,9 +85,21 @@ namespace Assets.Logistics.Transit
 
 			else if (type == LogisticsMessages.TransitRequested && args != null)
 				HandleTransitRequested(args as TransitRequestedMessageArgs);
-		}
 
-		// handle bad data, add location
+			else if (type == LogisticsMessages.ShipCreated && args != null)
+			    HandleShipCreated(args as ShipCreatedMessageArgs);
+
+        }
+
+	    private void HandleShipCreated(ShipCreatedMessageArgs args)
+	    {
+	        if(args == null || args.Ship == null)
+                throw new UnityException("TransitControl given bad ship args");
+
+            _ships.Add(args.Ship);
+	    }
+
+	    // handle bad data, add location
 		private void HandleRegisterLocation(TransitLocationMessageArgs args)
 		{
 			if(args == null || args.TransitLocation == null)
@@ -101,12 +115,11 @@ namespace Assets.Logistics.Transit
 		// handle bad data, discover travel time and begin tracking
 		private void HandleTransitRequested(TransitRequestedMessageArgs args)
 		{
-			if (args == null
-				|| string.IsNullOrEmpty(args.TravelingTo)
-				|| string.IsNullOrEmpty(args.TravelingFrom)
-				|| args.Ship == null
-				|| !_locations.ContainsKey(args.TravelingTo)
-				|| !_locations.ContainsKey(args.TravelingFrom))
+			if (string.IsNullOrEmpty(args?.TravelingTo) 
+                || string.IsNullOrEmpty(args.TravelingFrom) 
+                || args.Ship == null 
+                || !_locations.ContainsKey(args.TravelingTo) 
+                || !_locations.ContainsKey(args.TravelingFrom))
 				throw new UnityException("TransitControl given bad transit request message data");
 
 			var source = _locations[args.TravelingFrom];

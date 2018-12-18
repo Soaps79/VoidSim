@@ -30,7 +30,7 @@ namespace Assets.Logistics
 		public string Name;
 	}
 
-    // This represents a spot where a ship can land in the Transit system,
+    // This represents a spot where a ship can land in the Traffic system,
     // as well as its representation on-screen
 	public class ShipBerth : QScript, ISerializeData<ShipBerthData>
 	{
@@ -39,6 +39,7 @@ namespace Assets.Logistics
 		public bool IsInUse;
 		private BerthState _state;
 		public int Index;
+        public Ship ShipBeingServiced { get; private set; }
 
 		[SerializeField] private SpriteRenderer _indicator;
 
@@ -101,18 +102,16 @@ namespace Assets.Logistics
 		public void ConfirmLanding(TrafficShip ship)
 		{
 			_ship = ship;
-			if (OnShipDock != null)
-				OnShipDock(_ship);
-		}
+            OnShipDock?.Invoke(_ship);
+        }
 
 		public void CompleteServicing()
 		{
 			_ship.BeginDeparture();
 			State = BerthState.Empty;
 
-			if (OnShipUndock != null)
-				OnShipUndock(_ship);
-		}
+            OnShipUndock?.Invoke(_ship);
+        }
 
 		public void Initialize()
 		{
@@ -140,9 +139,8 @@ namespace Assets.Logistics
 					break;
 				case TrafficPhase.Docked:
 					State = BerthState.Transfer;
-					if (OnShipDock != null)
-						OnShipDock(_ship);
-					break;
+                    OnShipDock?.Invoke(_ship);
+                    break;
 			}
 		}
 

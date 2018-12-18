@@ -10,7 +10,8 @@ using UnityEngine;
 
 namespace Logistics.Transit
 {
-    // LocationDrivers are objects who are given the first shot at handling ships arriving at the Location
+    // LocationDrivers are objects who are given the first shot at handling Location duties
+    // otherwise, generic handling is provided by TransitLocation
     public interface ILocationDriver
     {
         bool TryHandleArrival(Ship ship);
@@ -63,11 +64,6 @@ namespace Logistics.Transit
             OnTransitDeparture?.Invoke(ship);
         }
 
-        public void HandleCargoRequested(CargoManifest manifest)
-        {
-            // Implement me during Distribution v1
-        }
-
         public Action<Ship> OnResume;
         // if it is on hold, resume hold
         // if not, driver should pick it up from callback
@@ -80,7 +76,7 @@ namespace Logistics.Transit
             }
 
             Ships.Add(ship);
-            if (OnResume != null) OnResume(ship);
+            OnResume?.Invoke(ship);
         }
 
         // TODO: Give another pass to the driver > transitlocation > holder relationship

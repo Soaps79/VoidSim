@@ -1195,6 +1195,7 @@ GameObject:
   - component: {fileID: 265325958}
   - component: {fileID: 265325961}
   - component: {fileID: 265325960}
+  - component: {fileID: 265325962}
   m_Layer: 0
   m_Name: VoidActor
   m_TagString: Untagged
@@ -1256,6 +1257,17 @@ MonoBehaviour:
   _shipDelayTime:
     TimeUnit: 2
     Length: 5
+--- !u!114 &265325962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 265325957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac47d052280492247bfb190aab152f6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &294099295
 GameObject:
   m_ObjectHideFlags: 0
@@ -8954,7 +8966,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1564975703}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac47d052280492247bfb190aab152f6f, type: 3}
+  m_Script: {fileID: 11500000, guid: 79203272f0ef84d479b55d2dd56f786d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!224 &1599810819 stripped
@@ -9796,6 +9808,7 @@ GameObject:
   - component: {fileID: 2110913139}
   - component: {fileID: 2110913138}
   - component: {fileID: 2110913137}
+  - component: {fileID: 2110913140}
   m_Layer: 0
   m_Name: Traffic
   m_TagString: Untagged
@@ -9857,6 +9870,17 @@ MonoBehaviour:
   _shipDelayTime:
     TimeUnit: 2
     Length: 2
+--- !u!114 &2110913140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2110913135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac47d052280492247bfb190aab152f6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2111345833
 Prefab:
   m_ObjectHideFlags: 0
